@@ -17,6 +17,7 @@ import { episodeMarks, lacksDetails, pickable } from '@/lib/format';
 import type {
   BaseItemDto,
   BaseItemDtoQueryResult,
+  RecommendationDto,
   SearchHintResult,
 } from './types';
 
@@ -279,6 +280,23 @@ export function usePersonItems(personId: string, types: string) {
       return offset < (last.TotalRecordCount ?? 0) ? offset : undefined;
     },
     staleTime: 60 * 60_000,
+  });
+}
+
+/** "Because you watched" and "Recommended for you" rows, from the user's history. */
+export function useRecommendations() {
+  const { client, user } = useSession();
+  return useQuery({
+    queryKey: [...useKey(), 'recommendations'],
+    meta: { cache: 'home' },
+    queryFn: () =>
+      client.get<RecommendationDto[]>('/Movies/Recommendations', {
+        userId: user.Id,
+        ItemLimit: 20,
+        AIOStreamsFeeds: true,
+      }),
+    staleTime: 10 * 60_000,
+    enabled: useFeature('feeds'),
   });
 }
 
