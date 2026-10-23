@@ -617,10 +617,12 @@ export class UserRepository {
     password: string,
     salt?: string
   ): Promise<{ encryptedConfig: string; salt: string }> {
-    // Every stored config passes here, so a PIN is never kept plain.
+    // Every stored config passes here, so a PIN or password is never kept plain.
     for (const profile of config.profiles ?? []) {
       if (profile.lock && !isProfileLockHash(profile.lock))
         profile.lock = await getTextHash(profile.lock);
+      if (profile.password && !isProfileLockHash(profile.password))
+        profile.password = await getTextHash(profile.password);
     }
     const { key, salt: saltUsed } = await deriveKey(
       `${password}:${appConfig.bootstrap.secretKey}`,

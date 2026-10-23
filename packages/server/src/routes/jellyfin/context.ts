@@ -225,6 +225,15 @@ export async function resolveConfigEntry(
   return entry;
 }
 
+/** Drops a cached config so a change its own users just made is read back at once. */
+export async function forgetConfig(
+  uuid: string,
+  encryptedPassword: string
+): Promise<void> {
+  const key = `${uuid}|${getSimpleTextHash(encryptedPassword)}`;
+  await configCache.delete(key).catch(() => undefined);
+}
+
 /**
  * The resolved config, or null when the credentials are wrong. Shared with the
  * cache: copy it before changing anything.
@@ -337,6 +346,27 @@ export async function userUnlocks(
   }
   if (PROFILE_PIN_PATTERN.test(pin) && (await verifyHash(pin, lock))) {
     await pinAttempts.reset(key);
+    return true;
+  }
+  return false;
+}
+
+const passwordAttempts = attemptLimiter(15 * 60, 10, 'jellyfin-user-password');
+
+/** Whether `password` is the profile's own password. Rate limited like a PIN. */
+export async function userPasswordOpens(
+  uuid: string,
+  profile: Profile,
+  password: string
+): Promise<boolean> {
+  if (!profile.password || !password) return false;
+  const key = `${uuid}:${profile.id}`;
+  if (!(await passwordAttempts.take(key))) {
+    logger.warn({ uuid, profile: profile.id }, 'user password locked out');
+    return false;
+  }
+  if (await verifyHash(password, profile.password)) {
+    await passwordAttempts.reset(key);
     return true;
   }
   return false;
