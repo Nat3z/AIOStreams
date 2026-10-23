@@ -726,6 +726,10 @@ msgstr "Merker"
 msgid "Bar"
 msgstr "Linje"
 
+#: src/app/home/page.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Før slutten"
@@ -3631,6 +3635,10 @@ msgstr "Nylige"
 #: src/app/search/page.tsx
 msgid "Recent searches"
 msgstr "Nylige søk"
+
+#: src/app/home/page.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"
