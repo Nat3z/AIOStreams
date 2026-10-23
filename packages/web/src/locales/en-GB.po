@@ -322,6 +322,10 @@ msgstr "12-hour ({twelve})"
 msgid "24-hour ({twentyFour})"
 msgstr "24-hour ({twentyFour})"
 
+#: src/app/settings/profile.tsx
+msgid "4 to 12 digits."
+msgstr "4 to 12 digits."
+
 #: src/app/settings/audio.tsx
 msgid "5.1 surround"
 msgstr "5.1 surround"
@@ -580,9 +584,21 @@ msgstr "Anime upscaling: off"
 msgid "Anime upscaling: on"
 msgstr "Anime upscaling: on"
 
+#: src/app/settings/profile.tsx
+msgid "Another device"
+msgstr "Another device"
+
 #: src/features/party/not-in-party.tsx
 msgid "Another relay"
 msgstr "Another relay"
+
+#: src/app/settings/profile.tsx
+msgid "Any"
+msgstr "Any"
+
+#: src/app/settings/profile.tsx
+msgid "Anyone using this device can switch to you without it."
+msgstr "Anyone using this device can switch to you without it."
 
 #: src/features/party/not-in-party.tsx
 msgid "Anyone with the invite can join, from any server."
@@ -641,9 +657,17 @@ msgstr "Ask if you are still watching"
 msgid "Ask when the app opens"
 msgstr "Ask when the app opens"
 
+#: src/app/settings/profile.tsx
+msgid "Asked when someone switches to you on a shared device."
+msgstr "Asked when someone switches to you on a shared device."
+
 #: src/app/settings/subtitles.tsx
 msgid "At 0% there is no background."
 msgstr "At 0% there is no background."
+
+#: src/app/settings/profile.tsx
+msgid "At least {min} characters"
+msgstr "At least {min} characters"
 
 #: src/app/settings/page.tsx
 #: src/features/player/options.tsx
@@ -843,6 +867,7 @@ msgstr "Can’t reach the server"
 
 #: src/app/downloads/page.tsx
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
 #: src/components/send-report.tsx
 #: src/features/playlists/playlists.tsx
 #: src/lib/i18n.ts
@@ -870,12 +895,17 @@ msgid "Catalog"
 msgstr "Catalog"
 
 #: src/app/settings/downloads.tsx
+#: src/app/settings/profile.tsx
 msgid "Change"
 msgstr "Change"
 
 #: src/app/downloads/page.tsx
 msgid "Change folder"
 msgstr "Change folder"
+
+#: src/app/settings/profile.tsx
+msgid "Change password"
+msgstr "Change password"
 
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Change reactions"
@@ -1079,6 +1109,7 @@ msgid "Copied as JSON"
 msgstr "Copied as JSON"
 
 #: src/app/settings/apps.tsx
+#: src/app/settings/profile.tsx
 #: src/components/shell/crash-report.tsx
 msgid "Copy"
 msgstr "Copy"
@@ -1117,6 +1148,7 @@ msgstr "Could not check: {error}"
 msgid "Could not connect: {message}"
 msgstr "Could not connect: {message}"
 
+#: src/app/settings/profile.tsx
 #: src/components/shell/crash-report.tsx
 msgid "Could not copy it"
 msgstr "Could not copy it"
@@ -1288,6 +1320,10 @@ msgstr "Crop"
 #: src/lib/input/keys.ts
 msgid "Ctrl"
 msgstr "Ctrl"
+
+#: src/app/settings/profile.tsx
+msgid "Current password"
+msgstr "Current password"
 
 #: src/app/settings/subtitles.tsx
 msgid "Cursive"
@@ -1572,7 +1608,12 @@ msgstr "E{e}"
 msgid "Each filter shows as a pill above the version list. Its search is words that must all appear, or a regular expression between slashes, such as /2160p|4k/. Case never matters."
 msgstr "Each filter shows as a pill above the version list. Its search is words that must all appear, or a regular expression between slashes, such as /2160p|4k/. Case never matters."
 
+#: src/app/settings/profile.tsx
+msgid "Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use."
+msgstr "Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use."
+
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
 msgid "Edit"
 msgstr "Edit"
 
@@ -1797,6 +1838,10 @@ msgstr "Font"
 msgid "For a receiver on an optical or ARC link, which gets other surround formats as stereo otherwise."
 msgstr "For a receiver on an optical or ARC link, which gets other surround formats as stereo otherwise."
 
+#: src/app/settings/profile.tsx
+msgid "For a screen that shows them washed out."
+msgstr "For a screen that shows them washed out."
+
 #: src/app/settings/interface.tsx
 msgid "For clocks and times of day, such as the player's clock and the TV guide."
 msgstr "For clocks and times of day, such as the player's clock and the TV guide."
@@ -1947,6 +1992,10 @@ msgstr "Hide episodes"
 msgid "Hide QR code"
 msgstr "Hide QR code"
 
+#: src/app/settings/profile.tsx
+msgid "Highest resolution"
+msgstr "Highest resolution"
+
 #. Holding the next key down, as in Hold + Enter
 #: src/lib/input/keys.ts
 msgid "Hold"
@@ -2061,6 +2110,10 @@ msgstr "Install a metadata addon from Addons → Marketplace. For one that isn't
 msgid "Install catalog addons from Addons → Marketplace. For one that isn't listed, use the Custom addon there."
 msgstr "Install catalog addons from Addons → Marketplace. For one that isn't listed, use the Custom addon there."
 
+#: src/app/settings/profile.tsx
+msgid "Install in Stremio"
+msgstr "Install in Stremio"
+
 #: src/app/settings/page.tsx
 msgid "Interface"
 msgstr "Interface"
@@ -2096,6 +2149,10 @@ msgstr "It didn't reach the developer, only this server: {forwardError}"
 #: src/app/settings/theme.tsx
 msgid "It will be undone unless you keep it."
 msgstr "It will be undone unless you keep it."
+
+#: src/app/settings/profile.tsx
+msgid "It won't be shown again. Copy it now, or open it in Stremio on this device."
+msgstr "It won't be shown again. Copy it now, or open it in Stremio on this device."
 
 #: src/app/settings/about.tsx
 msgid "Its Metal and AVFoundation video outputs."
@@ -2194,10 +2251,22 @@ msgstr "Language and output"
 msgid "Language, home, grids and episodes"
 msgstr "Language, home, grids and episodes"
 
+#: src/app/settings/profile.tsx
+msgid "Languages"
+msgstr "Languages"
+
 #: src/app/settings/interface.tsx
 #: src/lib/subtitles/style.ts
 msgid "Large"
 msgstr "Large"
+
+#: src/app/settings/profile.tsx
+msgid "Largest episode"
+msgstr "Largest episode"
+
+#: src/app/settings/profile.tsx
+msgid "Largest movie"
+msgstr "Largest movie"
 
 #: src/app/live-tv/_components/channel-details.tsx
 #: src/components/shell/update-prompt.tsx
@@ -2256,6 +2325,14 @@ msgstr "Licences"
 msgid "Link a pack someone shares, in this app's format or the one Fusion and Nuvio use. It stays up to date with its author's changes."
 msgstr "Link a pack someone shares, in this app's format or the one Fusion and Nuvio use. It stays up to date with its author's changes."
 
+#: src/app/settings/profile.tsx
+msgid "Link copied"
+msgstr "Link copied"
+
+#: src/app/settings/profile.tsx
+msgid "Link revoked"
+msgstr "Link revoked"
+
 #: src/app/settings/interface.tsx
 msgid "Liquid glass"
 msgstr "Liquid glass"
@@ -2283,6 +2360,10 @@ msgstr "Live"
 #: src/lib/input/actions.ts
 msgid "Live TV"
 msgstr "Live TV"
+
+#: src/app/settings/profile.tsx
+msgid "Living room TV"
+msgstr "Living room TV"
 
 #: src/features/party/in-party.tsx
 msgid "Loading"
@@ -2320,6 +2401,18 @@ msgstr "Lower subtitles"
 #: src/app/settings/apps.tsx
 msgid "macOS draws the video, using less power, and shows Dolby Vision itself. Shaders and mpv's picture options do not apply."
 msgstr "macOS draws the video, using less power, and shows Dolby Vision itself. Shaders and mpv's picture options do not apply."
+
+#: src/app/settings/profile.tsx
+msgid "Made {made}, never used"
+msgstr "Made {made}, never used"
+
+#: src/app/settings/profile.tsx
+msgid "Made {made}, used {used}"
+msgstr "Made {made}, used {used}"
+
+#: src/app/settings/profile.tsx
+msgid "Made once, shown once."
+msgstr "Made once, shown once."
 
 #: src/lib/i18n.ts
 msgid "Magenta"
@@ -2503,9 +2596,18 @@ msgid "Mute key"
 msgstr "Mute key"
 
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Name"
 msgstr "Name"
+
+#: src/app/settings/profile.tsx
+msgid "Name and picture"
+msgstr "Name and picture"
+
+#: src/app/settings/profile.tsx
+msgid "Name it for the device it goes on."
+msgstr "Name it for the device it goes on."
 
 #: src/app/settings/interface.tsx
 msgid "Navigation"
@@ -2527,9 +2629,25 @@ msgstr "Never"
 msgid "New code"
 msgstr "New code"
 
+#: src/app/settings/profile.tsx
+msgid "New link"
+msgstr "New link"
+
+#: src/app/settings/profile.tsx
+msgid "New password"
+msgstr "New password"
+
+#: src/app/settings/profile.tsx
+msgid "New PIN"
+msgstr "New PIN"
+
 #: src/features/playlists/playlists.tsx
 msgid "New playlist"
 msgstr "New playlist"
+
+#: src/app/settings/profile.tsx
+msgid "New Stremio link"
+msgstr "New Stremio link"
 
 #: src/features/player/controls.tsx
 #: src/features/remote/remote-sheet.tsx
@@ -2630,6 +2748,7 @@ msgid "No favourite channels yet."
 msgstr "No favourite channels yet."
 
 #: src/app/settings/cache.tsx
+#: src/app/settings/profile.tsx
 msgid "No limit"
 msgstr "No limit"
 
@@ -2868,6 +2987,10 @@ msgstr "On the home page"
 msgid "On this server"
 msgstr "On this server"
 
+#: src/app/settings/profile.tsx
+msgid "On top of what the owner set up, for you alone. Left alone, theirs stands."
+msgstr "On top of what the owner set up, for you alone. Left alone, theirs stands."
+
 #: src/app/settings/interface.tsx
 msgid "On wide screens"
 msgstr "On wide screens"
@@ -2937,6 +3060,10 @@ msgstr "Open"
 #: src/app/settings/apps.tsx
 msgid "Open folder"
 msgstr "Open folder"
+
+#: src/app/settings/profile.tsx
+msgid "Open in Stremio"
+msgstr "Open in Stremio"
 
 #: src/app/trailer/page.tsx
 msgid "Open its page"
@@ -3099,9 +3226,14 @@ msgstr "Pages load from the server again until they are saved anew."
 msgid "Pass surround audio through"
 msgstr "Pass surround audio through"
 
+#: src/app/settings/profile.tsx
 #: src/app/sign-in/page.tsx
 msgid "Password"
 msgstr "Password"
+
+#: src/app/settings/profile.tsx
+msgid "Password saved"
+msgstr "Password saved"
 
 #: src/app/settings/cache.tsx
 msgid "Past this, what was used longest ago goes first."
@@ -3193,6 +3325,10 @@ msgstr "Pick the line you heard at {heardAt}."
 msgid "Pick the version to download."
 msgstr "Pick the version to download."
 
+#: src/app/settings/profile.tsx
+msgid "Picture"
+msgstr "Picture"
+
 #: src/app/settings/apps.tsx
 #: src/features/player/options.tsx
 msgid "Picture-in-picture"
@@ -3214,6 +3350,7 @@ msgstr "Picture: {label}"
 msgid "Pills above the version list that each apply a search you save, such as one for 4K versions."
 msgstr "Pills above the version list that each apply a search you save, such as one for 4K versions."
 
+#: src/app/settings/profile.tsx
 #: src/app/sign-in/page.tsx
 msgid "PIN"
 msgstr "PIN"
@@ -3221,6 +3358,14 @@ msgstr "PIN"
 #: src/app/sign-in/page.tsx
 msgid "PIN or password"
 msgstr "PIN or password"
+
+#: src/app/settings/profile.tsx
+msgid "PIN removed"
+msgstr "PIN removed"
+
+#: src/app/settings/profile.tsx
+msgid "PIN saved"
+msgstr "PIN saved"
 
 #: src/app/settings/theme.tsx
 msgid "Pink"
@@ -3511,6 +3656,10 @@ msgstr "Previous trailer"
 msgid "Producer"
 msgstr "Producer"
 
+#: src/app/settings/page.tsx
+msgid "Profile"
+msgstr "Profile"
+
 #: src/app/settings/_components/shortcut-settings.tsx
 msgid "Puts every key back the way it came."
 msgstr "Puts every key back the way it came."
@@ -3669,6 +3818,7 @@ msgstr "Reminder set"
 #: src/app/servers/page.tsx
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
 msgid "Remove"
 msgstr "Remove"
 
@@ -3710,6 +3860,10 @@ msgstr "Remove from playlist"
 #: src/app/downloads/page.tsx
 msgid "Remove from the list, keep the file"
 msgstr "Remove from the list, keep the file"
+
+#: src/app/settings/profile.tsx
+msgid "Remove PIN"
+msgstr "Remove PIN"
 
 #: src/app/servers/page.tsx
 msgid "Remove server"
@@ -3821,6 +3975,10 @@ msgstr "Retimed and synced automatically"
 msgid "Retry"
 msgstr "Retry"
 
+#: src/app/settings/profile.tsx
+msgid "Revoke {label}"
+msgstr "Revoke {label}"
+
 #: src/features/remote/remote-sheet.tsx
 #: src/lib/input/keys.ts
 msgid "Rewind"
@@ -3861,6 +4019,7 @@ msgstr "Sans serif"
 
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/apps.tsx
+#: src/app/settings/profile.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Save"
 msgstr "Save"
@@ -4056,6 +4215,14 @@ msgstr "Server address"
 msgid "server error"
 msgstr "server error"
 
+#: src/app/settings/profile.tsx
+msgid "Set"
+msgstr "Set"
+
+#: src/app/settings/profile.tsx
+msgid "Set a password"
+msgstr "Set a password"
+
 #: src/features/player/options.tsx
 msgid "Set by hand"
 msgstr "Set by hand"
@@ -4241,6 +4408,10 @@ msgstr "Signed out"
 msgid "Signs and songs"
 msgstr "Signs and songs"
 
+#: src/app/settings/profile.tsx
+msgid "Signs you in on the web app and in Jellyfin apps."
+msgstr "Signs you in on the web app and in Jellyfin apps."
+
 #: src/app/settings/subtitles.tsx
 #: src/features/player/options.tsx
 msgid "Size"
@@ -4277,6 +4448,10 @@ msgstr "Skip filler episodes"
 #: src/lib/input/actions.ts
 msgid "Skip forward"
 msgstr "Skip forward"
+
+#: src/app/settings/profile.tsx
+msgid "Skip HDR and Dolby Vision"
+msgstr "Skip HDR and Dolby Vision"
 
 #: src/features/player/segments.ts
 msgid "Skip intro"
@@ -4467,6 +4642,18 @@ msgstr "Stops playing"
 #: src/features/versions/version-list.tsx
 msgid "Stream link copied"
 msgstr "Stream link copied"
+
+#: src/app/settings/profile.tsx
+msgid "Streams"
+msgstr "Streams"
+
+#: src/app/settings/profile.tsx
+msgid "Streams in these come first, in this order."
+msgstr "Streams in these come first, in this order."
+
+#: src/app/settings/profile.tsx
+msgid "Stremio"
+msgstr "Stremio"
 
 #: src/features/player/options.tsx
 msgid "Stretch"
@@ -4688,6 +4875,10 @@ msgstr "That is not a valid address."
 msgid "That is not a valid regular expression."
 msgstr "That is not a valid regular expression."
 
+#: src/app/settings/profile.tsx
+msgid "That isn't an address"
+msgstr "That isn't an address"
+
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "That party has ended."
@@ -4731,6 +4922,10 @@ msgstr "The {name} installed on this computer, in a window of its own with its o
 #: src/lib/jellyfin/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "The address must start with http:// or https://."
+
+#: src/app/settings/profile.tsx
+msgid "The address of an image. Empty shows your initial."
+msgstr "The address of an image. Empty shows your initial."
 
 #: src/app/servers/page.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -4824,6 +5019,10 @@ msgstr "The open-source software in this app, and the licence of each."
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "The other device could not be reached"
+
+#: src/app/settings/profile.tsx
+msgid "The owner's choice"
+msgstr "The owner's choice"
 
 #: src/components/shell/crash-report.tsx
 msgid "The page restarted unexpectedly"
@@ -5381,6 +5580,10 @@ msgstr "Versions play in the app, with its controls and playback settings. Choos
 msgid "Versions play in this browser. Choose another player to open them in it instead."
 msgstr "Versions play in this browser. Choose another player to open them in it instead."
 
+#: src/app/settings/profile.tsx
+msgid "Versions to show"
+msgstr "Versions to show"
+
 #: src/app/settings/playback.tsx
 msgid "Video"
 msgstr "Video"
@@ -5697,6 +5900,7 @@ msgstr "Yellow"
 msgid "Yesterday"
 msgstr "Yesterday"
 
+#: src/app/settings/profile.tsx
 #: src/components/shell/nav/account.tsx
 #: src/components/shell/nav/corner-menu.tsx
 #: src/components/shell/nav/mobile-nav.tsx
@@ -5713,6 +5917,14 @@ msgstr "You can change this later in Settings, under About."
 msgid "You left the party."
 msgstr "You left the party."
 
+#: src/app/settings/profile.tsx
+msgid "You sign in with the shared one. Set your own so only you can."
+msgstr "You sign in with the shared one. Set your own so only you can."
+
+#: src/app/settings/page.tsx
+msgid "You, your streams and Stremio"
+msgstr "You, your streams and Stremio"
+
 #: src/app/live-tv/page.tsx
 msgid "You'll be reminded at {time}"
 msgstr "You'll be reminded at {time}"
@@ -5725,9 +5937,17 @@ msgstr "Your {name}"
 msgid "Your badges"
 msgstr "Your badges"
 
+#: src/app/settings/profile.tsx
+msgid "Your devices stay signed in."
+msgstr "Your devices stay signed in."
+
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "Your own {name}"
+
+#: src/app/settings/profile.tsx
+msgid "Your password confirms it's you."
+msgstr "Your password confirms it's you."
 
 #: src/lib/playback/player-choice.ts
 msgid "your player"
@@ -5748,6 +5968,10 @@ msgstr "Your player plays in another app, which can't follow a party. Choose the
 #: src/app/item/_components/rating.tsx
 msgid "Your rating"
 msgstr "Your rating"
+
+#: src/app/settings/profile.tsx
+msgid "Your Stremio link"
+msgstr "Your Stremio link"
 
 #: src/app/settings/cache.tsx
 msgid "Your watch history and totals."
