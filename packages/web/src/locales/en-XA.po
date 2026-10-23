@@ -709,6 +709,10 @@ msgstr ""
 msgid "Bar"
 msgstr ""
 
+#: src/pages/home.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr ""
@@ -3539,6 +3543,10 @@ msgstr ""
 
 #: src/pages/search.tsx
 msgid "Recent searches"
+msgstr ""
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
 msgstr ""
 
 #: src/components/party/party-layer.tsx
