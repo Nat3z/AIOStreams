@@ -66,9 +66,12 @@ export async function publicInfo(req: Request) {
     aiostreams: {
       // The instance's own logo when unset, as the Stremio manifest falls back too.
       logo: config?.addonLogo || `${requestOrigin(req)}/logo.png`,
-      configureUrl: addressed
-        ? `${requestOrigin(req)}/stremio/${addressed.uuid}/${addressed.encryptedPassword}/configure`
-        : `${requestOrigin(req)}/stremio/configure`,
+      // An instance's users edit only their profile; the configure page is the admins'.
+      configureUrl: appConfig.jellyfin.instanceAlias
+        ? null
+        : addressed
+          ? `${requestOrigin(req)}/stremio/${addressed.uuid}/${addressed.encryptedPassword}/configure`
+          : `${requestOrigin(req)}/stremio/configure`,
       pinSignIn: appConfig.jellyfin.pinSignIn && !!mountOf(req),
       /** A user's own sign-in address, which signs in that user alone. */
       personal: !!req.jfMount?.persona,
