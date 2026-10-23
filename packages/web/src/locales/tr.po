@@ -71,7 +71,9 @@ msgstr "{downloaded} indirildi"
 msgid "{episodeCount, plural, one {# episode watched} other {# episodes watched}}"
 msgstr "{episodeCount, plural, one {# bölüm izlendi} other {# bölüm izlendi}}"
 
-#: src/pages/downloads.tsx src/pages/history.tsx src/pages/item.tsx
+#: src/pages/downloads.tsx
+#: src/pages/history.tsx
+#: src/pages/item.tsx
 msgid "{episodeCount, plural, one {# episode} other {# episodes}}"
 msgstr "{episodeCount, plural, one {# bölüm} other {# bölüm}}"
 
@@ -125,7 +127,8 @@ msgstr "{inProgress, plural, one {# devam ediyor} other {# devam ediyor}}"
 msgid "{key} is taken by {taken}"
 msgstr "{key}, {taken} tarafından kullanılıyor"
 
-#: src/components/card-preview.tsx src/components/episodes.tsx
+#: src/components/card-preview.tsx
+#: src/components/episodes.tsx
 #: src/pages/downloads.tsx
 msgid "{left} left"
 msgstr "{left} kaldı"
@@ -309,6 +312,10 @@ msgstr "0'dan 9'a"
 msgid "1 jumps a tenth of the way in, 5 halfway and 0 back to the start."
 msgstr "\"1\" yüzde onuna, \"5\" yarısına ve \"0\" başına atlıyor."
 
+#: src/pages/settings/profile.tsx
+msgid "4 to 12 digits."
+msgstr ""
+
 #: src/pages/settings/audio.tsx
 msgid "5.1 surround"
 msgstr "5.1 Surround"
@@ -373,7 +380,8 @@ msgstr "Hakkında"
 msgid "Accent"
 msgstr "Vurgu"
 
-#: src/components/layout.tsx src/pages/settings/index.tsx
+#: src/components/layout.tsx
+#: src/pages/settings/index.tsx
 msgid "Account"
 msgstr "Hesap"
 
@@ -385,8 +393,11 @@ msgstr "Hesap ve sunucu"
 msgid "Actions"
 msgstr "Eylemler"
 
-#: src/components/layout.tsx src/pages/history.tsx src/pages/home.tsx
-#: src/pages/settings/apps.tsx src/pages/settings/cache.tsx
+#: src/components/layout.tsx
+#: src/pages/history.tsx
+#: src/pages/home.tsx
+#: src/pages/settings/apps.tsx
+#: src/pages/settings/cache.tsx
 msgid "Activity"
 msgstr "Faaliyet"
 
@@ -414,7 +425,8 @@ msgstr "{label} için bir tuş ekle"
 msgid "Add a language"
 msgstr "Bir dil ekle"
 
-#: src/app.tsx src/pages/servers.tsx
+#: src/app.tsx
+#: src/pages/servers.tsx
 msgid "Add a server"
 msgstr "Bir sunucu ekle"
 
@@ -426,7 +438,8 @@ msgstr "Başka bir dil ekle"
 msgid "Add catalogs to your configuration, then refresh."
 msgstr "Katalogları yapılandırmanıza ekleyin, sonra yenileyin."
 
-#: src/components/item-menu.tsx src/pages/item.tsx
+#: src/components/item-menu.tsx
+#: src/pages/item.tsx
 msgid "Add favourite"
 msgstr "Favori ekle"
 
@@ -434,7 +447,9 @@ msgstr "Favori ekle"
 msgid "Add from Continue watching"
 msgstr "İzlemeye devam et içinden ekle"
 
-#: src/components/item-menu.tsx src/components/playlists.tsx src/pages/item.tsx
+#: src/components/item-menu.tsx
+#: src/components/playlists.tsx
+#: src/pages/item.tsx
 msgid "Add to playlist"
 msgstr "Oynatma listesine ekle"
 
@@ -446,7 +461,8 @@ msgstr "Bu oynatma listesine ekle"
 msgid "Added {name}"
 msgstr "{name} eklendi"
 
-#: src/components/playlists.tsx src/pages/player.tsx
+#: src/components/playlists.tsx
+#: src/pages/player.tsx
 msgid "Added to {name}"
 msgstr "{name} öğesine eklendi"
 
@@ -474,8 +490,10 @@ msgstr "Yayınlanıyor"
 msgid "Airs {day} · {until}"
 msgstr "Yayınlanma: {day} · {until}"
 
-#: src/components/kind-tabs.tsx src/components/version-picker.tsx
-#: src/pages/discover.tsx src/pages/favourites.tsx
+#: src/components/kind-tabs.tsx
+#: src/components/version-picker.tsx
+#: src/pages/discover.tsx
+#: src/pages/favourites.tsx
 msgid "All"
 msgstr "Hepsi"
 
@@ -511,7 +529,8 @@ msgstr "Yarım saat sonra uygulamaya döndüğünde de sorulur. İzleyen kişi P
 msgid "Alt"
 msgstr "Alt"
 
-#: src/pages/settings/audio.tsx src/pages/settings/interface.tsx
+#: src/pages/settings/audio.tsx
+#: src/pages/settings/interface.tsx
 #: src/pages/settings/subtitles.tsx
 msgid "Always"
 msgstr "Her zaman"
@@ -524,7 +543,8 @@ msgstr "Sürümde mevcut olduğunda, altyazıları her zaman kendi dilinizde gö
 msgid "An audio track you pick while watching a show sets the language for its other episodes. Picking what the settings above would play forgets it."
 msgstr "Bir diziyi izlerken seçtiğin ses parçasının dili, diğer bölümlerde de kullanılır. Yukarıdaki ayarların seçeceği parçayı seçersen bu tercih sıfırlanır."
 
-#: src/lib/hosts/jellyfin-android.ts src/pages/settings/about.tsx
+#: src/lib/hosts/jellyfin-android.ts
+#: src/pages/settings/about.tsx
 #: src/pages/settings/index.tsx
 msgid "Android app"
 msgstr "Android uygulaması"
@@ -533,15 +553,28 @@ msgstr "Android uygulaması"
 msgid "Android's own player, which uses less battery: the screen shows the video as the device decodes it, at the video's frame rate. Plays video the device can decode. Styled subtitles look as they do in mpv."
 msgstr "Daha az pil tüketen Android oynatıcısı. Video, cihazın çözdüğü biçimde ve kendi kare hızında gösterilir. Cihazın çözebildiği videoları oynatır. Biçimlendirilmiş altyazılar mpv ile aynı görünür."
 
+#: src/pages/settings/profile.tsx
+msgid "Another device"
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "Another relay"
 msgstr "Başka ara sunucu"
+
+#: src/pages/settings/profile.tsx
+msgid "Any"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Anyone using this device can switch to you without it."
+msgstr ""
 
 #: src/components/party/party-sheet.tsx
 msgid "Anyone with the invite can join, from any server."
 msgstr "Davetiyesi olan herkes, herhangi bir sunucudan katılabilir."
 
-#: src/lib/hosts/native-shell.ts src/pages/settings/index.tsx
+#: src/lib/hosts/native-shell.ts
+#: src/pages/settings/index.tsx
 msgid "App"
 msgstr "Uygulama"
 
@@ -593,11 +626,20 @@ msgstr "Hâlâ izlenip izlenmediğini sor"
 msgid "Ask when the app opens"
 msgstr "Uygulama açıldığı zaman sor"
 
+#: src/pages/settings/profile.tsx
+msgid "Asked when someone switches to you on a shared device."
+msgstr ""
+
 #: src/pages/settings/subtitles.tsx
 msgid "At 0% there is no background."
 msgstr "%0 olduğunda arkaplan yok."
 
-#: src/components/player/options.tsx src/components/remote-sheet.tsx
+#: src/pages/settings/profile.tsx
+msgid "At least {min} characters"
+msgstr ""
+
+#: src/components/player/options.tsx
+#: src/components/remote-sheet.tsx
 #: src/pages/settings/index.tsx
 msgid "Audio"
 msgstr "Ses"
@@ -622,7 +664,8 @@ msgstr "Ses: {label}"
 msgid "Auto-play the first version"
 msgstr "İlk sürümü otomatik oynat"
 
-#: src/pages/settings/audio.tsx src/pages/settings/interface.tsx
+#: src/pages/settings/audio.tsx
+#: src/pages/settings/interface.tsx
 #: src/pages/settings/playback.tsx
 msgid "Automatic"
 msgstr "Otomatik"
@@ -631,10 +674,15 @@ msgstr "Otomatik"
 msgid "Automatic lists episodes on narrow screens and puts them in a row on wide ones."
 msgstr "Otomatik, bölümleri dar ekranlarda listelerken geniş ekranlarda sıra halinde gösterir."
 
-#: src/components/layout.tsx src/components/licenses.tsx
-#: src/components/party/party-sheet.tsx src/components/player/controls.tsx
-#: src/components/player/next-episode.tsx src/lib/input/actions.ts
-#: src/pages/player.tsx src/pages/servers.tsx src/pages/sign-in.tsx
+#: src/components/layout.tsx
+#: src/components/licenses.tsx
+#: src/components/party/party-sheet.tsx
+#: src/components/player/controls.tsx
+#: src/components/player/next-episode.tsx
+#: src/lib/input/actions.ts
+#: src/pages/player.tsx
+#: src/pages/servers.tsx
+#: src/pages/sign-in.tsx
 #: src/pages/trailer.tsx
 msgid "Back"
 msgstr "Geri"
@@ -648,8 +696,10 @@ msgstr "Geri tuşu"
 msgid "Back in the player"
 msgstr "Yerleşik oynatıcı"
 
-#: src/components/version-settings.tsx src/pages/settings/interface.tsx
-#: src/pages/settings/subtitles.tsx src/pages/settings/theme.tsx
+#: src/components/version-settings.tsx
+#: src/pages/settings/interface.tsx
+#: src/pages/settings/subtitles.tsx
+#: src/pages/settings/theme.tsx
 msgid "Background"
 msgstr "Arkaplan"
 
@@ -673,7 +723,8 @@ msgstr "Sondan önce"
 msgid "Below zero plays the sound earlier, as for wireless headphones that lag behind the picture."
 msgstr "Sıfırın altı, görüntüye göre geciken kablosuz kulaklıklar için sesi daha erken çalar."
 
-#: src/components/player/options.tsx src/lib/input/actions.ts
+#: src/components/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Bigger subtitles"
 msgstr "Daha büyük altyazılar"
 
@@ -745,7 +796,8 @@ msgstr "Yerleşik oynatıcı"
 msgid "Buttons, progress bars and highlights."
 msgstr "Düğmeler, ilerleme çubukları ve vurgular."
 
-#: src/lib/hosts/shell/player.ts src/pages/settings/index.tsx
+#: src/lib/hosts/shell/player.ts
+#: src/pages/settings/index.tsx
 msgid "Cache"
 msgstr "Önbellek"
 
@@ -753,7 +805,9 @@ msgstr "Önbellek"
 msgid "Cache size"
 msgstr "Önbellek boyutu"
 
-#: src/components/layout.tsx src/pages/calendar.tsx src/pages/home.tsx
+#: src/components/layout.tsx
+#: src/pages/calendar.tsx
+#: src/pages/home.tsx
 #: src/pages/settings/apps.tsx
 msgid "Calendar"
 msgstr "Takvim"
@@ -762,7 +816,9 @@ msgstr "Takvim"
 msgid "Can’t reach"
 msgstr "Ulaşılamıyor"
 
-#: src/components/layout.tsx src/lib/client.ts src/pages/sign-in.tsx
+#: src/components/layout.tsx
+#: src/lib/client.ts
+#: src/pages/sign-in.tsx
 msgid "Can't reach the server"
 msgstr "Sunucuya ulaşılamıyor"
 
@@ -770,8 +826,12 @@ msgstr "Sunucuya ulaşılamıyor"
 msgid "Can’t reach the server"
 msgstr "Sunucuya ulaşılamıyor"
 
-#: src/components/playlists.tsx src/components/send-report.tsx
-#: src/components/version-settings.tsx src/lib/i18n.ts src/pages/downloads.tsx
+#: src/components/playlists.tsx
+#: src/components/send-report.tsx
+#: src/components/version-settings.tsx
+#: src/lib/i18n.ts
+#: src/pages/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Cancel"
 msgstr "İptal et"
 
@@ -792,6 +852,7 @@ msgid "Catalog"
 msgstr "Katalog"
 
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Change"
 msgstr "Değiştir"
 
@@ -799,11 +860,16 @@ msgstr "Değiştir"
 msgid "Change folder"
 msgstr "Klasörü değiştir"
 
+#: src/pages/settings/profile.tsx
+msgid "Change password"
+msgstr ""
+
 #: src/components/party/reaction-setting.tsx
 msgid "Change reactions"
 msgstr "Tepkileri değiştir"
 
-#: src/components/no-catalogs.tsx src/pages/settings/account.tsx
+#: src/components/no-catalogs.tsx
+#: src/pages/settings/account.tsx
 #: src/pages/sign-in.tsx
 msgid "Change server"
 msgstr "Sunucuyu değiştir"
@@ -828,11 +894,13 @@ msgstr "Kanal"
 msgid "Channels"
 msgstr "Kanallar"
 
-#: src/components/player/chapters.tsx src/components/player/keys.ts
+#: src/components/player/chapters.tsx
+#: src/components/player/keys.ts
 msgid "Chapter {number}"
 msgstr "Bölüm {number}"
 
-#: src/components/player/chapters.tsx src/components/player/options.tsx
+#: src/components/player/chapters.tsx
+#: src/components/player/options.tsx
 msgid "Chapters"
 msgstr "Bölümler"
 
@@ -844,7 +912,8 @@ msgstr "Sohbet"
 msgid "Check now"
 msgstr "Şimdi kontrol et"
 
-#: src/lib/hosts/shell/index.ts src/pages/settings/apps.tsx
+#: src/lib/hosts/shell/index.ts
+#: src/pages/settings/apps.tsx
 msgid "Checking…"
 msgstr "Kontrol ediliyor…"
 
@@ -880,7 +949,8 @@ msgstr "Puanı kaldır"
 msgid "Clear selection"
 msgstr "Seçimi temizle"
 
-#: src/components/crash-report.tsx src/components/player/mini-player.tsx
+#: src/components/crash-report.tsx
+#: src/components/player/mini-player.tsx
 #: src/components/window-controls.tsx
 msgid "Close"
 msgstr "Kapat"
@@ -893,7 +963,9 @@ msgstr "Kod kopyalandı"
 msgid "Code or invite link"
 msgstr "Kod veya davet bağlantısı"
 
-#: src/lib/format.ts src/pages/discover.tsx src/pages/item.tsx
+#: src/lib/format.ts
+#: src/pages/discover.tsx
+#: src/pages/item.tsx
 msgid "Collections"
 msgstr "Koleksiyonlar"
 
@@ -909,7 +981,8 @@ msgstr "Renkler ve özel CSS"
 msgid "Combine movie and show results"
 msgstr "Film ve dizi sonuçlarını birleştir"
 
-#: src/lib/playback/controller.ts src/pages/settings/audio.tsx
+#: src/lib/playback/controller.ts
+#: src/pages/settings/audio.tsx
 msgid "Commentary"
 msgstr "Yorum parçası"
 
@@ -933,7 +1006,8 @@ msgstr "Onlara gönderilen kopyaya yapılandırma kimlikleri de eklenmez."
 msgid "Configuration password"
 msgstr "Yapılandırma parolası"
 
-#: src/components/no-catalogs.tsx src/components/no-details.tsx
+#: src/components/no-catalogs.tsx
+#: src/components/no-details.tsx
 msgid "Configure"
 msgstr "Yapılandır"
 
@@ -953,11 +1027,13 @@ msgstr "Discord bağlantısı kuruldu."
 msgid "Connection lost"
 msgstr "Bağlantı kesildi"
 
-#: src/app.tsx src/pages/sign-in.tsx
+#: src/app.tsx
+#: src/pages/sign-in.tsx
 msgid "Continue"
 msgstr "Devam et"
 
-#: src/components/player/next-episode.tsx src/pages/home.tsx
+#: src/components/player/next-episode.tsx
+#: src/pages/home.tsx
 #: src/pages/settings/interface.tsx
 msgid "Continue watching"
 msgstr "İzlemeye devam et"
@@ -970,7 +1046,9 @@ msgstr "Kontroller"
 msgid "Copied as JSON"
 msgstr "JSON olarak kopyalandı"
 
-#: src/components/crash-report.tsx src/pages/settings/apps.tsx
+#: src/components/crash-report.tsx
+#: src/pages/settings/apps.tsx
+#: src/pages/settings/profile.tsx
 msgid "Copy"
 msgstr "Kopyala"
 
@@ -982,7 +1060,8 @@ msgstr "JSON olarak kopyala"
 msgid "Copy code"
 msgstr "Kodu kopyala"
 
-#: src/components/party/party-sheet.tsx src/pages/player.tsx
+#: src/components/party/party-sheet.tsx
+#: src/pages/player.tsx
 msgid "Copy link"
 msgstr "Bağlantıyı kopyala"
 
@@ -994,7 +1073,8 @@ msgstr "Yayın bağlantısını kopyala"
 msgid "Corner button"
 msgstr "Köşe düğmesi"
 
-#: src/components/playlists.tsx src/pages/player.tsx
+#: src/components/playlists.tsx
+#: src/pages/player.tsx
 msgid "Could not add to {name}"
 msgstr "{name} listesine eklenemedi"
 
@@ -1007,6 +1087,7 @@ msgid "Could not connect: {message}"
 msgstr "Bağlanılamadı: {message}"
 
 #: src/components/crash-report.tsx
+#: src/pages/settings/profile.tsx
 msgid "Could not copy it"
 msgstr "Kopyalanamadı"
 
@@ -1018,11 +1099,13 @@ msgstr "Kod kopyalanamadı"
 msgid "Could not copy the invite link"
 msgstr "Davet bağlantısı kopyalanamadı"
 
-#: src/components/version-picker.tsx src/pages/player.tsx
+#: src/components/version-picker.tsx
+#: src/pages/player.tsx
 msgid "Could not copy the link"
 msgstr "Bağlantı kopyalanamadı"
 
-#: src/components/version-settings.tsx src/pages/settings/apps.tsx
+#: src/components/version-settings.tsx
+#: src/pages/settings/apps.tsx
 msgid "Could not copy them"
 msgstr "Kopyalanamadılar"
 
@@ -1042,7 +1125,8 @@ msgstr "Sürümler bulunamadı: {message}"
 msgid "Could not join"
 msgstr "Katılınamadı"
 
-#: src/components/download-button.tsx src/components/item-menu.tsx
+#: src/components/download-button.tsx
+#: src/components/item-menu.tsx
 msgid "Could not list the episodes"
 msgstr "Bölümler listelenemedi"
 
@@ -1171,6 +1255,10 @@ msgstr "Kırp"
 msgid "Ctrl"
 msgstr "Ctrl"
 
+#: src/pages/settings/profile.tsx
+msgid "Current password"
+msgstr ""
+
 #: src/pages/settings/subtitles.tsx
 msgid "Cursive"
 msgstr "El yazısı"
@@ -1216,8 +1304,10 @@ msgid "Deep purple"
 msgstr "Koyu mor"
 
 #. No colour of its own
-#: src/components/version-settings.tsx src/lib/i18n.ts
-#: src/pages/settings/subtitles.tsx src/pages/settings/theme.tsx
+#: src/components/version-settings.tsx
+#: src/lib/i18n.ts
+#: src/pages/settings/subtitles.tsx
+#: src/pages/settings/theme.tsx
 msgid "Default"
 msgstr "Varsayılan"
 
@@ -1229,7 +1319,8 @@ msgstr "Gecikme"
 msgid "Delay: {delayLabel}"
 msgstr "Gecikme: {delayLabel}"
 
-#: src/components/playlists.tsx src/pages/downloads.tsx
+#: src/components/playlists.tsx
+#: src/pages/downloads.tsx
 msgid "Delete"
 msgstr "Sil"
 
@@ -1249,11 +1340,13 @@ msgstr "Oynatma listesini sil"
 msgid "Desert"
 msgstr "Çöl"
 
-#: src/pages/settings/about.tsx src/pages/settings/index.tsx
+#: src/pages/settings/about.tsx
+#: src/pages/settings/index.tsx
 msgid "Desktop app"
 msgstr "Masaüstü uygulaması"
 
-#: src/components/item-menu.tsx src/components/version-picker.tsx
+#: src/components/item-menu.tsx
+#: src/components/version-picker.tsx
 #: src/pages/item.tsx
 msgid "Details"
 msgstr "Detaylar"
@@ -1306,7 +1399,9 @@ msgstr "Bu bilgisayarda Discord çalışmıyor."
 msgid "Discord refused the status: {message}"
 msgstr "Discord durum bilgisini reddetti: {message}"
 
-#: src/components/layout.tsx src/pages/discover.tsx src/pages/settings/apps.tsx
+#: src/components/layout.tsx
+#: src/pages/discover.tsx
+#: src/pages/settings/apps.tsx
 msgid "Discover"
 msgstr "Keşfet"
 
@@ -1347,8 +1442,10 @@ msgid "Donate to Me"
 msgstr "Bana bağış yap"
 
 #: src/components/party/reaction-setting.tsx
-#: src/components/player/subtitle-sync.tsx src/components/playlists.tsx
-#: src/components/send-report.tsx src/components/version-settings.tsx
+#: src/components/player/subtitle-sync.tsx
+#: src/components/playlists.tsx
+#: src/components/send-report.tsx
+#: src/components/version-settings.tsx
 msgid "Done"
 msgstr "Bitti"
 
@@ -1356,8 +1453,10 @@ msgstr "Bitti"
 msgid "Down"
 msgstr "Aşağı"
 
-#: src/components/download-button.tsx src/components/item-menu.tsx
-#: src/components/version-picker.tsx src/pages/item.tsx
+#: src/components/download-button.tsx
+#: src/components/item-menu.tsx
+#: src/components/version-picker.tsx
+#: src/pages/item.tsx
 #: src/pages/settings/about.tsx
 msgid "Download"
 msgstr "İndir"
@@ -1379,11 +1478,13 @@ msgstr "İndirme duraklatıldı"
 msgid "Download the show"
 msgstr "Diziyi indir"
 
-#: src/components/download-button.tsx src/pages/downloads.tsx
+#: src/components/download-button.tsx
+#: src/pages/downloads.tsx
 msgid "Downloaded"
 msgstr "İndirildi"
 
-#: src/components/download-button.tsx src/pages/downloads.tsx
+#: src/components/download-button.tsx
+#: src/pages/downloads.tsx
 msgid "Downloading"
 msgstr "İndiriliyor"
 
@@ -1395,7 +1496,8 @@ msgstr "{version} sürümü indiriliyor…"
 msgid "Downloading, {percent}%"
 msgstr "İndiriliyor, %{percent}"
 
-#: src/components/layout.tsx src/pages/downloads.tsx
+#: src/components/layout.tsx
+#: src/pages/downloads.tsx
 #: src/pages/settings/index.tsx
 msgid "Downloads"
 msgstr "İndirilenler"
@@ -1434,7 +1536,12 @@ msgstr "{e}B"
 msgid "Each filter shows as a pill above the version list. Its search is words that must all appear, or a regular expression between slashes, such as /2160p|4k/. Case never matters."
 msgstr "Her filtre, sürüm listesinin üzerinde bir düğme olarak görünür. Arama, tamamının bulunması gereken sözcüklerden veya /2160p|4k/ gibi eğik çizgiler arasındaki bir düzenli ifadeden oluşur. Büyük/küçük harf ayrımı yapılmaz."
 
+#: src/pages/settings/profile.tsx
+msgid "Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use."
+msgstr ""
+
 #: src/components/version-settings.tsx
+#: src/pages/settings/profile.tsx
 msgid "Edit"
 msgstr "Düzenle"
 
@@ -1470,7 +1577,8 @@ msgstr "Bu kodu oturum açmış bir uygulamanın Hızlı bağlantı bölümüne 
 msgid "Enter your password."
 msgstr "Parolanı gir."
 
-#: src/components/episodes.tsx src/components/player/pause-screen.tsx
+#: src/components/episodes.tsx
+#: src/components/player/pause-screen.tsx
 msgid "Episode {number}"
 msgstr "{number}. bölüm"
 
@@ -1482,8 +1590,10 @@ msgstr "Bölüm ayrıntıları"
 msgid "Episode layout"
 msgstr "Bölüm görünümü"
 
-#: src/components/player/episodes.tsx src/components/player/options.tsx
-#: src/pages/item.tsx src/pages/settings/interface.tsx
+#: src/components/player/episodes.tsx
+#: src/components/player/options.tsx
+#: src/pages/item.tsx
+#: src/pages/settings/interface.tsx
 msgid "Episodes"
 msgstr "Bölümler"
 
@@ -1523,7 +1633,8 @@ msgstr "Her şey"
 msgid "Everything unwatched"
 msgstr "İzlenmemiş tüm içerikler"
 
-#: src/components/player/options.tsx src/components/window-controls.tsx
+#: src/components/player/options.tsx
+#: src/components/window-controls.tsx
 msgid "Exit full screen"
 msgstr "Tam ekrandan çık"
 
@@ -1543,7 +1654,8 @@ msgstr "Solma"
 msgid "Failed"
 msgstr "Başarısız"
 
-#: src/components/remote-sheet.tsx src/lib/input/keys.ts
+#: src/components/remote-sheet.tsx
+#: src/lib/input/keys.ts
 msgid "Fast forward"
 msgstr "İleri sar"
 
@@ -1556,7 +1668,8 @@ msgstr "Hızlandır"
 msgid "Favourite"
 msgstr "Favoriler"
 
-#: src/components/layout.tsx src/pages/favourites.tsx
+#: src/components/layout.tsx
+#: src/pages/favourites.tsx
 #: src/pages/settings/apps.tsx
 msgid "Favourites"
 msgstr "Favoriler"
@@ -1593,7 +1706,8 @@ msgstr "Bir başlık açıldığında sürümleri bul"
 msgid "Finding a version to download"
 msgstr "İndirilecek sürüm aranıyor"
 
-#: src/components/version-picker.tsx src/pages/downloads.tsx
+#: src/components/version-picker.tsx
+#: src/pages/downloads.tsx
 #: src/pages/player.tsx
 msgid "Finding a version…"
 msgstr "Sürüm aranıyor…"
@@ -1646,6 +1760,10 @@ msgstr "Yazı tipi"
 msgid "For a receiver on an optical or ARC link, which gets other surround formats as stereo otherwise."
 msgstr "Optik veya ARC bağlantısı kullanan, diğer çevresel ses biçimlerini stereo olarak alan alıcılar için."
 
+#: src/pages/settings/profile.tsx
+msgid "For a screen that shows them washed out."
+msgstr ""
+
 #: src/lib/playback/controller.ts
 msgid "Forced"
 msgstr ""
@@ -1678,7 +1796,8 @@ msgstr "Buzlu cam"
 msgid "Full"
 msgstr "Tam"
 
-#: src/components/player/options.tsx src/lib/input/actions.ts
+#: src/components/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Full screen"
 msgstr "Tam ekran"
 
@@ -1766,12 +1885,17 @@ msgstr "Bölümleri gizle"
 msgid "Hide QR code"
 msgstr "QR kodunu gizle"
 
+#: src/pages/settings/profile.tsx
+msgid "Highest resolution"
+msgstr ""
+
 #. Holding the next key down, as in Hold + Enter
 #: src/lib/input/keys.ts
 msgid "Hold"
 msgstr "Basılı tut"
 
-#: src/components/layout.tsx src/lib/input/actions.ts
+#: src/components/layout.tsx
+#: src/lib/input/actions.ts
 #: src/pages/settings/apps.tsx
 msgid "Home"
 msgstr "Ana sayfa"
@@ -1852,11 +1976,13 @@ msgstr "Keşfette"
 msgid "In Favourites"
 msgstr "Favorilerde"
 
-#: src/lib/playback/sound.ts src/lib/subtitles/delay.ts
+#: src/lib/playback/sound.ts
+#: src/lib/subtitles/delay.ts
 msgid "In sync"
 msgstr "Eşitlenmiş"
 
-#: src/components/download-button.tsx src/pages/downloads.tsx
+#: src/components/download-button.tsx
+#: src/pages/downloads.tsx
 msgid "In the app's downloads"
 msgstr "Uygulamanın indirmelerinde"
 
@@ -1876,6 +2002,10 @@ msgstr "Eklentiler → Mağaza bölümünden katalog eklentileri yükle. Listede
 #: src/components/no-catalogs.tsx
 msgid "Install catalog addons from Addons → Marketplace. For one that isn't listed, use the Custom addon there."
 msgstr "Eklentiler → Mağaza bölümünden katalog eklentileri yükle. Listede olmayanlar için oradaki Özel eklenti seçeneğini kullan."
+
+#: src/pages/settings/profile.tsx
+msgid "Install in Stremio"
+msgstr ""
 
 #: src/pages/settings/index.tsx
 msgid "Interface"
@@ -1912,6 +2042,10 @@ msgstr "Geliştiriciye ulaşmadı, yalnızca bu sunucuya gönderildi: {forwardEr
 #: src/pages/settings/theme.tsx
 msgid "It will be undone unless you keep it."
 msgstr "Saklamazsan geri alınacak."
+
+#: src/pages/settings/profile.tsx
+msgid "It won't be shown again. Copy it now, or open it in Stremio on this device."
+msgstr ""
 
 #: src/pages/settings/about.tsx
 msgid "Its Metal and AVFoundation video outputs."
@@ -1977,7 +2111,8 @@ msgstr "Bu cihazda saklanır."
 msgid "Kept on this device. Select + and press a key to add it; a remote, a gamepad or the scroll wheel works too."
 msgstr "Bu cihazda saklanır. Eklemek için + simgesini seçip bir tuşa bas; kumanda, oyun kumandası veya fare tekerleği de kullanılabilir."
 
-#: src/components/input-setup.tsx src/lib/input/actions.ts
+#: src/components/input-setup.tsx
+#: src/lib/input/actions.ts
 msgid "Keyboard shortcuts"
 msgstr "Klavye kısayolları"
 
@@ -1989,8 +2124,10 @@ msgstr "Tuşlar, kumandalar ve oyun kolları"
 msgid "Label"
 msgstr "Etiket"
 
-#: src/pages/settings/audio.tsx src/pages/settings/index.tsx
-#: src/pages/settings/interface.tsx src/pages/settings/subtitles.tsx
+#: src/pages/settings/audio.tsx
+#: src/pages/settings/index.tsx
+#: src/pages/settings/interface.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "Language"
 msgstr "Dil"
 
@@ -2006,9 +2143,22 @@ msgstr "Dil ve çıkış"
 msgid "Language, home, grids and episodes"
 msgstr "Dil, ana sayfa, ızgaralar ve bölümler"
 
-#: src/lib/subtitles/style.ts src/pages/settings/interface.tsx
+#: src/pages/settings/profile.tsx
+msgid "Languages"
+msgstr ""
+
+#: src/lib/subtitles/style.ts
+#: src/pages/settings/interface.tsx
 msgid "Large"
 msgstr "Büyük"
+
+#: src/pages/settings/profile.tsx
+msgid "Largest episode"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Largest movie"
+msgstr ""
 
 #: src/components/update-prompt.tsx
 msgid "Later"
@@ -2066,6 +2216,14 @@ msgstr "Lisanslar"
 msgid "Link a pack someone shares, in this app's format or the one Fusion and Nuvio use. It stays up to date with its author's changes."
 msgstr "Bu uygulamanın ya da Fusion ve Nuvio uygulamalarının biçiminde paylaşılan bir paket bağlantısı ekle. Paket, hazırlayan kişinin değişiklikleriyle güncel kalır."
 
+#: src/pages/settings/profile.tsx
+msgid "Link copied"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Link revoked"
+msgstr ""
+
 #: src/pages/settings/interface.tsx
 msgid "Liquid glass"
 msgstr "Sıvı cam"
@@ -2081,6 +2239,10 @@ msgstr "Yalnızca dillerimi listele"
 #: src/pages/search.tsx
 msgid "Listening…"
 msgstr "Dinleniyor…"
+
+#: src/pages/settings/profile.tsx
+msgid "Living room TV"
+msgstr ""
 
 #: src/components/party/party-sheet.tsx
 msgid "Loading"
@@ -2110,13 +2272,26 @@ msgstr "Oynat ve sürüm listesi beklemesin diye bir başlığın sayfası açı
 msgid "Lost the connection to {relay}. Reconnecting… Your player carries on, and gets back in step once it's back."
 msgstr "{relay} bağlantısı kesildi. Yeniden bağlanılıyor… Oynatıcı devam eder; bağlantı kurulduğunda yeniden eşitlenir."
 
-#: src/components/player/options.tsx src/lib/input/actions.ts
+#: src/components/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Lower subtitles"
 msgstr "Altyazıları aşağı taşı"
 
 #: src/pages/settings/apps.tsx
 msgid "macOS draws the video, using less power, and shows Dolby Vision itself. Shaders and mpv's picture options do not apply."
 msgstr "Videoyu macOS çizerek daha az güç tüketir ve Dolby Vision görüntüsünü kendisi gösterir. Shader'lar ve mpv görüntü ayarları uygulanmaz."
+
+#: src/pages/settings/profile.tsx
+msgid "Made {made}, never used"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Made {made}, used {used}"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Made once, shown once."
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "Magenta"
@@ -2135,11 +2310,14 @@ msgstr "İzlendi olarak işaretle"
 msgid "Mark unaired episodes"
 msgstr "Özet bölümleri atla"
 
-#: src/components/item-menu.tsx src/pages/history.tsx src/pages/item.tsx
+#: src/components/item-menu.tsx
+#: src/pages/history.tsx
+#: src/pages/item.tsx
 msgid "Mark unwatched"
 msgstr "İzlenmedi olarak işaretle"
 
-#: src/components/item-menu.tsx src/pages/item.tsx
+#: src/components/item-menu.tsx
+#: src/pages/item.tsx
 msgid "Mark watched"
 msgstr "İzlendi olarak işaretle"
 
@@ -2204,9 +2382,12 @@ msgstr "Eksik"
 msgid "Monospace"
 msgstr "Sabit genişlikli"
 
-#: src/components/episodes.tsx src/components/overview.tsx
-#: src/components/playlists.tsx src/components/version-picker.tsx
-#: src/pages/downloads.tsx src/pages/item.tsx
+#: src/components/episodes.tsx
+#: src/components/overview.tsx
+#: src/components/playlists.tsx
+#: src/components/version-picker.tsx
+#: src/pages/downloads.tsx
+#: src/pages/item.tsx
 msgid "More"
 msgstr "Daha fazla"
 
@@ -2238,11 +2419,13 @@ msgstr "{name} öğesini aşağı taşı"
 msgid "Move {name} up"
 msgstr "{name} öğesini yukarı taşı"
 
-#: src/components/playlists.tsx src/components/version-settings.tsx
+#: src/components/playlists.tsx
+#: src/components/version-settings.tsx
 msgid "Move down"
 msgstr "Aşağı taşı"
 
-#: src/components/playlists.tsx src/components/version-settings.tsx
+#: src/components/playlists.tsx
+#: src/components/version-settings.tsx
 msgid "Move up"
 msgstr "Yukarı taşı"
 
@@ -2250,8 +2433,11 @@ msgstr "Yukarı taşı"
 msgid "Moves between what's on screen, and to Search and Home. A gamepad's d-pad and left stick move too."
 msgstr "Ekrandaki öğeler, Arama ve Ana sayfa arasında gezinir. Oyun kumandasının yön tuşları ve sol çubuğu da kullanılabilir."
 
-#: src/components/kind-tabs.tsx src/components/random-pick.tsx
-#: src/lib/format.ts src/pages/discover.tsx src/pages/favourites.tsx
+#: src/components/kind-tabs.tsx
+#: src/components/random-pick.tsx
+#: src/lib/format.ts
+#: src/pages/discover.tsx
+#: src/pages/favourites.tsx
 #: src/pages/search.tsx
 msgid "Movies"
 msgstr "Filmler"
@@ -2280,7 +2466,8 @@ msgstr "Bu pencerede, uygulamanın kontrolleri ve oynatma ayarlarıyla çalışa
 msgid "mpv.conf, input.conf, scripts and shaders in this folder apply to the built-in mpv."
 msgstr "Bu klasördeki mpv.conf, input.conf, betikler ve shader'lar yerleşik mpv'ye uygulanır."
 
-#: src/components/player/volume.tsx src/lib/input/actions.ts
+#: src/components/player/volume.tsx
+#: src/lib/input/actions.ts
 msgid "Mute"
 msgstr "Sesi kapat"
 
@@ -2288,9 +2475,19 @@ msgstr "Sesi kapat"
 msgid "Mute key"
 msgstr "Sessize alma tuşu"
 
-#: src/components/playlists.tsx src/components/version-settings.tsx
+#: src/components/playlists.tsx
+#: src/components/version-settings.tsx
+#: src/pages/settings/profile.tsx
 msgid "Name"
 msgstr "İsim"
+
+#: src/pages/settings/profile.tsx
+msgid "Name and picture"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Name it for the device it goes on."
+msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "Navigation"
@@ -2312,11 +2509,28 @@ msgstr "Asla"
 msgid "New code"
 msgstr "Yeni kod"
 
+#: src/pages/settings/profile.tsx
+msgid "New link"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "New password"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "New PIN"
+msgstr ""
+
 #: src/components/playlists.tsx
 msgid "New playlist"
 msgstr "Yeni oynatma listesi"
 
-#: src/components/player/controls.tsx src/components/remote-sheet.tsx
+#: src/pages/settings/profile.tsx
+msgid "New Stremio link"
+msgstr ""
+
+#: src/components/player/controls.tsx
+#: src/components/remote-sheet.tsx
 #: src/lib/i18n.ts
 msgid "Next"
 msgstr "Sonraki"
@@ -2329,8 +2543,10 @@ msgstr "Sonraki ses parçası"
 msgid "Next chapter"
 msgstr "Sonraki sahne"
 
-#: src/components/player/controls.tsx src/components/player/next-episode.tsx
-#: src/lib/input/actions.ts src/pages/settings/playback.tsx
+#: src/components/player/controls.tsx
+#: src/components/player/next-episode.tsx
+#: src/lib/input/actions.ts
+#: src/pages/settings/playback.tsx
 msgid "Next episode"
 msgstr "Sonraki bölüm"
 
@@ -2354,15 +2570,18 @@ msgstr "Sonraki altyazı"
 msgid "Next track"
 msgstr "Sonraki parça"
 
-#: src/components/player/controls.tsx src/pages/trailer.tsx
+#: src/components/player/controls.tsx
+#: src/pages/trailer.tsx
 msgid "Next trailer"
 msgstr "Sonraki fragman"
 
-#: src/pages/home.tsx src/pages/settings/interface.tsx
+#: src/pages/home.tsx
+#: src/pages/settings/interface.tsx
 msgid "Next up"
 msgstr "Sıradaki"
 
-#: src/components/player/options.tsx src/pages/settings/audio.tsx
+#: src/components/player/options.tsx
+#: src/pages/settings/audio.tsx
 msgid "Night mode"
 msgstr "Gece modu"
 
@@ -2392,6 +2611,7 @@ msgid "No episodes to download there"
 msgstr "Burada indirilecek bölüm yok"
 
 #: src/pages/settings/cache.tsx
+#: src/pages/settings/profile.tsx
 msgid "No limit"
 msgstr "Sınırsız"
 
@@ -2443,7 +2663,8 @@ msgstr "Eşleşen sürüm yok."
 msgid "No versions were found."
 msgstr "Sürüm bulunamadı."
 
-#: src/pages/settings/audio.tsx src/pages/settings/subtitles.tsx
+#: src/pages/settings/audio.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "None"
 msgstr "Yok"
 
@@ -2452,12 +2673,14 @@ msgstr "Yok"
 msgid "None of your addons has details for {id}. Add a metadata addon to your configuration, then refresh."
 msgstr "Katalogları yapılandırmanıza ekleyin, sonra yenileyin."
 
-#: src/components/player/keys.ts src/lib/subtitles/style.ts
+#: src/components/player/keys.ts
+#: src/lib/subtitles/style.ts
 #: src/pages/settings/subtitles.tsx
 msgid "Normal"
 msgstr "Normal"
 
-#: src/components/player/keys.ts src/lib/input/actions.ts
+#: src/components/player/keys.ts
+#: src/lib/input/actions.ts
 msgid "Normal speed"
 msgstr "Normal hız"
 
@@ -2510,7 +2733,8 @@ msgstr "Sonuç bulunamadı."
 msgid "Nothing here yet. Add titles from their menu, or from the suggestions below."
 msgstr "Burada henüz içerik yok. İçerikleri menülerinden veya aşağıdaki önerilerden ekle."
 
-#: src/pages/discover.tsx src/pages/item.tsx
+#: src/pages/discover.tsx
+#: src/pages/item.tsx
 msgid "Nothing here."
 msgstr "Burada içerik yok."
 
@@ -2518,12 +2742,15 @@ msgstr "Burada içerik yok."
 msgid "Nothing is playing there."
 msgstr "Orada hiçbir şey oynatılmıyor."
 
-#: src/components/random-pick.tsx src/pages/favourites.tsx
+#: src/components/random-pick.tsx
+#: src/pages/favourites.tsx
 msgid "Nothing marked as a favourite yet."
 msgstr "Henüz favorilere eklenen içerik yok."
 
-#: src/components/licenses.tsx src/components/version-settings.tsx
-#: src/pages/discover.tsx src/pages/settings/audio.tsx
+#: src/components/licenses.tsx
+#: src/components/version-settings.tsx
+#: src/pages/discover.tsx
+#: src/pages/settings/audio.tsx
 #: src/pages/settings/interface.tsx
 msgid "Nothing matches."
 msgstr "Eşleşme yok."
@@ -2568,8 +2795,10 @@ msgstr "Şimdi: {shown}"
 msgid "Ocean"
 msgstr "Okyanus"
 
-#: src/components/player/options.tsx src/components/remote-sheet.tsx
-#: src/lib/playback/sound.ts src/pages/settings/audio.tsx
+#: src/components/player/options.tsx
+#: src/components/remote-sheet.tsx
+#: src/lib/playback/sound.ts
+#: src/pages/settings/audio.tsx
 #: src/pages/settings/subtitles.tsx
 msgid "Off"
 msgstr "Kapalı"
@@ -2601,6 +2830,10 @@ msgstr "Ana sayfada"
 #: src/components/party/party-sheet.tsx
 msgid "On this server"
 msgstr "Bu sunucuda"
+
+#: src/pages/settings/profile.tsx
+msgid "On top of what the owner set up, for you alone. Left alone, theirs stands."
+msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "On wide screens"
@@ -2650,15 +2883,23 @@ msgstr "Eyvah!"
 msgid "Opacity: {backgroundOpacity}%"
 msgstr "Opaklık: %{backgroundOpacity}"
 
-#: src/components/item-menu.tsx src/components/random-pick.tsx
-#: src/pages/history.tsx src/pages/settings/account.tsx
-#: src/pages/settings/apps.tsx src/pages/settings/downloads.tsx
+#: src/components/item-menu.tsx
+#: src/components/random-pick.tsx
+#: src/pages/history.tsx
+#: src/pages/settings/account.tsx
+#: src/pages/settings/apps.tsx
+#: src/pages/settings/downloads.tsx
 msgid "Open"
 msgstr "Aç"
 
-#: src/pages/downloads.tsx src/pages/settings/apps.tsx
+#: src/pages/downloads.tsx
+#: src/pages/settings/apps.tsx
 msgid "Open folder"
 msgstr "Klasörü aç"
+
+#: src/pages/settings/profile.tsx
+msgid "Open in Stremio"
+msgstr ""
 
 #: src/pages/trailer.tsx
 msgid "Open its page"
@@ -2818,9 +3059,14 @@ msgstr "Sayfalar yeniden kaydedilene kadar sunucudan yüklenir."
 msgid "Pass surround audio through"
 msgstr "Çevresel sesi doğrudan aktar"
 
+#: src/pages/settings/profile.tsx
 #: src/pages/sign-in.tsx
 msgid "Password"
 msgstr "Parola"
+
+#: src/pages/settings/profile.tsx
+msgid "Password saved"
+msgstr ""
 
 #: src/pages/settings/cache.tsx
 msgid "Past this, what was used longest ago goes first."
@@ -2838,9 +3084,12 @@ msgstr "Bu listeye eklemek için hızlı filtreleri JSON olarak veya filtrelerin
 msgid "Pattern"
 msgstr "Desen"
 
-#: src/components/player/controls.tsx src/components/player/mini-player.tsx
-#: src/components/remote-sheet.tsx src/lib/input/actions.ts
-#: src/lib/input/keys.ts src/pages/downloads.tsx
+#: src/components/player/controls.tsx
+#: src/components/player/mini-player.tsx
+#: src/components/remote-sheet.tsx
+#: src/lib/input/actions.ts
+#: src/lib/input/keys.ts
+#: src/pages/downloads.tsx
 msgid "Pause"
 msgstr "Duraklat"
 
@@ -2908,6 +3157,10 @@ msgstr "{heardAt} konumunda duyduğun repliği seç."
 msgid "Pick the version to download."
 msgstr "İndirilecek sürümü seç."
 
+#: src/pages/settings/profile.tsx
+msgid "Picture"
+msgstr ""
+
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr "Küçük pencere (PiP)"
@@ -2928,6 +3181,7 @@ msgstr "Görüntü: {label}"
 msgid "Pills above the version list that each apply a search you save, such as one for 4K versions."
 msgstr "Sürüm listesinin üzerinde, kaydettiğin aramaları uygulayan düğmeler. Örneğin 4K sürümleri bulmak için bir filtre ekleyebilirsin."
 
+#: src/pages/settings/profile.tsx
 #: src/pages/sign-in.tsx
 msgid "PIN"
 msgstr "PIN"
@@ -2936,15 +3190,29 @@ msgstr "PIN"
 msgid "PIN or password"
 msgstr "PIN veya parola"
 
+#: src/pages/settings/profile.tsx
+msgid "PIN removed"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "PIN saved"
+msgstr ""
+
 #: src/pages/settings/theme.tsx
 msgid "Pink"
 msgstr "Pembe"
 
-#: src/components/hero.tsx src/components/item-menu.tsx
-#: src/components/no-details.tsx src/components/player/controls.tsx
-#: src/components/player/mini-player.tsx src/components/playlists.tsx
-#: src/components/random-pick.tsx src/components/remote-sheet.tsx
-#: src/lib/input/actions.ts src/lib/input/keys.ts src/pages/item.tsx
+#: src/components/hero.tsx
+#: src/components/item-menu.tsx
+#: src/components/no-details.tsx
+#: src/components/player/controls.tsx
+#: src/components/player/mini-player.tsx
+#: src/components/playlists.tsx
+#: src/components/random-pick.tsx
+#: src/components/remote-sheet.tsx
+#: src/lib/input/actions.ts
+#: src/lib/input/keys.ts
+#: src/pages/item.tsx
 msgid "Play"
 msgstr "Oynat"
 
@@ -2986,7 +3254,8 @@ msgstr "Şimdi oynat"
 msgid "Play on"
 msgstr "Şimdi oynat"
 
-#: src/components/item-menu.tsx src/components/remote-sheet.tsx
+#: src/components/item-menu.tsx
+#: src/components/remote-sheet.tsx
 #: src/pages/item.tsx
 msgid "Play on another device"
 msgstr "Başka cihazda oynat"
@@ -3043,7 +3312,8 @@ msgstr "mpv ile oynat"
 msgid "Play/Pause"
 msgstr "Oynat/Duraklat"
 
-#: src/lib/hosts/shell/player.ts src/pages/settings/index.tsx
+#: src/lib/hosts/shell/player.ts
+#: src/pages/settings/index.tsx
 msgid "Playback"
 msgstr "Oynatma"
 
@@ -3060,7 +3330,8 @@ msgstr "Oynatılamadı: {failure}"
 msgid "Played here"
 msgstr "Burada oynatıldı"
 
-#: src/lib/input/actions.ts src/pages/settings/about.tsx
+#: src/lib/input/actions.ts
+#: src/pages/settings/about.tsx
 #: src/pages/settings/playback.tsx
 msgid "Player"
 msgstr "Oynatıcı"
@@ -3069,9 +3340,12 @@ msgstr "Oynatıcı"
 msgid "Player link"
 msgstr "Oynatıcı bağlantısı"
 
-#: src/components/party/party-sheet.tsx src/components/player/chapters.tsx
-#: src/components/player/episodes.tsx src/components/playlists.tsx
-#: src/components/sessions.tsx src/components/version-picker.tsx
+#: src/components/party/party-sheet.tsx
+#: src/components/player/chapters.tsx
+#: src/components/player/episodes.tsx
+#: src/components/playlists.tsx
+#: src/components/sessions.tsx
+#: src/components/version-picker.tsx
 msgid "Playing"
 msgstr "Oynatılıyor"
 
@@ -3091,12 +3365,14 @@ msgstr "{name} üzerinde oynatılıyor"
 msgid "Playing on and the next and previous buttons pass over episodes marked as filler. You can still play one yourself."
 msgstr "Otomatik devam ederken ve sonraki/önceki düğmeleri kullanıldığında dolgu olarak işaretlenen bölümler atlanır. İstersen bunları kendin oynatabilirsin."
 
-#: src/components/player/options.tsx src/components/playlists.tsx
+#: src/components/player/options.tsx
+#: src/components/playlists.tsx
 #: src/pages/item.tsx
 msgid "Playlist"
 msgstr "Oynatma listesi"
 
-#: src/components/layout.tsx src/components/playlists.tsx
+#: src/components/layout.tsx
+#: src/components/playlists.tsx
 msgid "Playlists"
 msgstr "Oynatma listeleri"
 
@@ -3144,7 +3420,8 @@ msgstr "Bir tuşa bas"
 msgid "Press Back again to leave"
 msgstr "Çıkmak için Geri tuşuna tekrar bas"
 
-#: src/components/version-settings.tsx src/pages/settings/subtitles.tsx
+#: src/components/version-settings.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "Preview"
 msgstr "Önizleme"
 
@@ -3157,7 +3434,8 @@ msgctxt "Episode segments showing the next episode"
 msgid "Previews"
 msgstr "Önizlemeler"
 
-#: src/components/player/controls.tsx src/components/remote-sheet.tsx
+#: src/components/player/controls.tsx
+#: src/components/remote-sheet.tsx
 #: src/lib/i18n.ts
 msgid "Previous"
 msgstr "Önceki"
@@ -3166,7 +3444,8 @@ msgstr "Önceki"
 msgid "Previous chapter"
 msgstr "Önceki sahne"
 
-#: src/components/player/controls.tsx src/lib/input/actions.ts
+#: src/components/player/controls.tsx
+#: src/lib/input/actions.ts
 msgid "Previous episode"
 msgstr "Önceki bölüm"
 
@@ -3178,13 +3457,18 @@ msgstr "Önceki ay"
 msgid "Previous track"
 msgstr "Önceki parça"
 
-#: src/components/player/controls.tsx src/pages/trailer.tsx
+#: src/components/player/controls.tsx
+#: src/pages/trailer.tsx
 msgid "Previous trailer"
 msgstr "Önceki fragman"
 
 #: src/components/people.tsx
 msgid "Producer"
 msgstr "Yapımcı"
+
+#: src/pages/settings/index.tsx
+msgid "Profile"
+msgstr ""
 
 #: src/components/shortcut-settings.tsx
 msgid "Puts every key back the way it came."
@@ -3202,7 +3486,8 @@ msgstr "Hızlı bağlantı"
 msgid "Quick Connect is unavailable: {message}"
 msgstr "Hızlı bağlantı kullanılamıyor: {message}"
 
-#: src/components/version-picker.tsx src/components/version-settings.tsx
+#: src/components/version-picker.tsx
+#: src/components/version-settings.tsx
 msgid "Quick filters"
 msgstr "Hızlı filtreler"
 
@@ -3214,7 +3499,8 @@ msgstr "Yan menü"
 msgid "Rainforest"
 msgstr "Yağmur ormanı"
 
-#: src/components/player/options.tsx src/lib/input/actions.ts
+#: src/components/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Raise subtitles"
 msgstr "Altyazıları yukarı taşı"
 
@@ -3227,7 +3513,8 @@ msgstr "Çevresel seste diyalogların bulunduğu merkez kanalın sesini yükselt
 msgid "Random"
 msgstr "Rastgele seç"
 
-#: src/components/item-menu.tsx src/components/random-pick.tsx
+#: src/components/item-menu.tsx
+#: src/components/random-pick.tsx
 #: src/pages/item.tsx
 msgid "Random episode"
 msgstr "Rastgele bölüm"
@@ -3240,7 +3527,8 @@ msgstr "Rastgele favori"
 msgid "Random pick"
 msgstr "Rastgele seç"
 
-#: src/components/rating.tsx src/pages/item.tsx
+#: src/components/rating.tsx
+#: src/pages/item.tsx
 msgid "Rate"
 msgstr "Puan ver"
 
@@ -3285,7 +3573,8 @@ msgstr "Yeniden bağlanılıyor…"
 msgid "Red"
 msgstr "Kırmızı"
 
-#: src/components/no-catalogs.tsx src/components/no-details.tsx
+#: src/components/no-catalogs.tsx
+#: src/components/no-details.tsx
 msgid "Refresh"
 msgstr "Yenile"
 
@@ -3305,12 +3594,15 @@ msgstr "Aracı sunucu adresi"
 msgid "Released"
 msgstr "Yayın tarihi"
 
-#: src/pages/settings/audio.tsx src/pages/settings/subtitles.tsx
+#: src/pages/settings/audio.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "Remember picks per show"
 msgstr "Dil seçimini diziye göre hatırla"
 
-#: src/components/version-settings.tsx src/pages/search.tsx
+#: src/components/version-settings.tsx
+#: src/pages/search.tsx
 #: src/pages/servers.tsx
+#: src/pages/settings/profile.tsx
 msgid "Remove"
 msgstr "Kaldır"
 
@@ -3318,7 +3610,8 @@ msgstr "Kaldır"
 msgid "Remove {key}"
 msgstr "{key} tuşunu kaldır"
 
-#: src/components/party/party-sheet.tsx src/pages/settings/common.tsx
+#: src/components/party/party-sheet.tsx
+#: src/pages/settings/common.tsx
 msgid "Remove {name}"
 msgstr "{name} öğesini kaldır"
 
@@ -3330,7 +3623,8 @@ msgstr "{targetName} bu cihazdan kaldırılsın mı? Yeniden ekleyip oturum açm
 msgid "Remove {term}"
 msgstr "{term} aramasını kaldır"
 
-#: src/components/item-menu.tsx src/pages/item.tsx
+#: src/components/item-menu.tsx
+#: src/pages/item.tsx
 msgid "Remove favourite"
 msgstr "Favorilerden kaldır"
 
@@ -3349,6 +3643,10 @@ msgstr "Oynatma listesinden kaldır"
 #: src/pages/downloads.tsx
 msgid "Remove from the list, keep the file"
 msgstr "Listeden kaldır, dosyayı tut"
+
+#: src/pages/settings/profile.tsx
+msgid "Remove PIN"
+msgstr ""
 
 #: src/pages/servers.tsx
 msgid "Remove server"
@@ -3378,7 +3676,8 @@ msgstr "Rapor kopyalandı"
 msgid "Request failed ({status})"
 msgstr "İstek başarısız ({status})"
 
-#: src/components/party/reaction-setting.tsx src/components/player/options.tsx
+#: src/components/party/reaction-setting.tsx
+#: src/components/player/options.tsx
 #: src/pages/history.tsx
 msgid "Reset"
 msgstr "Sıfırla"
@@ -3431,7 +3730,8 @@ msgstr "Önceki boyuta dön"
 msgid "Results of what you searched for."
 msgstr "Yaptığın aramaların sonuçları."
 
-#: src/components/item-menu.tsx src/components/random-pick.tsx
+#: src/components/item-menu.tsx
+#: src/components/random-pick.tsx
 #: src/pages/downloads.tsx
 msgid "Resume"
 msgstr "Devam et"
@@ -3444,7 +3744,8 @@ msgstr "{code} devam et"
 msgid "Resume all"
 msgstr "Tümünü devam ettir"
 
-#: src/components/version-picker.tsx src/lib/playback/use-player.ts
+#: src/components/version-picker.tsx
+#: src/lib/playback/use-player.ts
 #: src/pages/item.tsx
 msgid "Resume from {resumeAt}"
 msgstr "{resumeAt} konumundan devam et"
@@ -3457,7 +3758,12 @@ msgstr "Zamanlaması düzeltildi ve otomatik eşitlendi"
 msgid "Retry"
 msgstr "Yeniden dene"
 
-#: src/components/remote-sheet.tsx src/lib/input/keys.ts
+#: src/pages/settings/profile.tsx
+msgid "Revoke {label}"
+msgstr ""
+
+#: src/components/remote-sheet.tsx
+#: src/lib/input/keys.ts
 msgid "Rewind"
 msgstr "Geri sar"
 
@@ -3494,8 +3800,10 @@ msgstr "S{s}B{e}"
 msgid "Sans serif"
 msgstr "Serifsiz"
 
-#: src/components/playlists.tsx src/components/version-settings.tsx
+#: src/components/playlists.tsx
+#: src/components/version-settings.tsx
 #: src/pages/settings/apps.tsx
+#: src/pages/settings/profile.tsx
 msgid "Save"
 msgstr "Kaydet"
 
@@ -3571,9 +3879,13 @@ msgstr ""
 msgid "SDH, with sounds described"
 msgstr "SDH, sesleri betimleyen altyazı"
 
-#: src/components/layout.tsx src/components/licenses.tsx
-#: src/components/version-settings.tsx src/lib/input/actions.ts
-#: src/pages/discover.tsx src/pages/search.tsx src/pages/settings/apps.tsx
+#: src/components/layout.tsx
+#: src/components/licenses.tsx
+#: src/components/version-settings.tsx
+#: src/lib/input/actions.ts
+#: src/pages/discover.tsx
+#: src/pages/search.tsx
+#: src/pages/settings/apps.tsx
 msgid "Search"
 msgstr "Ara"
 
@@ -3613,7 +3925,9 @@ msgstr "Konuma atla"
 msgid "Seek bar previews"
 msgstr "İlerleme çubuğu önizlemeleri"
 
-#: src/lib/i18n.ts src/lib/input/actions.ts src/pages/history.tsx
+#: src/lib/i18n.ts
+#: src/lib/input/actions.ts
+#: src/pages/history.tsx
 msgid "Select"
 msgstr "Seç"
 
@@ -3621,7 +3935,8 @@ msgstr "Seç"
 msgid "Select all"
 msgstr "Tümünü seç"
 
-#: src/components/party/party-sheet.tsx src/components/send-report.tsx
+#: src/components/party/party-sheet.tsx
+#: src/components/send-report.tsx
 msgid "Send"
 msgstr "Gönder"
 
@@ -3629,7 +3944,8 @@ msgstr "Gönder"
 msgid "Send a report"
 msgstr "Rapor gönder"
 
-#: src/components/crash-report.tsx src/pages/settings/apps.tsx
+#: src/components/crash-report.tsx
+#: src/pages/settings/apps.tsx
 msgid "Send report"
 msgstr "Raporu gönder"
 
@@ -3661,7 +3977,8 @@ msgstr "Bu cihazın bilgilerini ve uygulamanın son kayıtlarını sunucuya gön
 msgid "Serif"
 msgstr "Serifli"
 
-#: src/pages/settings/about.tsx src/pages/settings/account.tsx
+#: src/pages/settings/about.tsx
+#: src/pages/settings/account.tsx
 msgid "Server"
 msgstr "Sunucu"
 
@@ -3673,11 +3990,20 @@ msgstr "Sunucu adresi"
 msgid "server error"
 msgstr "sunucu hatası"
 
+#: src/pages/settings/profile.tsx
+msgid "Set"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Set a password"
+msgstr ""
+
 #: src/components/player/options.tsx
 msgid "Set by hand"
 msgstr "Elle ayarlandı"
 
-#: src/components/layout.tsx src/pages/settings/index.tsx
+#: src/components/layout.tsx
+#: src/pages/settings/index.tsx
 msgid "Settings"
 msgstr "Ayarlar"
 
@@ -3764,8 +4090,11 @@ msgstr "Kayıtlı sayfalar gösteriliyor"
 msgid "Shown"
 msgstr "Görünür"
 
-#: src/components/kind-tabs.tsx src/components/random-pick.tsx
-#: src/lib/format.ts src/pages/discover.tsx src/pages/favourites.tsx
+#: src/components/kind-tabs.tsx
+#: src/components/random-pick.tsx
+#: src/lib/format.ts
+#: src/pages/discover.tsx
+#: src/pages/favourites.tsx
 #: src/pages/search.tsx
 msgid "Shows"
 msgstr "Diziler"
@@ -3814,7 +4143,8 @@ msgstr "Oturum aç"
 msgid "Sign in failed"
 msgstr "Oturum açılamadı"
 
-#: src/pages/servers.tsx src/pages/settings/account.tsx
+#: src/pages/servers.tsx
+#: src/pages/settings/account.tsx
 msgid "Sign out"
 msgstr "Oturumu kapat"
 
@@ -3834,11 +4164,17 @@ msgstr "Bu sunucudaki oturum kapatılsın mı?"
 msgid "Signed out"
 msgstr "Oturum kapatıldı"
 
-#: src/lib/playback/controller.ts src/pages/settings/subtitles.tsx
+#: src/lib/playback/controller.ts
+#: src/pages/settings/subtitles.tsx
 msgid "Signs and songs"
 msgstr "Yazılar ve şarkılar"
 
-#: src/components/player/options.tsx src/pages/settings/subtitles.tsx
+#: src/pages/settings/profile.tsx
+msgid "Signs you in on the web app and in Jellyfin apps."
+msgstr ""
+
+#: src/components/player/options.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "Size"
 msgstr "Boyut"
 
@@ -3873,6 +4209,10 @@ msgstr "Dolgu bölümleri atla"
 #: src/lib/input/actions.ts
 msgid "Skip forward"
 msgstr "İleri atla"
+
+#: src/pages/settings/profile.tsx
+msgid "Skip HDR and Dolby Vision"
+msgstr ""
 
 #: src/components/player/segments.ts
 msgid "Skip intro"
@@ -3934,7 +4274,8 @@ msgstr "{n}. alan: {emoji}"
 msgid "Slower"
 msgstr "Daha yavaş"
 
-#: src/lib/subtitles/style.ts src/pages/settings/interface.tsx
+#: src/lib/subtitles/style.ts
+#: src/pages/settings/interface.tsx
 msgid "Small"
 msgstr "Küçük"
 
@@ -3942,7 +4283,8 @@ msgstr "Küçük"
 msgid "Small labels on each version for what it has, from packs you link or badges you make."
 msgstr "Her sürümün özelliklerini gösteren küçük etiketler. Eklediğin paketlerden veya kendi oluşturduğun rozetlerden gelir."
 
-#: src/components/player/options.tsx src/lib/input/actions.ts
+#: src/components/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Smaller subtitles"
 msgstr "Altyazıları küçült"
 
@@ -3950,7 +4292,8 @@ msgstr "Altyazıları küçült"
 msgid "Solid"
 msgstr "Düz"
 
-#: src/lib/party/actions.ts src/lib/party/party.ts
+#: src/lib/party/actions.ts
+#: src/lib/party/party.ts
 msgid "Someone"
 msgstr "Birisi"
 
@@ -3962,7 +4305,8 @@ msgstr "bu cihazın okuyamadığı bir içerik"
 msgid "Something this device cannot read"
 msgstr "Bu cihazın okuyamadığı bir içerik"
 
-#: src/components/player/options.tsx src/pages/settings/audio.tsx
+#: src/components/player/options.tsx
+#: src/pages/settings/audio.tsx
 msgid "Sound"
 msgstr "Ses"
 
@@ -4014,11 +4358,13 @@ msgstr "Başlatılıyor…"
 msgid "Starts without subtitles."
 msgstr "Altyazısız başlatır."
 
-#: src/components/player/options.tsx src/lib/input/actions.ts
+#: src/components/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Statistics"
 msgstr "İstatistikler"
 
-#: src/pages/history.tsx src/pages/settings/apps.tsx
+#: src/pages/history.tsx
+#: src/pages/settings/apps.tsx
 msgid "Status"
 msgstr "Durum"
 
@@ -4026,7 +4372,8 @@ msgstr "Durum"
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/components/remote-sheet.tsx src/lib/input/actions.ts
+#: src/components/remote-sheet.tsx
+#: src/lib/input/actions.ts
 #: src/lib/input/keys.ts
 msgid "Stop"
 msgstr "Dur"
@@ -4040,9 +4387,22 @@ msgstr "Dinlemeyi durdur"
 msgid "Stops playing"
 msgstr "Şimdi oynatılıyor"
 
-#: src/components/version-picker.tsx src/pages/player.tsx
+#: src/components/version-picker.tsx
+#: src/pages/player.tsx
 msgid "Stream link copied"
 msgstr "Yayın bağlantısı kopyalandı"
+
+#: src/pages/settings/profile.tsx
+msgid "Streams"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Streams in these come first, in this order."
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Stremio"
+msgstr ""
 
 #: src/components/player/options.tsx
 msgid "Stretch"
@@ -4052,7 +4412,8 @@ msgstr "Uzat"
 msgid "Studios"
 msgstr "Stüdyolar"
 
-#: src/components/player/options.tsx src/pages/settings/interface.tsx
+#: src/components/player/options.tsx
+#: src/pages/settings/interface.tsx
 msgid "Style"
 msgstr "Stil"
 
@@ -4080,8 +4441,10 @@ msgstr "Altyazı boyutu: {label}"
 msgid "Subtitle types"
 msgstr "Altyazı türleri"
 
-#: src/components/player/options.tsx src/components/remote-sheet.tsx
-#: src/pages/settings/index.tsx src/pages/settings/subtitles.tsx
+#: src/components/player/options.tsx
+#: src/components/remote-sheet.tsx
+#: src/pages/settings/index.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "Subtitles"
 msgstr "Altyazılar"
 
@@ -4157,7 +4520,8 @@ msgstr "Geçiş yap"
 msgid "Switch server"
 msgstr "Sunucuyu değiştir"
 
-#: src/components/layout.tsx src/components/no-catalogs.tsx
+#: src/components/layout.tsx
+#: src/components/no-catalogs.tsx
 #: src/pages/settings/account.tsx
 msgid "Switch user"
 msgstr "Kullanıcı değiştir"
@@ -4170,7 +4534,8 @@ msgstr "TV'yi her videoya uygun yenileme hızına geçirerek akıcı hareket sa�
 msgid "Sync automatically"
 msgstr "Otomatik eşitle"
 
-#: src/components/player/subtitle-sync.tsx src/lib/input/actions.ts
+#: src/components/player/subtitle-sync.tsx
+#: src/lib/input/actions.ts
 msgid "Sync by ear"
 msgstr "Dinleyerek eşitle"
 
@@ -4226,7 +4591,8 @@ msgstr "Kilidi açmak için dokun"
 msgid "Tap when you hear a line and when its subtitle shows, in either order."
 msgstr "Bir repliği duyduğunda ve altyazısı göründüğünde dokun. Sıra önemli değil."
 
-#: src/components/version-settings.tsx src/pages/settings/subtitles.tsx
+#: src/components/version-settings.tsx
+#: src/pages/settings/subtitles.tsx
 msgid "Text"
 msgstr "Yazı"
 
@@ -4257,6 +4623,10 @@ msgstr "Bu adres geçerli değil."
 #: src/components/version-settings.tsx
 msgid "That is not a valid regular expression."
 msgstr "Bu düzenli ifade geçerli değil."
+
+#: src/pages/settings/profile.tsx
+msgid "That isn't an address"
+msgstr ""
 
 #: src/lib/party/party.ts
 msgid "That party has ended."
@@ -4301,6 +4671,10 @@ msgstr "Bu bilgisayara kurulu {name}, kendi kontrolleri ve yapılandırmasıyla 
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Adres http:// veya https:// ile başlamalı."
+
+#: src/pages/settings/profile.tsx
+msgid "The address of an image. Empty shows your initial."
+msgstr ""
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -4390,6 +4764,10 @@ msgstr "Bu uygulamadaki açık kaynaklı yazılımlar ve her birinin lisansı."
 msgid "The other device could not be reached"
 msgstr "Diğer cihaza ulaşılamadı"
 
+#: src/pages/settings/profile.tsx
+msgid "The owner's choice"
+msgstr ""
+
 #: src/components/crash-report.tsx
 msgid "The page restarted unexpectedly"
 msgstr "Sayfa beklenmedik şekilde yeniden başladı"
@@ -4467,7 +4845,8 @@ msgstr "Video çıkışı uygulama yeniden açıldığında değişir."
 msgid "The whole show"
 msgstr "Tüm dizi"
 
-#: src/pages/settings/index.tsx src/pages/settings/theme.tsx
+#: src/pages/settings/index.tsx
+#: src/pages/settings/theme.tsx
 msgid "Theme"
 msgstr "Tema"
 
@@ -4612,11 +4991,13 @@ msgstr ""
 msgid "Timing"
 msgstr "Zamanlama"
 
-#: src/pages/history.tsx src/pages/settings/interface.tsx
+#: src/pages/history.tsx
+#: src/pages/settings/interface.tsx
 msgid "Title"
 msgstr "Başlık"
 
-#: src/pages/settings/apps.tsx src/pages/settings/cache.tsx
+#: src/pages/settings/apps.tsx
+#: src/pages/settings/cache.tsx
 msgid "Title pages"
 msgstr "İçerik sayfaları"
 
@@ -4656,7 +5037,8 @@ msgstr "{n}. parça"
 msgid "Tracks"
 msgstr "Ses parçaları"
 
-#: src/lib/playback/trailers.ts src/pages/item.tsx
+#: src/lib/playback/trailers.ts
+#: src/pages/item.tsx
 msgid "Trailer"
 msgstr "Fragman"
 
@@ -4672,8 +5054,10 @@ msgstr "Aşağıdaki ayarın göstereceği altyazılar için sırayla denenir."
 msgid "Troubleshooting"
 msgstr "Sorun giderme"
 
-#: src/components/party/party-sheet.tsx src/components/random-pick.tsx
-#: src/components/version-picker.tsx src/pages/downloads.tsx
+#: src/components/party/party-sheet.tsx
+#: src/components/random-pick.tsx
+#: src/components/version-picker.tsx
+#: src/pages/downloads.tsx
 #: src/pages/sign-in.tsx
 msgid "Try again"
 msgstr "Yeniden dene"
@@ -4710,7 +5094,8 @@ msgstr "Alacağı rozetleri görmek için bir yayın adı yaz."
 msgid "Typewriter"
 msgstr "Daktilo"
 
-#: src/components/episodes.tsx src/lib/format.ts
+#: src/components/episodes.tsx
+#: src/lib/format.ts
 msgid "Unaired"
 msgstr "Yayınlanmadı"
 
@@ -4863,7 +5248,8 @@ msgstr "{version} sürümü yüklenmeye hazır."
 msgid "Version searches at once"
 msgstr "Eş zamanlı sürüm araması"
 
-#: src/components/player/options.tsx src/components/version-picker.tsx
+#: src/components/player/options.tsx
+#: src/components/version-picker.tsx
 #: src/pages/settings/playback.tsx
 msgid "Versions"
 msgstr "Sürümler"
@@ -4888,6 +5274,10 @@ msgstr "Versiyonlar uygulama içinde kendi kontrolleri ve oynatma ayarları ile 
 msgid "Versions play in this browser. Choose another player to open them in it instead."
 msgstr "Sürümler bu tarayıcıda oynatılır. Başka bir oynatıcıda açmak için onu seç."
 
+#: src/pages/settings/profile.tsx
+msgid "Versions to show"
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Video"
 msgstr "Video"
@@ -4900,7 +5290,8 @@ msgstr "Video çıkışı"
 msgid "View"
 msgstr "Görüntüle"
 
-#: src/components/licenses.tsx src/pages/settings/about.tsx
+#: src/components/licenses.tsx
+#: src/pages/settings/about.tsx
 msgid "Visit"
 msgstr "Ziyaret et"
 
@@ -4912,7 +5303,8 @@ msgstr "Sesli arama başarısız"
 msgid "Volume"
 msgstr "Ses düzeyi"
 
-#: src/components/player/gestures.ts src/components/player/keys.ts
+#: src/components/player/gestures.ts
+#: src/components/player/keys.ts
 msgid "Volume {percent}%"
 msgstr "Ses düzeyi %{percent}"
 
@@ -4964,17 +5356,22 @@ msgstr "Bu yapılandırmadaki başka bir kullanıcı olarak izle. PIN'i olan kul
 msgid "Watch parties"
 msgstr "Birlikte izleme oturumları"
 
-#: src/components/layout.tsx src/components/party/party-sheet.tsx
-#: src/components/player/options.tsx src/pages/item.tsx
+#: src/components/layout.tsx
+#: src/components/party/party-sheet.tsx
+#: src/components/player/options.tsx
+#: src/pages/item.tsx
 msgid "Watch party"
 msgstr "Birlikte izleme"
 
-#: src/components/layout.tsx src/components/party/party-sheet.tsx
-#: src/components/player/options.tsx src/pages/item.tsx
+#: src/components/layout.tsx
+#: src/components/party/party-sheet.tsx
+#: src/components/player/options.tsx
+#: src/pages/item.tsx
 msgid "Watch together"
 msgstr "Birlikte izle"
 
-#: src/pages/history.tsx src/pages/item.tsx
+#: src/pages/history.tsx
+#: src/pages/item.tsx
 msgid "Watched"
 msgstr "İzlendi"
 
@@ -4986,7 +5383,8 @@ msgstr "İzlendi ×{playCount}"
 msgid "Watched marks and resume points are removed from this server. Favourites stay. Titles a tracker still lists come back when it next syncs."
 msgstr "İzlendi işaretleri ve devam etme konumları bu sunucudan kaldırılır. Favoriler kalır. İzleme takip hizmetinde hâlâ listelenen içerikler, bir sonraki eşitlemede geri gelir."
 
-#: src/components/party/party-sheet.tsx src/pages/settings/index.tsx
+#: src/components/party/party-sheet.tsx
+#: src/pages/settings/index.tsx
 msgid "Watching"
 msgstr "İzleniyor"
 
@@ -5179,12 +5577,21 @@ msgid "Yellow"
 msgstr "Sarı"
 
 #: src/components/layout.tsx
+#: src/pages/settings/profile.tsx
 msgid "You"
 msgstr "Siz"
 
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Birlikte izlemeden ayrıldın."
+
+#: src/pages/settings/profile.tsx
+msgid "You sign in with the shared one. Set your own so only you can."
+msgstr ""
+
+#: src/pages/settings/index.tsx
+msgid "You, your streams and Stremio"
+msgstr ""
 
 #: src/pages/settings/playback.tsx
 msgid "Your {name}"
@@ -5194,9 +5601,17 @@ msgstr "Kendi {name} uygulaman"
 msgid "Your badges"
 msgstr "Kendi rozetlerin"
 
+#: src/pages/settings/profile.tsx
+msgid "Your devices stay signed in."
+msgstr ""
+
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "Kendi {name} uygulaman"
+
+#: src/pages/settings/profile.tsx
+msgid "Your password confirms it's you."
+msgstr ""
 
 #: src/lib/playback/player-choice.ts
 msgid "your player"
@@ -5217,6 +5632,10 @@ msgstr "Oynatıcın ayrı bir uygulamada çalışıyor ve birlikte izlemeyi taki
 #: src/components/rating.tsx
 msgid "Your rating"
 msgstr "Puanın"
+
+#: src/pages/settings/profile.tsx
+msgid "Your Stremio link"
+msgstr ""
 
 #: src/pages/settings/cache.tsx
 msgid "Your watch history and totals."
