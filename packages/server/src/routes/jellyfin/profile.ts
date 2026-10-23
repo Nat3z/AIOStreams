@@ -7,6 +7,7 @@ import {
   selfStateOf,
   SelfPreferencesSchema,
   StremioTokenRepository,
+  UserInviteRepository,
   config as appConfig,
   updateSelf,
   USER_PASSWORD_MIN,
@@ -178,6 +179,42 @@ router.post(
         return;
       }
       await saveSelf(ctx, { password: next });
+      res.status(204).end();
+    } catch (error) {
+      sendError(res, error);
+    }
+  })
+);
+
+const welcomeBody = z.object({
+  token: z.string().min(16).max(64),
+  password: z.string().min(USER_PASSWORD_MIN).max(128),
+});
+
+// A setup link's last step: the user's own password, which also resets a
+// forgotten one, and then the link stops working.
+router.post(
+  '/AIOStreams/Profile/Welcome',
+  self(async (req, res, ctx) => {
+    try {
+      const { token, password } = welcomeBody.parse(bodyOf(req));
+      const invite = await UserInviteRepository.find(token);
+      if (
+        !invite ||
+        invite.uuid !== ctx.uuid ||
+        invite.persona !== ctx.persona?.id
+      ) {
+        res
+          .status(403)
+          .json({ Message: 'This link has expired or was already used' });
+        return;
+      }
+      await saveSelf(ctx, { password });
+      await UserInviteRepository.consume(token);
+      logger.info(
+        { uuid: ctx.uuid, persona: ctx.persona?.id },
+        'user finished setting up'
+      );
       res.status(204).end();
     } catch (error) {
       sendError(res, error);
