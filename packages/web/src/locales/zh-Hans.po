@@ -484,6 +484,10 @@ msgstr "已添加 {name}"
 msgid "Added to {name}"
 msgstr "已添加到 {name}"
 
+#: src/app/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/app/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "请在配置页面设置插件、目录和用户。"
@@ -1070,6 +1074,7 @@ msgid "Composer"
 msgstr "创作者"
 
 #: src/app/settings/account.tsx
+#: src/app/settings/profile.tsx
 msgid "Configuration"
 msgstr "配置"
 
@@ -3078,6 +3083,7 @@ msgstr "不透明度：{backgroundOpacity}%"
 #: src/app/settings/account.tsx
 #: src/app/settings/apps.tsx
 #: src/app/settings/downloads.tsx
+#: src/app/settings/profile.tsx
 #: src/components/media/item-menu.tsx
 #: src/components/media/random-pick.tsx
 msgid "Open"
