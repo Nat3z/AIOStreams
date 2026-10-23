@@ -116,7 +116,8 @@ const profileBody = z
   })
   .strict();
 
-router.patch(
+// POST, as Jellyfin updates a user, so every client's CORS lets it through.
+router.post(
   '/AIOStreams/Profile',
   self(async (req, res, ctx) => {
     try {
