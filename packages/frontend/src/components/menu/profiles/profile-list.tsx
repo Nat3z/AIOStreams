@@ -346,19 +346,29 @@ const PIN_SHAPE = /^\d{4,12}$/;
 const PIN_ONLY_LENGTH = 6;
 const PIN_ONLY_SHAPE = new RegExp(`^\\d{${PIN_ONLY_LENGTH},12}$`);
 
-/** A saved PIN comes back as its hash, never as the digits. */
+/** A saved PIN or password comes back as its hash, never as typed. */
 function isSavedPin(lock: string | undefined): lock is string {
   return !!lock && lock.startsWith('$2');
 }
 
-function PinField({
+/** Must match the server's floor for a profile's own password. */
+const PASSWORD_MIN = 8;
+
+/** A PIN or password: shown as set once saved, and changed or removed from there. */
+function SecretField({
+  label,
   value,
   onChange,
   help,
+  placeholder,
+  numeric,
 }: {
+  label: string;
   value: string | undefined;
   onChange(value: string | undefined): void;
   help: string;
+  placeholder: string;
+  numeric?: boolean;
 }) {
   const [saved] = useState(isSavedPin(value) ? value : undefined);
   const [mode, setMode] = useState<'saved' | 'edit' | 'removed'>(
@@ -369,7 +379,7 @@ function PinField({
     return (
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-medium">PIN</p>
+          <p className="text-sm font-medium">{label}</p>
           <p className="text-xs text-[--muted]">
             {mode === 'saved' ? 'Set. ' + help : 'Removed when you save.'}
           </p>
@@ -416,20 +426,63 @@ function PinField({
   }
   return (
     <TextInput
-      label="PIN"
+      label={label}
       type="password"
-      inputMode="numeric"
+      inputMode={numeric ? 'numeric' : undefined}
       autoComplete="new-password"
       placeholder={saved ? 'Unchanged' : 'None'}
-      help={`Optional, 4 to 12 digits. ${help}`}
+      help={`${placeholder} ${help}`}
       value={isSavedPin(value) ? '' : (value ?? '')}
       onValueChange={(typed) => {
-        const digits = typed.replace(/\D/g, '').slice(0, 12);
-        onChange(digits || saved);
+        const next = numeric ? typed.replace(/\D/g, '').slice(0, 12) : typed;
+        onChange(next || saved);
       }}
     />
   );
 }
+
+function PinField({
+  value,
+  onChange,
+  help,
+}: {
+  value: string | undefined;
+  onChange(value: string | undefined): void;
+  help: string;
+}) {
+  return (
+    <SecretField
+      label="PIN"
+      numeric
+      placeholder="Optional, 4 to 12 digits."
+      value={value}
+      onChange={onChange}
+      help={help}
+    />
+  );
+}
+
+function PasswordField({
+  value,
+  onChange,
+}: {
+  value: string | undefined;
+  onChange(value: string | undefined): void;
+}) {
+  return (
+    <SecretField
+      label="Password"
+      placeholder={`Optional, at least ${PASSWORD_MIN} characters.`}
+      value={value}
+      onChange={onChange}
+      help="Their own, for the web app and Jellyfin apps, so they never need the configuration's. They can change it from their profile."
+    />
+  );
+}
+
+/** A typed password too short to save, as saved ones are hashes. */
+const shortPassword = (password: string | undefined) =>
+  !!password && !password.startsWith('$2') && password.length < PASSWORD_MIN;
 
 export function ProfileList({
   rowExtra,
@@ -574,6 +627,10 @@ export function ProfileList({
       toast.error('A PIN is 4 to 12 digits.');
       return;
     }
+    if (shortPassword(value.password)) {
+      toast.error(`A password is at least ${PASSWORD_MIN} characters.`);
+      return;
+    }
     if (
       pinSignIn &&
       !editingOwner &&
@@ -614,6 +671,7 @@ export function ProfileList({
       trackers,
       hidden: value.hidden || undefined,
       lock: value.lock || undefined,
+      password: value.password || undefined,
       ...(editingOwner
         ? {}
         : {
@@ -858,6 +916,11 @@ export function ProfileList({
                 )}
               </>
             )}
+
+            <PasswordField
+              value={value.password}
+              onChange={(password) => set({ password })}
+            />
 
             <PinField
               value={value.lock}
