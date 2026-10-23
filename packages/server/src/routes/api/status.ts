@@ -71,6 +71,7 @@ const statusInfo = async (): Promise<StatusResponse> => {
         maxLibraries: libraryLimit(),
         maxPersonas: appConfig.jellyfin.maxPersonas,
         pinSignIn: appConfig.jellyfin.pinSignIn,
+        instance: !!appConfig.jellyfin.instanceAlias,
         maxTrackers: appConfig.watchState.maxSinks,
         playWait: probesOn('jellyfin')
           ? appConfig.mediaInfo.playWait
