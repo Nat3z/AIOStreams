@@ -122,8 +122,10 @@ export function LoginPage() {
     }) => login(username, password),
     onSuccess: (user) => {
       qc.setQueryData(sessionQuery.queryKey, user);
-      const params = new URLSearchParams(window.location.search);
-      window.location.href = safeNext(params.get('next'));
+      const next = new URLSearchParams(window.location.search).get('next');
+      // An admin of an instance goes straight to its configuration.
+      window.location.href =
+        !next && user.configUnlocked ? '/stremio/configure' : safeNext(next);
     },
     onError: (err) => {
       if (err instanceof APIError && err.is('UNAUTHORIZED')) {
