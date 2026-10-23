@@ -125,6 +125,18 @@ export function isProfileLockHash(value: string): boolean {
 
 const PROFILE_ID_PATTERN = /^[a-z0-9][a-z0-9_-]{0,31}$/;
 
+export const USER_PASSWORD_MIN = 8;
+/** A profile's own sign-in password, or the bcrypt hash it was saved as. */
+const UserPasswordSchema = z
+  .string()
+  .refine(
+    (v) =>
+      BCRYPT_HASH_PATTERN.test(v) ||
+      (v.length >= USER_PASSWORD_MIN && v.length <= 128),
+    `A password must be ${USER_PASSWORD_MIN} to 128 characters.`
+  )
+  .optional();
+
 /** The first, with id `''`, is the owner. */
 const ProfileSchema = z.object({
   // Names the DB partition, so a rename must not touch it.
@@ -155,6 +167,7 @@ const ProfileSchema = z.object({
     .string()
     .regex(PROFILE_LOCK_PATTERN, 'A PIN must be 4 to 12 digits.')
     .optional(),
+  password: UserPasswordSchema,
 });
 
 export type Profile = z.infer<typeof ProfileSchema>;
