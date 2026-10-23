@@ -123,6 +123,19 @@ app.use((req, res, next) => {
 });
 app.use(express.urlencoded({ extended: true }));
 
+/*
+ * Jellyfin clients pointed at the bare site address call its API from the
+ * root, so the routes only Jellyfin answers go to the /jellyfin mount.
+ */
+const JELLYFIN_ROOT =
+  /^\/(aiostreams|artists|auth|branding|channels|clientlog|collections|devices|displaypreferences|environment|genres|getutctime|images|items|library|livetv|localization|mediasegments|movies|musicgenres|notifications|packages|persons|playback|playingitems|playlists|plugins|quickconnect|repositories|scheduledtasks|search|sessions|shows|startup|studios|syncplay|system|trailers|userfavoriteitems|userimage|useritems|userplayeditems|users|userviews|videos|years|web|emby|mediabrowser)(\/|\?|$)/i;
+app.use((req, _res, next) => {
+  if (appConfig.jellyfin.enabled && JELLYFIN_ROOT.test(req.url)) {
+    req.url = `/jellyfin${req.url}`;
+  }
+  next();
+});
+
 // Allow all origins in development for easier testing
 if (appConfig.bootstrap.nodeEnv === 'development') {
   logger.info('CORS enabled for all origins in development');
