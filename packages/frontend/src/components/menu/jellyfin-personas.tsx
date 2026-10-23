@@ -8,6 +8,7 @@ import {
   createUserInvite,
   listUserInvites,
   revokeUserInvite,
+  uploadUserAvatar,
   type Credentials,
   type UserInvite,
   type WatchStateTrackerOption,
@@ -24,8 +25,9 @@ import { Select } from '@aiostreams/ui/select';
 import { Switch } from '@aiostreams/ui/switch';
 import { Modal } from '@aiostreams/ui/modal';
 import { copyToClipboard } from '@aiostreams/ui/utils/clipboard';
+import { avatarImage } from '@aiostreams/ui/utils/avatar-image';
 import { toast } from 'sonner';
-import { FiEdit2, FiLink, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiEdit2, FiLink, FiPlus, FiTrash2, FiUpload } from 'react-icons/fi';
 import type { UserData } from '@aiostreams/core';
 
 type JellyfinSettings = NonNullable<UserData['jellyfin']>;
@@ -578,6 +580,61 @@ function SetupLinkModal({
   );
 }
 
+/** A picture's address, or one uploaded here, which needs a saved configuration. */
+function AvatarField({
+  credentials,
+  value,
+  onChange,
+}: {
+  credentials: Credentials | null;
+  value: string | undefined;
+  onChange: (avatar: string | undefined) => void;
+}) {
+  const input = React.useRef<HTMLInputElement>(null);
+  const upload = useMutation({
+    mutationFn: async (file: File) =>
+      uploadUserAvatar(credentials!, await avatarImage(file)),
+    onSuccess: ({ url }) => onChange(url),
+    onError: (error) => toast.error(errorText(error, 'Failed to upload')),
+  });
+  return (
+    <div className="flex items-end gap-2">
+      <TextInput
+        label="Avatar"
+        help="Optional. Shown on the sign-in picker. Paste an image address or upload one."
+        placeholder="https://"
+        value={value ?? ''}
+        onValueChange={(v) => onChange(v || undefined)}
+        fieldClass="flex-1"
+      />
+      {credentials && (
+        <>
+          <Button
+            type="button"
+            intent="gray-outline"
+            leftIcon={<FiUpload />}
+            loading={upload.isPending}
+            onClick={() => input.current?.click()}
+          >
+            Upload
+          </Button>
+          <input
+            ref={input}
+            type="file"
+            accept="image/*"
+            hidden
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              e.target.value = '';
+              if (file) upload.mutate(file);
+            }}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
 export function JellyfinPersonas() {
   const { userData, setUserData, uuid, password } = useUserData();
   const credentials = React.useMemo(
@@ -953,13 +1010,11 @@ export function JellyfinPersonas() {
                 maxTrackers={maxTrackers}
               />
             )}
-            <TextInput
-              label="Avatar URL"
-              help="Optional. Shown on the sign-in picker."
-              placeholder="https://"
-              value={primaryDraft.avatar ?? ''}
-              onValueChange={(value) =>
-                setPrimaryDraft({ ...primaryDraft, avatar: value || undefined })
+            <AvatarField
+              credentials={credentials}
+              value={primaryDraft.avatar}
+              onChange={(avatar) =>
+                setPrimaryDraft({ ...primaryDraft, avatar })
               }
             />
             <Switch
@@ -1053,14 +1108,10 @@ export function JellyfinPersonas() {
               />
             )}
 
-            <TextInput
-              label="Avatar URL"
-              help="Optional. Shown on the sign-in picker."
-              placeholder="https://"
-              value={draft.avatar ?? ''}
-              onValueChange={(value) =>
-                setDraft({ ...draft, avatar: value || undefined })
-              }
+            <AvatarField
+              credentials={credentials}
+              value={draft.avatar}
+              onChange={(avatar) => setDraft({ ...draft, avatar })}
             />
 
             <Switch

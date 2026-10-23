@@ -987,10 +987,6 @@ msgstr ""
 msgid "Configuration ids are left out of their copy too."
 msgstr ""
 
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr ""
-
 #: src/components/no-catalogs.tsx
 msgid "Configure"
 msgstr ""
@@ -2423,10 +2419,6 @@ msgstr ""
 msgid "Navigation"
 msgstr ""
 
-#: src/pages/sign-in.tsx
-msgid "Needed to switch to this user."
-msgstr ""
-
 #: src/pages/downloads.tsx
 msgid "Needs attention"
 msgstr ""
@@ -3068,11 +3060,6 @@ msgstr ""
 msgid "Pick the version to download."
 msgstr ""
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr ""
@@ -3477,6 +3464,7 @@ msgstr ""
 msgid "Remember picks per show"
 msgstr ""
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4465,11 +4453,6 @@ msgstr ""
 msgid "That is not a valid regular expression."
 msgstr ""
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr ""
@@ -4512,11 +4495,6 @@ msgstr ""
 
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
-msgstr ""
-
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "The address of an image. Empty shows your initial."
 msgstr ""
 
 #: src/pages/servers.tsx
@@ -4674,6 +4652,10 @@ msgstr ""
 
 #: src/components/download-button.tsx
 msgid "The whole show"
+msgstr ""
+
+#: src/pages/sign-in.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
 msgstr ""
 
 #: src/pages/settings/index.tsx
@@ -4998,6 +4980,14 @@ msgstr ""
 
 #: src/pages/settings/index.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
 msgstr ""
 
 #: src/pages/sign-in.tsx
