@@ -617,13 +617,15 @@ export class UserRepository {
     password: string,
     salt?: string
   ): Promise<{ encryptedConfig: string; salt: string }> {
-    // Every stored config passes here, so a PIN is never kept plain.
+    // Every stored config passes here, so a PIN or password is never kept plain.
     for (const user of [
       config.jellyfin?.primary,
       ...(config.jellyfin?.personas ?? []),
     ]) {
       if (user?.lock && !isPersonaLockHash(user.lock))
         user.lock = await getTextHash(user.lock);
+      if (user?.password && !isPersonaLockHash(user.password))
+        user.password = await getTextHash(user.password);
     }
     const { key, salt: saltUsed } = await deriveKey(
       `${password}:${appConfig.bootstrap.secretKey}`,
