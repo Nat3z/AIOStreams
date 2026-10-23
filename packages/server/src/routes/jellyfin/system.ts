@@ -54,6 +54,8 @@ const FEATURES = {
   parties: 1,
   /** `/AIOStreams/Profile`, where a user edits themselves and makes Stremio links. */
   profile: 1,
+  /** `/Movies/Recommendations?AIOStreamsFeeds=true` answers only rows made from the user's history. */
+  feeds: 1,
   /** CORS lets the `X-AIOStreams-*` headers through. */
   clientHints: 1,
   /** Jellyfin's `/Playlists` API. */
