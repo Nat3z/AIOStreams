@@ -29,6 +29,7 @@ import imagesRouter from './images.js';
 import playstateRouter from './playstate.js';
 import playlistsRouter from './playlists.js';
 import webRouter from './web.js';
+import profileRouter from './profile.js';
 import { jellyfinWebRoot } from '../../app.js';
 
 export const jellyfinCors: express.RequestHandler = (req, res, next) => {
@@ -63,7 +64,7 @@ export const jellyfinCors: express.RequestHandler = (req, res, next) => {
 
 const UNLIMITED = /^\/system\/info\/public$/i;
 const LOGIN_LIKE =
-  /^\/(users\/authenticatebyname|users\/authenticatewithquickconnect|quickconnect\/(authorize|initiate))$/i;
+  /^\/(users\/authenticatebyname|users\/authenticatewithquickconnect|quickconnect\/(authorize|initiate)|users\/([^/]+\/)?password|aiostreams\/profile\/password)$/i;
 const IMAGE_LIKE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general)(\/|$)/i;
 const STREAM_LIKE = /^\/items\/[^/]+\/(playbackinfo|mediasources)$/i;
@@ -207,6 +208,7 @@ export function createJellyfinRouter(): Router {
 
   router.use(jellyfinContext);
   router.use(webRouter);
+  router.use(profileRouter);
   router.use(systemRouter);
   router.use(syncPlayRouter);
   router.use(remoteRouter);
