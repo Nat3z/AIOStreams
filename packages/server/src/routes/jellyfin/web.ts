@@ -43,6 +43,7 @@ import {
   withControls,
 } from './users.js';
 import { controllableDevices } from './remote.js';
+import { isInstanceConfig } from '../../utils/admin-handoff.js';
 import {
   appReportsRateLimiter,
   jellyfinLoginRateLimiter,
@@ -120,8 +121,15 @@ function isCaller(ctx: JellyfinRequestContext, user: WebUser): boolean {
 
 type Secret = 'pin' | 'password' | 'password-pin';
 
-/** What switching to `user` asks of the caller. */
-function secretFor(ctx: JellyfinRequestContext, user: WebUser): Secret | null {
+/**
+ * What switching to `user` asks of the caller. On an instance, whose users are
+ * separate people, reaching someone else always takes a password.
+ */
+function secretFor(
+  ctx: JellyfinRequestContext,
+  user: WebUser,
+  instance: boolean
+): Secret | null {
   const locked = user.persona
     ? personaLocked(user.persona)
     : accountLocked(ctx.userData);
@@ -129,7 +137,7 @@ function secretFor(ctx: JellyfinRequestContext, user: WebUser): Secret | null {
   // a signed-in device would hand over the account.
   if (isCaller(ctx, user)) return locked ? 'pin' : null;
   // A persona session may have begun with its PIN alone.
-  if (!provedPassword(ctx) && (!user.persona || !locked)) {
+  if (instance || (!provedPassword(ctx) && (!user.persona || !locked))) {
     return locked ? 'password-pin' : 'password';
   }
   return locked ? 'pin' : null;
@@ -260,12 +268,13 @@ function switchable(ctx: JellyfinRequestContext): WebUser[] {
 router.get(
   '/AIOStreams/Users',
   web(async (_req, res, ctx) => {
+    const instance = await isInstanceConfig(ctx.uuid);
     res.json(
       switchable(ctx).map((u) => ({
         user: userDto(ctx.uuid, ctx.userData, u.persona),
         avatar: avatarOf(ctx, u),
         hidden: !!u.persona?.hidden,
-        needs: secretFor(ctx, u),
+        needs: secretFor(ctx, u, instance),
       }))
     );
   })
@@ -506,7 +515,7 @@ router.post(
       res.status(404).json({ Message: 'User not found' });
       return;
     }
-    const needs = secretFor(ctx, user);
+    const needs = secretFor(ctx, user, await isInstanceConfig(ctx.uuid));
     if (needs && !(await jellyfinLoginRateLimiter.tryConsume(req))) {
       res.status(429).json({ Message: 'Too many attempts' });
       return;
