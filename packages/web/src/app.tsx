@@ -11,6 +11,7 @@ import { LoadingOverlay } from '@aiostreams/ui/loading-spinner';
 import {
   asksWho,
   enterOn,
+  inviteToken,
   pickerAccount,
   SessionProvider,
   useSessionPhase,
@@ -20,7 +21,8 @@ import { webRouter } from './router';
 import { SignInScreen, Unreachable, UserPicker } from './app/sign-in/page';
 import { PageBackground } from './components/shell/layout';
 import { apiBase, JellyfinClient } from './lib/jellyfin/client';
-import { navigate, to } from './lib/paths';
+import { navigate, startOver, to } from './lib/paths';
+import { WelcomePage } from './app/welcome/page';
 import {
   NO_SERVER_INFO,
   ServerInfoProvider,
@@ -300,6 +302,8 @@ function Session({
   React.useEffect(() => currentHost().start?.({ base }), [base]);
 
   const ready = phase.kind === 'ready' ? phase : null;
+  // A setup link opens on its welcome steps rather than the app.
+  const [invite, setInvite] = React.useState(inviteToken);
   // Built anew in another language, as some text is written outside React.
   const { i18n } = useLingui();
   const anonymous = React.useMemo(() => new JellyfinClient(base), [base]);
@@ -379,7 +383,14 @@ function Session({
           signOut={signOut}
           changeServer={changeServer}
         >
-          <RouterProvider router={webRouter} />
+          {invite && inviteToken() === invite ? (
+            <WelcomePage
+              invite={invite}
+              onDone={() => void startOver(to.home).then(() => setInvite(null))}
+            />
+          ) : (
+            <RouterProvider router={webRouter} />
+          )}
           {/* Inside a session, which its report is sent through. */}
           {shellHost() && <CrashReportDialog />}
         </SessionProvider>

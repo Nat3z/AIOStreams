@@ -79,6 +79,11 @@ export {
   type StremioTokenInfo,
 } from './repositories/stremio-tokens.js';
 export {
+  UserInviteRepository,
+  type UserInviteTarget,
+  type UserInviteInfo,
+} from './repositories/user-invites.js';
+export {
   JellyfinAddressRepository,
   type JellyfinAddressTarget,
 } from './repositories/jellyfin-addresses.js';
