@@ -3362,6 +3362,7 @@ msgstr "Poprzedni zwiastun"
 msgid "Producer"
 msgstr "Producent"
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""

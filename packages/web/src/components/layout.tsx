@@ -54,7 +54,7 @@ import { currentHost } from '../lib/hosts';
 import { pageRtl } from '../lib/direction';
 import { shellHost } from '../lib/hosts/shell';
 import { serverAddress } from '../lib/servers';
-import { useServerInfo } from '../lib/server-info';
+import { useFeature, useServerInfo } from '../lib/server-info';
 import { useDiscordBrowsing } from '../lib/discord';
 import { useServerEvents } from '../lib/server-events';
 import { retryNow, useReachable } from '../lib/connection';
@@ -469,6 +469,7 @@ export function WebLayout() {
   const { switchUser } = useSession();
   const users = usePickableUsers();
   const several = (users.data?.length ?? 0) > 1;
+  const profile = useFeature('profile');
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const entry = useRouterState({
     select: (s) => s.location.state.__TSR_key ?? s.location.href,
@@ -593,13 +594,20 @@ export function WebLayout() {
     iconType: BiTransferAlt,
     onClick: switchUser,
   };
-  const you: SidebarItem = several
-    ? switchItem
-    : {
-        id: 'account',
-        name: t`Account`,
-        onClick: () => navigate(to.settings('account')),
-      };
+  // Users with a profile of their own manage it there; switching stays in Account.
+  const you: SidebarItem = profile
+    ? {
+        id: 'profile',
+        name: t`Profile`,
+        onClick: () => navigate(to.settings('profile')),
+      }
+    : several
+      ? switchItem
+      : {
+          id: 'account',
+          name: t`Account`,
+          onClick: () => navigate(to.settings('account')),
+        };
 
   const page = cn(
     'relative pb-[var(--nav-bar)] ps-[env(safe-area-inset-left)] pe-[env(safe-area-inset-right)] pt-[var(--top-bar,0px)]',
