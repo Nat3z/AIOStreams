@@ -84,6 +84,12 @@ export {
   type UserInviteInfo,
 } from './repositories/user-invites.js';
 export {
+  AvatarRepository,
+  AVATAR_MAX_BYTES,
+  AVATAR_TYPES,
+  type AvatarType,
+} from './repositories/avatars.js';
+export {
   JellyfinAddressRepository,
   type JellyfinAddressTarget,
 } from './repositories/jellyfin-addresses.js';

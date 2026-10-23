@@ -48,6 +48,7 @@ import { appReports } from './0047_app_reports.js';
 import { watchSessionTracks } from './0048_watch_session_tracks.js';
 import { stremioTokens } from './0049_stremio_tokens.js';
 import { userInvites } from './0050_user_invites.js';
+import { avatars } from './0051_avatars.js';
 import type { Migration } from './types.js';
 
 export const MIGRATIONS: readonly Migration[] = [
@@ -101,6 +102,7 @@ export const MIGRATIONS: readonly Migration[] = [
   watchSessionTracks,
   stremioTokens,
   userInvites,
+  avatars,
 ];
 
 export type { Migration } from './types.js';
