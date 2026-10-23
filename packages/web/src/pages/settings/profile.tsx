@@ -49,6 +49,8 @@ interface Profile {
   hasPassword: boolean;
   passwordMin: number;
   preferences: Preferences;
+  /** The instance's owner, who can open its configure page from here. */
+  configure?: boolean;
 }
 
 interface StremioLink {
@@ -221,6 +223,7 @@ function IdentityCard({ profile }: { profile: Profile }) {
             </Button>
           </div>
         </SettingsRow>
+        {profile.configure && <ConfigureRow />}
       </SettingsCard>
       <FaceModal open={editing === 'face'} profile={profile} onClose={close} />
       <PinModal open={editing === 'pin'} onClose={close} />
@@ -231,6 +234,43 @@ function IdentityCard({ profile }: { profile: Profile }) {
       />
       <ConfirmationDialog {...removePin} />
     </>
+  );
+}
+
+function ConfigureRow() {
+  const { client } = useSession();
+  const open = useMutation({
+    mutationFn: () =>
+      client.post<{ url: string }>('/AIOStreams/Profile/Configure'),
+  });
+  return (
+    <SettingsRow
+      label={t`Configuration`}
+      help={t`Addons, catalogs and everyone's accounts.`}
+    >
+      <Button
+        intent="gray-outline"
+        className={button}
+        loading={open.isPending}
+        onClick={() => {
+          // Opened now, while the click still allows a new tab.
+          const tab = window.open('', '_blank');
+          open.mutate(undefined, {
+            onSuccess: ({ url }) => {
+              const href = new URL(url, client.base).href;
+              if (tab) tab.location.href = href;
+              else window.location.href = href;
+            },
+            onError: (error) => {
+              tab?.close();
+              toast.error(error.message);
+            },
+          });
+        }}
+      >
+        <Trans>Open</Trans>
+      </Button>
+    </SettingsRow>
   );
 }
 
