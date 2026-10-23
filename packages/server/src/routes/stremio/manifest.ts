@@ -58,7 +58,8 @@ const manifest = async (config?: UserData): Promise<Manifest> => {
       }.png`,
     background: config?.addonBackground,
     behaviorHints: {
-      configurable: true,
+      // An install link's user cannot configure what it serves.
+      configurable: !config?.installUrl,
       configurationRequired: config ? false : true,
       ...(epgProvider && { epgProvider }),
       ...(catchupDays && { catchupDays }),
