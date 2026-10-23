@@ -43,6 +43,7 @@ import {
   withControls,
 } from './users.js';
 import { controllableDevices } from './remote.js';
+import { isInstanceConfig } from '../../utils/admin-handoff.js';
 import {
   appReportsRateLimiter,
   jellyfinLoginRateLimiter,
@@ -108,14 +109,21 @@ function provedPassword(ctx: JellyfinRequestContext): boolean {
 
 type Secret = 'pin' | 'password' | 'password-pin';
 
-/** What switching to `user` asks of the caller. */
-function secretFor(ctx: JellyfinRequestContext, user: WebUser): Secret | null {
+/**
+ * What switching to `user` asks of the caller. On an instance, whose profiles are
+ * separate people, reaching someone else always takes a password.
+ */
+function secretFor(
+  ctx: JellyfinRequestContext,
+  user: WebUser,
+  instance: boolean
+): Secret | null {
   const locked = !!user.profile.lock;
   // A PIN is asked on every switch, to the signed-in user too, or handing over
   // a signed-in device would hand over the owner.
   if (user.profile.id === ctx.profile.id) return locked ? 'pin' : null;
   // A profile's session may have begun with its PIN alone.
-  if (!provedPassword(ctx) && (isOwner(user.profile) || !locked)) {
+  if (instance || (!provedPassword(ctx) && (isOwner(user.profile) || !locked))) {
     return locked ? 'password-pin' : 'password';
   }
   return locked ? 'pin' : null;
@@ -236,12 +244,13 @@ function switchable(ctx: JellyfinRequestContext): WebUser[] {
 router.get(
   '/AIOStreams/Users',
   web(async (_req, res, ctx) => {
+    const instance = await isInstanceConfig(ctx.uuid);
     res.json(
       switchable(ctx).map((u) => ({
         user: userDto(ctx.uuid, ctx.userData, u.profile),
         avatar: u.profile.avatar ?? null,
         hidden: isSeparate(u.profile),
-        needs: secretFor(ctx, u),
+        needs: secretFor(ctx, u, instance),
       }))
     );
   })
@@ -482,7 +491,7 @@ router.post(
       res.status(404).json({ Message: 'User not found' });
       return;
     }
-    const needs = secretFor(ctx, user);
+    const needs = secretFor(ctx, user, await isInstanceConfig(ctx.uuid));
     if (needs && !(await jellyfinLoginRateLimiter.tryConsume(req))) {
       res.status(429).json({ Message: 'Too many attempts' });
       return;
