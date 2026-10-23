@@ -16,6 +16,7 @@ export type {
   MediaStream,
   PlaybackInfoResponse,
   QuickConnectResult,
+  RecommendationDto,
   SearchHint,
   SearchHintResult,
   SessionInfoDto,
