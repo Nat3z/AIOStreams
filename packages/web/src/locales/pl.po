@@ -725,6 +725,10 @@ msgstr "Etykiety"
 msgid "Bar"
 msgstr "Pasek"
 
+#: src/pages/home.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr "Przed końcem"
@@ -3667,6 +3671,10 @@ msgstr ""
 #: src/pages/search.tsx
 msgid "Recent searches"
 msgstr "Ostatnie wyszukiwania"
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
