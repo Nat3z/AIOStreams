@@ -727,6 +727,10 @@ msgstr "Abzeichen"
 msgid "Bar"
 msgstr "Leiste"
 
+#: src/app/home/page.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Vor dem Ende"
@@ -3635,6 +3639,10 @@ msgstr "Zuletzt gesehen"
 #: src/app/search/page.tsx
 msgid "Recent searches"
 msgstr "Letzte Suchanfragen"
+
+#: src/app/home/page.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"
