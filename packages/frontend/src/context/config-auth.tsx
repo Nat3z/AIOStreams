@@ -13,8 +13,30 @@ import {
   endConfigSession,
   hasConfigSessionCookie,
   loadConfigFromSession,
+  logout,
 } from '@/lib/api';
 import { clearDrafts } from '@/lib/drafts';
+
+/**
+ * Signs the web app out too, by its own keys: `jellyfin_credentials` and the
+ * marker that stops the configure sign-in from signing it straight back in.
+ */
+function leaveWebApp(): void {
+  try {
+    const key = 'jellyfin_credentials';
+    const stored = JSON.parse(localStorage.getItem(key) ?? 'null') as {
+      Servers?: { ManualAddress: string }[];
+    } | null;
+    const base = `${window.location.origin}/jellyfin`;
+    if (stored?.Servers) {
+      stored.Servers = stored.Servers.filter((s) => s.ManualAddress !== base);
+      localStorage.setItem(key, JSON.stringify(stored));
+    }
+    localStorage.setItem(`aiostreams-web-signed-out:${base}`, 'true');
+  } catch {
+    /* storage off: the web app asks the server, which no longer signs it in */
+  }
+}
 
 type ConfigAuthContextType = {
   isSignedIn: boolean;
@@ -69,6 +91,7 @@ export function ConfigAuthProvider({
   const [signOutEverywhere, setSignOutEverywhere] = React.useState(false);
 
   const sessionsEnabled = status?.settings.configSessionsEnabled !== false;
+  const instance = status?.settings.jellyfin?.instance === true;
   const [restoring, setRestoring] = React.useState(
     () => sessionsEnabled && hasConfigSessionCookie()
   );
@@ -85,11 +108,18 @@ export function ConfigAuthProvider({
       setPassword(null);
       setEncryptedPassword(null);
       const revoke = everywhere ? endAllConfigSessions() : endConfigSession();
-      void revoke.catch(() => {
+      // An instance's owner signed in on its web app; leaving goes back there.
+      const left = instance
+        ? Promise.allSettled([revoke, logout()]).then(() => {
+            leaveWebApp();
+            window.location.href = '/';
+          })
+        : revoke;
+      void left.catch(() => {
         /* the local state is already cleared; the row expires on its own */
       });
     },
-    [uuid, setUserData, setUuid, setPassword, setEncryptedPassword]
+    [uuid, instance, setUserData, setUuid, setPassword, setEncryptedPassword]
   );
 
   const confirmSignOut = useConfirmationDialog({
