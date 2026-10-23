@@ -472,6 +472,10 @@ msgstr "Dodano {name}"
 msgid "Added to {name}"
 msgstr "Dodano do {name}"
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "Dodatki, katalogi i użytkowników można ustawić na stronie konfiguracji."
@@ -1036,6 +1040,7 @@ msgid "Composer"
 msgstr "Kompozytor"
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr "Konfiguracja"
 
@@ -2993,6 +2998,7 @@ msgstr "Nieprzezroczystość: {backgroundOpacity}%"
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr "Otwórz"
 
