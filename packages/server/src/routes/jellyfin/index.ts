@@ -62,7 +62,7 @@ export const jellyfinCors: express.RequestHandler = (req, res, next) => {
 
 const UNLIMITED = /^\/system\/info\/public$/i;
 const LOGIN_LIKE =
-  /^\/(users\/authenticatebyname|users\/authenticatewithquickconnect|quickconnect\/(authorize|initiate)|users\/([^/]+\/)?password|aiostreams\/profile\/password)$/i;
+  /^\/(users\/authenticatebyname|users\/authenticatewithquickconnect|quickconnect\/(authorize|initiate)|users\/([^/]+\/)?password|aiostreams\/profile\/(password|stremio))$/i;
 const IMAGE_LIKE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general)(\/|$)/i;
 const STREAM_LIKE = /^\/items\/[^/]+\/(playbackinfo|mediasources)$/i;
@@ -172,7 +172,11 @@ export function createJellyfinRouter(): Router {
   router.use((req, res, next) => {
     if (UNLIMITED.test(req.path)) {
       next();
-    } else if (LOGIN_LIKE.test(req.path)) {
+    } else if (
+      LOGIN_LIKE.test(req.path) &&
+      // Listing install links is no sign-in attempt.
+      !(req.method === 'GET' && /^\/aiostreams\/profile\//i.test(req.path))
+    ) {
       jellyfinLoginRateLimiter(req, res, next);
     } else if (IMAGE_LIKE.test(req.path)) {
       jellyfinImageRateLimiter(req, res, next);
