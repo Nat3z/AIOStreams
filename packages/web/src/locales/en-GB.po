@@ -695,6 +695,10 @@ msgstr "Badges"
 msgid "Bar"
 msgstr "Bar"
 
+#: src/pages/home.tsx
+msgid "Because you watched"
+msgstr "Because you watched"
+
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr "Before the end"
@@ -3440,6 +3444,10 @@ msgstr "Recaps"
 #: src/pages/search.tsx
 msgid "Recent searches"
 msgstr "Recent searches"
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
+msgstr "Recommended for you"
 
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
