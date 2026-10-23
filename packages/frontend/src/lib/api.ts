@@ -264,7 +264,8 @@ export interface SessionUser {
 }
 
 export async function login(username: string, password: string) {
-  return api<SessionUser>('POST /auth/login', {
+  // Set when an admin was signed into the instance configuration as well.
+  return api<SessionUser & { configUnlocked?: boolean }>('POST /auth/login', {
     body: { username, password },
   });
 }
