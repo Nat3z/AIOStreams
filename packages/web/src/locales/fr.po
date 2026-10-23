@@ -500,6 +500,10 @@ msgstr "Adresse"
 msgid "Ads"
 msgstr "Publicités"
 
+#: src/app/welcome/page.tsx
+msgid "Again"
+msgstr ""
+
 #: src/lib/i18n.ts
 msgid "AIOStreams is a solo project built and maintained by me in my free time. If you find it useful, please consider supporting my work. Your donation helps me keep the project alive and improve it for everyone!"
 msgstr "AIOStreams est un projet solo développé et maintenu sur mon temps libre. Si vous le trouvez utile, pensez à soutenir mon travail. Votre don m'aide à faire vivre le projet et à l'améliorer pour tout le monde !"
@@ -676,6 +680,7 @@ msgid "At 0% there is no background."
 msgstr "À 0 %, il n'y a aucun arrière-plan."
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "At least {min} characters"
 msgstr ""
 
@@ -720,6 +725,7 @@ msgstr "Automatique liste les épisodes sur les écrans étroits et les affiche 
 #: src/app/settings/_components/licenses.tsx
 #: src/app/sign-in/page.tsx
 #: src/app/trailer/page.tsx
+#: src/app/welcome/page.tsx
 #: src/components/shell/history-buttons.tsx
 #: src/features/party/not-in-party.tsx
 #: src/features/player/controls.tsx
@@ -1110,6 +1116,7 @@ msgstr "Connexion perdue"
 
 #: src/app.tsx
 #: src/app/sign-in/page.tsx
+#: src/app/welcome/page.tsx
 msgid "Continue"
 msgstr "Continuer"
 
@@ -1822,6 +1829,10 @@ msgstr "Recherche des versions"
 msgid "Finding versions of {name}…"
 msgstr "Recherche des versions de {name}…"
 
+#: src/app/welcome/page.tsx
+msgid "Finish"
+msgstr ""
+
 #: src/app/item/_components/details.tsx
 msgid "First aired"
 msgstr "Première diffusion"
@@ -2086,6 +2097,10 @@ msgstr "Comment ça fonctionne"
 #: src/app/settings/about.tsx
 msgid "How to use the app and what each setting does."
 msgstr "Comment utiliser l'application et rôle de chaque paramètre."
+
+#: src/app/welcome/page.tsx
+msgid "How you watch"
+msgstr ""
 
 #: src/lib/subtitles/style.ts
 msgid "Huge"
@@ -2628,6 +2643,7 @@ msgstr "Touche Muet"
 
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Name"
 msgstr "Nom"
@@ -3150,6 +3166,10 @@ msgstr "Facultatif."
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Facultatif. Adresse d'une image affichée à la place du libellé."
 
+#: src/app/welcome/page.tsx
+msgid "Optional. Each change saves as you make it, and you can change it later in settings."
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. Match only these parts of a version, named as the formatter names them, such as seMatched for the stream expression it matched."
 msgstr "Facultatif. Ne fait correspondre que ces parties d'une version, nommées telles que le formateur les définit, comme seMatched pour l'expression de flux correspondante."
@@ -3265,6 +3285,7 @@ msgstr "Passthrough audio surround"
 
 #: src/app/settings/profile.tsx
 #: src/app/sign-in/page.tsx
+#: src/app/welcome/page.tsx
 msgid "Password"
 msgstr "Mot de passe"
 
@@ -3363,6 +3384,7 @@ msgid "Pick the version to download."
 msgstr "Choisissez la version à télécharger."
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "Picture"
 msgstr ""
 
@@ -4428,6 +4450,10 @@ msgstr "Barre latérale"
 msgid "Sign in"
 msgstr "Se connecter"
 
+#: src/app/welcome/page.tsx
+msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "Sign in failed"
 msgstr "Échec de la connexion"
@@ -4650,6 +4676,10 @@ msgstr "Démarrer une session"
 msgid "Start on"
 msgstr "Redémarrer maintenant"
 
+#: src/app/welcome/page.tsx
+msgid "Start watching"
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "Starting…"
 msgstr "Démarrage…"
@@ -4670,6 +4700,10 @@ msgstr "Statut"
 
 #: src/app/settings/interface.tsx
 msgid "Stays as it is"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Step {number} of {total}"
 msgstr ""
 
 #: src/app/settings/audio.tsx
@@ -4929,6 +4963,7 @@ msgid "That is not a valid regular expression."
 msgstr "Ce n'est pas une expression régulière valide."
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "That isn't an address"
 msgstr ""
 
@@ -4977,6 +5012,7 @@ msgid "The address must start with http:// or https://."
 msgstr "L'adresse doit commencer par http:// ou https://."
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "The address of an image. Empty shows your initial."
 msgstr ""
 
@@ -5174,6 +5210,10 @@ msgstr "Il n'y a rien ici"
 #: src/app/settings/_components/version-settings.tsx
 msgid "These come before the packs' badges. Badges that share a group are alternatives: only the first that matches shows."
 msgstr "Ceux-ci passent avant les badges des packs. Les badges d'un même groupe sont alternatifs : seul le premier correspondant s'affiche."
+
+#: src/app/welcome/page.tsx
+msgid "These don't match"
+msgstr ""
 
 #: src/lib/subtitles/delay.ts
 msgid "These subtitles don't match the video's own"
@@ -5771,6 +5811,14 @@ msgstr "Regarde {name}, à {at}"
 msgid "Web app"
 msgstr "Application web"
 
+#: src/app/welcome/page.tsx
+msgid "Welcome, {greeting}"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "What everyone on this server sees."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "What happened"
 msgstr "Ce qui s'est passé"
@@ -5984,6 +6032,18 @@ msgstr ""
 msgid "You'll be reminded at {time}"
 msgstr ""
 
+#: src/app/welcome/page.tsx
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set."
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "You're set, {name}"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "You've been added to this server. A few steps and it's yours."
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Your {name}"
 msgstr "Votre {name}"
@@ -5999,6 +6059,10 @@ msgstr ""
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "Votre propre {name}"
+
+#: src/app/welcome/page.tsx
+msgid "Your password"
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "Your password confirms it's you."

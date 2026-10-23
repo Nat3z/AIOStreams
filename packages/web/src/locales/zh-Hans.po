@@ -500,6 +500,10 @@ msgstr "地址"
 msgid "Ads"
 msgstr "广告"
 
+#: src/app/welcome/page.tsx
+msgid "Again"
+msgstr ""
+
 #: src/lib/i18n.ts
 msgid "AIOStreams is a solo project built and maintained by me in my free time. If you find it useful, please consider supporting my work. Your donation helps me keep the project alive and improve it for everyone!"
 msgstr "AIOStreams 是我利用业余时间独立开发和维护的项目。如果你觉得它有用，欢迎支持我的工作。你的捐赠能帮助我继续维护项目，并为所有人带来改进！"
@@ -676,6 +680,7 @@ msgid "At 0% there is no background."
 msgstr "设为 0% 时不显示背景。"
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "At least {min} characters"
 msgstr ""
 
@@ -720,6 +725,7 @@ msgstr "在窄屏上自动以列表显示剧集，在宽屏上则将剧集横向
 #: src/app/settings/_components/licenses.tsx
 #: src/app/sign-in/page.tsx
 #: src/app/trailer/page.tsx
+#: src/app/welcome/page.tsx
 #: src/components/shell/history-buttons.tsx
 #: src/features/party/not-in-party.tsx
 #: src/features/player/controls.tsx
@@ -1109,6 +1115,7 @@ msgstr "连接已断开"
 
 #: src/app.tsx
 #: src/app/sign-in/page.tsx
+#: src/app/welcome/page.tsx
 msgid "Continue"
 msgstr "继续"
 
@@ -1822,6 +1829,10 @@ msgstr "正在查找版本"
 msgid "Finding versions of {name}…"
 msgstr "正在查找 {name} 的版本…"
 
+#: src/app/welcome/page.tsx
+msgid "Finish"
+msgstr ""
+
 #: src/app/item/_components/details.tsx
 msgid "First aired"
 msgstr "首播日期"
@@ -2084,6 +2095,10 @@ msgstr "这些功能的工作方式"
 #: src/app/settings/about.tsx
 msgid "How to use the app and what each setting does."
 msgstr "介绍应用的使用方法和各项设置的作用。"
+
+#: src/app/welcome/page.tsx
+msgid "How you watch"
+msgstr ""
 
 #: src/lib/subtitles/style.ts
 msgid "Huge"
@@ -2625,6 +2640,7 @@ msgstr "静音键"
 
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Name"
 msgstr "名称"
@@ -3147,6 +3163,10 @@ msgstr "可选。"
 msgid "Optional. An image address, shown in place of the label."
 msgstr "可选。图片地址，将用于替代标签文字显示。"
 
+#: src/app/welcome/page.tsx
+msgid "Optional. Each change saves as you make it, and you can change it later in settings."
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. Match only these parts of a version, named as the formatter names them, such as seMatched for the stream expression it matched."
 msgstr "可选。仅匹配版本中的指定部分，名称需与格式化器使用的名称一致，例如表示匹配到的串流表达式的 seMatched。"
@@ -3262,6 +3282,7 @@ msgstr "直通环绕声音频"
 
 #: src/app/settings/profile.tsx
 #: src/app/sign-in/page.tsx
+#: src/app/welcome/page.tsx
 msgid "Password"
 msgstr "密码"
 
@@ -3360,6 +3381,7 @@ msgid "Pick the version to download."
 msgstr "选择要下载的版本。"
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "Picture"
 msgstr ""
 
@@ -4429,6 +4451,10 @@ msgstr "侧边栏"
 msgid "Sign in"
 msgstr "登录"
 
+#: src/app/welcome/page.tsx
+msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "Sign in failed"
 msgstr "登录失败"
@@ -4651,6 +4677,10 @@ msgstr "开始一起观看"
 msgid "Start on"
 msgstr "立即重新启动"
 
+#: src/app/welcome/page.tsx
+msgid "Start watching"
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "Starting…"
 msgstr "正在启动…"
@@ -4671,6 +4701,10 @@ msgstr "状态"
 
 #: src/app/settings/interface.tsx
 msgid "Stays as it is"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Step {number} of {total}"
 msgstr ""
 
 #: src/app/settings/audio.tsx
@@ -4931,6 +4965,7 @@ msgid "That is not a valid regular expression."
 msgstr "正则表达式无效。"
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "That isn't an address"
 msgstr ""
 
@@ -4979,6 +5014,7 @@ msgid "The address must start with http:// or https://."
 msgstr "地址必须以 http:// 或 https:// 开头。"
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
 msgid "The address of an image. Empty shows your initial."
 msgstr ""
 
@@ -5177,6 +5213,10 @@ msgstr "这里没有内容"
 #: src/app/settings/_components/version-settings.tsx
 msgid "These come before the packs' badges. Badges that share a group are alternatives: only the first that matches shows."
 msgstr "这些标签会优先于配置包中的标签显示。同组标签互为替代项：只显示第一个匹配的标签。"
+
+#: src/app/welcome/page.tsx
+msgid "These don't match"
+msgstr ""
 
 #: src/lib/subtitles/delay.ts
 msgid "These subtitles don't match the video's own"
@@ -5774,6 +5814,14 @@ msgstr "正在观看 {name}，已播放 {at}"
 msgid "Web app"
 msgstr "网页应用"
 
+#: src/app/welcome/page.tsx
+msgid "Welcome, {greeting}"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "What everyone on this server sees."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "What happened"
 msgstr "发生了什么"
@@ -5989,6 +6037,18 @@ msgstr ""
 msgid "You'll be reminded at {time}"
 msgstr ""
 
+#: src/app/welcome/page.tsx
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set."
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "You're set, {name}"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "You've been added to this server. A few steps and it's yours."
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Your {name}"
 msgstr "你的 {name}"
@@ -6004,6 +6064,10 @@ msgstr ""
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "你自己的 {name}"
+
+#: src/app/welcome/page.tsx
+msgid "Your password"
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "Your password confirms it's you."

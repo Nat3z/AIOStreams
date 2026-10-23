@@ -13,7 +13,6 @@ import {
   CreateUserResponse,
 } from '@/lib/api';
 import { JellyfinApiKeys } from './jellyfin-api-keys';
-import { JellyfinPersonas } from './jellyfin-personas';
 import { JellyfinTrackers } from './jellyfin-trackers';
 import { PageWrapper } from '@/components/shared/page-wrapper';
 import { Alert } from '@aiostreams/ui/alert';
@@ -619,7 +618,7 @@ function JellyfinPrimer({
   );
 }
 
-type ServerTab = 'connect' | 'users';
+type ServerTab = 'connect' | 'trackers';
 
 function AppFact({
   icon,
@@ -745,10 +744,10 @@ function AppBlock({
               rounded
               className="w-full sm:w-auto"
               leftIcon={<Users className="h-4 w-4" />}
-              onClick={() => onOpenServer('users')}
+              onClick={() => onOpenServer('trackers')}
               disabled={disabled}
             >
-              Users, trackers and playback
+              Trackers and playback
             </Button>
             <Button
               size="sm"
@@ -3288,11 +3287,6 @@ function Content() {
                     </div>
                   </div>
                 ),
-              },
-              {
-                value: 'users',
-                label: 'Users',
-                content: <JellyfinPersonas />,
               },
               {
                 value: 'trackers',
