@@ -328,6 +328,15 @@ app.get(
   }
 );
 
+// An instance's site root is its users' web app, not the configure page.
+app.get('/', (req, res, next) => {
+  if (!appConfig.jellyfin.instanceAlias) {
+    next();
+    return;
+  }
+  res.redirect(302, '/jellyfin/web/');
+});
+
 // redirect for legacy paths
 app.get('{/:config}/configure', (req, res) => {
   res.redirect('/stremio/configure');
