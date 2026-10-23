@@ -31,13 +31,12 @@ export async function isInstanceConfig(uuid: string): Promise<boolean> {
 
 export async function issueAdminHandoff(): Promise<string> {
   const code = randomBytes(24).toString('base64url');
-  await codes.set(code, true, HANDOFF_TTL);
+  // Redeemed straight away, so it can't wait in the write buffer.
+  await codes.set(code, true, HANDOFF_TTL, true);
   return code;
 }
 
-/** Each code opens once. */
+/** Each code opens once: only the delete that removes it counts. */
 export async function redeemAdminHandoff(code: string): Promise<boolean> {
-  if (!(await codes.get(code))) return false;
-  await codes.delete(code);
-  return true;
+  return !!code && (await codes.delete(code));
 }
