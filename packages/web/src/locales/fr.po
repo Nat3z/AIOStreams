@@ -733,6 +733,10 @@ msgstr "Badges"
 msgid "Bar"
 msgstr "Barre"
 
+#: src/app/home/page.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Avant la fin"
@@ -3681,6 +3685,10 @@ msgstr "Accent"
 #: src/app/search/page.tsx
 msgid "Recent searches"
 msgstr "Recherches récentes"
+
+#: src/app/home/page.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"
