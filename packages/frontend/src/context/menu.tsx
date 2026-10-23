@@ -42,6 +42,7 @@ export function MenuProvider({ children }: { children: React.ReactNode }) {
   const statsAvailable =
     status?.settings.userAnalyticsEnabled === true &&
     Boolean(user.uuid && user.password);
+  const usersAvailable = status?.settings.jellyfin?.enabled === true;
 
   const menus = useMemo(() => {
     let availableMenus = VALID_MENUS as readonly MenuId[];
@@ -53,8 +54,11 @@ export function MenuProvider({ children }: { children: React.ReactNode }) {
     if (!statsAvailable) {
       availableMenus = availableMenus.filter((menu) => menu !== 'stats');
     }
+    if (!usersAvailable) {
+      availableMenus = availableMenus.filter((menu) => menu !== 'users');
+    }
     return availableMenus;
-  }, [mode, statsAvailable]);
+  }, [mode, statsAvailable, usersAvailable]);
 
   // Get initial menu from URL or default to 'about'
   const initialMenu = (() => {

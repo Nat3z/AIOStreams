@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
 import {
   APIError,
@@ -9,14 +9,17 @@ import {
   mintToken,
   quickConnectAuthorize,
   quickConnectByCode,
+  UserInviteRepository,
   UserRepository,
 } from '@aiostreams/core';
 import { userApiRateLimiter } from '../../middlewares/ratelimit.js';
 import { attachSession } from '../../middlewares/auth.js';
 import { resolveConfigCredentials } from '../../utils/basic-auth.js';
 import { createResponse } from '../../utils/responses.js';
+import { isInstanceConfig } from '../../utils/admin-handoff.js';
 import {
   accountLocked,
+  personaById,
   resolveConfig,
   userUnlocks,
 } from '../jellyfin/context.js';
@@ -431,6 +434,131 @@ router.post('/web/token', async (req, res, next) => {
         ),
       })
     );
+  } catch (error) {
+    next(
+      error instanceof APIError
+        ? error
+        : new APIError(constants.ErrorCode.INTERNAL_SERVER_ERROR)
+    );
+  }
+});
+
+/*
+ * Onboarding links, one per user, which the owner sends from the configure
+ * page. Only users saved in the configuration get one.
+ */
+const inviteBody = z.object({ persona: z.string().min(1).max(64) });
+
+/** The configuration's own credentials; a user's session can't send links. */
+async function inviteOwner(
+  req: Request,
+  res: Response
+): Promise<{ uuid: string; password: string } | null> {
+  if (!appConfig.jellyfin.enabled) return null;
+  const creds = await resolveConfigCredentials(req, res, {
+    allowEncrypted: false,
+  });
+  if (!creds) return null;
+  await UserRepository.verifyUser(creds.uuid, creds.password);
+  return creds;
+}
+
+router.get('/invites', async (req, res, next) => {
+  try {
+    const creds = await inviteOwner(req, res);
+    if (!creds) {
+      next(new APIError(constants.ErrorCode.UNAUTHORIZED));
+      return;
+    }
+    res.json(
+      createResponse({
+        success: true,
+        data: await UserInviteRepository.list(creds.uuid),
+      })
+    );
+  } catch (error) {
+    next(
+      error instanceof APIError
+        ? error
+        : new APIError(constants.ErrorCode.INTERNAL_SERVER_ERROR)
+    );
+  }
+});
+
+router.post('/invites', async (req, res, next) => {
+  try {
+    const parsed = inviteBody.safeParse(req.body ?? {});
+    if (!parsed.success) {
+      next(new APIError(constants.ErrorCode.MISSING_REQUIRED_FIELDS));
+      return;
+    }
+    const creds = await inviteOwner(req, res);
+    if (!creds) {
+      next(new APIError(constants.ErrorCode.UNAUTHORIZED));
+      return;
+    }
+    const enc = encryptString(creds.password);
+    if (!enc.success || !enc.data) {
+      next(new APIError(constants.ErrorCode.ENCRYPTION_ERROR));
+      return;
+    }
+    const userData = await resolveConfig(creds.uuid, enc.data);
+    const persona = userData && personaById(userData, parsed.data.persona);
+    if (!persona) {
+      res.status(404).json(
+        createResponse({
+          success: false,
+          detail: 'Save your configuration to send this user a link',
+        })
+      );
+      return;
+    }
+    const { token, expiresAt } = await UserInviteRepository.create({
+      uuid: creds.uuid,
+      encryptedPassword: enc.data,
+      persona: parsed.data.persona,
+    });
+    logger.info(
+      { uuid: creds.uuid, persona: parsed.data.persona },
+      'onboarding link issued'
+    );
+    // Opened where this user signs in, as a token only works on its own mount.
+    const mount =
+      persona.hidden && persona.address
+        ? `/jellyfin/p/${persona.address}`
+        : (await isInstanceConfig(creds.uuid))
+          ? '/jellyfin'
+          : `/jellyfin/${creds.uuid}/${enc.data}`;
+    res.json(
+      createResponse({
+        success: true,
+        data: {
+          url: `${appConfig.bootstrap.baseUrl}${mount}/web/#/welcome?invite=${token}`,
+          expiresAt,
+        },
+      })
+    );
+  } catch (error) {
+    next(
+      error instanceof APIError
+        ? error
+        : new APIError(constants.ErrorCode.INTERNAL_SERVER_ERROR)
+    );
+  }
+});
+
+router.delete('/invites/:persona', async (req, res, next) => {
+  try {
+    const creds = await inviteOwner(req, res);
+    if (!creds) {
+      next(new APIError(constants.ErrorCode.UNAUTHORIZED));
+      return;
+    }
+    const revoked = await UserInviteRepository.revoke(
+      creds.uuid,
+      String(req.params.persona)
+    );
+    res.json(createResponse({ success: true, data: { revoked } }));
   } catch (error) {
     next(
       error instanceof APIError

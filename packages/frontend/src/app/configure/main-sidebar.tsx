@@ -24,6 +24,7 @@ import {
   BiSearch,
   BiGridAlt,
   BiBarChartAlt2,
+  BiGroup,
 } from 'react-icons/bi';
 import { useCommandPalette } from '@/context/command-palette';
 import { useRegisterQuickAction } from '@/context/quick-actions';
@@ -157,6 +158,16 @@ export function MainSidebar() {
             iconType: BiBarChartAlt2,
             isCurrent: selectedMenu === 'stats',
             id: 'stats' as const,
+          },
+        ] as MenuItem[])
+      : ([] as MenuItem[])),
+    ...(status?.settings.jellyfin?.enabled
+      ? ([
+          {
+            name: 'Users',
+            iconType: BiGroup,
+            isCurrent: selectedMenu === 'users',
+            id: 'users' as const,
           },
         ] as MenuItem[])
       : ([] as MenuItem[])),
