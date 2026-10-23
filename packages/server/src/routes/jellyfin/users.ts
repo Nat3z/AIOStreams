@@ -3,6 +3,7 @@ import {
   config as appConfig,
   createLogger,
   encryptString,
+  USER_PASSWORD_MIN,
   getSimpleTextHash,
   isConfigUuid,
   liveCatalogs,
@@ -36,6 +37,8 @@ import {
   PIN_REQUIRED,
   lockTag,
   userUnlocks,
+  userPasswordOpens,
+  bodyField,
   watchScopeOf,
   qs,
   resolveConfig,
@@ -51,6 +54,7 @@ import {
   userConfiguration,
 } from './preferences.js';
 import { pickSource } from './playback.js';
+import { saveSelf } from './profile.js';
 import { serverName } from './system.js';
 import { sessionIdOf } from './session-sockets.js';
 import { controllableDevices, type RemoteDevice } from './remote.js';
@@ -398,6 +402,26 @@ async function pinOnlySignIn(
   return !!target.profile.lock && userUnlocks(mount.uuid, target.profile, pin);
 }
 
+/** A picker sign-in with the profile's own password in place of the configuration's. */
+async function ownPasswordSignIn(
+  mount: PickerMount,
+  name: string,
+  pw: string
+): Promise<PickerTarget | null> {
+  let target: PickerTarget | null;
+  if (mount.profile) {
+    target = await pickerTarget(mount, name);
+  } else {
+    const userData = await resolveConfig(mount.uuid, mount.encryptedPassword);
+    const profile = userData ? resolveSignIn(userData, name) : null;
+    target = userData && profile ? { userData, profile } : null;
+  }
+  return target &&
+    (await userPasswordOpens(mount.uuid, target.profile, pw))
+    ? target
+    : null;
+}
+
 router.post(
   '/Users/AuthenticateByName',
   jfOptional(async (req, res) => {
@@ -434,6 +458,30 @@ router.post(
       return;
     }
     const proven = await checkPassword(uuid, pw);
+    const byOwn =
+      !proven && mount ? await ownPasswordSignIn(mount, wanted, pw) : null;
+    if (mount && byOwn) {
+      const client = clientOf(req);
+      logger.info(
+        {
+          uuid: mount.uuid,
+          profile: byOwn.profile.id,
+          client: client.name,
+          device: client.device,
+        },
+        'jellyfin client authenticated with its own password'
+      );
+      res.json(
+        await authenticationResult(
+          req,
+          mount.uuid,
+          mount.encryptedPassword,
+          byOwn.userData,
+          byOwn.profile
+        )
+      );
+      return;
+    }
     if (!proven) {
       const byPin =
         own ?? (mount && wanted ? await pickerTarget(mount, wanted) : null);
@@ -618,13 +666,35 @@ router.post(
     res.status(204).end();
   })
 );
+/* Changes the caller's own password; a user token's persona is its own, never the id in the URL. */
 router.post(
-  [
-    '/Users/Password',
-    '/Users/:userId/Password',
-    '/Users/:userId/Policy',
-    '/Users/:userId/EasyPassword',
-  ],
+  ['/Users/Password', '/Users/:userId/Password'],
+  jf(async (req, res, ctx) => {
+    if (ctx.apiKey) {
+      res.status(400).json({ Message: 'API keys have no user' });
+      return;
+    }
+    const current = String(bodyField(req, 'CurrentPw') ?? '');
+    const next = String(bodyField(req, 'NewPw') ?? '');
+    const proven =
+      !ctx.profile.password ||
+      (await userPasswordOpens(ctx.uuid, ctx.profile, current));
+    if (!proven) {
+      res.status(403).json({ Message: 'Invalid password' });
+      return;
+    }
+    if (next.length < USER_PASSWORD_MIN) {
+      res.status(400).json({
+        Message: `A password must be at least ${USER_PASSWORD_MIN} characters`,
+      });
+      return;
+    }
+    await saveSelf(ctx, { password: next });
+    res.status(204).end();
+  })
+);
+router.post(
+  ['/Users/:userId/Policy', '/Users/:userId/EasyPassword'],
   jf(async (_req, res) => {
     res.status(204).end();
   })
