@@ -6,6 +6,8 @@ import {
   decryptString,
   selfStateOf,
   SelfPreferencesSchema,
+  StremioTokenRepository,
+  config as appConfig,
   updateSelf,
   USER_PASSWORD_MIN,
   type SelfProfilePatch,
@@ -154,6 +156,59 @@ router.post(
     } catch (error) {
       sendError(res, error);
     }
+  })
+);
+
+const installBody = z.object({
+  password: z.string().max(128).optional(),
+  label: z.string().trim().min(1).max(40).default('Stremio'),
+});
+
+// The link opens streams as this user, so making one asks for their password.
+router.post(
+  '/AIOStreams/Profile/Stremio',
+  self(async (req, res, ctx) => {
+    try {
+      const { password, label } = installBody.parse(bodyOf(req));
+      if (!(await confirmsPassword(req, ctx, password))) {
+        res.status(403).json({ Message: 'Invalid password' });
+        return;
+      }
+      const token = await StremioTokenRepository.create(
+        {
+          uuid: ctx.uuid,
+          encryptedPassword: ctx.encryptedPassword,
+          persona: ctx.persona?.id ?? null,
+        },
+        label
+      );
+      res.json({
+        manifestUrl: `${appConfig.bootstrap.baseUrl}/s/${token}/manifest.json`,
+      });
+    } catch (error) {
+      sendError(res, error);
+    }
+  })
+);
+
+router.get(
+  '/AIOStreams/Profile/Stremio',
+  self(async (_req, res, ctx) => {
+    res.json(
+      await StremioTokenRepository.list(ctx.uuid, ctx.persona?.id ?? null)
+    );
+  })
+);
+
+router.delete(
+  '/AIOStreams/Profile/Stremio/:id',
+  self(async (req, res, ctx) => {
+    const revoked = await StremioTokenRepository.revoke(
+      ctx.uuid,
+      ctx.persona?.id ?? null,
+      String(req.params.id)
+    );
+    res.status(revoked ? 204 : 404).end();
   })
 );
 
