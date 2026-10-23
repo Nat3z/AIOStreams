@@ -473,6 +473,10 @@ msgstr "已添加 {name}"
 msgid "Added to {name}"
 msgstr "已添加到 {name}"
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "请在配置页面设置插件、目录和用户。"
@@ -484,6 +488,10 @@ msgstr "地址"
 #: src/pages/settings/playback.tsx
 msgid "Ads"
 msgstr "广告"
+
+#: src/pages/welcome.tsx
+msgid "Again"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "AIOStreams is a solo project built and maintained by me in my free time. If you find it useful, please consider supporting my work. Your donation helps me keep the project alive and improve it for everyone!"
@@ -647,6 +655,7 @@ msgid "At 0% there is no background."
 msgstr "设为 0% 时不显示背景。"
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "At least {min} characters"
 msgstr ""
 
@@ -696,6 +705,7 @@ msgstr "在窄屏上自动以列表显示剧集，在宽屏上则将剧集横向
 #: src/pages/servers.tsx
 #: src/pages/sign-in.tsx
 #: src/pages/trailer.tsx
+#: src/pages/welcome.tsx
 msgid "Back"
 msgstr "返回"
 
@@ -726,6 +736,10 @@ msgstr "标签"
 #: src/pages/settings/interface.tsx
 msgid "Bar"
 msgstr "栏"
+
+#: src/pages/home.tsx
+msgid "Because you watched"
+msgstr ""
 
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
@@ -1034,6 +1048,7 @@ msgid "Composer"
 msgstr "创作者"
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr "配置"
 
@@ -1068,6 +1083,7 @@ msgstr "连接已断开"
 
 #: src/app.tsx
 #: src/pages/sign-in.tsx
+#: src/pages/welcome.tsx
 msgid "Continue"
 msgstr "继续"
 
@@ -1774,6 +1790,10 @@ msgstr "正在查找版本"
 msgid "Finding versions of {name}…"
 msgstr "正在查找 {name} 的版本…"
 
+#: src/pages/welcome.tsx
+msgid "Finish"
+msgstr ""
+
 #: src/pages/item.tsx
 msgid "First aired"
 msgstr "首播日期"
@@ -2023,6 +2043,10 @@ msgstr "这些功能的工作方式"
 #: src/pages/settings/about.tsx
 msgid "How to use the app and what each setting does."
 msgstr "介绍应用的使用方法和各项设置的作用。"
+
+#: src/pages/welcome.tsx
+msgid "How you watch"
+msgstr ""
 
 #: src/lib/subtitles/style.ts
 msgid "Huge"
@@ -2563,6 +2587,7 @@ msgstr "静音键"
 #: src/components/playlists.tsx
 #: src/components/version-settings.tsx
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "Name"
 msgstr "名称"
 
@@ -3001,6 +3026,7 @@ msgstr "不透明度：{backgroundOpacity}%"
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr "打开"
 
@@ -3057,6 +3083,10 @@ msgstr "可选。"
 #: src/components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "可选。图片地址，将用于替代标签文字显示。"
+
+#: src/pages/welcome.tsx
+msgid "Optional. Each change saves as you make it, and you can change it later in settings."
+msgstr ""
 
 #: src/components/version-settings.tsx
 msgid "Optional. Match only these parts of a version, named as the formatter names them, such as seMatched for the stream expression it matched."
@@ -3173,6 +3203,7 @@ msgstr "直通环绕声音频"
 
 #: src/pages/settings/profile.tsx
 #: src/pages/sign-in.tsx
+#: src/pages/welcome.tsx
 msgid "Password"
 msgstr "密码"
 
@@ -3270,6 +3301,7 @@ msgid "Pick the version to download."
 msgstr "选择要下载的版本。"
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "Picture"
 msgstr ""
 
@@ -3587,6 +3619,7 @@ msgstr "上一个预告片"
 msgid "Producer"
 msgstr "制片人"
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
@@ -3686,6 +3719,10 @@ msgstr ""
 #: src/pages/search.tsx
 msgid "Recent searches"
 msgstr "最近搜索"
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
@@ -4285,6 +4322,10 @@ msgstr "侧边栏"
 msgid "Sign in"
 msgstr "登录"
 
+#: src/pages/welcome.tsx
+msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
+msgstr ""
+
 #: src/pages/sign-in.tsx
 msgid "Sign in failed"
 msgstr "登录失败"
@@ -4504,6 +4545,10 @@ msgstr "开始一起观看"
 msgid "Start on"
 msgstr ""
 
+#: src/pages/welcome.tsx
+msgid "Start watching"
+msgstr ""
+
 #: src/components/remote-sheet.tsx
 msgid "Starting…"
 msgstr "正在启动…"
@@ -4521,6 +4566,10 @@ msgstr "统计"
 #: src/pages/settings/apps.tsx
 msgid "Status"
 msgstr "状态"
+
+#: src/pages/welcome.tsx
+msgid "Step {number} of {total}"
+msgstr ""
 
 #: src/pages/settings/audio.tsx
 msgid "Stereo"
@@ -4780,6 +4829,7 @@ msgid "That is not a valid regular expression."
 msgstr "正则表达式无效。"
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "That isn't an address"
 msgstr ""
 
@@ -4828,6 +4878,7 @@ msgid "The address must start with http:// or https://."
 msgstr "地址必须以 http:// 或 https:// 开头。"
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "The address of an image. Empty shows your initial."
 msgstr ""
 
@@ -5026,6 +5077,10 @@ msgstr "这里没有内容"
 #: src/components/version-settings.tsx
 msgid "These come before the packs' badges. Badges that share a group are alternatives: only the first that matches shows."
 msgstr "这些标签会优先于配置包中的标签显示。同组标签互为替代项：只显示第一个匹配的标签。"
+
+#: src/pages/welcome.tsx
+msgid "These don't match"
+msgstr ""
 
 #: src/lib/subtitles/delay.ts
 msgid "These subtitles don't match the video's own"
@@ -5580,6 +5635,14 @@ msgstr "正在观看 {name}，已播放 {at}"
 msgid "Web app"
 msgstr "网页应用"
 
+#: src/pages/welcome.tsx
+msgid "Welcome, {greeting}"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "What everyone on this server sees."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "What happened"
 msgstr "发生了什么"
@@ -5783,6 +5846,18 @@ msgstr ""
 msgid "You'll be reminded at {time}"
 msgstr ""
 
+#: src/pages/welcome.tsx
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set."
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You're set, {name}"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You've been added to this server. A few steps and it's yours."
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Your {name}"
 msgstr "你的 {name}"
@@ -5798,6 +5873,10 @@ msgstr ""
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "你自己的 {name}"
+
+#: src/pages/welcome.tsx
+msgid "Your password"
+msgstr ""
 
 #: src/pages/settings/profile.tsx
 msgid "Your password confirms it's you."

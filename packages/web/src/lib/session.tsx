@@ -58,6 +58,12 @@ export type SessionPhase =
     }
   | { kind: 'ready'; client: JellyfinClient; user: UserDto };
 
+/** A setup link the owner sent, `#/welcome?invite=<token>`. */
+export function inviteToken(): string | null {
+  const [path, query = ''] = window.location.hash.slice(1).split('?');
+  return path === '/welcome' ? new URLSearchParams(query).get('invite') : null;
+}
+
 const lastUserKey = (base: string) => `aiostreams-web-last-user:${base}`;
 /**
  * The user who left for the picker here. Until then a user with a PIN stays
@@ -219,6 +225,18 @@ export function useSessionPhase(base: string) {
     let cancelled = false;
     const anonymous = new JellyfinClient(base);
     const run = async () => {
+      // A setup link signs its user in here, whoever was before.
+      const invite = inviteToken();
+      if (invite) {
+        const auth = await anonymous
+          .post<AuthenticationResult>('/AIOStreams/Invite', { Token: invite })
+          .catch(() => null);
+        if (auth?.AccessToken) {
+          if (!cancelled) adopt(anonymous, auth);
+          return;
+        }
+        await startOver(to.home);
+      }
       const stored = readCredentials(base);
       if (stored) {
         const client = anonymous.withToken(stored.token);
@@ -307,7 +325,7 @@ export function useSessionPhase(base: string) {
     return () => {
       cancelled = true;
     };
-  }, [base, enter, pick, askWho, attempt]);
+  }, [base, adopt, enter, pick, askWho, attempt]);
 
   const signIn = React.useCallback(
     async (username: string, password: string) => {
