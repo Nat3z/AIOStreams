@@ -338,19 +338,29 @@ const PIN_SHAPE = /^\d{4,12}$/;
 const PIN_ONLY_LENGTH = 6;
 const PIN_ONLY_SHAPE = new RegExp(`^\\d{${PIN_ONLY_LENGTH},12}$`);
 
-/** A saved PIN comes back as its hash, never as the digits. */
+/** A saved PIN or password comes back as its hash, never as typed. */
 function isSavedPin(lock: string | undefined): lock is string {
   return !!lock && lock.startsWith('$2');
 }
 
-function PinField({
+/** Must match the server's floor for a user's own password. */
+const PASSWORD_MIN = 8;
+
+/** A PIN or password: shown as set once saved, and changed or removed from there. */
+function SecretField({
+  label,
   value,
   onChange,
-  help = 'Signing in as this user needs it, typed after the password as password/PIN. Anyone who can edit this configuration can still change or remove it.',
+  help,
+  placeholder,
+  numeric,
 }: {
+  label: string;
   value: string | undefined;
   onChange(value: string | undefined): void;
-  help?: string;
+  help: string;
+  placeholder: string;
+  numeric?: boolean;
 }) {
   const [saved] = useState(isSavedPin(value) ? value : undefined);
   const [mode, setMode] = useState<'saved' | 'edit' | 'removed'>(
@@ -361,7 +371,7 @@ function PinField({
     return (
       <div className="flex items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-sm font-medium">PIN</p>
+          <p className="text-sm font-medium">{label}</p>
           <p className="text-xs text-[--muted]">
             {mode === 'saved' ? 'Set. ' + help : 'Removed when you save.'}
           </p>
@@ -408,20 +418,63 @@ function PinField({
   }
   return (
     <TextInput
-      label="PIN"
+      label={label}
       type="password"
-      inputMode="numeric"
+      inputMode={numeric ? 'numeric' : undefined}
       autoComplete="new-password"
       placeholder={saved ? 'Unchanged' : 'None'}
-      help={`Optional, 4 to 12 digits. ${help}`}
+      help={`${placeholder} ${help}`}
       value={isSavedPin(value) ? '' : (value ?? '')}
       onValueChange={(typed) => {
-        const digits = typed.replace(/\D/g, '').slice(0, 12);
-        onChange(digits || saved);
+        const next = numeric ? typed.replace(/\D/g, '').slice(0, 12) : typed;
+        onChange(next || saved);
       }}
     />
   );
 }
+
+function PinField({
+  value,
+  onChange,
+  help = 'Signing in as this user needs it, typed after the password as password/PIN. Anyone who can edit this configuration can still change or remove it.',
+}: {
+  value: string | undefined;
+  onChange(value: string | undefined): void;
+  help?: string;
+}) {
+  return (
+    <SecretField
+      label="PIN"
+      numeric
+      placeholder="Optional, 4 to 12 digits."
+      value={value}
+      onChange={onChange}
+      help={help}
+    />
+  );
+}
+
+function PasswordField({
+  value,
+  onChange,
+}: {
+  value: string | undefined;
+  onChange(value: string | undefined): void;
+}) {
+  return (
+    <SecretField
+      label="Password"
+      placeholder={`Optional, at least ${PASSWORD_MIN} characters.`}
+      value={value}
+      onChange={onChange}
+      help="Their own, for the web app and Jellyfin apps, so they never need the configuration's. They can change it from their profile."
+    />
+  );
+}
+
+/** A typed password too short to save, as saved ones are hashes. */
+const shortPassword = (password: string | undefined) =>
+  !!password && !password.startsWith('$2') && password.length < PASSWORD_MIN;
 
 export function JellyfinPersonas() {
   const { userData, setUserData, uuid, password } = useUserData();
@@ -540,6 +593,10 @@ export function JellyfinPersonas() {
       toast.error('A PIN is 4 to 12 digits.');
       return;
     }
+    if (shortPassword(draft.password)) {
+      toast.error(`A password is at least ${PASSWORD_MIN} characters.`);
+      return;
+    }
     if (
       pinSignIn &&
       draft.lock &&
@@ -570,6 +627,7 @@ export function JellyfinPersonas() {
       hidden: draft.hidden || undefined,
       address: draft.hidden ? (draft.address ?? newAddress()) : undefined,
       lock: draft.lock || undefined,
+      password: draft.password || undefined,
     };
     if (editing !== null && editing < personas.length) next[editing] = value;
     else next.push(value);
@@ -585,6 +643,10 @@ export function JellyfinPersonas() {
       !PIN_SHAPE.test(primaryDraft.lock)
     ) {
       toast.error('A PIN is 4 to 12 digits.');
+      return;
+    }
+    if (shortPassword(primaryDraft.password)) {
+      toast.error(`A password is at least ${PASSWORD_MIN} characters.`);
       return;
     }
     const name = primaryDraft.name?.trim() || '';
@@ -620,6 +682,7 @@ export function JellyfinPersonas() {
       trackers: primaryDraft.trackers,
       hidden: primaryDraft.hidden || undefined,
       lock: primaryDraft.lock || undefined,
+      password: primaryDraft.password || undefined,
     };
     patch({ primary: Object.values(value).some(Boolean) ? value : undefined });
     setPrimaryDraft(null);
@@ -657,12 +720,12 @@ export function JellyfinPersonas() {
   return (
     <div className="space-y-3">
       <p className="text-xs text-gray-400">
-        Shown as users of the server. Everyone signs in with this
-        configuration&apos;s password, and a user with a PIN also needs that,
-        typed after the password as password/PIN. The primary user is this
-        configuration itself; each other user can keep a history and trackers of
-        its own. Drag a user to change where it sits on the sign-in picker; the
-        primary user is always listed first.
+        Shown as users of the server. A user with a password of their own signs
+        in with it; the rest use this configuration&apos;s password, and a user
+        with a PIN also needs that, typed after the password as password/PIN.
+        The primary user is this configuration itself; each other user can keep
+        a history and trackers of its own. Drag a user to change where it sits
+        on the sign-in picker; the primary user is always listed first.
         {pinSignIn &&
           ` On the sign-in picker address, a user with a PIN of ${PIN_ONLY_LENGTH} or more digits can sign in with that PIN alone, so each person needs only their own PIN.`}
       </p>
@@ -813,6 +876,12 @@ export function JellyfinPersonas() {
                 setPrimaryDraft({ ...primaryDraft, hidden: value || undefined })
               }
             />
+            <PasswordField
+              value={primaryDraft.password}
+              onChange={(password) =>
+                setPrimaryDraft({ ...primaryDraft, password })
+              }
+            />
             <PinField
               value={primaryDraft.lock}
               onChange={(lock) => setPrimaryDraft({ ...primaryDraft, lock })}
@@ -920,6 +989,10 @@ export function JellyfinPersonas() {
               />
             )}
 
+            <PasswordField
+              value={draft.password}
+              onChange={(password) => setDraft({ ...draft, password })}
+            />
             <PinField
               value={draft.lock}
               onChange={(lock) => setDraft({ ...draft, lock })}
