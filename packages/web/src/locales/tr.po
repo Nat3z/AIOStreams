@@ -752,6 +752,10 @@ msgstr "Rozetler"
 msgid "Bar"
 msgstr "Çubuk"
 
+#: src/app/home/page.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Sondan önce"
@@ -3786,6 +3790,10 @@ msgstr "Vurgu"
 #: src/app/search/page.tsx
 msgid "Recent searches"
 msgstr "Son aramalar"
+
+#: src/app/home/page.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"

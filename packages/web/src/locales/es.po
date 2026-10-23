@@ -751,6 +751,10 @@ msgstr "Insignias"
 msgid "Bar"
 msgstr "Barra"
 
+#: src/app/home/page.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Antes del final"
@@ -3774,6 +3778,10 @@ msgstr "Acento"
 #: src/app/search/page.tsx
 msgid "Recent searches"
 msgstr "Búsquedas recientes"
+
+#: src/app/home/page.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"
