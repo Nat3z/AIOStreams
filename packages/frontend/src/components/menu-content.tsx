@@ -9,6 +9,7 @@ import { SaveInstallMenu } from './menu/save-install';
 import { FormatterMenu } from './menu/formatter';
 import { ProxyMenu } from './menu/proxy';
 import { StatsMenu } from './menu/stats';
+import { UsersMenu } from './menu/users';
 
 export function MenuContent() {
   const { selectedMenu } = useMenu();
@@ -32,6 +33,8 @@ export function MenuContent() {
       return <MiscellaneousMenu />;
     case 'stats':
       return <StatsMenu />;
+    case 'users':
+      return <UsersMenu />;
     case 'save-install':
       return <SaveInstallMenu />;
     default:

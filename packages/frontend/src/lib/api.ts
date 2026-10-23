@@ -942,6 +942,39 @@ export async function getJellyfinApiKeyToken(
   });
 }
 
+export interface UserInvite {
+  persona: string;
+  createdAt: number;
+  expiresAt: number;
+  usedAt: number | null;
+}
+
+/** Each user's setup link, as last sent. */
+export async function listUserInvites(credentials: Credentials) {
+  return api<UserInvite[]>('GET /jellyfin/invites', authed(credentials));
+}
+
+/** A new setup link for a saved user, which turns off their last one. */
+export async function createUserInvite(
+  credentials: Credentials,
+  persona: string
+) {
+  return api<{ url: string; expiresAt: number }>('POST /jellyfin/invites', {
+    ...authed(credentials),
+    body: { persona },
+  });
+}
+
+export async function revokeUserInvite(
+  credentials: Credentials,
+  persona: string
+) {
+  return api<{ revoked: boolean }>(
+    `DELETE /jellyfin/invites/${encodeURIComponent(persona)}`,
+    authed(credentials)
+  );
+}
+
 export interface QuickConnectPending {
   device: { name: string; app: string; version: string };
   requestedAt: string;
