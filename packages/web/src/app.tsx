@@ -8,12 +8,18 @@ import { ThemeProvider } from 'next-themes';
 import { Toaster } from '@aiostreams/ui/toaster';
 import { DirectionProvider } from '@aiostreams/ui/core/direction';
 import { LoadingOverlay } from '@aiostreams/ui/loading-spinner';
-import { pickerAccount, SessionProvider, useSessionPhase } from './lib/session';
+import {
+  inviteToken,
+  pickerAccount,
+  SessionProvider,
+  useSessionPhase,
+} from './lib/session';
 import { webRouter } from './router';
 import { SignInScreen, Unreachable, UserPicker } from './pages/sign-in';
 import { PageBackground } from './components/layout';
 import { apiBase, JellyfinClient } from './lib/client';
-import { navigate, to } from './lib/paths';
+import { navigate, startOver, to } from './lib/paths';
+import { WelcomePage } from './pages/welcome';
 import {
   NO_SERVER_INFO,
   ServerInfoProvider,
@@ -235,6 +241,8 @@ function Session({
   React.useEffect(() => currentHost().start?.({ base }), [base]);
 
   const ready = phase.kind === 'ready' ? phase : null;
+  // A setup link opens on its welcome steps rather than the app.
+  const [invite, setInvite] = React.useState(inviteToken);
   // Built anew in another language, as some text is written outside React.
   const { i18n } = useLingui();
   const anonymous = React.useMemo(() => new JellyfinClient(base), [base]);
@@ -311,7 +319,14 @@ function Session({
           signOut={signOut}
           changeServer={changeServer}
         >
-          <RouterProvider router={webRouter} />
+          {invite && inviteToken() === invite ? (
+            <WelcomePage
+              invite={invite}
+              onDone={() => void startOver(to.home).then(() => setInvite(null))}
+            />
+          ) : (
+            <RouterProvider router={webRouter} />
+          )}
           {/* Inside a session, which its report is sent through. */}
           {shellHost() && <CrashReportDialog />}
         </SessionProvider>
