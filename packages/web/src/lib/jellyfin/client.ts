@@ -180,6 +180,7 @@ export class JellyfinClient {
     path: string,
     init: {
       query?: Query;
+      /** A Blob goes as itself, under its own type; anything else as JSON. */
       body?: unknown;
       keepalive?: boolean;
       purpose?: Purpose;
@@ -189,7 +190,11 @@ export class JellyfinClient {
     const headers: Record<string, string> = {
       Authorization: this.authorization,
     };
-    if (init.body !== undefined) headers['Content-Type'] = 'application/json';
+    const raw = init.body instanceof Blob;
+    if (init.body !== undefined)
+      headers['Content-Type'] = raw
+        ? (init.body as Blob).type
+        : 'application/json';
     if (hinted.has(this.base))
       Object.assign(headers, hints(this.deviceName, init.purpose));
     let res: Response;
@@ -197,7 +202,12 @@ export class JellyfinClient {
       res = await fetch(this.url(path, init.query), {
         method,
         headers,
-        body: init.body === undefined ? undefined : JSON.stringify(init.body),
+        body:
+          init.body === undefined
+            ? undefined
+            : raw
+              ? (init.body as Blob)
+              : JSON.stringify(init.body),
         keepalive: init.keepalive,
         signal: init.signal,
       });
