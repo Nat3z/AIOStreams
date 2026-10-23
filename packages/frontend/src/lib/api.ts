@@ -72,7 +72,7 @@ export class APIError extends Error {
 // =============================================================================
 
 type RequestOptions = Omit<RequestInit, 'body' | 'method'> & {
-  body?: Record<string, unknown> | FormData | string;
+  body?: Record<string, unknown> | FormData | Blob | string;
 };
 
 // =============================================================================
@@ -137,6 +137,9 @@ export async function api<T>(
   // Handle body
   if (body !== undefined) {
     if (body instanceof FormData) {
+      request.body = body;
+    } else if (body instanceof Blob) {
+      headers.set('Content-Type', body.type);
       request.body = body;
     } else if (typeof body === 'string') {
       request.body = body;
@@ -973,6 +976,14 @@ export async function revokeUserInvite(
     `DELETE /jellyfin/invites/${encodeURIComponent(persona)}`,
     authed(credentials)
   );
+}
+
+/** Stores a picture for one of the users, returning the address to save. */
+export async function uploadUserAvatar(credentials: Credentials, file: File) {
+  return api<{ url: string }>('POST /jellyfin/avatars', {
+    ...authed(credentials),
+    body: file,
+  });
 }
 
 export interface QuickConnectPending {

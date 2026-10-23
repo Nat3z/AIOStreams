@@ -44,6 +44,7 @@ import publicCommunityRouter from './routes/community.js';
 import webdavRouter from './routes/webdav.js';
 import { createJellyfinRouter } from './routes/jellyfin/index.js';
 import partyRouter from './party/routes.js';
+import { serveAvatar } from './utils/avatars.js';
 import { createNabRouter } from './routes/api/nab.js';
 import {
   gdrive,
@@ -300,6 +301,10 @@ app.use(
     maxAge: '1y',
   })
 );
+
+app.get('/avatars/:id', staticRateLimiter, (req, res, next) => {
+  serveAvatar(req, res).catch(next);
+});
 
 // Root-level static files (not content-hashed). Short cache; kept behind the
 // static rate limiter. The logo honours the alternate-design branding flag.
