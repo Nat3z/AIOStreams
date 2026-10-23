@@ -74,6 +74,11 @@ export {
 } from './repositories/config-sessions.js';
 export { LinkedAccountRepository } from './repositories/linked-accounts.js';
 export {
+  StremioTokenRepository,
+  type StremioTokenTarget,
+  type StremioTokenInfo,
+} from './repositories/stremio-tokens.js';
+export {
   JellyfinAddressRepository,
   type JellyfinAddressTarget,
 } from './repositories/jellyfin-addresses.js';
