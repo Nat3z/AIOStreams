@@ -27,6 +27,7 @@ import {
   bodyOf,
   jf,
   userUnlocks,
+  userPasswordOpens,
   watchScopeOf,
   qi,
   qs,
@@ -120,10 +121,19 @@ function secretFor(ctx: JellyfinRequestContext, user: WebUser): Secret | null {
   return locked ? 'pin' : null;
 }
 
-async function passwordOpens(ctx: JellyfinRequestContext, password: string) {
-  return UserRepository.verifyUser(ctx.uuid, password).then(
+/** The configuration password, or the target user's own one. */
+async function passwordOpens(
+  ctx: JellyfinRequestContext,
+  user: WebUser,
+  password: string
+) {
+  const opensConfig = await UserRepository.verifyUser(ctx.uuid, password).then(
     () => true,
     () => false
+  );
+  return (
+    opensConfig ||
+    userPasswordOpens(ctx.uuid, user.profile, password)
   );
 }
 
@@ -136,11 +146,11 @@ async function secretOpens(
   if (needs === 'pin') {
     return userUnlocks(ctx.uuid, user.profile, secret);
   }
-  if (needs === 'password') return passwordOpens(ctx, secret);
+  if (needs === 'password') return passwordOpens(ctx, user, secret);
   const slash = secret.lastIndexOf('/');
   if (slash <= 0) return false;
   return (
-    (await passwordOpens(ctx, secret.slice(0, slash))) &&
+    (await passwordOpens(ctx, user, secret.slice(0, slash))) &&
     userUnlocks(ctx.uuid, user.profile, secret.slice(slash + 1))
   );
 }
