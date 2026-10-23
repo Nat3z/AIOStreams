@@ -451,6 +451,10 @@ msgstr "{name} aggiunto"
 msgid "Added to {name}"
 msgstr "Aggiunto a {name}"
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "Addon, cataloghi e utenti si configurano nella pagina delle impostazioni."
@@ -698,6 +702,10 @@ msgstr "Badge"
 #: src/pages/settings/interface.tsx
 msgid "Bar"
 msgstr "Barra"
+
+#: src/pages/home.tsx
+msgid "Because you watched"
+msgstr ""
 
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
@@ -976,6 +984,7 @@ msgid "Composer"
 msgstr "Compositore"
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr "Configurazione"
 
@@ -2813,6 +2822,7 @@ msgstr "Opacità: {backgroundOpacity}%"
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr "Apri"
 
@@ -3358,6 +3368,7 @@ msgstr "Trailer precedente"
 msgid "Producer"
 msgstr "Produttore"
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
@@ -3446,6 +3457,10 @@ msgstr "Riassunti"
 #: src/pages/search.tsx
 msgid "Recent searches"
 msgstr "Ricerche recenti"
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
