@@ -17,7 +17,8 @@ const ddl = (int: string) => `
 `;
 
 export const jellyfinPlaylists: Migration = {
-  id: 49,
+  // 49-51 are the fork's own migrations, already applied on its database.
+  id: 52,
   name: 'jellyfin_playlists',
   up: { sqlite: ddl('INTEGER'), postgres: ddl('BIGINT') },
 };
