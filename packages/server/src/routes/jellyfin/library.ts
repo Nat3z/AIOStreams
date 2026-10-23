@@ -6,6 +6,7 @@ import {
   catalogHasCollections,
   encodeImageTag,
   suggestTitles,
+  watchFeeds,
   filmographyPage,
   findPerson,
   recommendedPreviews,
@@ -1389,11 +1390,51 @@ router.get(
   })
 );
 
+/**
+ * Rows from what this user watched, as Jellyfin names them. With nothing
+ * watched yet or no TMDB, the first movie catalogs stand in, except for the
+ * web app (`AIOStreamsFeeds`), which shows those already.
+ */
 router.get(
   '/Movies/Recommendations',
   jf(async (req, res, ctx) => {
     const limit = Math.min(Math.max(1, qi(req, 'ItemLimit', 8)), 20);
     const engine = await ctx.engine();
+    const feeds = await watchFeeds(engine, ctx.userData, ctx.watch, limit);
+    if (feeds.length) {
+      res.json(
+        await Promise.all(
+          feeds.map(async (feed) => {
+            const items = await itemsFromPreviews(ctx, feed.items);
+            rememberListMarkers(ctx, items);
+            const seed = feed.seed
+              ? await getMeta(ctx, feed.seed.type, feed.seed.id).catch(
+                  () => null
+                )
+              : null;
+            return {
+              Items: items.map(stripInternal),
+              RecommendationType: feed.seed
+                ? 'SimilarToRecentlyPlayed'
+                : 'SimilarToLikedItem',
+              BaselineItemName: seed?.name ?? '',
+              CategoryId: feed.seed
+                ? encodeItemId({
+                    k: feed.seed.kind,
+                    t: feed.seed.type,
+                    i: feed.seed.id,
+                  })
+                : 'recommended',
+            };
+          })
+        )
+      );
+      return;
+    }
+    if (qb(req, 'AIOStreamsFeeds')) {
+      res.json([]);
+      return;
+    }
     const views = withoutRequiredGenre(await ctx.views())
       .filter((v) => v.collectionType === 'movies')
       .slice(0, 3);
