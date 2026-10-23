@@ -1,0 +1,299 @@
+import React from 'react';
+import { t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
+import { AnimatePresence, motion } from 'motion/react';
+import { useMutation } from '@tanstack/react-query';
+import { Button } from '@aiostreams/ui/button';
+import { TextInput } from '@aiostreams/ui/text-input';
+import { PasswordInput } from '@aiostreams/ui/password-input';
+import { Skeleton } from '@aiostreams/ui/skeleton';
+import { cn } from '@aiostreams/ui/core/styling';
+import { useSession } from '@/lib/jellyfin/session';
+import { UserAvatar } from '@/components/user-avatar';
+import { ErrorLine, RISE, Screen } from '../sign-in/page';
+import {
+  PreferencesCard,
+  useProfile,
+  useSaveProfile,
+} from '../settings/profile';
+
+/*
+ * Where a setup link lands: the user, signed in by the link, picks their name,
+ * picture and preferences, then a password of their own, which ends the link.
+ */
+
+const STEPS = ['you', 'streams', 'password'] as const;
+type Step = (typeof STEPS)[number] | 'done';
+
+const CARD =
+  'mx-auto w-full max-w-lg space-y-5 rounded-2xl border border-white/10 bg-gray-950/80 p-6 shadow-xl';
+
+export function WelcomePage({
+  invite,
+  onDone,
+}: {
+  invite: string;
+  onDone: () => void;
+}) {
+  const [step, setStep] = React.useState<Step>('you');
+  const next = () => setStep(STEPS[STEPS.indexOf(step as never) + 1] ?? 'done');
+  return (
+    <Screen name="welcome">
+      {step !== 'done' && <Progress step={step} />}
+      <AnimatePresence mode="wait">
+        <motion.div key={step} {...RISE}>
+          {step === 'you' && <YouStep onNext={next} />}
+          {step === 'streams' && (
+            <StreamsStep onBack={() => setStep('you')} onNext={next} />
+          )}
+          {step === 'password' && (
+            <PasswordStep
+              invite={invite}
+              onBack={() => setStep('streams')}
+              onNext={next}
+            />
+          )}
+          {step === 'done' && <DoneStep onDone={onDone} />}
+        </motion.div>
+      </AnimatePresence>
+    </Screen>
+  );
+}
+
+function Progress({ step }: { step: Step }) {
+  const at = STEPS.indexOf(step as never);
+  const number = at + 1;
+  const total = STEPS.length;
+  return (
+    <ol
+      aria-label={t`Step ${number} of ${total}`}
+      className="mx-auto flex w-full max-w-lg gap-2"
+    >
+      {STEPS.map((s, i) => (
+        <li
+          key={s}
+          className={cn(
+            'h-1 flex-1 rounded-full transition-colors',
+            i <= at ? 'bg-white' : 'bg-white/15'
+          )}
+        />
+      ))}
+    </ol>
+  );
+}
+
+function StepHead({ title, help }: { title: string; help: string }) {
+  return (
+    <div className="space-y-1">
+      <h1 data-ui="page-title" className="text-xl font-semibold">
+        {title}
+      </h1>
+      <p className="text-sm text-[--muted]">{help}</p>
+    </div>
+  );
+}
+
+function StepButtons({
+  onBack,
+  next,
+  busy,
+  disabled,
+}: {
+  onBack?: () => void;
+  next: string;
+  busy?: boolean;
+  disabled?: boolean;
+}) {
+  return (
+    <div className="flex flex-col-reverse gap-2 pt-1 sm:flex-row sm:justify-end">
+      {onBack && (
+        <Button
+          type="button"
+          intent="gray-outline"
+          className="rounded-full"
+          onClick={onBack}
+        >
+          <Trans>Back</Trans>
+        </Button>
+      )}
+      <Button
+        type="submit"
+        intent="white"
+        className="rounded-full"
+        loading={busy}
+        disabled={disabled}
+      >
+        {next}
+      </Button>
+    </div>
+  );
+}
+
+function YouStep({ onNext }: { onNext: () => void }) {
+  const { user } = useSession();
+  const profile = useProfile();
+  const save = useSaveProfile();
+  const [name, setName] = React.useState<string | null>(null);
+  const [avatar, setAvatar] = React.useState<string | null>(null);
+  if (!profile.data)
+    return <Skeleton className="mx-auto h-72 max-w-lg rounded-2xl" />;
+
+  const shownName = (name ?? profile.data.name ?? user.Name ?? '').trim();
+  const greeting = shownName || (user.Name ?? '');
+  const shownAvatar = (avatar ?? profile.data.avatar ?? '').trim();
+  const validAvatar = !shownAvatar || URL.canParse(shownAvatar);
+  return (
+    <form
+      className={CARD}
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (name === null && avatar === null) return onNext();
+        save.mutate(
+          { name: shownName, avatar: shownAvatar || null },
+          { onSuccess: onNext }
+        );
+      }}
+    >
+      <StepHead
+        title={t`Welcome, ${greeting}`}
+        help={t`You've been added to this server. A few steps and it's yours.`}
+      />
+      <div className="flex items-center gap-4">
+        <UserAvatar
+          name={shownName}
+          src={validAvatar ? shownAvatar : null}
+          className="size-16 text-xl"
+        />
+        <TextInput
+          label={t`Name`}
+          help={t`What everyone on this server sees.`}
+          value={name ?? profile.data.name ?? user.Name ?? ''}
+          maxLength={32}
+          onValueChange={setName}
+          fieldClass="flex-1"
+        />
+      </div>
+      <TextInput
+        label={t`Picture`}
+        help={t`The address of an image. Empty shows your initial.`}
+        placeholder="https://"
+        value={avatar ?? profile.data.avatar ?? ''}
+        error={validAvatar ? undefined : t`That isn't an address`}
+        onValueChange={setAvatar}
+      />
+      <StepButtons
+        next={t`Continue`}
+        busy={save.isPending}
+        disabled={!shownName || !validAvatar}
+      />
+    </form>
+  );
+}
+
+function StreamsStep({
+  onBack,
+  onNext,
+}: {
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const profile = useProfile();
+  return (
+    <form
+      className={CARD}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onNext();
+      }}
+    >
+      <StepHead
+        title={t`How you watch`}
+        help={t`Optional. Each change saves as you make it, and you can change it later in settings.`}
+      />
+      {profile.data ? (
+        <PreferencesCard preferences={profile.data.preferences} />
+      ) : (
+        <Skeleton className="h-72 rounded-xl" />
+      )}
+      <StepButtons onBack={onBack} next={t`Continue`} />
+    </form>
+  );
+}
+
+function PasswordStep({
+  invite,
+  onBack,
+  onNext,
+}: {
+  invite: string;
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  const { client } = useSession();
+  const profile = useProfile();
+  const [password, setPassword] = React.useState('');
+  const [again, setAgain] = React.useState('');
+  const finish = useMutation({
+    mutationFn: () =>
+      client.post<void>('/AIOStreams/Profile/Welcome', {
+        token: invite,
+        password,
+      }),
+    onSuccess: onNext,
+  });
+  const min = profile.data?.passwordMin ?? 8;
+  const short = password.length > 0 && password.length < min;
+  const mismatch = again.length > 0 && again !== password;
+  return (
+    <form
+      className={CARD}
+      onSubmit={(e) => {
+        e.preventDefault();
+        finish.mutate();
+      }}
+    >
+      <StepHead
+        title={t`Your password`}
+        help={t`You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set.`}
+      />
+      <PasswordInput
+        label={t`Password`}
+        autoComplete="new-password"
+        autoFocus
+        value={password}
+        error={short ? t`At least ${min} characters` : undefined}
+        onValueChange={setPassword}
+      />
+      <PasswordInput
+        label={t`Again`}
+        autoComplete="new-password"
+        value={again}
+        error={mismatch ? t`These don't match` : undefined}
+        onValueChange={setAgain}
+      />
+      <ErrorLine error={finish.error?.message ?? null} />
+      <StepButtons
+        onBack={onBack}
+        next={t`Finish`}
+        busy={finish.isPending}
+        disabled={password.length < min || again !== password}
+      />
+    </form>
+  );
+}
+
+function DoneStep({ onDone }: { onDone: () => void }) {
+  const { user } = useSession();
+  const name = user.Name ?? '';
+  return (
+    <div className={cn(CARD, 'text-center')}>
+      <StepHead
+        title={t`You're set, ${name}`}
+        help={t`Sign in as ${name} on any device. Stremio links and apps are in Settings, under Profile.`}
+      />
+      <Button intent="white" className="w-full rounded-full" onClick={onDone}>
+        <Trans>Start watching</Trans>
+      </Button>
+    </div>
+  );
+}
