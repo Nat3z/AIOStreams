@@ -1,0 +1,42 @@
+# aio.natfor.work: this fork and its Redis. AIOStreams listens on the
+# Tailscale address only; Caddy on oci-selfhosted is the way in.
+#
+#   cp deploy/.env.example deploy/.env   # then fill it in
+#   docker compose -f deploy/compose.yaml up -d --build
+
+name: aio
+
+services:
+  aiostreams:
+    build:
+      context: ..
+    container_name: aiostreams
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    environment:
+      PORT: 3000
+      DATABASE_URI: sqlite:///app/data/db.sqlite
+      REDIS_URI: redis://redis:6379/0
+    volumes:
+      - aiostreams_data:/app/data
+    ports:
+      - ${TAILSCALE_IP:?}:3000:3000
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  redis:
+    image: redis:7-alpine
+    container_name: aio-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --save 3600 1
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 10s
+
+volumes:
+  aiostreams_data:
+  redis_data:
