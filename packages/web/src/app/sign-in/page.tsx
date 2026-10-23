@@ -661,8 +661,8 @@ function SecretPrompt({
         <div ref={scope} className="w-full space-y-3">
           {askPassword && (
             <PasswordInput
-              label={t`Configuration password`}
-              help={t`Needed to switch to this user.`}
+              label={t`Password`}
+              help={t`Theirs, or the configuration's. Needed to switch to this user.`}
               autoFocus
               value={password}
               onValueChange={setPassword}
