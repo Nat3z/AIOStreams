@@ -1084,10 +1084,6 @@ msgstr ""
 msgid "Configuration ids are left out of their copy too."
 msgstr ""
 
-#: src/app/sign-in/page.tsx
-msgid "Configuration password"
-msgstr ""
-
 #: src/app/item/_components/no-details.tsx
 #: src/components/media/no-catalogs.tsx
 msgid "Configure"
@@ -2643,10 +2639,6 @@ msgstr ""
 msgid "Navigation"
 msgstr ""
 
-#: src/app/sign-in/page.tsx
-msgid "Needed to switch to this user."
-msgstr ""
-
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
 msgstr ""
@@ -3361,11 +3353,6 @@ msgstr ""
 msgid "Pick the version to download."
 msgstr ""
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/app/settings/apps.tsx
 #: src/features/player/options.tsx
 msgid "Picture-in-picture"
@@ -3861,6 +3848,7 @@ msgstr ""
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/components/avatar-picker.tsx
 msgid "Remove"
 msgstr ""
 
@@ -4929,11 +4917,6 @@ msgstr ""
 msgid "That is not a valid regular expression."
 msgstr ""
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr ""
@@ -4976,11 +4959,6 @@ msgstr ""
 
 #: src/lib/jellyfin/servers.ts
 msgid "The address must start with http:// or https://."
-msgstr ""
-
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "The address of an image. Empty shows your initial."
 msgstr ""
 
 #: src/app/servers/page.tsx
@@ -5159,6 +5137,10 @@ msgstr ""
 
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
+msgstr ""
+
+#: src/app/sign-in/page.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
 msgstr ""
 
 #: src/app/settings/page.tsx
@@ -5539,6 +5521,14 @@ msgstr ""
 
 #: src/app/settings/page.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
 msgstr ""
 
 #: src/app/settings/about.tsx

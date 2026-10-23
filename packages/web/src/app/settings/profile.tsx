@@ -21,6 +21,7 @@ import { LANGUAGES as FILTER_LANGUAGES } from '@aiostreams/core/src/utils/langua
 import { useSession } from '../../lib/session';
 import { relativeTime } from '../../lib/format';
 import { UserAvatar } from '../../components/user-avatar';
+import { AvatarPicker } from '../../components/avatar-picker';
 import { SettingsCard, SettingsRow } from '../../components/settings-card';
 import { LanguageList, followsYou } from './common';
 
@@ -359,11 +360,9 @@ function FaceModal({
   const save = useSaveProfile();
   const [draft, setDraft] = useDraft(open, () => ({
     name: profile.name ?? '',
-    avatar: profile.avatar ?? '',
+    avatar: profile.avatar,
   }));
   const name = draft.name.trim();
-  const avatar = draft.avatar.trim();
-  const validAvatar = !avatar || URL.canParse(avatar);
   return (
     <FormModal
       name="profile-face"
@@ -371,32 +370,21 @@ function FaceModal({
       title={t`Name and picture`}
       onClose={onClose}
       saving={save.isPending}
-      canSave={!!name && validAvatar}
+      canSave={!!name}
       onSubmit={() =>
-        save.mutate({ name, avatar: avatar || null }, { onSuccess: onClose })
+        save.mutate({ name, avatar: draft.avatar }, { onSuccess: onClose })
       }
     >
-      <div className="flex items-center gap-4">
-        <UserAvatar
-          name={name}
-          src={validAvatar ? avatar : null}
-          className="size-16 text-xl"
-        />
-        <TextInput
-          label={t`Name`}
-          value={draft.name}
-          maxLength={32}
-          onValueChange={(v) => setDraft((d) => ({ ...d, name: v }))}
-          fieldClass="flex-1"
-        />
-      </div>
+      <AvatarPicker
+        name={name}
+        src={draft.avatar}
+        onChange={(avatar) => setDraft((d) => ({ ...d, avatar }))}
+      />
       <TextInput
-        label={t`Picture`}
-        help={t`The address of an image. Empty shows your initial.`}
-        placeholder="https://"
-        value={draft.avatar}
-        error={validAvatar ? undefined : t`That isn't an address`}
-        onValueChange={(v) => setDraft((d) => ({ ...d, avatar: v }))}
+        label={t`Name`}
+        value={draft.name}
+        maxLength={32}
+        onValueChange={(v) => setDraft((d) => ({ ...d, name: v }))}
       />
     </FormModal>
   );

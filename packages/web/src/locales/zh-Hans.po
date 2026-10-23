@@ -1088,10 +1088,6 @@ msgstr "配置"
 msgid "Configuration ids are left out of their copy too."
 msgstr "复制时也会排除配置 ID。"
 
-#: src/app/sign-in/page.tsx
-msgid "Configuration password"
-msgstr "配置密码"
-
 #: src/app/item/_components/no-details.tsx
 #: src/components/media/no-catalogs.tsx
 msgid "Configure"
@@ -2657,10 +2653,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "导航"
 
-#: src/app/sign-in/page.tsx
-msgid "Needed to switch to this user."
-msgstr "切换到此用户时需要。"
-
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
 msgstr "需要处理"
@@ -3380,11 +3372,6 @@ msgstr "选择你在 {heardAt} 听到的台词。"
 msgid "Pick the version to download."
 msgstr "选择要下载的版本。"
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/app/settings/apps.tsx
 #: src/features/player/options.tsx
 msgid "Picture-in-picture"
@@ -3888,6 +3875,7 @@ msgstr ""
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/components/avatar-picker.tsx
 msgid "Remove"
 msgstr "移除"
 
@@ -4964,11 +4952,6 @@ msgstr "地址无效。"
 msgid "That is not a valid regular expression."
 msgstr "正则表达式无效。"
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "一起观看已结束。"
@@ -5012,11 +4995,6 @@ msgstr "此电脑上安装的 {name}，会在独立窗口中运行，并使用�
 #: src/lib/jellyfin/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "地址必须以 http:// 或 https:// 开头。"
-
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/app/servers/page.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5196,6 +5174,10 @@ msgstr "下次打开应用时，视频输出设置会生效。"
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "整部剧集"
+
+#: src/app/sign-in/page.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5577,6 +5559,14 @@ msgstr "更新、mpv 和故障排查"
 #: src/app/settings/page.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "更新、画中画、mpv 和故障排查"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/app/settings/about.tsx
 #: src/components/shell/usage-stats.tsx

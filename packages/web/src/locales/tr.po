@@ -1088,10 +1088,6 @@ msgstr "Yapılandırma"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Onlara gönderilen kopyaya yapılandırma kimlikleri de eklenmez."
 
-#: src/app/sign-in/page.tsx
-msgid "Configuration password"
-msgstr "Yapılandırma parolası"
-
 #: src/app/item/_components/no-details.tsx
 #: src/components/media/no-catalogs.tsx
 msgid "Configure"
@@ -2656,10 +2652,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "Navigasyon"
 
-#: src/app/sign-in/page.tsx
-msgid "Needed to switch to this user."
-msgstr "Bu kullanıcıya geçmek için gerekir."
-
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
 msgstr "Müdahale gerekiyor"
@@ -3379,11 +3371,6 @@ msgstr "{heardAt} konumunda duyduğun repliği seç."
 msgid "Pick the version to download."
 msgstr "İndirilecek sürümü seç."
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/app/settings/apps.tsx
 #: src/features/player/options.tsx
 msgid "Picture-in-picture"
@@ -3885,6 +3872,7 @@ msgstr ""
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/components/avatar-picker.tsx
 msgid "Remove"
 msgstr "Kaldır"
 
@@ -4958,11 +4946,6 @@ msgstr "Bu adres geçerli değil."
 msgid "That is not a valid regular expression."
 msgstr "Bu düzenli ifade geçerli değil."
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "İzleme etkinliği bitti."
@@ -5006,11 +4989,6 @@ msgstr "Bu bilgisayara kurulu {name}, kendi kontrolleri ve yapılandırmasıyla 
 #: src/lib/jellyfin/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Adres http:// veya https:// ile başlamalı."
-
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/app/servers/page.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5189,6 +5167,10 @@ msgstr "Video çıkışı uygulama yeniden açıldığında değişir."
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "Tüm dizi"
+
+#: src/app/sign-in/page.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5570,6 +5552,14 @@ msgstr "Güncellemeler, mpv ve sorun giderme"
 #: src/app/settings/page.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Güncellemeler, resim içinde resim, mpv ve sorun giderme"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/app/settings/about.tsx
 #: src/components/shell/usage-stats.tsx

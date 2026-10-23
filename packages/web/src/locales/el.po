@@ -1083,10 +1083,6 @@ msgstr "Διαμόρφωση"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Τα αναγνωριστικά διαμόρφωσης παραλείπονται και από το αντίγραφο που λαμβάνει ο προγραμματιστής."
 
-#: src/app/sign-in/page.tsx
-msgid "Configuration password"
-msgstr "Κωδικός πρόσβασης διαμόρφωσης"
-
 #: src/app/item/_components/no-details.tsx
 #: src/components/media/no-catalogs.tsx
 msgid "Configure"
@@ -2642,10 +2638,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "Πλοήγηση"
 
-#: src/app/sign-in/page.tsx
-msgid "Needed to switch to this user."
-msgstr "Απαιτείται για μετάβαση σε αυτόν τον χρήστη."
-
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
 msgstr "Χρειάζεται προσοχή"
@@ -3360,11 +3352,6 @@ msgstr "Επίλεξε την ατάκα που άκουσες στο {heardAt}.
 msgid "Pick the version to download."
 msgstr "Επίλεξε την έκδοση για λήψη."
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/app/settings/apps.tsx
 #: src/features/player/options.tsx
 msgid "Picture-in-picture"
@@ -3860,6 +3847,7 @@ msgstr "Η υπενθύμιση ορίστηκε"
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/components/avatar-picker.tsx
 msgid "Remove"
 msgstr "Αφαίρεση"
 
@@ -4928,11 +4916,6 @@ msgstr "Αυτή η διεύθυνση δεν είναι έγκυρη."
 msgid "That is not a valid regular expression."
 msgstr "Αυτή η κανονική έκφραση δεν είναι έγκυρη."
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "Αυτή η ομαδική προβολή έχει τελειώσει."
@@ -4976,11 +4959,6 @@ msgstr "Το {name} που είναι εγκατεστημένο σε αυτόν
 #: src/lib/jellyfin/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Η διεύθυνση πρέπει να αρχίζει με http:// ή https://."
-
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/app/servers/page.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5159,6 +5137,10 @@ msgstr "Η έξοδος βίντεο αλλάζει όταν ανοίξει ξα
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "Ολόκληρη η σειρά"
+
+#: src/app/sign-in/page.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5539,6 +5521,14 @@ msgstr "Ενημερώσεις, mpv και αντιμετώπιση προβλη
 #: src/app/settings/page.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Ενημερώσεις, εικόνα μέσα σε εικόνα, mpv και αντιμετώπιση προβλημάτων"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/app/settings/about.tsx
 #: src/components/shell/usage-stats.tsx

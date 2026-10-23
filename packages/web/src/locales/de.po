@@ -1083,10 +1083,6 @@ msgstr "Konfiguration"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Konfigurations-IDs werden auch aus ihrer Kopie entfernt."
 
-#: src/app/sign-in/page.tsx
-msgid "Configuration password"
-msgstr "Konfigurations-Passwort"
-
 #: src/app/item/_components/no-details.tsx
 #: src/components/media/no-catalogs.tsx
 msgid "Configure"
@@ -2642,10 +2638,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "Navigation"
 
-#: src/app/sign-in/page.tsx
-msgid "Needed to switch to this user."
-msgstr "Zum Wechseln zu diesem Benutzer erforderlich."
-
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
 msgstr "Aufmerksamkeit erforderlich"
@@ -3360,11 +3352,6 @@ msgstr "Wähle die Zeile aus, die du bei {heardAt} gehört hast."
 msgid "Pick the version to download."
 msgstr "Wähle die Version zum Herunterladen."
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/app/settings/apps.tsx
 #: src/features/player/options.tsx
 msgid "Picture-in-picture"
@@ -3860,6 +3847,7 @@ msgstr "Erinnerung eingerichtet"
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
+#: src/components/avatar-picker.tsx
 msgid "Remove"
 msgstr "Entfernen"
 
@@ -4928,11 +4916,6 @@ msgstr "Das ist keine gültige Adresse."
 msgid "That is not a valid regular expression."
 msgstr "Das ist kein gültiger regulärer Ausdruck."
 
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "Diese Watch-Party wurde beendet."
@@ -4976,11 +4959,6 @@ msgstr "Die auf diesem Computer installierte Anwendung {name} in einem eigenen F
 #: src/lib/jellyfin/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Die Adresse muss mit http:// oder https:// beginnen."
-
-#: src/app/settings/profile.tsx
-#: src/app/welcome/page.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/app/servers/page.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5159,6 +5137,10 @@ msgstr "Die Videoausgabe ändert sich beim nächsten Öffnen der App."
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "Die gesamte Serie"
+
+#: src/app/sign-in/page.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5539,6 +5521,14 @@ msgstr "Updates, mpv und Fehlerbehebung"
 #: src/app/settings/page.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Updates, Bild-in-Bild, mpv und Fehlerbehebung"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/app/settings/about.tsx
 #: src/components/shell/usage-stats.tsx
