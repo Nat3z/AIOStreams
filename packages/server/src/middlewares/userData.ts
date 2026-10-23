@@ -17,6 +17,8 @@ import {
   logVariantNotes,
   VARIANT_QUERY_PARAM,
   VARIANT_PATH_PARAM,
+  StremioTokenRepository,
+  config as appConfig,
 } from '@aiostreams/core';
 import { syncUserDataUrls } from '../utils/syncUserData.js';
 import { buildVariantRequestContext } from '../utils/variant-context.js';
@@ -37,6 +39,8 @@ const RESOURCE_REGEX = new RegExp(`/(${VALID_RESOURCES.join('|')})`);
 interface UserDataParams {
   uuid?: string;
   encryptedPassword?: string;
+  /** A user's install link, which names its configuration and user itself. */
+  stremioToken?: string;
   // match Express.Request<ParamsDictionary> to keep middleware flexible
   [key: string]: string | string[] | undefined;
 }
@@ -46,7 +50,22 @@ export const userDataMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { uuid: uuidOrAlias, encryptedPassword } = req.params;
+  let { uuid: uuidOrAlias, encryptedPassword } = req.params;
+  // An install link serves the variants of the user it was minted for.
+  let tokenPersona: string | null | undefined;
+  let tokenVariants: string[] | undefined;
+  if (req.params.stremioToken) {
+    const target = await StremioTokenRepository.resolve(
+      req.params.stremioToken
+    );
+    if (!target) {
+      next(new APIError(constants.ErrorCode.USER_INVALID_DETAILS));
+      return;
+    }
+    uuidOrAlias = target.uuid;
+    encryptedPassword = target.encryptedPassword;
+    tokenPersona = target.persona;
+  }
 
   // Both uuid and encryptedPassword should be present since we mounted the router on this path
   if (!uuidOrAlias || !encryptedPassword) {
@@ -129,20 +148,36 @@ export const userDataMiddleware = async (
     userData.encryptedPassword = encryptedPassword;
     userData.uuid = uuid;
     userData.ip = req.userIp;
+    if (tokenPersona !== undefined) {
+      const persona = tokenPersona
+        ? userData.jellyfin?.personas?.find((p) => p.id === tokenPersona)
+        : null;
+      if (tokenPersona && !persona) {
+        next(new APIError(constants.ErrorCode.USER_INVALID_DETAILS));
+        return;
+      }
+      tokenVariants = persona
+        ? (persona.variants ?? [])
+        : (userData.jellyfin?.primary?.variants ?? []);
+      userData.installUrl = `${appConfig.bootstrap.baseUrl}/s/${req.params.stremioToken}`;
+    }
 
     if (resource !== 'configure') {
       // Before syncUserDataUrls, since a variant may add a synced URL, and
       // before validateConfig, which is what makes the patch safe.
       try {
-        const { ids: selected, location } = resolveVariantSelector(
-          req.params[VARIANT_PATH_PARAM],
-          req.query[VARIANT_QUERY_PARAM]
-        );
+        // An install link's variants are its user's, whatever the URL asks.
+        const { ids: selected, location } = tokenVariants
+          ? { ids: tokenVariants, location: 'query' as const }
+          : resolveVariantSelector(
+              req.params[VARIANT_PATH_PARAM],
+              req.query[VARIANT_QUERY_PARAM]
+            );
         const context = buildVariantRequestContext(req, resource);
         void recordClientAgent(uuid, context.userAgent, resource);
         const result = await activateVariants(userData, selected, context);
         userData = result.userData;
-        if (selected.length) {
+        if (selected.length && !tokenVariants) {
           userData.variantSelectorLocation = location;
         }
         if (result.applied.length) {
@@ -154,7 +189,8 @@ export const userDataMiddleware = async (
               resource,
               variants: userData.activeVariants,
               auto: result.auto,
-              location: selected.length ? location : undefined,
+              location:
+                selected.length && !tokenVariants ? location : undefined,
             },
             'serving request with config variants'
           );
