@@ -22,6 +22,7 @@ import {
   type JellyfinRequestContext,
 } from './context.js';
 import { jellyfinLoginRateLimiter } from '../../middlewares/ratelimit.js';
+import { AVATAR_REFUSED, avatarBody, saveAvatar } from '../../utils/avatars.js';
 import {
   isInstanceConfig,
   issueAdminHandoff,
@@ -161,6 +162,17 @@ router.post(
     } catch (error) {
       sendError(res, error);
     }
+  })
+);
+
+// The picture goes up first; saving the profile with its address sets it.
+router.post(
+  '/AIOStreams/Profile/Avatar',
+  avatarBody,
+  self(async (req, res, ctx) => {
+    const url = await saveAvatar(req, ctx.uuid);
+    if (url) res.json({ url });
+    else res.status(400).json({ Message: AVATAR_REFUSED });
   })
 );
 
