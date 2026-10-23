@@ -3348,6 +3348,7 @@ msgstr "Vorheriger Trailer"
 msgid "Producer"
 msgstr "Produktion"
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
