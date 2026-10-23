@@ -128,6 +128,18 @@ const UserLockSchema = z
   .regex(PERSONA_LOCK_PATTERN, 'A PIN must be 4 to 12 digits.')
   .optional();
 
+export const USER_PASSWORD_MIN = 8;
+/** A user's own sign-in password, or the bcrypt hash it was saved as. */
+const UserPasswordSchema = z
+  .string()
+  .refine(
+    (v) =>
+      BCRYPT_HASH_PATTERN.test(v) ||
+      (v.length >= USER_PASSWORD_MIN && v.length <= 128),
+    `A password must be ${USER_PASSWORD_MIN} to 128 characters.`
+  )
+  .optional();
+
 /** A user a Jellyfin client can sign in as. Shares the configuration's credential. */
 const JellyfinPersonaSchema = z.object({
   // Names the DB partition, so a rename must not touch it.
@@ -153,6 +165,7 @@ const JellyfinPersonaSchema = z.object({
     .regex(/^[a-z0-9]{10,32}$/)
     .optional(),
   lock: UserLockSchema,
+  password: UserPasswordSchema,
 });
 
 export type JellyfinPersona = z.infer<typeof JellyfinPersonaSchema>;
@@ -195,6 +208,7 @@ const JellyfinSettingsFields = z.object({
       /** Kept out of the picker; still signs in by name. */
       hidden: z.boolean().optional(),
       lock: UserLockSchema,
+      password: UserPasswordSchema,
     })
     .optional(),
   personas: z
