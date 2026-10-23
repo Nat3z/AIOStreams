@@ -149,6 +149,16 @@ export const jellyfinSchema = {
     requiresRestart: false,
     secret: false,
   },
+  instanceAlias: {
+    schema: z.string().nullable(),
+    default: null,
+    label: 'Instance configuration',
+    description:
+      "An alias (from ALIASED_CONFIGURATIONS or a saved profile) whose configuration this whole instance serves. The bare /jellyfin address and the site root become that configuration's sign-in picker, so its users sign in with only their name and their own password, and the configure page is left to the instance's admins.",
+    env: 'JELLYFIN_INSTANCE_ALIAS',
+    requiresRestart: false,
+    secret: false,
+  },
   resolveOnOpen: {
     schema: z.enum(['always', 'never', 'user']),
     default: 'user',
