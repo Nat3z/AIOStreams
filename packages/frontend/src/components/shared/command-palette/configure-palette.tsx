@@ -28,6 +28,7 @@ import {
   BiCog,
   BiSave,
   BiBarChartAlt2,
+  BiGroup,
 } from 'react-icons/bi';
 
 const MENU_ITEMS: Array<{
@@ -38,6 +39,8 @@ const MENU_ITEMS: Array<{
   /** When true, the entry is only shown if (a) the instance owner has
    *  per-user analytics on, and (b) the user is signed in. */
   requiresStats?: boolean;
+  /** Only shown while the instance serves the Jellyfin API. */
+  requiresJellyfin?: boolean;
 }> = [
   { id: 'about', label: 'About', icon: <BiInfoCircle /> },
   { id: 'services', label: 'Services', icon: <BiCloud /> },
@@ -53,6 +56,7 @@ const MENU_ITEMS: Array<{
     icon: <BiBarChartAlt2 />,
     requiresStats: true,
   },
+  { id: 'users', label: 'Users', icon: <BiGroup />, requiresJellyfin: true },
   { id: 'save-install', label: 'Save & Install', icon: <BiSave /> },
 ];
 
@@ -88,6 +92,7 @@ const MENU_LABELS: Record<MenuId, string> = {
   filters: 'Filters',
   sorting: 'Sorting',
   stats: 'Stats',
+  users: 'Users',
   formatter: 'Formatter',
   proxy: 'Proxy',
   miscellaneous: 'Miscellaneous',
@@ -148,6 +153,7 @@ export function CommandPalette() {
   const user = useUserData();
   const statsAvailable =
     status?.settings.userAnalyticsEnabled === true && Boolean(user.uuid);
+  const jellyfinAvailable = status?.settings.jellyfin?.enabled === true;
   const [query, setQuery] = useState('');
   // Keeps typing responsive while the (much larger) result list renders at a
   // lower priority.
@@ -158,9 +164,11 @@ export function CommandPalette() {
     () =>
       MENU_ITEMS.filter(
         (m) =>
-          (mode === 'pro' || !m.proOnly) && (!m.requiresStats || statsAvailable)
+          (mode === 'pro' || !m.proOnly) &&
+          (!m.requiresStats || statsAvailable) &&
+          (!m.requiresJellyfin || jellyfinAvailable)
       ).map((m) => ({ ...m, haystack: buildHaystack([m.label, m.id]) })),
-    [mode, statsAvailable]
+    [mode, statsAvailable, jellyfinAvailable]
   );
 
   const quickActionItems = useMemo(

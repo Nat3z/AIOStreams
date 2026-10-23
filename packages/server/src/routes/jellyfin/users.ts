@@ -19,6 +19,7 @@ import {
   resolveByItem,
   resolveByPlaySession,
   subtitleFormatFor,
+  UserInviteRepository,
   type ClientInfo,
   type JellyfinMediaStream,
   isOwner,
@@ -600,6 +601,48 @@ router.post(
         entry.encryptedPassword,
         userData,
         profile
+      )
+    );
+  })
+);
+
+// Whoever holds a setup link signs in as its user until they finish with it.
+router.post(
+  '/AIOStreams/Invite',
+  jfOptional(async (req, res) => {
+    const body = (req.body ?? {}) as Record<string, unknown>;
+    const token = String(body.Token ?? body.token ?? '');
+    const found = token ? await UserInviteRepository.find(token) : null;
+    const mount = req.jfMount;
+    const invite =
+      found &&
+      (!mount ||
+        (mount.uuid.toLowerCase() === found.uuid.toLowerCase() &&
+          (!mount.persona || mount.persona === found.persona)))
+        ? found
+        : null;
+    const userData = invite
+      ? await resolveConfig(invite.uuid, invite.encryptedPassword)
+      : null;
+    const persona =
+      invite && userData ? personaById(userData, invite.persona) : null;
+    if (!invite || !userData || !persona) {
+      res
+        .status(401)
+        .json({ Message: 'This link has expired or was already used' });
+      return;
+    }
+    logger.info(
+      { uuid: invite.uuid, persona: persona.id },
+      'setup link opened'
+    );
+    res.json(
+      await authenticationResult(
+        req,
+        invite.uuid,
+        invite.encryptedPassword,
+        userData,
+        persona
       )
     );
   })

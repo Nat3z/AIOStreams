@@ -452,6 +452,7 @@ const ANONYMOUS_OK = [
   /^\/getutctime$/i,
   /^\/users\/authenticatebyname$/i,
   /^\/users\/authenticatewithquickconnect$/i,
+  /^\/aiostreams\/invite$/i,
   /^\/users\/public$/i,
   /^\/branding\//i,
   /^\/quickconnect\/(enabled|initiate|connect)$/i,

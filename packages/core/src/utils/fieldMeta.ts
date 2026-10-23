@@ -20,6 +20,7 @@ export const MENU_IDS = [
   'proxy',
   'miscellaneous',
   'stats',
+  'users',
   'save-install',
 ] as const;
 export type MenuId = (typeof MENU_IDS)[number];
