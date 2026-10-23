@@ -21,6 +21,10 @@ import {
   type JellyfinRequestContext,
 } from './context.js';
 import { jellyfinLoginRateLimiter } from '../../middlewares/ratelimit.js';
+import {
+  isInstanceConfig,
+  issueAdminHandoff,
+} from '../../utils/admin-handoff.js';
 
 /*
  * The signed-in user's own profile, as the web app's settings edit it. Every
@@ -99,7 +103,28 @@ router.get(
       passwordMin: USER_PASSWORD_MIN,
       preferences: state.preferences,
       linked: state.addons.map((a) => ({ source: a.source, name: a.name })),
+      configure: await ownsInstance(ctx),
     });
+  })
+);
+
+/** The instance's own primary user, who is its owner. */
+async function ownsInstance(ctx: JellyfinRequestContext): Promise<boolean> {
+  return !ctx.persona && (await isInstanceConfig(ctx.uuid));
+}
+
+// The owner is already signed in, so the configure page asks nothing more.
+router.post(
+  '/AIOStreams/Profile/Configure',
+  self(async (_req, res, ctx) => {
+    if (!(await ownsInstance(ctx))) {
+      res
+        .status(403)
+        .json({ Message: 'Only the owner configures this server' });
+      return;
+    }
+    const code = await issueAdminHandoff();
+    res.json({ url: `/api/v1/auth/handoff?code=${code}` });
   })
 );
 

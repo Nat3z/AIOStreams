@@ -21,6 +21,10 @@ import {
   setConfigSessionCookie,
 } from '../../../middlewares/auth.js';
 import { createResponse } from '../../../utils/responses.js';
+import {
+  ownerAdmin,
+  redeemAdminHandoff,
+} from '../../../utils/admin-handoff.js';
 import oidcRouter from './oidc.js';
 
 const router: Router = Router();
@@ -123,6 +127,27 @@ router.post('/logout', (req, res) => {
       detail: 'Logged out successfully',
     })
   );
+});
+
+// GET /auth/handoff — the owner's way in from the web app's profile.
+router.get('/handoff', loginRateLimiter, async (req, res) => {
+  const code = typeof req.query.code === 'string' ? req.query.code : '';
+  if (!(await redeemAdminHandoff(code))) {
+    res.redirect(302, '/login');
+    return;
+  }
+  const admin = ownerAdmin();
+  if (admin) {
+    const permissions = [...getEffectivePermissions(admin)];
+    setSessionCookie(req, res, {
+      username: admin,
+      permissions,
+      source: 'password',
+    });
+  }
+  await unlockInstanceConfig(req, res);
+  res.setHeader('Cache-Control', 'no-store');
+  res.redirect(302, '/stremio/configure');
 });
 
 // GET /auth/me — current session user, or 401.
