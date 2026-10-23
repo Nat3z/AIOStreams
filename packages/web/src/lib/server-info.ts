@@ -17,6 +17,7 @@ export type Feature =
   | 'fillers'
   | 'parties'
   | 'reports'
+  | 'profile'
   | 'clientHints';
 
 /** What a server's public info says about it. */
