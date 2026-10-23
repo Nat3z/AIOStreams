@@ -1,0 +1,9 @@
+# For oci-selfhosted's Caddyfile. AIOStreams answers on this machine's
+# Tailscale address.
+aio.natfor.work {
+	encode zstd gzip
+	reverse_proxy 100.87.64.61:3000 {
+		# Party and Jellyfin sockets.
+		flush_interval -1
+	}
+}
