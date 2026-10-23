@@ -120,11 +120,15 @@ export function useSessionPhase(base: string) {
       storage.set(lastUserKey(base), user.Id);
       storage.remove(leftKey(base));
       saveUser(base, user);
-      setPhase({
-        kind: 'ready',
-        client: proof.withToken(auth.AccessToken!),
-        user,
-      });
+      const client = proof.withToken(auth.AccessToken!);
+      setPhase({ kind: 'ready', client, user });
+      // The instance's owner signs in to configure it; everyone else stays.
+      if (!__STANDALONE__) {
+        void client
+          .post<{ url: string }>('/AIOStreams/Profile/Configure')
+          .then(({ url }) => window.location.assign(new URL(url, base).href))
+          .catch(() => {});
+      }
     },
     [base]
   );
