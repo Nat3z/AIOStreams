@@ -447,6 +447,10 @@ msgstr ""
 msgid "Added to {name}"
 msgstr ""
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr ""
@@ -692,6 +696,10 @@ msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "Bar"
+msgstr ""
+
+#: src/pages/home.tsx
+msgid "Because you watched"
 msgstr ""
 
 #: src/pages/settings/playback.tsx
@@ -971,6 +979,7 @@ msgid "Composer"
 msgstr ""
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr ""
 
@@ -2785,6 +2794,7 @@ msgstr ""
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr ""
 
@@ -3324,6 +3334,7 @@ msgstr ""
 msgid "Producer"
 msgstr ""
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
@@ -3407,6 +3418,10 @@ msgstr ""
 
 #: src/pages/search.tsx
 msgid "Recent searches"
+msgstr ""
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
 msgstr ""
 
 #: src/components/party/party-layer.tsx

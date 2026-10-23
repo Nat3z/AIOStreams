@@ -442,6 +442,10 @@ msgstr "Added {name}"
 msgid "Added to {name}"
 msgstr "Added to {name}"
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr "Addons, catalogs and everyone's accounts."
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "Addons, catalogs and users are set up on the configuration page."
@@ -970,6 +974,7 @@ msgid "Composer"
 msgstr "Composer"
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr "Configuration"
 
@@ -2784,6 +2789,7 @@ msgstr "Opacity: {backgroundOpacity}%"
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr "Open"
 
