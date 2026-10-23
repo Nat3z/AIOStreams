@@ -77,6 +77,11 @@ export type SelectProps = InputStyling &
      */
     placeholder?: string;
     /**
+     * Whether the placeholder is listed, to pick no value. Defaults to on
+     * unless the field is required.
+     */
+    clearable?: boolean;
+    /**
      * Direction of the text
      */
     dir?: 'ltr' | 'rtl';
@@ -120,6 +125,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
         /**/
         className,
         placeholder,
+        clearable = !basicFieldProps.required,
         options,
         chevronIconClass,
         scrollButtonClass,
@@ -276,7 +282,7 @@ export const Select = React.forwardRef<HTMLButtonElement, SelectProps>(
                 <SelectPrimitive.Viewport
                   className={cn(SelectAnatomy.viewport(), viewportClass)}
                 >
-                  {!!placeholder && !basicFieldProps.required && (
+                  {!!placeholder && clearable && (
                     <SelectPrimitive.Item
                       className={cn(SelectAnatomy.item(), itemClass)}
                       value="__placeholder__"

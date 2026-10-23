@@ -130,8 +130,8 @@ export function LanguageList({
       {!fixed && (max === undefined || value.length < max) && (
         <Select
           ref={add}
-          // Required leaves the placeholder out of the list it opens.
-          required
+          // A picker that adds, not a field: nothing to clear, nothing a form waits on.
+          clearable={false}
           placeholder={
             value.length ? t`Add another language` : t`Add a language`
           }
