@@ -9,7 +9,7 @@ import { PasswordInput } from '@aiostreams/ui/password-input';
 import { Skeleton } from '@aiostreams/ui/skeleton';
 import { cn } from '@aiostreams/ui/core/styling';
 import { useSession } from '../lib/session';
-import { UserAvatar } from '../components/user-avatar';
+import { AvatarPicker } from '../components/avatar-picker';
 import { ErrorLine, RISE, Screen } from './sign-in';
 import {
   PreferencesCard,
@@ -134,22 +134,21 @@ function YouStep({ onNext }: { onNext: () => void }) {
   const profile = useProfile();
   const save = useSaveProfile();
   const [name, setName] = React.useState<string | null>(null);
-  const [avatar, setAvatar] = React.useState<string | null>(null);
+  const [avatar, setAvatar] = React.useState<string | null | undefined>();
   if (!profile.data)
     return <Skeleton className="mx-auto h-72 max-w-lg rounded-2xl" />;
 
   const shownName = (name ?? profile.data.name ?? user.Name ?? '').trim();
   const greeting = shownName || (user.Name ?? '');
-  const shownAvatar = (avatar ?? profile.data.avatar ?? '').trim();
-  const validAvatar = !shownAvatar || URL.canParse(shownAvatar);
+  const shownAvatar = avatar === undefined ? profile.data.avatar : avatar;
   return (
     <form
       className={CARD}
       onSubmit={(e) => {
         e.preventDefault();
-        if (name === null && avatar === null) return onNext();
+        if (name === null && avatar === undefined) return onNext();
         save.mutate(
-          { name: shownName, avatar: shownAvatar || null },
+          { name: shownName, avatar: shownAvatar },
           { onSuccess: onNext }
         );
       }}
@@ -158,33 +157,18 @@ function YouStep({ onNext }: { onNext: () => void }) {
         title={t`Welcome, ${greeting}`}
         help={t`You've been added to this server. A few steps and it's yours.`}
       />
-      <div className="flex items-center gap-4">
-        <UserAvatar
-          name={shownName}
-          src={validAvatar ? shownAvatar : null}
-          className="size-16 text-xl"
-        />
-        <TextInput
-          label={t`Name`}
-          help={t`What everyone on this server sees.`}
-          value={name ?? profile.data.name ?? user.Name ?? ''}
-          maxLength={32}
-          onValueChange={setName}
-          fieldClass="flex-1"
-        />
-      </div>
+      <AvatarPicker name={shownName} src={shownAvatar} onChange={setAvatar} />
       <TextInput
-        label={t`Picture`}
-        help={t`The address of an image. Empty shows your initial.`}
-        placeholder="https://"
-        value={avatar ?? profile.data.avatar ?? ''}
-        error={validAvatar ? undefined : t`That isn't an address`}
-        onValueChange={setAvatar}
+        label={t`Name`}
+        help={t`What everyone on this server sees.`}
+        value={name ?? profile.data.name ?? user.Name ?? ''}
+        maxLength={32}
+        onValueChange={setName}
       />
       <StepButtons
         next={t`Continue`}
         busy={save.isPending}
-        disabled={!shownName || !validAvatar}
+        disabled={!shownName}
       />
     </form>
   );

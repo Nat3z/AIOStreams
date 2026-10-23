@@ -1050,10 +1050,6 @@ msgstr "Configuration"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Configuration ids are left out of their copy too."
 
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr "Configuration password"
-
 #: src/components/no-catalogs.tsx
 #: src/components/no-details.tsx
 msgid "Configure"
@@ -2590,10 +2586,6 @@ msgstr "Name it for the device it goes on."
 msgid "Navigation"
 msgstr "Navigation"
 
-#: src/pages/sign-in.tsx
-msgid "Needed to switch to this user."
-msgstr "Needed to switch to this user."
-
 #: src/pages/downloads.tsx
 msgid "Needs attention"
 msgstr "Needs attention"
@@ -3283,11 +3275,6 @@ msgstr "Pick the line you heard at {heardAt}."
 msgid "Pick the version to download."
 msgstr "Pick the version to download."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "Picture"
-msgstr "Picture"
-
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr "Picture-in-picture"
@@ -3756,6 +3743,7 @@ msgstr "Reminder removed"
 msgid "Reminder set"
 msgstr "Reminder set"
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4799,11 +4787,6 @@ msgstr "That is not a valid address."
 msgid "That is not a valid regular expression."
 msgstr "That is not a valid regular expression."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "That isn't an address"
-msgstr "That isn't an address"
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "That party has ended."
@@ -4847,11 +4830,6 @@ msgstr "The {name} installed on this computer, in a window of its own with its o
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "The address must start with http:// or https://."
-
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr "The address of an image. Empty shows your initial."
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5030,6 +5008,10 @@ msgstr "The video output changes when the app opens again."
 #: src/components/download-button.tsx
 msgid "The whole show"
 msgstr "The whole show"
+
+#: src/pages/sign-in.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr "Theirs, or the configuration's. Needed to switch to this user."
 
 #: src/pages/settings/index.tsx
 #: src/pages/settings/theme.tsx
@@ -5374,6 +5356,14 @@ msgstr "Updates, mpv and troubleshooting"
 #: src/pages/settings/index.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Updates, picture-in-picture, mpv and troubleshooting"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr "Upload a picture"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr "Upload picture"
 
 #: src/pages/sign-in.tsx
 msgid "Use Quick Connect, or the configuration’s password."

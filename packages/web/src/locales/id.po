@@ -1054,10 +1054,6 @@ msgstr "Konfigurasi"
 msgid "Configuration ids are left out of their copy too."
 msgstr "ID konfigurasi juga tidak disertakan dalam salinan mereka."
 
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr "Kata sandi konfigurasi"
-
 #: src/components/no-catalogs.tsx
 #: src/components/no-details.tsx
 msgid "Configure"
@@ -2594,10 +2590,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "Navigasi"
 
-#: src/pages/sign-in.tsx
-msgid "Needed to switch to this user."
-msgstr "Diperlukan untuk beralih ke pengguna ini."
-
 #: src/pages/downloads.tsx
 msgid "Needs attention"
 msgstr "Memerlukan perhatian"
@@ -3287,11 +3279,6 @@ msgstr "Pilih dialog yang Anda dengar pada {heardAt}."
 msgid "Pick the version to download."
 msgstr "Pilih versi yang akan diunduh."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr "Picture-in-picture"
@@ -3760,6 +3747,7 @@ msgstr "Pengingat dihapus"
 msgid "Reminder set"
 msgstr "Pengingat diatur"
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4803,11 +4791,6 @@ msgstr "Alamat tersebut tidak valid."
 msgid "That is not a valid regular expression."
 msgstr "Ekspresi reguler tersebut tidak valid."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "Sesi nonton bersama tersebut telah berakhir."
@@ -4851,11 +4834,6 @@ msgstr "{name} yang terpasang di komputer ini, dalam jendela tersendiri dengan k
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Alamat harus diawali dengan http:// atau [https://](https://)."
-
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5034,6 +5012,10 @@ msgstr "Keluaran video berubah saat aplikasi dibuka kembali."
 #: src/components/download-button.tsx
 msgid "The whole show"
 msgstr "Seluruh serial"
+
+#: src/pages/sign-in.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/pages/settings/index.tsx
 #: src/pages/settings/theme.tsx
@@ -5378,6 +5360,14 @@ msgstr "Pembaruan, mpv, dan pemecahan masalah"
 #: src/pages/settings/index.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Pembaruan, picture-in-picture, mpv, dan pemecahan masalah"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Use Quick Connect, or the configuration’s password."

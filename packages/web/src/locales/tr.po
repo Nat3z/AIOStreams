@@ -1059,10 +1059,6 @@ msgstr "Yapılandırma"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Onlara gönderilen kopyaya yapılandırma kimlikleri de eklenmez."
 
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr "Yapılandırma parolası"
-
 #: src/components/no-catalogs.tsx
 #: src/components/no-details.tsx
 msgid "Configure"
@@ -2608,10 +2604,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "Navigasyon"
 
-#: src/pages/sign-in.tsx
-msgid "Needed to switch to this user."
-msgstr "Bu kullanıcıya geçmek için gerekir."
-
 #: src/pages/downloads.tsx
 msgid "Needs attention"
 msgstr "Müdahale gerekiyor"
@@ -3306,11 +3298,6 @@ msgstr "{heardAt} konumunda duyduğun repliği seç."
 msgid "Pick the version to download."
 msgstr "İndirilecek sürümü seç."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr "Küçük pencere (PiP)"
@@ -3785,6 +3772,7 @@ msgstr ""
 msgid "Reminder set"
 msgstr ""
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4833,11 +4821,6 @@ msgstr "Bu adres geçerli değil."
 msgid "That is not a valid regular expression."
 msgstr "Bu düzenli ifade geçerli değil."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "İzleme etkinliği bitti."
@@ -4881,11 +4864,6 @@ msgstr "Bu bilgisayara kurulu {name}, kendi kontrolleri ve yapılandırmasıyla 
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Adres http:// veya https:// ile başlamalı."
-
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5064,6 +5042,10 @@ msgstr "Video çıkışı uygulama yeniden açıldığında değişir."
 #: src/components/download-button.tsx
 msgid "The whole show"
 msgstr "Tüm dizi"
+
+#: src/pages/sign-in.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/pages/settings/index.tsx
 #: src/pages/settings/theme.tsx
@@ -5409,6 +5391,14 @@ msgstr "Güncellemeler, mpv ve sorun giderme"
 #: src/pages/settings/index.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Güncellemeler, resim içinde resim, mpv ve sorun giderme"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Use Quick Connect, or the configuration’s password."

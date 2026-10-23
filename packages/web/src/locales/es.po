@@ -1058,10 +1058,6 @@ msgstr "Configuración"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Los id de configuración también se omiten en su copia."
 
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr "Contraseña de configuración"
-
 #: src/components/no-catalogs.tsx
 #: src/components/no-details.tsx
 msgid "Configure"
@@ -2602,10 +2598,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "Navegación"
 
-#: src/pages/sign-in.tsx
-msgid "Needed to switch to this user."
-msgstr "Necesario cambiar a este usuario."
-
 #: src/pages/downloads.tsx
 msgid "Needs attention"
 msgstr "Necesita atención"
@@ -3297,11 +3289,6 @@ msgstr "Elige la línea que escuchaste en {heardAt}."
 msgid "Pick the version to download."
 msgstr "Elige la versión para descargar."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr "Imagen en imagen"
@@ -3773,6 +3760,7 @@ msgstr ""
 msgid "Reminder set"
 msgstr ""
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4819,11 +4807,6 @@ msgstr "Esa no es una dirección válida."
 msgid "That is not a valid regular expression."
 msgstr "Esa no es una expresión regular válida."
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "Ese grupo ha terminado."
@@ -4867,11 +4850,6 @@ msgstr "La aplicación {name} instalada en este equipo se ejecuta en su propia v
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "La dirección debe comenzar con http:// o https://."
-
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5050,6 +5028,10 @@ msgstr "La salida de video cambia cuando la aplicación se abre de nuevo."
 #: src/components/download-button.tsx
 msgid "The whole show"
 msgstr "Toda la serie"
+
+#: src/pages/sign-in.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/pages/settings/index.tsx
 #: src/pages/settings/theme.tsx
@@ -5394,6 +5376,14 @@ msgstr "Actualizaciones, mpv y solución de problemas"
 #: src/pages/settings/index.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Actulizaciones, imagen en imagen, mpv y solución de problemas"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Use Quick Connect, or the configuration’s password."

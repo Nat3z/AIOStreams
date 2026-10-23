@@ -1059,10 +1059,6 @@ msgstr "配置"
 msgid "Configuration ids are left out of their copy too."
 msgstr "复制时也会排除配置 ID。"
 
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr "配置密码"
-
 #: src/components/no-catalogs.tsx
 #: src/components/no-details.tsx
 msgid "Configure"
@@ -2609,10 +2605,6 @@ msgstr ""
 msgid "Navigation"
 msgstr "导航"
 
-#: src/pages/sign-in.tsx
-msgid "Needed to switch to this user."
-msgstr "切换到此用户时需要。"
-
 #: src/pages/downloads.tsx
 msgid "Needs attention"
 msgstr "需要处理"
@@ -3307,11 +3299,6 @@ msgstr "选择你在 {heardAt} 听到的台词。"
 msgid "Pick the version to download."
 msgstr "选择要下载的版本。"
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "Picture"
-msgstr ""
-
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
 msgstr "画中画"
@@ -3788,6 +3775,7 @@ msgstr ""
 msgid "Reminder set"
 msgstr ""
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4839,11 +4827,6 @@ msgstr "地址无效。"
 msgid "That is not a valid regular expression."
 msgstr "正则表达式无效。"
 
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "一起观看已结束。"
@@ -4887,11 +4870,6 @@ msgstr "此电脑上安装的 {name}，会在独立窗口中运行，并使用�
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "地址必须以 http:// 或 https:// 开头。"
-
-#: src/pages/settings/profile.tsx
-#: src/pages/welcome.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -5071,6 +5049,10 @@ msgstr "下次打开应用时，视频输出设置会生效。"
 #: src/components/download-button.tsx
 msgid "The whole show"
 msgstr "整部剧集"
+
+#: src/pages/sign-in.tsx
+msgid "Theirs, or the configuration's. Needed to switch to this user."
+msgstr ""
 
 #: src/pages/settings/index.tsx
 #: src/pages/settings/theme.tsx
@@ -5416,6 +5398,14 @@ msgstr "更新、mpv 和故障排查"
 #: src/pages/settings/index.tsx
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "更新、画中画、mpv 和故障排查"
+
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Use Quick Connect, or the configuration’s password."
