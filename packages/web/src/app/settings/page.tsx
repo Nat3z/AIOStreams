@@ -18,6 +18,7 @@ import {
   LuPalette,
   LuTv,
   LuUser,
+  LuUserPen,
   LuVolume2,
 } from 'react-icons/lu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@aiostreams/ui/tabs';
@@ -27,6 +28,7 @@ import { cn } from '@aiostreams/ui/core/styling';
 import { DonationModal } from '@aiostreams/ui/shared/donation-modal';
 import { useDisclosure } from '@aiostreams/ui/hooks/disclosure';
 import { currentHost } from '@/lib/hosts';
+import { useFeature } from '@/lib/jellyfin/server-info';
 import { shellHost } from '@/lib/hosts/shell';
 import { appBridge } from '@/lib/hosts/shell/bridge';
 import { PageBody } from '@/components/shell/page';
@@ -40,6 +42,7 @@ import { ThemeSection } from './theme';
 import { CacheSection } from './cache';
 import { DownloadsSection } from './downloads';
 import { AccountSection } from './account';
+import { ProfileSection } from './profile';
 import { AppSection, DesktopSection, AndroidSection } from './apps';
 import { AboutSection } from './about';
 
@@ -55,9 +58,21 @@ interface Section {
 const groupLabel = (group: Section['group']) =>
   group === 'watching' ? t`Watching` : t`App`;
 
-function sections(): Section[] {
+function sections(profile: boolean): Section[] {
   const host = currentHost();
   return [
+    ...(profile
+      ? [
+          {
+            id: 'profile',
+            label: t`Profile`,
+            description: t`You, your streams and Stremio`,
+            icon: LuUserPen,
+            group: 'watching' as const,
+            Content: ProfileSection,
+          },
+        ]
+      : []),
     {
       id: 'playback',
       label: t`Playback`,
@@ -214,7 +229,8 @@ export function SettingsPage({
   tab: string;
   onTabChange(tab: string): void;
 }) {
-  const all = React.useMemo(sections, []);
+  const profile = useFeature('profile');
+  const all = React.useMemo(() => sections(profile), [profile]);
   const donation = useDisclosure(false);
   // With no marker sliding, the tabs keep the usual focus mark.
   const still = useReducedMotion();
