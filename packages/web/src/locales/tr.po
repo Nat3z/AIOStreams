@@ -473,6 +473,10 @@ msgstr "{name} eklendi"
 msgid "Added to {name}"
 msgstr "{name} öğesine eklendi"
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "Eklentiler, kataloglar ve kullanıcılar yapılandırma sayfasında ayarlanır."
@@ -484,6 +488,10 @@ msgstr "Adres"
 #: src/pages/settings/playback.tsx
 msgid "Ads"
 msgstr "Reklamlar"
+
+#: src/pages/welcome.tsx
+msgid "Again"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "AIOStreams is a solo project built and maintained by me in my free time. If you find it useful, please consider supporting my work. Your donation helps me keep the project alive and improve it for everyone!"
@@ -648,6 +656,7 @@ msgid "At 0% there is no background."
 msgstr "%0 olduğunda arkaplan yok."
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "At least {min} characters"
 msgstr ""
 
@@ -697,6 +706,7 @@ msgstr "Otomatik, bölümleri dar ekranlarda listelerken geniş ekranlarda sıra
 #: src/pages/servers.tsx
 #: src/pages/sign-in.tsx
 #: src/pages/trailer.tsx
+#: src/pages/welcome.tsx
 msgid "Back"
 msgstr "Geri"
 
@@ -727,6 +737,10 @@ msgstr "Rozetler"
 #: src/pages/settings/interface.tsx
 msgid "Bar"
 msgstr "Çubuk"
+
+#: src/pages/home.tsx
+msgid "Because you watched"
+msgstr ""
 
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
@@ -1037,6 +1051,7 @@ msgid "Composer"
 msgstr "Besteci"
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr "Yapılandırma"
 
@@ -1071,6 +1086,7 @@ msgstr "Bağlantı kesildi"
 
 #: src/app.tsx
 #: src/pages/sign-in.tsx
+#: src/pages/welcome.tsx
 msgid "Continue"
 msgstr "Devam et"
 
@@ -1778,6 +1794,10 @@ msgstr "Sürümler aranıyor"
 msgid "Finding versions of {name}…"
 msgstr "{name} için sürümler aranıyor…"
 
+#: src/pages/welcome.tsx
+msgid "Finish"
+msgstr ""
+
 #: src/pages/item.tsx
 msgid "First aired"
 msgstr "İlk yayın tarihi"
@@ -2028,6 +2048,10 @@ msgstr "Nasıl çalışır?"
 #: src/pages/settings/about.tsx
 msgid "How to use the app and what each setting does."
 msgstr "Uygulamanın kullanımı ve ayarların işlevleri."
+
+#: src/pages/welcome.tsx
+msgid "How you watch"
+msgstr ""
 
 #: src/lib/subtitles/style.ts
 msgid "Huge"
@@ -2568,6 +2592,7 @@ msgstr "Sessize alma tuşu"
 #: src/components/playlists.tsx
 #: src/components/version-settings.tsx
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "Name"
 msgstr "İsim"
 
@@ -3007,6 +3032,7 @@ msgstr "Opaklık: %{backgroundOpacity}"
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr "Aç"
 
@@ -3063,6 +3089,10 @@ msgstr "İsteğe bağlı."
 #: src/components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "İsteğe bağlı. Etiketin yerine gösterilecek görselin adresi."
+
+#: src/pages/welcome.tsx
+msgid "Optional. Each change saves as you make it, and you can change it later in settings."
+msgstr ""
 
 #: src/components/version-settings.tsx
 msgid "Optional. Match only these parts of a version, named as the formatter names them, such as seMatched for the stream expression it matched."
@@ -3179,6 +3209,7 @@ msgstr "Çevresel sesi doğrudan aktar"
 
 #: src/pages/settings/profile.tsx
 #: src/pages/sign-in.tsx
+#: src/pages/welcome.tsx
 msgid "Password"
 msgstr "Parola"
 
@@ -3276,6 +3307,7 @@ msgid "Pick the version to download."
 msgstr "İndirilecek sürümü seç."
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "Picture"
 msgstr ""
 
@@ -3593,6 +3625,7 @@ msgstr "Önceki fragman"
 msgid "Producer"
 msgstr "Yapımcı"
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
@@ -3692,6 +3725,10 @@ msgstr "Vurgu"
 #: src/pages/search.tsx
 msgid "Recent searches"
 msgstr "Son aramalar"
+
+#: src/pages/home.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
@@ -4289,6 +4326,10 @@ msgstr "Kenar çubuğu"
 msgid "Sign in"
 msgstr "Oturum aç"
 
+#: src/pages/welcome.tsx
+msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
+msgstr ""
+
 #: src/pages/sign-in.tsx
 msgid "Sign in failed"
 msgstr "Oturum açılamadı"
@@ -4510,6 +4551,10 @@ msgstr "Birlikte izlemeyi başlat"
 msgid "Start on"
 msgstr "Şimdi yeniden başlat"
 
+#: src/pages/welcome.tsx
+msgid "Start watching"
+msgstr ""
+
 #: src/components/remote-sheet.tsx
 msgid "Starting…"
 msgstr "Başlatılıyor…"
@@ -4527,6 +4572,10 @@ msgstr "İstatistikler"
 #: src/pages/settings/apps.tsx
 msgid "Status"
 msgstr "Durum"
+
+#: src/pages/welcome.tsx
+msgid "Step {number} of {total}"
+msgstr ""
 
 #: src/pages/settings/audio.tsx
 msgid "Stereo"
@@ -4785,6 +4834,7 @@ msgid "That is not a valid regular expression."
 msgstr "Bu düzenli ifade geçerli değil."
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "That isn't an address"
 msgstr ""
 
@@ -4833,6 +4883,7 @@ msgid "The address must start with http:// or https://."
 msgstr "Adres http:// veya https:// ile başlamalı."
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "The address of an image. Empty shows your initial."
 msgstr ""
 
@@ -5030,6 +5081,10 @@ msgstr "Burada içerik yok"
 #: src/components/version-settings.tsx
 msgid "These come before the packs' badges. Badges that share a group are alternatives: only the first that matches shows."
 msgstr "Bunlar paketlerdeki rozetlerden önce gelir. Aynı gruptaki rozetler birbirinin alternatifidir; yalnızca ilk eşleşen gösterilir."
+
+#: src/pages/welcome.tsx
+msgid "These don't match"
+msgstr ""
 
 #: src/lib/subtitles/delay.ts
 msgid "These subtitles don't match the video's own"
@@ -5585,6 +5640,14 @@ msgstr "{name}, {at} konumunda izleniyor"
 msgid "Web app"
 msgstr "Web uygulaması"
 
+#: src/pages/welcome.tsx
+msgid "Welcome, {greeting}"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "What everyone on this server sees."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "What happened"
 msgstr "Ne oldu?"
@@ -5786,6 +5849,18 @@ msgstr ""
 msgid "You'll be reminded at {time}"
 msgstr ""
 
+#: src/pages/welcome.tsx
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set."
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You're set, {name}"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You've been added to this server. A few steps and it's yours."
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Your {name}"
 msgstr "Kendi {name} uygulaman"
@@ -5801,6 +5876,10 @@ msgstr ""
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "Kendi {name} uygulaman"
+
+#: src/pages/welcome.tsx
+msgid "Your password"
+msgstr ""
 
 #: src/pages/settings/profile.tsx
 msgid "Your password confirms it's you."

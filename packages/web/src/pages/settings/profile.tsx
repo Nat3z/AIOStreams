@@ -81,7 +81,7 @@ function useProfileKey() {
   return ['jf', client.base, user.Id, 'profile'] as const;
 }
 
-function useProfile() {
+export function useProfile() {
   const { client } = useSession();
   return useQuery({
     queryKey: useProfileKey(),
@@ -90,7 +90,7 @@ function useProfile() {
 }
 
 /** Saves a change, shown at once and put back if the server refuses it. */
-function useSaveProfile() {
+export function useSaveProfile() {
   const { client } = useSession();
   const queryClient = useQueryClient();
   const key = useProfileKey();
@@ -506,7 +506,7 @@ const sizeOptions = (sizes: number[]) => [
 const languageOptions = () =>
   FILTER_LANGUAGES.map((name) => ({ value: name, label: name }));
 
-function PreferencesCard({ preferences }: { preferences: Preferences }) {
+export function PreferencesCard({ preferences }: { preferences: Preferences }) {
   const save = useSaveProfile();
   // Everything is sent each time, as the server keeps the whole set.
   const set = (change: Preferences) =>
