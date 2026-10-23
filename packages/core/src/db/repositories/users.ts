@@ -90,6 +90,7 @@ export class UserRepository {
     config.autoVariants = undefined;
     config.healthResults = undefined;
     config.variantSelectorLocation = undefined;
+    config.installUrl = undefined;
 
     let configToValidate: UserData = config;
     if (config.parentConfig?.uuid) {
@@ -262,6 +263,7 @@ export class UserRepository {
     decryptedConfig.autoVariants = undefined;
     decryptedConfig.healthResults = undefined;
     decryptedConfig.variantSelectorLocation = undefined;
+    decryptedConfig.installUrl = undefined;
     return applyMigrations(decryptedConfig);
   }
 
@@ -381,6 +383,7 @@ export class UserRepository {
     config.autoVariants = undefined;
     config.healthResults = undefined;
     config.variantSelectorLocation = undefined;
+    config.installUrl = undefined;
 
     const db = getDb();
     const current = await db.maybeOne<UserRow>(
