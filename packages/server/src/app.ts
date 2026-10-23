@@ -212,6 +212,11 @@ app.use(
   stremioAuthRouter
 );
 app.use('/stremio/:uuid/:encryptedPassword', stremioAuthRouter); // For authenticated routes
+// A user's install link: the token stands in for the configuration's credentials.
+app.use('/s/:stremioToken/configure', (_req, res) => {
+  res.status(404).end();
+});
+app.use('/s/:stremioToken', stremioAuthRouter);
 
 const chillLinkRouter = express.Router({ mergeParams: true });
 chillLinkRouter.use(corsMiddleware);

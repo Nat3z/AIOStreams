@@ -48,12 +48,14 @@ export class AIOStreams {
     this.ctx = {
       userData,
       options,
-      manifestUrl: withVariantSelector(
-        `${appConfig.bootstrap.baseUrl}/stremio/${userData.uuid}/${userData.encryptedPassword}`,
-        '/manifest.json',
-        userData.activeVariants,
-        userData.variantSelectorLocation
-      ),
+      manifestUrl: userData.installUrl
+        ? `${userData.installUrl}/manifest.json`
+        : withVariantSelector(
+            `${appConfig.bootstrap.baseUrl}/stremio/${userData.uuid}/${userData.encryptedPassword}`,
+            '/manifest.json',
+            userData.activeVariants,
+            userData.variantSelectorLocation
+          ),
       manifests: {},
       supportedResources: {},
       finalResources: [],

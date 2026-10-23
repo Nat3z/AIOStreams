@@ -752,6 +752,8 @@ export const UserDataSchema = z.object({
   healthResults: z.record(z.string(), z.boolean()).optional(),
   /** Request scoped: where the selector sat in the URL. Never persisted. */
   variantSelectorLocation: VariantSelectorLocationSchema.optional(),
+  /** Request scoped: the install link the request came through, which replaces the configuration's own URL. Never persisted. */
+  installUrl: z.string().optional(),
   encryptedPassword: z.string().min(1).optional(),
   trusted: z.boolean().optional(),
   showChanges: z.boolean().optional(),

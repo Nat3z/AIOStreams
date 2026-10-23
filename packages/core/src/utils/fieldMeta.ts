@@ -83,6 +83,7 @@ type IgnoredKeys =
   | 'autoVariants'
   | 'healthResults'
   | 'variantSelectorLocation'
+  | 'installUrl'
   | 'addons'
   | 'proxies'
   | 'ip'
