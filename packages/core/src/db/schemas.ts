@@ -1957,6 +1957,8 @@ const StatusResponseSchema = z.object({
         maxPersonas: z.number(),
         /** Whether a user's PIN alone signs it in on a picker address. */
         pinSignIn: z.boolean().optional(),
+        /** The site is one configuration's server, whose root is its web app. */
+        instance: z.boolean().optional(),
         /** Trackers one user syncs with at most. */
         maxTrackers: z.number(),
         /** The default wait for tracks on play; absent when nothing is probed. */
