@@ -20,6 +20,7 @@ import { attachSession } from '../../middlewares/auth.js';
 import { resolveConfigCredentials } from '../../utils/basic-auth.js';
 import { createResponse } from '../../utils/responses.js';
 import { isInstanceConfig } from '../../utils/admin-handoff.js';
+import { AVATAR_REFUSED, avatarBody, saveAvatar } from '../../utils/avatars.js';
 import { resolveConfig, userUnlocks } from '../jellyfin/context.js';
 import { authenticationResult, userDto } from '../jellyfin/users.js';
 
@@ -512,6 +513,33 @@ router.post('/invites', async (req, res, next) => {
         },
       })
     );
+  } catch (error) {
+    next(
+      error instanceof APIError
+        ? error
+        : new APIError(constants.ErrorCode.INTERNAL_SERVER_ERROR)
+    );
+  }
+});
+
+/** A picture for one of the configuration's users, saved with it later. */
+router.post('/avatars', avatarBody, async (req, res, next) => {
+  try {
+    const creds = await inviteOwner(req, res);
+    if (!creds) {
+      next(new APIError(constants.ErrorCode.UNAUTHORIZED));
+      return;
+    }
+    const url = await saveAvatar(req, creds.uuid);
+    res
+      .status(url ? 200 : 400)
+      .json(
+        createResponse(
+          url
+            ? { success: true, data: { url } }
+            : { success: false, detail: AVATAR_REFUSED }
+        )
+      );
   } catch (error) {
     next(
       error instanceof APIError
