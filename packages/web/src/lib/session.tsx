@@ -71,6 +71,20 @@ const lastUserKey = (base: string) => `aiostreams-web-last-user:${base}`;
 const leftKey = (base: string) => `aiostreams-web-left-user:${base}`;
 const AWAY_MS = 30 * 60_000;
 
+/**
+ * Each user's last token here, so switching back to someone signed in on this
+ * device asks nothing again. Signing a user out drops theirs.
+ */
+const tokensKey = (base: string) => `aiostreams-web-user-tokens:${base}`;
+const tokens = {
+  read: (base: string) =>
+    storage.get<Record<string, string>>(tokensKey(base)) ?? {},
+  set(base: string, userId: string, token: string | null): void {
+    const { [userId]: _, ...rest } = tokens.read(base);
+    storage.set(tokensKey(base), token ? { ...rest, [userId]: token } : rest);
+  },
+};
+
 /** Ends the token on the server and forgets the sign-in here. */
 export function endSession(base: string, token: string | null): void {
   if (token) {
@@ -78,7 +92,9 @@ export function endSession(base: string, token: string | null): void {
       .post('/Sessions/Logout')
       .catch(() => undefined);
   }
-  forgetUser(base, readCredentials(base)?.userId);
+  const userId = readCredentials(base)?.userId;
+  forgetUser(base, userId);
+  if (userId) tokens.set(base, userId, null);
   clearCredentials(base);
   storage.remove(lastUserKey(base));
   storage.remove(leftKey(base));
@@ -124,6 +140,7 @@ export function useSessionPhase(base: string) {
       });
       storage.set(lastUserKey(base), user.Id);
       storage.remove(leftKey(base));
+      tokens.set(base, user.Id!, auth.AccessToken!);
       saveUser(base, user);
       const client = proof.withToken(auth.AccessToken!);
       setPhase({ kind: 'ready', client, user });
@@ -150,27 +167,57 @@ export function useSessionPhase(base: string) {
     [adopt, queryClient]
   );
 
+  /** The users still signed in here, each by their own token. */
+  const signedInHere = React.useCallback(
+    async (proof: JellyfinClient, users: PickableUser[]) => {
+      const saved = tokens.read(base);
+      const found = await Promise.all(
+        users.map(async (u) => {
+          const id = u.user.Id!;
+          if (!saved[id]) return null;
+          const client = proof.withToken(saved[id]);
+          const me = await client.get<UserDto>('/Users/Me').catch((e) => {
+            if (isUnauthorized(e)) tokens.set(base, id, null);
+            return null;
+          });
+          return me?.Id === id ? ([id, client] as const) : null;
+        })
+      );
+      return new Map(found.filter((f) => f !== null));
+    },
+    [base]
+  );
+
   /**
-   * `stay`, still signed in here, carries on without a PIN. Whoever is picked
+   * `stay`, the user on this session, carries on without a PIN. Whoever is picked
    * starts on Home, with no way back to the pages before.
    */
   const pick = React.useCallback(
     async (proof: JellyfinClient, users: PickableUser[], stay?: UserDto) => {
       // Before the session's router unmounts: mounted again, it doesn't load a place it moved to meanwhile.
-      await startOver(to.home);
+      const [here] = await Promise.all([
+        signedInHere(proof, users),
+        startOver(to.home),
+      ]);
       setPhase({
         kind: 'picking',
         client: proof,
+        // Someone signed in here switches back by their own token: only a PIN of theirs is asked.
         users: users.map((u) =>
-          stay && u.user.Id === stay.Id ? { ...u, needs: null } : u
+          stay && u.user.Id === stay.Id
+            ? { ...u, needs: null }
+            : here.has(u.user.Id!) && u.needs
+              ? { ...u, needs: u.needs === 'password' ? null : 'pin' }
+              : u
         ),
         choose: async (id, secret) => {
-          if (!stay || id !== stay.Id) return switchTo(proof, id, secret);
-          setPhase({ kind: 'ready', client: proof, user: stay });
+          if (stay && id === stay.Id)
+            return setPhase({ kind: 'ready', client: proof, user: stay });
+          await switchTo(here.get(id) ?? proof, id, secret);
         },
       });
     },
-    [switchTo]
+    [signedInHere, switchTo]
   );
 
   /** Who to pick from as the app opens, or null to carry on as before. */
