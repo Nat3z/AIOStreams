@@ -53,7 +53,8 @@ const manifest = async (config?: UserData): Promise<Manifest> => {
         appConfig.branding.alternateDesign ? '_alt' : ''
       }.png`,
     behaviorHints: {
-      configurable: true,
+      // An install link's user cannot configure what it serves.
+      configurable: !config?.installUrl,
       configurationRequired: config ? false : true,
     },
     addonCatalogs,
