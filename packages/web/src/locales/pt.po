@@ -3690,6 +3690,7 @@ msgid "Producer"
 msgstr "Produtor"
 
 #: src/app/settings/page.tsx
+#: src/components/shell/layout.tsx
 msgid "Profile"
 msgstr ""
 

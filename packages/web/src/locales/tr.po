@@ -3688,6 +3688,7 @@ msgid "Producer"
 msgstr "Yapımcı"
 
 #: src/app/settings/page.tsx
+#: src/components/shell/layout.tsx
 msgid "Profile"
 msgstr ""
 
