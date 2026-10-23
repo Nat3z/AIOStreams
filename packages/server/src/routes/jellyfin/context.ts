@@ -222,6 +222,15 @@ export async function resolveConfigEntry(
   return entry;
 }
 
+/** Drops a cached config so a change its own users just made is read back at once. */
+export async function forgetConfig(
+  uuid: string,
+  encryptedPassword: string
+): Promise<void> {
+  const key = `${uuid}|${getSimpleTextHash(encryptedPassword)}`;
+  await configCache.delete(key).catch(() => undefined);
+}
+
 /**
  * The resolved config, or null when the credentials are wrong. Shared with the
  * cache: copy it before changing anything.
@@ -373,6 +382,37 @@ export async function userUnlocks(
   }
   if (PERSONA_PIN_PATTERN.test(pin) && (await verifyHash(pin, lock))) {
     await pinAttempts.reset(key);
+    return true;
+  }
+  return false;
+}
+
+const passwordAttempts = attemptLimiter(15 * 60, 10, 'jellyfin-user-password');
+
+/** The password hash of a persona, or of the account for `null`. */
+export function userPasswordOf(
+  userData: Pick<UserData, 'jellyfin'>,
+  persona: JellyfinPersona | null
+): string | undefined {
+  return persona ? persona.password : userData.jellyfin?.primary?.password;
+}
+
+/** Whether `password` is the user's own password. Rate limited like a PIN. */
+export async function userPasswordOpens(
+  uuid: string,
+  userData: Pick<UserData, 'jellyfin'>,
+  persona: JellyfinPersona | null,
+  password: string
+): Promise<boolean> {
+  const stored = userPasswordOf(userData, persona);
+  if (!stored || !password) return false;
+  const key = `${uuid}:${persona?.id ?? ''}`;
+  if (!(await passwordAttempts.take(key))) {
+    logger.warn({ uuid, persona: persona?.id }, 'user password locked out');
+    return false;
+  }
+  if (await verifyHash(password, stored)) {
+    await passwordAttempts.reset(key);
     return true;
   }
   return false;
