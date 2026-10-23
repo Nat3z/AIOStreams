@@ -141,6 +141,7 @@ const MENU_PAGES: Record<MenuId, PageId> = {
   proxy: 'playback',
   miscellaneous: 'advanced',
   stats: 'stats',
+  users: 'profiles',
   'save-install': 'stremio',
 };
 
