@@ -656,6 +656,14 @@ export const jellyfinContext: RequestHandler = async (req, res, next) => {
         return;
       }
       req.jfMount = target;
+    } else if (appConfig.jellyfin.instanceAlias) {
+      // The bare address is the instance configuration's picker.
+      const target = await resolvePickerAlias(appConfig.jellyfin.instanceAlias);
+      if (!target) {
+        res.status(503).json({ Message: 'Instance configuration not found' });
+        return;
+      }
+      req.jfMount = target;
     }
     if (
       payload &&
