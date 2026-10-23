@@ -22,6 +22,7 @@ import {
   LuSearch,
   LuTv,
   LuUser,
+  LuUserPen,
   LuVolume2,
 } from 'react-icons/lu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@aiostreams/ui/tabs';
@@ -33,6 +34,7 @@ import { DonationModal } from '@aiostreams/ui/shared/donation-modal';
 import { useDisclosure } from '@aiostreams/ui/hooks/disclosure';
 import { useMediaQuery } from '@aiostreams/ui/hooks/media-query';
 import { currentHost } from '@/lib/hosts';
+import { useFeature } from '@/lib/jellyfin/server-info';
 import { shellHost } from '@/lib/hosts/shell';
 import { navigate, to } from '@/lib/paths';
 import { canPlayWithWebGpu } from '@/lib/playback/player-choice';
@@ -56,6 +58,7 @@ import { ThemeSection } from './theme';
 import { CacheSection } from './cache';
 import { DownloadsSection } from './downloads';
 import { AccountSection } from './account';
+import { ProfileSection } from './profile';
 import { AppSection, DesktopSection, AndroidSection } from './apps';
 import { AboutSection } from './about';
 
@@ -73,10 +76,22 @@ interface Section {
 const groupLabel = (group: Group) =>
   ({ watching: t`Watching`, look: t`Look and feel`, app: t`App` })[group];
 
-function sections(): Section[] {
+function sections(profile: boolean): Section[] {
   const host = currentHost();
   const picture = !!shellHost() || (!host.player && canPlayWithWebGpu());
   return [
+    ...(profile
+      ? [
+          {
+            id: 'profile',
+            label: t`Profile`,
+            description: t`You, your streams and Stremio`,
+            icon: LuUserPen,
+            group: 'watching' as const,
+            Content: ProfileSection,
+          },
+        ]
+      : []),
     {
       id: 'playback',
       label: t`Playback`,
@@ -585,7 +600,8 @@ function WideSettings({
 }
 
 export function SettingsPage({ tab }: { tab: string }) {
-  const all = React.useMemo(sections, []);
+  const profile = useFeature('profile');
+  const all = React.useMemo(() => sections(profile), [profile]);
   const donation = useDisclosure(false);
   const wide = useMediaQuery('(min-width: 1024px)');
   const [query, setQuery] = React.useState('');
