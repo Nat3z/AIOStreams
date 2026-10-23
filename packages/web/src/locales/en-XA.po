@@ -3432,6 +3432,7 @@ msgstr ""
 msgid "Producer"
 msgstr ""
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
