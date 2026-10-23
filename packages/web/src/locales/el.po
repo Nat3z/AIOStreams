@@ -727,6 +727,10 @@ msgstr "Ετικέτες"
 msgid "Bar"
 msgstr "Γραμμή"
 
+#: src/app/home/page.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Πριν από το τέλος"
@@ -3635,6 +3639,10 @@ msgstr "Πρόσφατα"
 #: src/app/search/page.tsx
 msgid "Recent searches"
 msgstr "Πρόσφατες αναζητήσεις"
+
+#: src/app/home/page.tsx
+msgid "Recommended for you"
+msgstr ""
 
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"
