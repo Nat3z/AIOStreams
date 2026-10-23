@@ -6,6 +6,7 @@ import {
   decryptString,
   selfStateOf,
   SelfPreferencesSchema,
+  traktServices,
   updateSelf,
   USER_PASSWORD_MIN,
   type SelfProfilePatch,
@@ -19,6 +20,11 @@ import {
   type JellyfinRequestContext,
 } from './context.js';
 import { jellyfinLoginRateLimiter } from '../../middlewares/ratelimit.js';
+import {
+  metadataPasswordFor,
+  startTraktLink,
+  TRAKT_SOURCES,
+} from '../api/trakt-link.js';
 
 /*
  * The signed-in user's own profile, as the web app's settings edit it. Every
@@ -97,6 +103,7 @@ router.get(
       passwordMin: USER_PASSWORD_MIN,
       preferences: state.preferences,
       linked: state.addons.map((a) => ({ source: a.source, name: a.name })),
+      traktAvailable: !!traktServices(),
     });
   })
 );
@@ -154,6 +161,73 @@ router.post(
     } catch (error) {
       sendError(res, error);
     }
+  })
+);
+
+const traktBody = z.object({
+  /** The web app's own address, which the link returns to when it is done. */
+  returnTo: z.string().url().max(2048),
+});
+
+router.post(
+  '/AIOStreams/Profile/Trakt',
+  self(async (req, res, ctx) => {
+    try {
+      const { returnTo } = traktBody.parse(bodyOf(req));
+      // Back to this server only, so a link cannot be made to land elsewhere.
+      if (new URL(returnTo).origin !== new URL(ctx.baseUrl).origin) {
+        res.status(400).json({ Message: 'Invalid return address' });
+        return;
+      }
+      if (!traktServices()) {
+        res.status(404).json({ Message: 'Trakt linking is not set up' });
+        return;
+      }
+      const user = ctx.persona ?? ctx.userData.jellyfin?.primary;
+      const url = await startTraktLink(
+        {
+          uuid: ctx.uuid,
+          encryptedPassword: ctx.encryptedPassword,
+          personaId: ctx.persona?.id ?? null,
+          returnTo,
+        },
+        `${user?.name ?? 'Owner'} (${ctx.uuid.slice(0, 8)})`
+      );
+      res.json({ url });
+    } catch (error) {
+      sendError(res, error);
+    }
+  })
+);
+
+router.delete(
+  '/AIOStreams/Profile/Trakt',
+  self(async (_req, res, ctx) => {
+    const services = traktServices();
+    const linked = selfStateOf(ctx.userData, ctx.persona).addons.filter((a) =>
+      TRAKT_SOURCES.includes(a.source)
+    );
+    // Unlinked here first: a service that is down must not keep it linked.
+    await saveSelf(ctx, { addons: { sources: TRAKT_SOURCES, addons: [] } });
+    const profile = linked
+      .map((a) => services?.bridge.profileOf(a.manifestUrl))
+      .find((id) => !!id);
+    const lists = linked.find((a) => a.source === 'trakt-lists');
+    await Promise.all([
+      profile && services?.bridge.disconnect(profile),
+      profile &&
+        lists &&
+        services?.metadata?.delete(
+          lists.manifestUrl,
+          metadataPasswordFor(profile)
+        ),
+    ]).catch((error) =>
+      logger.warn(
+        { err: error instanceof Error ? error.message : String(error) },
+        'trakt unlink left something behind'
+      )
+    );
+    res.status(204).end();
   })
 );
 

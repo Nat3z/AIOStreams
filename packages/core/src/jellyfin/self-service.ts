@@ -165,8 +165,8 @@ export interface SelfProfilePatch {
   pin?: string | null;
   password?: string;
   preferences?: SelfPreferences;
-  /** Replaces the addons linked from `source`. */
-  addons?: { source: string; addons: SelfAddon[] };
+  /** Replaces every addon linked from these sources. */
+  addons?: { sources: string[]; addons: SelfAddon[] };
 }
 
 // One edit at a time per configuration, so two users saving together both land.
@@ -224,9 +224,10 @@ export function updateSelf(
       const state = readState(userData, id);
       if (patch.preferences) state.preferences = patch.preferences;
       if (patch.addons) {
+        const { sources, addons } = patch.addons;
         state.addons = [
-          ...state.addons.filter((a) => a.source !== patch.addons!.source),
-          ...patch.addons.addons,
+          ...state.addons.filter((a) => !sources.includes(a.source)),
+          ...addons,
         ];
       }
       writeSelfVariant(userData, user, persona, id, state);
@@ -261,12 +262,15 @@ function writeSelfVariant(
     user.variants = [...chosen, id];
   }
 
-  // A linked tracker is the user's own history, so it is theirs alone.
-  const trackerIds = state.addons
-    .filter((a) => a.tracker)
-    .map((a) => selfAddonInstanceId(persona, a.source));
-  const ownPrefix = `${id}~`;
-  const kept = (user.trackers ?? []).filter((t) => !t.startsWith(ownPrefix));
-  const trackers = [...kept, ...trackerIds];
-  user.trackers = trackers.length || user.trackers ? trackers : undefined;
+  // Left on automatic, the user's variant already makes a linked tracker
+  // theirs; an explicit list has to name it.
+  if (user.trackers) {
+    const ownPrefix = `${id}~`;
+    user.trackers = [
+      ...user.trackers.filter((t) => !t.startsWith(ownPrefix)),
+      ...state.addons
+        .filter((a) => a.tracker)
+        .map((a) => selfAddonInstanceId(persona, a.source)),
+    ];
+  }
 }

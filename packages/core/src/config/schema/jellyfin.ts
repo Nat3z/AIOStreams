@@ -286,6 +286,58 @@ export const jellyfinSchema = {
       ui: { min: 0 },
     },
   },
+  trakt: {
+    bridgeUrl: {
+      schema: optionalUrlString,
+      default: null,
+      label: 'Trakt bridge URL',
+      description:
+        "Where this server reaches a homedocker-trakt-bridge, e.g. `http://trakt-bridge:7000`. With the bridge's admin and secret keys, a user's profile offers Link Trakt, which scrobbles their plays to their own Trakt account and reads back their progress. Set the bridge's `PUBLIC_BASE_URL` to `<BASE_URL>/api/v1/trakt-link/bridge` and register `<BASE_URL>/api/v1/trakt-link/bridge/oauth/callback` as its Trakt app's redirect.",
+      env: 'TRAKT_BRIDGE_URL',
+      requiresRestart: false,
+      secret: false,
+    },
+    bridgeAdminKey: {
+      schema: z.string(),
+      default: '',
+      label: 'Trakt bridge admin key',
+      description:
+        "The bridge's `ADMIN_KEY`, used to create each user's bridge profile.",
+      env: 'TRAKT_BRIDGE_ADMIN_KEY',
+      requiresRestart: false,
+      secret: true,
+    },
+    bridgeSecretKey: {
+      schema: z.string(),
+      default: '',
+      label: 'Trakt bridge secret key',
+      description:
+        "The bridge's `BRIDGE_SECRET_KEY`, which its per-profile keys are derived from.",
+      env: 'TRAKT_BRIDGE_SECRET_KEY',
+      requiresRestart: false,
+      secret: true,
+    },
+    metadataUrl: {
+      schema: optionalUrlString,
+      default: null,
+      label: 'AIOMetadata URL',
+      description:
+        "Where this server reaches an AIOMetadata instance, e.g. `http://aiometadata:3232`. Linking Trakt then also adds that user's Trakt recommendations, watchlist and up next as catalogs. Set its `TRAKT_REDIRECT_URI` to `<BASE_URL>/api/v1/trakt-link/aiom/callback` and register that with its Trakt app.",
+      env: 'TRAKT_METADATA_URL',
+      requiresRestart: false,
+      secret: false,
+    },
+    metadataAdminKey: {
+      schema: z.string(),
+      default: '',
+      label: 'AIOMetadata admin key',
+      description:
+        "AIOMetadata's `ADMIN_KEY`, so its sign-in gate never stands between this server and it.",
+      env: 'TRAKT_METADATA_ADMIN_KEY',
+      requiresRestart: false,
+      secret: true,
+    },
+  },
   streamCacheTtl: {
     schema: seconds,
     default: 180,

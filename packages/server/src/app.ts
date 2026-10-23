@@ -19,6 +19,7 @@ import {
   dashboardApi,
   usenetApi,
   jellyfinApi,
+  traktLinkApi,
   mediaInfoApi,
   communityApi,
   reportsApi,
@@ -156,6 +157,7 @@ apiRouter.use('/auth', authApi);
 apiRouter.use('/dashboard', dashboardApi);
 apiRouter.use('/usenet', usenetApi);
 apiRouter.use('/jellyfin', jellyfinApi);
+apiRouter.use('/trakt-link', traktLinkApi);
 apiRouter.use('/sabnzbd', sabnzbdRouter);
 apiRouter.use('/newznab', createNabRouter('newznab'));
 apiRouter.use('/torznab', createNabRouter('torznab'));
