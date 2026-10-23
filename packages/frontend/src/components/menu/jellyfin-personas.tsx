@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { DndContext } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -10,7 +10,15 @@ import { CSS } from '@dnd-kit/utilities';
 import { useUserData } from '@/context/userData';
 import { useStatus } from '@/context/status';
 import { watchStateTrackersQuery } from '@/lib/queries';
-import type { WatchStateTrackerOption } from '@/lib/api';
+import {
+  APIError,
+  createUserInvite,
+  listUserInvites,
+  revokeUserInvite,
+  type Credentials,
+  type UserInvite,
+  type WatchStateTrackerOption,
+} from '@/lib/api';
 import { cn } from '@aiostreams/ui/core/styling';
 import { pill, VariantPills } from '../shared/variant-pills';
 import { UserAvatar } from '../shared/user-avatar';
@@ -27,7 +35,7 @@ import { Switch } from '@aiostreams/ui/switch';
 import { Modal } from '@aiostreams/ui/modal';
 import { copyToClipboard } from '@aiostreams/ui/utils/clipboard';
 import { toast } from 'sonner';
-import { FiEdit2, FiPlus, FiTrash2 } from 'react-icons/fi';
+import { FiEdit2, FiLink, FiPlus, FiTrash2 } from 'react-icons/fi';
 import type { UserData } from '@aiostreams/core';
 
 type JellyfinSettings = NonNullable<UserData['jellyfin']>;
@@ -136,6 +144,7 @@ interface UserRowProps {
   summary: string;
   dragHandleProps?: { attributes: any; listeners: any } | null;
   onEdit: () => void;
+  onInvite?: () => void;
   onDelete?: () => void;
 }
 
@@ -145,6 +154,7 @@ function UserRow({
   summary,
   dragHandleProps,
   onEdit,
+  onInvite,
   onDelete,
 }: UserRowProps) {
   return (
@@ -164,6 +174,15 @@ function UserRow({
         <p className="truncate text-sm text-white">{name}</p>
         <p className="truncate text-xs text-[--muted]">{summary}</p>
       </div>
+      {onInvite && (
+        <IconButton
+          size="sm"
+          intent="gray-subtle"
+          icon={<FiLink />}
+          aria-label={`Setup link for ${name}`}
+          onClick={onInvite}
+        />
+      )}
       <IconButton
         size="sm"
         intent="gray-subtle"
@@ -476,6 +495,122 @@ function PasswordField({
 const shortPassword = (password: string | undefined) =>
   !!password && !password.startsWith('$2') && password.length < PASSWORD_MIN;
 
+const errorText = (error: unknown, fallback: string) =>
+  error instanceof APIError && error.detail
+    ? error.detail
+    : error instanceof Error
+      ? error.message
+      : fallback;
+
+function inviteState(invite: UserInvite | undefined): string {
+  if (!invite) return 'No link sent yet.';
+  if (invite.usedAt) return 'Set up. A new link lets them pick a new password.';
+  if (invite.expiresAt <= Date.now()) return 'The last link expired.';
+  return `A link is out, until ${new Date(invite.expiresAt).toLocaleDateString()}.`;
+}
+
+/**
+ * A link that signs someone in as their user until they have picked a
+ * password, which is also how a forgotten one is reset.
+ */
+function SetupLinkModal({
+  credentials,
+  persona,
+  invite,
+  onClose,
+}: {
+  credentials: Credentials;
+  persona: Persona;
+  invite: UserInvite | undefined;
+  onClose: () => void;
+}) {
+  const queryClient = useQueryClient();
+  const [url, setUrl] = useState<string | null>(null);
+  const refresh = () =>
+    queryClient.invalidateQueries({
+      queryKey: ['user-invites', credentials.uuid],
+    });
+  const create = useMutation({
+    mutationFn: () => createUserInvite(credentials, persona.id),
+    onSuccess: ({ url }) => {
+      setUrl(url);
+      void refresh();
+    },
+    onError: (error) =>
+      toast.error(errorText(error, 'Failed to make the link')),
+  });
+  const revoke = useMutation({
+    mutationFn: () => revokeUserInvite(credentials, persona.id),
+    onSuccess: () => {
+      setUrl(null);
+      toast.info('Link turned off.');
+      void refresh();
+    },
+    onError: (error) => toast.error(errorText(error, 'Failed to turn it off')),
+  });
+  const pending = !!invite && !invite.usedAt && invite.expiresAt > Date.now();
+  const copy = (value: string) =>
+    copyToClipboard(value, {
+      onSuccess: () => toast.success('Link copied to clipboard'),
+      onError: () => toast.error('Failed to copy link'),
+    });
+
+  return (
+    <Modal open onOpenChange={onClose} title={`Set up ${persona.name}`}>
+      <div className="space-y-4">
+        <p className="text-sm text-[--muted]">
+          Send this to {persona.name}. It signs them in once, without a
+          password, and walks them through their name, picture, preferences and
+          a password of their own. It works for 7 days, until they finish.
+        </p>
+        <p className="text-sm">{inviteState(invite)}</p>
+        {url && (
+          <TextInput
+            label="Setup link"
+            value={url}
+            readOnly
+            onFocus={(e) => e.currentTarget.select()}
+            help="Shown once. Making another turns this one off."
+          />
+        )}
+        <div className="flex flex-wrap justify-end gap-2">
+          {pending && (
+            <Button
+              size="sm"
+              intent="alert-subtle"
+              rounded
+              loading={revoke.isPending}
+              onClick={() => revoke.mutate()}
+            >
+              Turn off
+            </Button>
+          )}
+          {url ? (
+            <Button
+              size="sm"
+              intent="white"
+              rounded
+              onClick={() => void copy(url)}
+            >
+              Copy
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              intent="white"
+              rounded
+              loading={create.isPending}
+              onClick={() => create.mutate()}
+            >
+              {invite ? 'New link' : 'Make link'}
+            </Button>
+          )}
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 export function JellyfinPersonas() {
   const { userData, setUserData, uuid, password } = useUserData();
   const credentials = React.useMemo(
@@ -483,6 +618,12 @@ export function JellyfinPersonas() {
     [uuid, password]
   );
   const trackerQuery = useQuery(watchStateTrackersQuery(credentials));
+  const inviteQuery = useQuery({
+    queryKey: ['user-invites', uuid],
+    queryFn: () => listUserInvites(credentials!),
+    enabled: !!credentials,
+  });
+  const [inviting, setInviting] = useState<Persona | null>(null);
   const trackerSync =
     !trackerQuery.data || trackerQuery.data.push || trackerQuery.data.pull;
   const trackerOptions = trackerQuery.data?.available ?? NO_TRACKER_OPTIONS;
@@ -786,6 +927,7 @@ export function JellyfinPersonas() {
                   });
                   setEditing(index);
                 }}
+                onInvite={credentials ? () => setInviting(persona) : undefined}
                 onDelete={() => {
                   setPendingRemoval(index);
                   removeDialog.open();
@@ -1013,6 +1155,15 @@ export function JellyfinPersonas() {
             </div>
           </div>
         </Modal>
+      )}
+
+      {inviting && credentials && (
+        <SetupLinkModal
+          credentials={credentials}
+          persona={inviting}
+          invite={inviteQuery.data?.find((i) => i.persona === inviting.id)}
+          onClose={() => setInviting(null)}
+        />
       )}
 
       <ConfirmationDialog {...removeDialog} />
