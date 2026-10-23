@@ -33,6 +33,7 @@ import { useMediaQuery } from '@aiostreams/ui/hooks/media-query';
 import { useSession } from '@/lib/jellyfin/session';
 import { useLiveTvShown } from '@/features/live-tv/live-tv';
 import { usePickableUsers } from '@/lib/jellyfin/history';
+import { useFeature } from '@/lib/jellyfin/server-info';
 import { pageOpening } from '@/lib/page-open';
 import { navigate, to } from '@/lib/paths';
 import { currentHost } from '@/lib/hosts';
@@ -156,6 +157,7 @@ export function WebLayout() {
   const { switchUser, user } = useSession();
   const users = usePickableUsers();
   const several = (users.data?.length ?? 0) > 1;
+  const profile = useFeature('profile');
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const entry = useRouterState({
     select: (s) => s.location.state.__TSR_key ?? s.location.href,
@@ -295,13 +297,20 @@ export function WebLayout() {
     iconType: BiTransferAlt,
     onClick: switchUser,
   };
-  const you: SidebarItem = several
-    ? switchItem
-    : {
-        id: 'account',
-        name: t`Account`,
-        onClick: () => navigate(to.settings('account')),
-      };
+  // Users with a profile of their own manage it there; switching stays in Account.
+  const you: SidebarItem = profile
+    ? {
+        id: 'profile',
+        name: t`Profile`,
+        onClick: () => navigate(to.settings('profile')),
+      }
+    : several
+      ? switchItem
+      : {
+          id: 'account',
+          name: t`Account`,
+          onClick: () => navigate(to.settings('account')),
+        };
 
   const page = cn(
     'relative pb-[calc(var(--nav-bar)+var(--mini-bar,0px))] ps-[env(safe-area-inset-left)] pe-[env(safe-area-inset-right)] pt-[var(--top-bar,0px)]',
