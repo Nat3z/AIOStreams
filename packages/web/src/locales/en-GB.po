@@ -3480,10 +3480,6 @@ msgstr "Recaps"
 msgid "Recent searches"
 msgstr "Recent searches"
 
-#: src/pages/home.tsx
-msgid "Recommended for you"
-msgstr "Recommended for you"
-
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
 msgstr "Reconnecting to the party…"
