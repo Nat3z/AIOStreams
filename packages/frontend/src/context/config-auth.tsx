@@ -162,7 +162,7 @@ export function ConfigAuthProvider({
       .then((result) => {
         if (cancelled) return;
         setUserData(() => result.userData);
-        setBaseline(result.userData);
+        setBaseline(result.userData, result.revision ?? null);
         setUuid(result.userData.uuid ?? null);
         setEncryptedPassword(result.encryptedPassword);
       })
