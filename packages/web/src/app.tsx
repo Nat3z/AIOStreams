@@ -295,8 +295,15 @@ function Session({
   changeServer?: () => void;
   askAll?: () => void;
 }) {
-  const { phase, signIn, signInWithQuickConnect, switchUser, signOut, retry } =
-    useSessionPhase(base, askAll);
+  const {
+    phase,
+    signIn,
+    signInWithQuickConnect,
+    switchUser,
+    signOut,
+    renew,
+    retry,
+  } = useSessionPhase(base, askAll);
   const changeServer = leave ?? currentHost().selectServer;
 
   React.useEffect(() => currentHost().start?.({ base }), [base]);
@@ -381,6 +388,7 @@ function Session({
           user={phase.user}
           switchUser={switchUser}
           signOut={signOut}
+          renew={renew}
           changeServer={changeServer}
         >
           {invite && inviteToken() === invite ? (
