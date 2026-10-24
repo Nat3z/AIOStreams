@@ -4,6 +4,8 @@ import {
   APIError,
   createLogger,
   decryptString,
+  mintToken,
+  readToken,
   selfStateOf,
   SelfPreferencesSchema,
   StremioTokenRepository,
@@ -17,6 +19,9 @@ import {
   bodyOf,
   forgetConfig,
   jf,
+  lockTag,
+  personaById,
+  resolveConfig,
   userPasswordOf,
   userPasswordOpens,
   type JellyfinRequestContext,
@@ -158,7 +163,21 @@ router.post(
         },
         'user updated their profile'
       );
-      res.status(204).end();
+      if (patch.pin === undefined) {
+        res.status(204).end();
+        return;
+      }
+      // A new PIN ends the user's other sessions, but not this one.
+      const userData = await resolveConfig(ctx.uuid, ctx.encryptedPassword);
+      const persona =
+        userData && ctx.persona ? personaById(userData, ctx.persona.id) : null;
+      const { iat: _, ...payload } = readToken(ctx.token)!;
+      res.json({
+        AccessToken: mintToken({
+          ...payload,
+          l: (userData && lockTag(userData, persona)) || undefined,
+        }),
+      });
     } catch (error) {
       sendError(res, error);
     }
