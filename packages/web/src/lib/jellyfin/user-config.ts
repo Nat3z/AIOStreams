@@ -32,6 +32,8 @@ export interface PlaybackPrefs {
   RememberSubtitleSelections?: boolean;
   /** Library ids placed first, in this order; the rest follow in the addon's. */
   OrderedViews?: string[];
+  /** Library ids left out of the user's libraries and home. */
+  MyMediaExcludes?: string[];
 }
 
 // A server without the lists has only the single language.
@@ -71,7 +73,7 @@ export function usePlaybackPrefs() {
     onMutate: (next) => queryClient.setQueryData(queryKey, next),
     // The library order comes back in the views, wherever they're listed.
     onSuccess: (_, next) => {
-      if ('OrderedViews' in next)
+      if ('OrderedViews' in next || 'MyMediaExcludes' in next)
         void queryClient.invalidateQueries({
           queryKey: [...queryKey.slice(0, 3), 'views'],
         });
