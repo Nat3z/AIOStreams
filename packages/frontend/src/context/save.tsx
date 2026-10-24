@@ -100,6 +100,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     password,
     encryptedPassword,
     setBaseline,
+    revision,
   } = useUserData();
   const { status } = useStatus();
   const { setSelectedMenu } = useMenu();
@@ -295,8 +296,13 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
 
       setLoading(true);
       try {
-        await updateUserConfig(uuid, userData, password);
-        setBaseline(userData);
+        const saved = await updateUserConfig(
+          uuid,
+          userData,
+          password,
+          revision
+        );
+        setBaseline(userData, saved.revision);
         void queryClient.invalidateQueries({
           queryKey: WATCH_STATE_TRACKERS_QUERY_ROOT,
         });
@@ -324,6 +330,7 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
       setSelectedMenu,
       setUserData,
       setBaseline,
+      revision,
       queryClient,
     ]
   );
@@ -352,9 +359,9 @@ export function SaveProvider({ children }: { children: React.ReactNode }) {
     // no unsaved edits for this extra write to pick up.
     if (changed && uuid) {
       setUserData(() => next);
-      updateUserConfig(uuid, next, password).catch(() =>
-        toast.warning('Could not remember that preference')
-      );
+      updateUserConfig(uuid, next, password, revision)
+        .then((saved) => setBaseline(next, saved.revision))
+        .catch(() => toast.warning('Could not remember that preference'));
     }
     setAlwaysPush(false);
     setPushResults(null);
