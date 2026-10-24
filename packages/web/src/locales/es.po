@@ -1097,6 +1097,7 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "Conectar"
 
@@ -1478,6 +1479,10 @@ msgstr "Murió el {date} ({age} años)"
 #: src/components/media/people.tsx
 msgid "Director"
 msgstr "Director"
+
+#: src/app/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "Discord"
@@ -2861,6 +2866,10 @@ msgstr "Aún no se ha transmitido"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Aún no se ha comprobado."
+
+#: src/app/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -4445,6 +4454,10 @@ msgstr "¿Cerrar sesión en este navegador?"
 msgid "Sign out of this server?"
 msgstr "¿Cerrar sesión en este servidor?"
 
+#: src/app/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/app/servers/page.tsx
 msgid "Signed out"
 msgstr "Sesión cerrada"
@@ -5380,6 +5393,10 @@ msgstr "Pestañas superiores"
 msgid "Track {n}"
 msgstr "Pista {n}"
 
+#: src/app/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Pistas"
@@ -5822,6 +5839,10 @@ msgstr "Qué guardar"
 msgid "What you can send from a party's chat."
 msgstr "Lo que puedes enviar desde el chat de un grupo."
 
+#: src/app/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "Lo que muestra tu perfil de Discord. Se guarda en este dispositivo."
@@ -5990,6 +6011,10 @@ msgstr ""
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Te fuiste del grupo."
+
+#: src/app/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."

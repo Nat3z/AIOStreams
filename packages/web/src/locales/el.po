@@ -1093,6 +1093,7 @@ msgid "Confirm"
 msgstr "Επιβεβαίωση"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "Σύνδεση"
 
@@ -1472,6 +1473,10 @@ msgstr "Ημερομηνία θανάτου: {date} (ηλικία: {age})"
 #: src/components/media/people.tsx
 msgid "Director"
 msgstr "Σκηνοθέτης"
+
+#: src/app/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "Discord"
@@ -2852,6 +2857,10 @@ msgstr "Δεν έχει προβληθεί ακόμη"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Δεν έχει ελεγχθεί ακόμη."
+
+#: src/app/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -4432,6 +4441,10 @@ msgstr "Να γίνει αποσύνδεση από αυτό το πρόγραμ
 msgid "Sign out of this server?"
 msgstr "Να γίνει αποσύνδεση από αυτόν τον διακομιστή;"
 
+#: src/app/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/app/servers/page.tsx
 msgid "Signed out"
 msgstr "Έγινε αποσύνδεση"
@@ -5364,6 +5377,10 @@ msgstr "Επάνω καρτέλες"
 msgid "Track {n}"
 msgstr "Κομμάτι {n}"
 
+#: src/app/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Κομμάτια"
@@ -5805,6 +5822,10 @@ msgstr "Τι θα αποθηκεύεται"
 msgid "What you can send from a party's chat."
 msgstr "Τι μπορείς να στείλεις από τη συνομιλία μιας ομαδικής προβολής."
 
+#: src/app/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "Τι εμφανίζει το προφίλ σου στο Discord. Αποθηκεύεται σε αυτή τη συσκευή."
@@ -5973,6 +5994,10 @@ msgstr ""
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Αποχώρησες από την ομαδική προβολή."
+
+#: src/app/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."

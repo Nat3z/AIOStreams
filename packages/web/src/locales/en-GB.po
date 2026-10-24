@@ -1089,6 +1089,7 @@ msgid "Confirm"
 msgstr "Confirm"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "Connect"
 
@@ -1468,6 +1469,10 @@ msgstr "Died {date} (aged {age})"
 #: src/components/media/people.tsx
 msgid "Director"
 msgstr "Director"
+
+#: src/app/settings/profile.tsx
+msgid "Disconnect"
+msgstr "Disconnect"
 
 #: src/app/settings/apps.tsx
 msgid "Discord"
@@ -2848,6 +2853,10 @@ msgstr "Not aired yet"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Not checked yet."
+
+#: src/app/settings/profile.tsx
+msgid "Not connected"
+msgstr "Not connected"
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -4428,6 +4437,10 @@ msgstr "Sign out of this browser?"
 msgid "Sign out of this server?"
 msgstr "Sign out of this server?"
 
+#: src/app/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr "Signed in as {account}"
+
 #: src/app/servers/page.tsx
 msgid "Signed out"
 msgstr "Signed out"
@@ -5360,6 +5373,10 @@ msgstr "Top tabs"
 msgid "Track {n}"
 msgstr "Track {n}"
 
+#: src/app/settings/profile.tsx
+msgid "Tracking"
+msgstr "Tracking"
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Tracks"
@@ -5801,6 +5818,10 @@ msgstr "What to save"
 msgid "What you can send from a party's chat."
 msgstr "What you can send from a party's chat."
 
+#: src/app/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr "What you watch is marked on these, and what you mark there shows here."
+
 #: src/app/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "What your Discord profile shows. Kept on this device."
@@ -5969,6 +5990,10 @@ msgstr "You can change this later in Settings, under About."
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "You left the party."
+
+#: src/app/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr "You share the main history, so what you watch is tracked on its accounts."
 
 #: src/app/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."

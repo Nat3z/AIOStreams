@@ -1098,6 +1098,7 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "Ligar"
 
@@ -1479,6 +1480,10 @@ msgstr "Faleceu a {date} (aos {age} anos)"
 #: src/components/media/people.tsx
 msgid "Director"
 msgstr "Realizador"
+
+#: src/app/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "Discord"
@@ -2871,6 +2876,10 @@ msgstr "Ainda não verificado."
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Ainda não verificado."
+
+#: src/app/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -4461,6 +4470,10 @@ msgstr "Terminar sessão neste browser?"
 msgid "Sign out of this server?"
 msgstr "Terminar sessão neste servidor?"
 
+#: src/app/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/app/servers/page.tsx
 msgid "Signed out"
 msgstr "Sessão terminada"
@@ -5396,6 +5409,10 @@ msgstr "Separadores superiores"
 msgid "Track {n}"
 msgstr "Faixa {n}"
 
+#: src/app/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Faixas"
@@ -5839,6 +5856,10 @@ msgstr "O que guardar"
 msgid "What you can send from a party's chat."
 msgstr "O que pode enviar a partir do chat de uma sessão."
 
+#: src/app/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "O que o seu perfil do Discord mostra. Guardado neste dispositivo."
@@ -6007,6 +6028,10 @@ msgstr ""
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Saiu da sessão."
+
+#: src/app/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."

@@ -1093,6 +1093,7 @@ msgid "Confirm"
 msgstr "Potwierdź"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "Połącz"
 
@@ -1472,6 +1473,10 @@ msgstr "Zmarł {date} (w wieku {age})"
 #: src/components/media/people.tsx
 msgid "Director"
 msgstr "Reżyser"
+
+#: src/app/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "Discord"
@@ -2852,6 +2857,10 @@ msgstr "Jeszcze niewyemitowany"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Jeszcze nie sprawdzono."
+
+#: src/app/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -4432,6 +4441,10 @@ msgstr "Wylogować się z tej przeglądarki?"
 msgid "Sign out of this server?"
 msgstr "Wylogować się z tego serwera?"
 
+#: src/app/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/app/servers/page.tsx
 msgid "Signed out"
 msgstr "Wylogowano"
@@ -5364,6 +5377,10 @@ msgstr "Górne karty"
 msgid "Track {n}"
 msgstr "Ścieżka {n}"
 
+#: src/app/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Ścieżki"
@@ -5805,6 +5822,10 @@ msgstr "Co zapisywać"
 msgid "What you can send from a party's chat."
 msgstr "Co możesz wysyłać na czacie wspólnego oglądania."
 
+#: src/app/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "Co wyświetla Twój profil na Discordzie. Zapisane na tym urządzeniu."
@@ -5973,6 +5994,10 @@ msgstr ""
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Opuściłeś wspólne oglądanie."
+
+#: src/app/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."
