@@ -3,7 +3,7 @@ import {
   AIOStreams,
   APIError,
   Cache,
-  accountScope,
+  watchScopeOf,
   activateVariants,
   config as appConfig,
   constants,
@@ -292,16 +292,6 @@ export async function userForToken(token: string): Promise<TokenUser | null> {
     watch: watchScopeOf(uuid, persona),
     payload,
   };
-}
-
-/** A persona with a history of its own keeps its watch state and preferences apart. */
-export function watchScopeOf(
-  uuid: string,
-  persona: JellyfinPersona | null | undefined
-): WatchScope {
-  return persona && persona.history !== 'shared'
-    ? { uuid, persona: persona.id }
-    : accountScope(uuid);
 }
 
 export function personasOf(userData: UserData): JellyfinPersona[] {
@@ -639,7 +629,7 @@ async function buildContext(
   let scope: string | null = null;
   let views: Promise<ViewEntry[]> | null = null;
   let leafEvidence: Promise<LeafEvidence> | null = null;
-  const finalUserData = userData;
+  const finalUserData: UserData = { ...userData, watchPersona: persona?.id };
   const engineOf = (data: UserData) =>
     new AIOStreams(data, {
       skipFailedAddons: true,
