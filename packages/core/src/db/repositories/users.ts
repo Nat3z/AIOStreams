@@ -43,6 +43,10 @@ function dbError(err: unknown, fallback = constants.ErrorCode.DATABASE_ERROR) {
   return new APIError(fallback);
 }
 
+/** Names a stored config, so a save can tell it was opened from this one. */
+const revisionOf = (encryptedConfig: string): string =>
+  getSimpleTextHash(encryptedConfig).slice(0, 16);
+
 function toDateString(v: unknown): string {
   if (v instanceof Date) return v.toISOString();
   return String(v);
@@ -182,12 +186,20 @@ export class UserRepository {
     }
   }
 
+  /** The stored config and its revision, which a save can check with. */
+  static async getRawUserWithRevision(
+    uuid: string,
+    password: string
+  ): Promise<{ userData: UserData; revision: string }> {
+    return this.loadRawUser(uuid, password);
+  }
+
   static async getRawUser(
     uuid: string,
     password: string
   ): Promise<UserData | null> {
     try {
-      const config = await this.loadRawUser(uuid, password);
+      const { userData: config } = await this.loadRawUser(uuid, password);
       logger.info(`Retrieved raw configuration for user ${uuid}`);
       return config;
     } catch (error) {
@@ -203,11 +215,11 @@ export class UserRepository {
     password: string
   ): Promise<UserData | null> {
     try {
-      let config = await this.loadRawUser(uuid, password);
+      let { userData: config } = await this.loadRawUser(uuid, password);
 
       if (config.parentConfig?.uuid) {
         try {
-          const parent = await this.loadRawUser(
+          const { userData: parent } = await this.loadRawUser(
             config.parentConfig.uuid,
             config.parentConfig.password
           );
@@ -239,7 +251,7 @@ export class UserRepository {
   private static async loadRawUser(
     uuid: string,
     password: string
-  ): Promise<UserData> {
+  ): Promise<{ userData: UserData; revision: string }> {
     const db = getDb();
     const row = await db.maybeOne<UserRow>(
       sql`SELECT config, config_salt, password_hash FROM users WHERE uuid = ${uuid}`
@@ -268,7 +280,10 @@ export class UserRepository {
     decryptedConfig.variantSelectorLocation = undefined;
     decryptedConfig.installUrl = undefined;
     decryptedConfig.watchPersona = undefined;
-    return applyMigrations(decryptedConfig);
+    return {
+      userData: applyMigrations(decryptedConfig),
+      revision: revisionOf(row.config),
+    };
   }
 
   /**
@@ -384,11 +399,16 @@ export class UserRepository {
     }
   }
 
+  /**
+   * Saves over the stored config, returning its new revision. With `revision`,
+   * only over the config it names: one saved since is a 409, not overwritten.
+   */
   static async updateUser(
     uuid: string,
     password: string,
-    config: UserData
-  ): Promise<void> {
+    config: UserData,
+    revision?: string
+  ): Promise<string> {
     // Do async pre-work (validation, parent fetch, encryption) outside the
     // transaction. The transaction itself is fast and synchronous-ish.
 
@@ -407,7 +427,7 @@ export class UserRepository {
 
     const db = getDb();
     const current = await db.maybeOne<UserRow>(
-      sql`SELECT config_salt, password_hash FROM users WHERE uuid = ${uuid}`
+      sql`SELECT config, config_salt, password_hash FROM users WHERE uuid = ${uuid}`
     );
     if (!current) {
       throw new APIError(constants.ErrorCode.USER_INVALID_DETAILS);
@@ -415,6 +435,9 @@ export class UserRepository {
     const isValid = await verifyHash(password, current.password_hash);
     if (!isValid) {
       throw new APIError(constants.ErrorCode.USER_INVALID_DETAILS);
+    }
+    if (revision && revision !== revisionOf(current.config)) {
+      throw new APIError(constants.ErrorCode.USER_CONFIG_CHANGED);
     }
 
     let configToValidate: UserData = config;
@@ -461,9 +484,14 @@ export class UserRepository {
 
     try {
       await db.tx(async (tx) => {
-        await tx.exec(
-          sql`UPDATE users SET config = ${encryptedConfig}, updated_at = CURRENT_TIMESTAMP WHERE uuid = ${uuid}`
+        // Conditional on the config validated against, so a save landing meanwhile wins.
+        const { rowCount } = await tx.exec(
+          sql`UPDATE users SET config = ${encryptedConfig}, updated_at = CURRENT_TIMESTAMP
+               WHERE uuid = ${uuid} AND config = ${current.config}`
         );
+        if (!rowCount) {
+          throw new APIError(constants.ErrorCode.USER_CONFIG_CHANGED);
+        }
         await JellyfinAddressRepository.syncForUuid(
           tx,
           uuid,
@@ -472,7 +500,9 @@ export class UserRepository {
         );
       });
       logger.info(`Updated user ${uuid} with an updated configuration`);
+      return revisionOf(encryptedConfig);
     } catch (error) {
+      if (error instanceof APIError) throw error;
       const msg = error instanceof Error ? error.message : String(error);
       logger.error(`Failed to update user ${uuid}: ${msg}`);
       throw dbError(error);
