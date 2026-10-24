@@ -654,10 +654,6 @@ msgstr "Abzeichen"
 msgid "Bar"
 msgstr "Leiste"
 
-#: src/pages/home.tsx
-msgid "Because you watched"
-msgstr ""
-
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr "Vor dem Ende"
