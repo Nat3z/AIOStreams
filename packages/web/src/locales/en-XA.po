@@ -2372,6 +2372,14 @@ msgstr ""
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr ""
 
+#: src/app/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr ""
@@ -5064,6 +5072,10 @@ msgstr ""
 msgid "The open-source software in this app, and the licence of each."
 msgstr ""
 
+#: src/app/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr ""
@@ -5554,11 +5566,7 @@ msgid "Usage statistics"
 msgstr ""
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr ""
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
+msgid "Use Quick Connect."
 msgstr ""
 
 #: src/app/settings/theme.tsx
@@ -5567,10 +5575,6 @@ msgstr ""
 
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
-msgstr ""
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
 msgstr ""
 
 #: src/app/sign-in/page.tsx
