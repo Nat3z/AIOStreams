@@ -9,6 +9,7 @@ import {
   createLogger,
   decryptString,
   selfStateOf,
+  serialQueue,
   TRACKER_PROVIDERS,
   updateSelf,
   UserRepository,
@@ -38,6 +39,10 @@ interface Pending {
 }
 
 const pending = Cache.getInstance<string, Pending>('tracker-sign-in', 1000);
+// A user's sign-ins and sign-outs read and rewrite one configuration, so one at a time.
+const serialised = serialQueue();
+const userKey = (uuid: string, persona: string | null) =>
+  `${uuid}:${persona ?? ''}`;
 
 const isProvider = (value: string): value is TrackerProvider =>
   (TRACKER_PROVIDERS as readonly string[]).includes(value);
@@ -198,12 +203,14 @@ trackersRouter.delete(
       return;
     }
     const password = passwordFor(ctx.uuid, persona);
-    await aiom.disconnect(provider, userUUID, password);
-    // Nothing left to track with, so it stops being their tracker.
-    const accounts = await aiom.accounts(userUUID, password);
-    if (!Object.values(accounts).some(Boolean)) {
-      await link(aiom, { ...ctx, persona }, null);
-    }
+    await serialised(userKey(ctx.uuid, persona), async () => {
+      await aiom.disconnect(provider, userUUID, password);
+      // Nothing left to track with, so it stops being their tracker.
+      const accounts = await aiom.accounts(userUUID, password);
+      if (!Object.values(accounts).some(Boolean)) {
+        await link(aiom, { ...ctx, persona }, null);
+      }
+    });
     res.status(204).end();
   })
 );
@@ -230,19 +237,21 @@ trackerCallbackRouter.get('/:provider/callback', async (req, res) => {
     const aiom = service();
     const query = req.originalUrl.split('?')[1] ?? '';
     const tokenId = await aiom.finishAuthorize(who.provider, query);
-    const raw = await UserRepository.getRawUser(
-      who.uuid,
-      configPassword(who.encryptedPassword)
-    );
-    if (!raw) throw new Error('Your account changed; sign in again');
-    const linked = linkedOf(raw, who.persona);
-    const userUUID = await aiom.connect(
-      who.provider,
-      tokenId,
-      passwordFor(who.uuid, who.persona),
-      (linked && aiom.userOf(linked.manifestUrl)) ?? undefined
-    );
-    await link(aiom, who, userUUID);
+    await serialised(userKey(who.uuid, who.persona), async () => {
+      const raw = await UserRepository.getRawUser(
+        who.uuid,
+        configPassword(who.encryptedPassword)
+      );
+      if (!raw) throw new Error('Your account changed; sign in again');
+      const linked = linkedOf(raw, who.persona);
+      const userUUID = await aiom.connect(
+        who.provider,
+        tokenId,
+        passwordFor(who.uuid, who.persona),
+        (linked && aiom.userOf(linked.manifestUrl)) ?? undefined
+      );
+      await link(aiom, who, userUUID);
+    });
     const name = await aiom.username(tokenId);
     logger.info(
       { uuid: who.uuid, persona: who.persona, provider },
