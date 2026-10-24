@@ -156,6 +156,20 @@ const PLACEMENTS: ReadonlySet<string> = new Set(['before', 'after']);
 
 export const VARIANT_ID_PATTERN = /^[a-z0-9][a-z0-9_-]{0,31}$/;
 
+/** First line of a variant the Jellyfin self-service writes for one user. */
+export const SELF_VARIANT_MARKER = '# self-service: ';
+
+/** A user's own generated variant, which the owner's variant quota skips. */
+export function isSelfVariant(variant: {
+  id: string;
+  script: string;
+}): boolean {
+  return (
+    /^self(-|$)/.test(variant.id) &&
+    variant.script.startsWith(SELF_VARIANT_MARKER)
+  );
+}
+
 /**
  * `FIELD_META` is typed as a total record over `keyof UserData`, so a newly
  * added config field is not targetable until classified there.
