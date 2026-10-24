@@ -11,6 +11,8 @@ import {
   createLogger,
   ExtrasParser,
   IdParser,
+  BECAUSE_CATALOG_PREFIX,
+  isPersonalCatalog,
   RECOMMENDED_CATALOG_ID,
   userScopeKey,
 } from '../utils/index.js';
@@ -41,7 +43,11 @@ import {
   type ResolvedPlaybackSink,
 } from '../watch-state/handoff/index.js';
 import { getCatalog as _getCatalog } from './catalog.js';
-import { recommendedCatalog } from '../jellyfin/feeds.js';
+import {
+  becauseCatalog,
+  becauseCatalogs,
+  recommendedCatalog,
+} from '../jellyfin/feeds.js';
 import { watchScopeOf } from '../watch-state/types.js';
 import {
   getStreams as _getStreams,
@@ -95,8 +101,27 @@ export class AIOStreams {
     await assignPublicIps(this.ctx);
     await fetchManifests(this.ctx);
     buildResources(this.ctx);
+    if (this.ctx.options?.path === 'jellyfin') await this.addBecauseCatalogs();
     this.ctx.isInitialised = true;
     return this;
+  }
+
+  /** Whose history the personal catalogs read: the persona being served. */
+  private personalScope() {
+    const { uuid, watchPersona, jellyfin } = this.ctx.userData;
+    const persona = jellyfin?.personas?.find((p) => p.id === watchPersona);
+    return watchScopeOf(uuid ?? '', persona);
+  }
+
+  /** Jellyfin's "Because you watched" libraries, after "Recommended for you". */
+  private async addBecauseCatalogs() {
+    const catalogs = await becauseCatalogs(this, this.personalScope()).catch(
+      () => []
+    );
+    if (!catalogs.length) return;
+    const list = this.ctx.finalCatalogs;
+    const last = list.findLastIndex((c) => c.id === RECOMMENDED_CATALOG_ID);
+    list.splice(last + 1, 0, ...catalogs);
   }
 
   private checkInitialised() {
@@ -120,17 +145,20 @@ export class AIOStreams {
     id: string,
     extras?: string
   ): Promise<AIOStreamsResponse<MetaPreview[]>> {
-    if (id === RECOMMENDED_CATALOG_ID) {
+    if (isPersonalCatalog(id)) {
       // One page: a client paging on gets nothing more.
       if (new ExtrasParser(extras).skip)
         return { success: true, data: [], errors: [] };
-      const { uuid, watchPersona, jellyfin } = this.ctx.userData;
-      const persona = jellyfin?.personas?.find((p) => p.id === watchPersona);
-      const data = await recommendedCatalog(
-        this,
-        watchScopeOf(uuid ?? '', persona),
-        type
-      );
+      const scope = this.personalScope();
+      const data =
+        id === RECOMMENDED_CATALOG_ID
+          ? await recommendedCatalog(this, scope, type)
+          : await becauseCatalog(
+              this,
+              scope,
+              type,
+              id.slice(BECAUSE_CATALOG_PREFIX.length)
+            );
       return { success: true, data, errors: [] };
     }
     return _getCatalog(this.ctx, type, id, extras);
