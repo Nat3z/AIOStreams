@@ -6,6 +6,8 @@ One shared configuration, run by its owner, with each person signing in as their
 | --- | --- | --- |
 | `aiostreams` | `100.87.64.61:3000` (Tailscale) | this fork |
 | `redis` | compose network only | cache |
+| `aiometadata` | compose network only | tracks for each user who signs in to Simkl or AniList |
+| `aiometadata-redis` | compose network only | its cache (Redis 8) |
 
 ## First run
 
@@ -16,5 +18,7 @@ Docker from snap can't read hidden directories, so run these from a clone outsid
 3. Add `deploy/Caddyfile`'s block to oci-selfhosted and reload Caddy.
 4. Sign in at `https://aio.natfor.work/stremio/configure` with `AIOSTREAMS_AUTH`. Build the configuration, add users under Save & Install → Jellyfin → Users, and save it.
 5. Put `home:<uuid>:<encryptedPassword>` from the saved install URL in `ALIASED_CONFIGURATIONS`, then run `docker compose -f deploy/compose.yaml up -d`.
+
+For tracking, make a Simkl and an AniList app with the redirect URIs in `.env.example`, fill in their credentials, and run `docker compose -f deploy/compose.yaml up -d`. Each person then connects their own account from Settings → Profile → Tracking.
 
 People then sign in at `https://aio.natfor.work/` (the web app) or add `https://aio.natfor.work/jellyfin` as a server in a Jellyfin app.
