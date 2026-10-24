@@ -1817,6 +1817,7 @@ export function useSaveInstall({ offerStremio = true } = {}) {
     setPassword,
     encryptedPassword,
     setEncryptedPassword,
+    setBaseline,
   } = useUserData();
   const { data: linkedAccounts } = useQuery(
     linkedAccountsQuery(uuid ? { uuid, password } : null)
@@ -1990,6 +1991,8 @@ export function useSaveInstall({ offerStremio = true } = {}) {
           'Keep its UUID and password somewhere safe: neither can be recovered. Copy the UUID from the Configuration page.',
         duration: 10_000,
       });
+      // Saves from here on must still match what was created.
+      setBaseline(userData, result.revision);
       setUuid(result.uuid);
       setEncryptedPassword((result as CreateUserResponse).encryptedPassword);
       setPassword(newPassword);
