@@ -7,6 +7,7 @@ import {
   encodeImageTag,
   suggestTitles,
   watchFeeds,
+  RECOMMENDED_CATALOG_ID,
   filmographyPage,
   findPerson,
   recommendedPreviews,
@@ -1391,9 +1392,9 @@ router.get(
 );
 
 /**
- * Rows from what this user watched, as Jellyfin names them. With nothing
- * watched yet or no TMDB, the first movie catalogs stand in, except for the
- * web app (`AIOStreamsFeeds`), which shows those already.
+ * "Because you watched" rows, as Jellyfin names them; "Recommended for you" is
+ * a library. With nothing watched yet or no TMDB, the first movie catalogs
+ * stand in, except for the web app (`AIOStreamsFeeds`), which shows those already.
  */
 router.get(
   '/Movies/Recommendations',
@@ -1407,24 +1408,18 @@ router.get(
           feeds.map(async (feed) => {
             const items = await itemsFromPreviews(ctx, feed.items);
             rememberListMarkers(ctx, items);
-            const seed = feed.seed
-              ? await getMeta(ctx, feed.seed.type, feed.seed.id).catch(
-                  () => null
-                )
-              : null;
+            const seed = await getMeta(ctx, feed.seed.type, feed.seed.id).catch(
+              () => null
+            );
             return {
               Items: items.map(stripInternal),
-              RecommendationType: feed.seed
-                ? 'SimilarToRecentlyPlayed'
-                : 'SimilarToLikedItem',
+              RecommendationType: 'SimilarToRecentlyPlayed',
               BaselineItemName: seed?.name ?? '',
-              CategoryId: feed.seed
-                ? encodeItemId({
-                    k: feed.seed.kind,
-                    t: feed.seed.type,
-                    i: feed.seed.id,
-                  })
-                : 'recommended',
+              CategoryId: encodeItemId({
+                k: feed.seed.kind,
+                t: feed.seed.type,
+                i: feed.seed.id,
+              }),
             };
           })
         )
@@ -1435,8 +1430,13 @@ router.get(
       res.json([]);
       return;
     }
+    // Recommendations are empty with nothing watched.
     const views = withoutRequiredGenre(await ctx.views())
-      .filter((v) => v.collectionType === 'movies')
+      .filter(
+        (v) =>
+          v.collectionType === 'movies' &&
+          v.catalog.id !== RECOMMENDED_CATALOG_ID
+      )
       .slice(0, 3);
     const out = [];
     for (const view of views) {

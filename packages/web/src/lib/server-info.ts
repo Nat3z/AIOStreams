@@ -19,6 +19,7 @@ export type Feature =
   | 'reports'
   | 'profile'
   | 'feeds'
+  | 'recommended'
   | 'clientHints';
 
 /** What a server's public info says about it. */
