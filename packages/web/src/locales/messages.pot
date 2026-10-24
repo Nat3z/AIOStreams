@@ -698,6 +698,10 @@ msgstr ""
 msgid "Bar"
 msgstr ""
 
+#: src/pages/settings/interface.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr ""
@@ -4595,7 +4599,7 @@ msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Visio
 msgstr ""
 
 #: src/pages/settings/interface.tsx
-msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
 msgstr ""
 
 #: src/components/remote-sheet.tsx
