@@ -5,6 +5,7 @@ import {
   AvatarRepository,
   config as appConfig,
   type AvatarType,
+  type UserData,
 } from '@aiostreams/core';
 import { requestOrigin } from '../routes/jellyfin/context.js';
 
@@ -35,14 +36,32 @@ function imageOf(req: Request): { type: AvatarType; data: Buffer } | null {
 
 export const AVATAR_REFUSED = 'A PNG, JPEG or WebP image under 512 KB';
 
+/** The uploads the configuration's users show, which cleanup keeps. */
+function avatarsInUse(userData: UserData | null): string[] {
+  const users = [
+    userData?.jellyfin?.primary,
+    ...(userData?.jellyfin?.personas ?? []),
+  ];
+  return users.flatMap((u) => {
+    const id = /\/avatars\/([\w-]+)$/.exec(u?.avatar ?? '')?.[1];
+    return id ? [id] : [];
+  });
+}
+
 /** Stores the upload for `uuid`, returning its address, or null when it isn't an image. */
 export async function saveAvatar(
   req: Request,
-  uuid: string
+  uuid: string,
+  userData: UserData | null
 ): Promise<string | null> {
   const image = imageOf(req);
   if (!image) return null;
-  const id = await AvatarRepository.save(uuid, image.type, image.data);
+  const id = await AvatarRepository.save(
+    uuid,
+    image.type,
+    image.data,
+    avatarsInUse(userData)
+  );
   const origin =
     appConfig.bootstrap.baseUrl?.replace(/\/$/, '') || requestOrigin(req);
   return `${origin}/avatars/${id}`;
