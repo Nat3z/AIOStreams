@@ -314,6 +314,20 @@ async function progressed(
       durationMs: existing.durationMs || undefined,
       sessionStartedAt: existing.startedAt,
     });
+
+  // Trackers hear it was watched as the threshold is crossed, not at the stop.
+  const durationMs = existing.durationMs || undefined;
+  if (
+    positionMs != null &&
+    !playedThrough(existing.positionMs, durationMs) &&
+    playedThrough(positionMs, durationMs)
+  )
+    await reportPlayback(ctx, 'played', ref, {
+      positionMs,
+      durationMs,
+      played: true,
+      sessionStartedAt: existing.startedAt,
+    });
 }
 
 router.post(
@@ -455,12 +469,17 @@ async function setPlayed(
     return;
   }
   const ref = contentRefOf(d);
+  const identity = await watchIdentityFor(ref);
+  // An unmark of something never marked would only roll a tracker's progress back.
+  const was = (await provider.getMany(ctx.watch, [identity.itemKey])).get(
+    identity.itemKey
+  );
   const row = await provider.record(ctx.watch, {
     type: kind,
-    identity: await watchIdentityFor(ref),
+    identity,
     snapshot: snapshotOf(item),
   });
-  await reportPlayback(ctx, kind, ref, { row, item });
+  if (played || was?.played) await reportPlayback(ctx, kind, ref, { row, item });
 }
 
 /** An episode and every aired one before it, specials aside, as one bulk mark. */
