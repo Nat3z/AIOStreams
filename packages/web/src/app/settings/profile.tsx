@@ -575,14 +575,23 @@ const TRACKERS: { id: TrackerProvider; name: string; icon: IconType }[] = [
   { id: 'anilist', name: 'AniList', icon: SiAnilist },
 ];
 
-function TrackersCard() {
+function useTrackersKey() {
+  return [...useProfileKey(), 'trackers'] as const;
+}
+
+export function useTrackers() {
   const { client } = useSession();
-  const queryClient = useQueryClient();
-  const key = [...useProfileKey(), 'trackers'] as const;
-  const trackers = useQuery({
-    queryKey: key,
+  return useQuery({
+    queryKey: useTrackersKey(),
     queryFn: () => client.get<Trackers>('/AIOStreams/Profile/Trackers'),
   });
+}
+
+export function TrackersCard() {
+  const { client } = useSession();
+  const queryClient = useQueryClient();
+  const key = useTrackersKey();
+  const trackers = useTrackers();
   const refetch = trackers.refetch;
   const [waiting, setWaiting] = React.useState<TrackerProvider | null>(null);
   const connect = useMutation({
