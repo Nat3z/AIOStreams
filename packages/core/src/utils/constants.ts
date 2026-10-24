@@ -1588,6 +1588,9 @@ export const RECOMMENDED_CATALOG_ID = 'aiostreams.recommended' as const;
 /** Jellyfin's "Because you watched" catalogs, one per recent title, after this and its id. */
 export const BECAUSE_CATALOG_PREFIX = 'aiostreams.because.' as const;
 
+/** Where every "Because you watched" catalog sits in a user's library order, as one. */
+export const BECAUSE_ORDER_KEY = 'aiostreams.because' as const;
+
 /** Catalogs made from the requester's own history. */
 export const isPersonalCatalog = (id: string): boolean =>
   id === RECOMMENDED_CATALOG_ID || id.startsWith(BECAUSE_CATALOG_PREFIX);
