@@ -970,6 +970,7 @@ msgid "Confirm"
 msgstr "Bestätigen"
 
 #: src/pages/servers.tsx
+#: src/pages/settings/profile.tsx
 msgid "Connect"
 msgstr "Verbinden"
 
@@ -1308,6 +1309,10 @@ msgstr "Gestorben: {date} (Alter: {age})"
 #: src/components/people.tsx
 msgid "Director"
 msgstr "Regie"
+
+#: src/pages/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
 
 #: src/pages/settings/apps.tsx
 msgid "Discord"
@@ -2523,6 +2528,10 @@ msgstr "Normale Geschwindigkeit"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Noch nicht geprüft."
+
+#: src/pages/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -3894,6 +3903,10 @@ msgstr "Von diesem Browser abmelden?"
 msgid "Sign out of this server?"
 msgstr "Von diesem Server abmelden?"
 
+#: src/pages/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/pages/servers.tsx
 msgid "Signed out"
 msgstr "Abgemeldet"
@@ -4737,6 +4750,10 @@ msgstr "Obere Registerkarten"
 msgid "Track {n}"
 msgstr "Spur {n}"
 
+#: src/pages/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Spuren"
@@ -5139,6 +5156,10 @@ msgstr "Zu speichernde Inhalte"
 msgid "What you can send from a party's chat."
 msgstr ""
 
+#: src/pages/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
+
 #: src/pages/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "Angaben auf deinem Discord-Profil. Auf diesem Gerät gespeichert."
@@ -5275,6 +5296,10 @@ msgstr "Du"
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Du hast die Watch-Party verlassen."
+
+#: src/pages/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
 
 #: src/pages/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."

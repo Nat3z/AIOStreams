@@ -965,6 +965,7 @@ msgid "Confirm"
 msgstr "Confirm"
 
 #: src/pages/servers.tsx
+#: src/pages/settings/profile.tsx
 msgid "Connect"
 msgstr "Connect"
 
@@ -1302,6 +1303,10 @@ msgstr "Died {date} (aged {age})"
 #: src/components/people.tsx
 msgid "Director"
 msgstr "Director"
+
+#: src/pages/settings/profile.tsx
+msgid "Disconnect"
+msgstr "Disconnect"
 
 #: src/pages/settings/apps.tsx
 msgid "Discord"
@@ -2516,6 +2521,10 @@ msgstr "Normal speed"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Not checked yet."
+
+#: src/pages/settings/profile.tsx
+msgid "Not connected"
+msgstr "Not connected"
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -3882,6 +3891,10 @@ msgstr "Sign out of this browser?"
 msgid "Sign out of this server?"
 msgstr "Sign out of this server?"
 
+#: src/pages/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr "Signed in as {account}"
+
 #: src/pages/servers.tsx
 msgid "Signed out"
 msgstr "Signed out"
@@ -4725,6 +4738,10 @@ msgstr "Top tabs"
 msgid "Track {n}"
 msgstr "Track {n}"
 
+#: src/pages/settings/profile.tsx
+msgid "Tracking"
+msgstr "Tracking"
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Tracks"
@@ -5127,6 +5144,10 @@ msgstr "What to save"
 msgid "What you can send from a party's chat."
 msgstr "What you can send from a party's chat."
 
+#: src/pages/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr "What you watch is marked on these, and what you mark there shows here."
+
 #: src/pages/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr "What your Discord profile shows. Kept on this device."
@@ -5263,6 +5284,10 @@ msgstr "You"
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "You left the party."
+
+#: src/pages/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr "You share the main history, so what you watch is tracked on its accounts."
 
 #: src/pages/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."
