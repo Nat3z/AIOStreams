@@ -1,5 +1,5 @@
 import React, { memo, useState } from 'react';
-import { CatalogModification } from '@aiostreams/core';
+import { CatalogModification, constants } from '@aiostreams/core';
 import type {
   DraggableAttributes,
   DraggableSyntheticListeners,
@@ -45,6 +45,10 @@ const orderState = (c: CatalogModification) =>
 
 export const isMerged = (c: CatalogModification) =>
   c.id.startsWith('aiostreams.merged.');
+
+/** Merges load sources from their addon, which built-in catalogs have none of. */
+export const canMerge = (c: CatalogModification) =>
+  !isMerged(c) && !constants.isPersonalCatalog(c.id);
 
 export function onHome(c: CatalogModification): boolean {
   if (c.genreRequired) return !!c.showOnHome;
