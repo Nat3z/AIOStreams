@@ -544,11 +544,13 @@ export class UserRepository {
     }
   }
 
+  /** Like {@link updateUser}, refuses a `revision` the stored config no longer is. */
   static async changePassword(
     uuid: string,
     currentPassword: string,
-    newPassword: string
-  ): Promise<{ encryptedPassword: string }> {
+    newPassword: string,
+    revision?: string
+  ): Promise<{ encryptedPassword: string; revision: string }> {
     if (newPassword.length < 6) {
       throw new APIError(constants.ErrorCode.USER_NEW_PASSWORD_TOO_SHORT);
     }
@@ -564,6 +566,9 @@ export class UserRepository {
     }
     if (!(await verifyHash(currentPassword, row.password_hash))) {
       throw new APIError(constants.ErrorCode.USER_INVALID_DETAILS);
+    }
+    if (revision && revision !== revisionOf(row.config)) {
+      throw new APIError(constants.ErrorCode.USER_CONFIG_CHANGED);
     }
     if (await verifyHash(newPassword, row.password_hash)) {
       throw new APIError(
@@ -592,14 +597,18 @@ export class UserRepository {
 
     try {
       await db.tx(async (tx) => {
-        await tx.exec(
+        // Over the config it re-encrypted only, so a save landing meanwhile isn't lost.
+        const { rowCount } = await tx.exec(
           sql`UPDATE users
               SET password_hash = ${newPasswordHash},
                   config = ${encryptedConfig},
                   config_salt = ${newConfigSalt},
                   updated_at = CURRENT_TIMESTAMP
-              WHERE uuid = ${uuid}`
+              WHERE uuid = ${uuid} AND config = ${row.config}`
         );
+        if (!rowCount) {
+          throw new APIError(constants.ErrorCode.USER_CONFIG_CHANGED);
+        }
         // Saved configurations hold the same blob as the install URL, so they
         // break on the next password change unless rotated with it.
         await ConfigProfileRepository.reencryptForUuid(
@@ -621,7 +630,10 @@ export class UserRepository {
         await ConfigSessionRepository.deleteAllForUuid(uuid, tx);
       });
       logger.info(`Changed password for user ${uuid}`);
-      return { encryptedPassword: newEncryptedPasswordToken };
+      return {
+        encryptedPassword: newEncryptedPasswordToken,
+        revision: revisionOf(encryptedConfig),
+      };
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       logger.error(`Failed to change password for user ${uuid}: ${msg}`);
