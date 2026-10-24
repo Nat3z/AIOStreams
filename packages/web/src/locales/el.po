@@ -2346,6 +2346,14 @@ msgstr "Επιτρέπει στον αποκωδικοποιητή της τηλ
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "Επιτρέπει στον αποκωδικοποιητή της τηλεόρασης να συγχρονίζει την εικόνα και τον ήχο, για πιο ομαλή αναπαραγωγή 4K και HDR σε ορισμένες τηλεοράσεις. Απενεργοποίησέ το αν η εικόνα κολλάει ή παραμένει μαύρη."
 
+#: src/app/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr "Άδειες χρήσης"
@@ -2642,6 +2650,10 @@ msgstr ""
 #: src/app/settings/interface.tsx
 msgid "Navigation"
 msgstr "Πλοήγηση"
+
+#: src/app/sign-in/page.tsx
+msgid "Needed to switch to this user."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
@@ -5062,6 +5074,10 @@ msgstr "Ο παλαιότερος τρόπος απόδοσης του mpv, γι
 msgid "The open-source software in this app, and the licence of each."
 msgstr "Το λογισμικό ανοιχτού κώδικα αυτής της εφαρμογής και η άδεια χρήσης του καθενός."
 
+#: src/app/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "Δεν ήταν δυνατή η επικοινωνία με την άλλη συσκευή"
@@ -5150,10 +5166,6 @@ msgstr "Η έξοδος βίντεο αλλάζει όταν ανοίξει ξα
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "Ολόκληρη η σειρά"
-
-#: src/app/sign-in/page.tsx
-msgid "Theirs, or the configuration's. Needed to switch to this user."
-msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5553,12 +5565,8 @@ msgid "Usage statistics"
 msgstr ""
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Χρησιμοποίησε τη Γρήγορη σύνδεση ή τον κωδικό πρόσβασης της διαμόρφωσης."
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
-msgstr "Χρησιμοποίησε τον κωδικό πρόσβασης της διαμόρφωσης."
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5567,10 +5575,6 @@ msgstr "Χρήση του CSS αυτού του διακομιστή"
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Χρησιμοποίησε το UUID ή το ψευδώνυμο της διαμόρφωσής σου και τον κωδικό πρόσβασής της."
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Χρησιμοποίησε το PIN σου ή τον κωδικό πρόσβασης της διαμόρφωσης."
 
 #: src/app/sign-in/page.tsx
 msgid "Use your PIN."

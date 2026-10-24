@@ -2359,6 +2359,14 @@ msgstr "让电视的解码器自行同步画面和声音，在部分电视上可
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "让电视的解码器自行同步画面和声音，在部分电视上可更流畅地播放 4K 和 HDR。如果画面卡顿或黑屏，请关闭此选项。"
 
+#: src/app/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr ""
@@ -2657,6 +2665,10 @@ msgstr ""
 #: src/app/settings/interface.tsx
 msgid "Navigation"
 msgstr "导航"
+
+#: src/app/sign-in/page.tsx
+msgid "Needed to switch to this user."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
@@ -5099,6 +5111,10 @@ msgstr "mpv 的旧式渲染方式，适用于其他方式无法正常工作的 M
 msgid "The open-source software in this app, and the licence of each."
 msgstr ""
 
+#: src/app/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "无法连接到另一台设备"
@@ -5187,10 +5203,6 @@ msgstr "下次打开应用时，视频输出设置会生效。"
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "整部剧集"
-
-#: src/app/sign-in/page.tsx
-msgid "Theirs, or the configuration's. Needed to switch to this user."
-msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5591,12 +5603,8 @@ msgid "Usage statistics"
 msgstr ""
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "使用「快速连接」，或输入配置密码。"
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
-msgstr "使用配置密码。"
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5605,10 +5613,6 @@ msgstr "使用此服务器的 CSS"
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "使用配置的 UUID 或别名及其密码。"
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "使用你的 PIN 码或配置密码。"
 
 #: src/app/sign-in/page.tsx
 msgid "Use your PIN."

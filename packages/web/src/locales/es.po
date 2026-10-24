@@ -2353,6 +2353,14 @@ msgstr "Permite que el decodificador del televisor mantenga sincronizados por s�
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "Permite que el decodificador del televisor mantenga sincronizados por sí mismo la imagen y el sonido, lo que, en algunos televisores, hace que la reproducción de contenido 4K y HDR sea más fluida. Desactiva esta opción si el video presenta tirones o se queda en negro."
 
+#: src/app/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr "Licencias"
@@ -2650,6 +2658,10 @@ msgstr ""
 #: src/app/settings/interface.tsx
 msgid "Navigation"
 msgstr "Navegación"
+
+#: src/app/sign-in/page.tsx
+msgid "Needed to switch to this user."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
@@ -5078,6 +5090,10 @@ msgstr "El método de renderizado más antiguo de mpv, pensado para equipos Mac 
 msgid "The open-source software in this app, and the licence of each."
 msgstr "El software de código abierto presente en esta aplicación, así como la licencia de cada uno."
 
+#: src/app/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "No se pudo contactar con el otro dispositivo"
@@ -5166,10 +5182,6 @@ msgstr "La salida de video cambia cuando la aplicación se abre de nuevo."
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "Toda la serie"
-
-#: src/app/sign-in/page.tsx
-msgid "Theirs, or the configuration's. Needed to switch to this user."
-msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5569,12 +5581,8 @@ msgid "Usage statistics"
 msgstr ""
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Usar Conexión Rápida o la contraseña de configuración."
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
-msgstr "Usar la contraseña de la configuración."
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5583,10 +5591,6 @@ msgstr "Utilizar CSS de este servidor"
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Usar el UUID o alias de tu configuración y su contraseña."
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Usar tu PIN o la contraseña de configuración."
 
 #: src/app/sign-in/page.tsx
 msgid "Use your PIN."

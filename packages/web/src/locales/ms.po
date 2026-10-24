@@ -2346,6 +2346,14 @@ msgstr "Membenarkan penyahsulit TV mengekalkan kesegeraan gambar dan bunyi secar
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "Membenarkan penyahsulit TV mengekalkan kesegeraan gambar dan bunyi secara kendiri."
 
+#: src/app/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr "Lesen"
@@ -2642,6 +2650,10 @@ msgstr ""
 #: src/app/settings/interface.tsx
 msgid "Navigation"
 msgstr "Navigasi"
+
+#: src/app/sign-in/page.tsx
+msgid "Needed to switch to this user."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Needs attention"
@@ -5062,6 +5074,10 @@ msgstr "Kaedah paparan mpv yang lebih lama untuk sistem Mac."
 msgid "The open-source software in this app, and the licence of each."
 msgstr "Perisian sumber terbuka dalam aplikasi ini, dan lesen masing-masing."
 
+#: src/app/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "Peranti lain tidak dapat dihubungi"
@@ -5150,10 +5166,6 @@ msgstr "Output video bertukar apabila aplikasi dibuka semula."
 #: src/features/downloads/download-button.tsx
 msgid "The whole show"
 msgstr "Keseluruhan rancangan"
-
-#: src/app/sign-in/page.tsx
-msgid "Theirs, or the configuration's. Needed to switch to this user."
-msgstr ""
 
 #: src/app/settings/page.tsx
 #: src/app/settings/theme.tsx
@@ -5553,12 +5565,8 @@ msgid "Usage statistics"
 msgstr ""
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Gunakan Sambungan Pantas, atau kata laluan konfigurasi."
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
-msgstr "Gunakan kata laluan konfigurasi."
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5567,10 +5575,6 @@ msgstr "Gunakan CSS pelayan ini"
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Gunakan UUID atau alias konfigurasi anda serta kata laluanya."
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Gunakan PIN anda, atau kata laluan konfigurasi."
 
 #: src/app/sign-in/page.tsx
 msgid "Use your PIN."
