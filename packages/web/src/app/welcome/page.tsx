@@ -13,16 +13,19 @@ import { AvatarPicker } from '@/components/avatar-picker';
 import { ErrorLine, RISE, Screen } from '../sign-in/page';
 import {
   PreferencesCard,
+  TrackersCard,
   useProfile,
   useSaveProfile,
+  useTrackers,
 } from '../settings/profile';
 
 /*
  * Where a setup link lands: the user, signed in by the link, picks their name,
- * picture and preferences, then a password of their own, which ends the link.
+ * picture and preferences, connects a tracker if the server has them, then a
+ * password of their own, which ends the link.
  */
 
-const STEPS = ['you', 'streams', 'password'] as const;
+const STEPS = ['you', 'streams', 'tracking', 'password'] as const;
 type Step = (typeof STEPS)[number] | 'done';
 
 const CARD =
@@ -35,23 +38,24 @@ export function WelcomePage({
   invite: string;
   onDone: () => void;
 }) {
+  const trackers = useTrackers();
+  // Tracking only shows where the server has it and the user keeps their own history.
+  const tracks = !!trackers.data?.available && !trackers.data.shared;
+  const steps = STEPS.filter((s) => s !== 'tracking' || tracks);
   const [step, setStep] = React.useState<Step>('you');
-  const next = () => setStep(STEPS[STEPS.indexOf(step as never) + 1] ?? 'done');
+  const at = steps.indexOf(step as never);
+  const next = () => setStep(steps[at + 1] ?? 'done');
+  const back = () => setStep(steps[at - 1] ?? 'you');
   return (
     <Screen name="welcome">
-      {step !== 'done' && <Progress step={step} />}
+      {step !== 'done' && <Progress steps={steps} step={step} />}
       <AnimatePresence mode="wait">
         <motion.div key={step} {...RISE}>
           {step === 'you' && <YouStep onNext={next} />}
-          {step === 'streams' && (
-            <StreamsStep onBack={() => setStep('you')} onNext={next} />
-          )}
+          {step === 'streams' && <StreamsStep onBack={back} onNext={next} />}
+          {step === 'tracking' && <TrackingStep onBack={back} onNext={next} />}
           {step === 'password' && (
-            <PasswordStep
-              invite={invite}
-              onBack={() => setStep('streams')}
-              onNext={next}
-            />
+            <PasswordStep invite={invite} onBack={back} onNext={next} />
           )}
           {step === 'done' && <DoneStep onDone={onDone} />}
         </motion.div>
@@ -60,16 +64,16 @@ export function WelcomePage({
   );
 }
 
-function Progress({ step }: { step: Step }) {
-  const at = STEPS.indexOf(step as never);
+function Progress({ steps, step }: { steps: readonly Step[]; step: Step }) {
+  const at = steps.indexOf(step);
   const number = at + 1;
-  const total = STEPS.length;
+  const total = steps.length;
   return (
     <ol
       aria-label={t`Step ${number} of ${total}`}
       className="mx-auto flex w-full max-w-lg gap-2"
     >
-      {STEPS.map((s, i) => (
+      {steps.map((s, i) => (
         <li
           key={s}
           className={cn(
@@ -199,6 +203,31 @@ function StreamsStep({
       ) : (
         <Skeleton className="h-72 rounded-xl" />
       )}
+      <StepButtons onBack={onBack} next={t`Continue`} />
+    </form>
+  );
+}
+
+function TrackingStep({
+  onBack,
+  onNext,
+}: {
+  onBack: () => void;
+  onNext: () => void;
+}) {
+  return (
+    <form
+      className={CARD}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onNext();
+      }}
+    >
+      <StepHead
+        title={t`Keep track`}
+        help={t`Optional. Connect an account and what you watch here is marked there, and the other way round.`}
+      />
+      <TrackersCard />
       <StepButtons onBack={onBack} next={t`Continue`} />
     </form>
   );
