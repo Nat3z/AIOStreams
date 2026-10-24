@@ -30,6 +30,8 @@ export interface PlaybackPrefs {
   /** Off only when false, as in Jellyfin. */
   RememberAudioSelections?: boolean;
   RememberSubtitleSelections?: boolean;
+  /** Library ids placed first, in this order; the rest follow in the addon's. */
+  OrderedViews?: string[];
 }
 
 // A server without the lists has only the single language.
@@ -67,6 +69,13 @@ export function usePlaybackPrefs() {
         ? client.post(`/Users/${target}/Configuration`, next)
         : client.post('/Users/Configuration', next, { userId: user.Id }),
     onMutate: (next) => queryClient.setQueryData(queryKey, next),
+    // The library order comes back in the views, wherever they're listed.
+    onSuccess: (_, next) => {
+      if ('OrderedViews' in next)
+        void queryClient.invalidateQueries({
+          queryKey: [...queryKey.slice(0, 3), 'views'],
+        });
+    },
     onError: () => {
       toast.error(t`Could not save that setting`);
       void queryClient.invalidateQueries({ queryKey });
