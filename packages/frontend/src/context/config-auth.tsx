@@ -18,33 +18,48 @@ import {
 import { clearDrafts } from '@/lib/drafts';
 
 /**
- * Signs the web app out too, by its own keys: `jellyfin_credentials`, the
- * owner's saved switch token, and the marker that stops the configure sign-in
- * from signing it straight back in.
+ * Signs the web app out too, on every mount of this origin (`/jellyfin` and its
+ * `/jellyfin/u/<alias>` addresses), by its own keys: `jellyfin_credentials`,
+ * the owner's saved switch token, and the marker that stops the configure
+ * sign-in from signing it straight back in.
  */
 function leaveWebApp(ownerUuid: string | null): void {
   try {
+    const root = `${window.location.origin}/jellyfin`;
+    const isMount = (base: string): boolean =>
+      base === root || base.startsWith(`${root}/`);
+    const mounts = new Set<string>([root]);
+
     const key = 'jellyfin_credentials';
     const stored = JSON.parse(localStorage.getItem(key) ?? 'null') as {
       Servers?: { ManualAddress: string }[];
     } | null;
-    const base = `${window.location.origin}/jellyfin`;
     if (stored?.Servers) {
-      stored.Servers = stored.Servers.filter((s) => s.ManualAddress !== base);
+      stored.Servers = stored.Servers.filter((s) => {
+        if (!isMount(s.ManualAddress)) return true;
+        mounts.add(s.ManualAddress);
+        return false;
+      });
       localStorage.setItem(key, JSON.stringify(stored));
     }
     // The owner's Jellyfin id is their bare uuid, whoever the web app is on now;
     // a token left behind lets the picker switch back to them without a password.
-    const tokensKey = `aiostreams-web-user-tokens:${base}`;
-    const tokens = JSON.parse(
-      localStorage.getItem(tokensKey) ?? '{}'
-    ) as Record<string, string>;
     const ownerId = ownerUuid?.replace(/-/g, '');
-    if (ownerId && tokens[ownerId]) {
-      delete tokens[ownerId];
-      localStorage.setItem(tokensKey, JSON.stringify(tokens));
+    const tokensPrefix = 'aiostreams-web-user-tokens:';
+    for (const tokensKey of Object.keys(localStorage)) {
+      const base = tokensKey.slice(tokensPrefix.length);
+      if (!tokensKey.startsWith(tokensPrefix) || !isMount(base)) continue;
+      mounts.add(base);
+      const tokens = JSON.parse(
+        localStorage.getItem(tokensKey) ?? '{}'
+      ) as Record<string, string>;
+      if (ownerId && tokens[ownerId]) {
+        delete tokens[ownerId];
+        localStorage.setItem(tokensKey, JSON.stringify(tokens));
+      }
     }
-    localStorage.setItem(`aiostreams-web-signed-out:${base}`, 'true');
+    for (const base of mounts)
+      localStorage.setItem(`aiostreams-web-signed-out:${base}`, 'true');
   } catch {
     /* storage off: the web app asks the server, which no longer signs it in */
   }
