@@ -43,7 +43,10 @@ import {
   resolvePlaybackSinks,
   type ResolvedPlaybackSink,
 } from '../watch-state/handoff/index.js';
-import { getCatalog as _getCatalog } from './catalog.js';
+import {
+  applyCatalogModifications,
+  getCatalog as _getCatalog,
+} from './catalog.js';
 import {
   becauseCatalog,
   becauseCatalogs,
@@ -149,19 +152,32 @@ export class AIOStreams {
     extras?: string
   ): Promise<AIOStreamsResponse<MetaPreview[]>> {
     if (isPersonalCatalog(id)) {
+      const parsed = new ExtrasParser(extras);
       // One page: a client paging on gets nothing more.
-      if (new ExtrasParser(extras).skip)
-        return { success: true, data: [], errors: [] };
+      if (parsed.skip) return { success: true, data: [], errors: [] };
       const scope = this.personalScope();
-      const data =
+      // Loaded by its own type; a renamed type is only what the client sees.
+      const mod = this.ctx.userData.catalogModifications?.find(
+        (m) => m.id === id && m.overrideType === type
+      );
+      const kind = mod?.type ?? type;
+      const items =
         id === RECOMMENDED_CATALOG_ID
-          ? await recommendedCatalog(this, scope, type)
+          ? await recommendedCatalog(this, scope, kind)
           : await becauseCatalog(
               this,
               scope,
-              type,
+              kind,
               id.slice(BECAUSE_CATALOG_PREFIX.length)
             );
+      const data = await applyCatalogModifications(
+        this.ctx,
+        items,
+        id,
+        type,
+        parsed,
+        `${type}-${id}-${userScopeKey(this.ctx.userData)}-${this.ctx.userData.watchPersona ?? ''}`
+      );
       return { success: true, data, errors: [] };
     }
     return _getCatalog(this.ctx, type, id, extras);
