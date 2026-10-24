@@ -63,8 +63,9 @@ async function tmdbIdOf(
 }
 
 /**
- * The movies and shows watched most recently, a show once however many
- * episodes, and the TMDB keys of everything watched, to leave out.
+ * The movies and shows watched most recently, `SEEDS` of each so either has
+ * recommendations, a show once however many episodes; and the TMDB keys of
+ * everything watched, to leave out.
  */
 async function historyOf(
   scope: WatchScope
@@ -82,7 +83,7 @@ async function historyOf(
     const key = `${kind === 'movie' ? 'movie' : 'tv'}:${tmdbId}`;
     if (watched.has(key)) continue;
     watched.add(key);
-    if (seeds.length < SEEDS)
+    if (seeds.filter((s) => s.kind === kind).length < SEEDS)
       seeds.push({ kind, type: row.mediaType, id: row.baseId, tmdbId });
   }
   return { seeds, watched };
