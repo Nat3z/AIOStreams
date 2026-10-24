@@ -2089,6 +2089,14 @@ msgstr ""
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr ""
 
+#: src/pages/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/components/version-settings.tsx
 msgid "Link a pack someone shares, in this app's format or the one Fusion and Nuvio use. It stays up to date with its author's changes."
 msgstr ""
@@ -2351,6 +2359,10 @@ msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "Navigation"
+msgstr ""
+
+#: src/pages/sign-in.tsx
+msgid "Needed to switch to this user."
 msgstr ""
 
 #: src/pages/downloads.tsx
@@ -4468,6 +4480,10 @@ msgstr ""
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr ""
 
+#: src/pages/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/components/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr ""
@@ -4547,10 +4563,6 @@ msgstr ""
 
 #: src/components/download-button.tsx
 msgid "The whole show"
-msgstr ""
-
-#: src/pages/sign-in.tsx
-msgid "Theirs, or the configuration's. Needed to switch to this user."
 msgstr ""
 
 #: src/pages/settings/index.tsx
@@ -4886,11 +4898,7 @@ msgid "Upload picture"
 msgstr ""
 
 #: src/pages/sign-in.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr ""
-
-#: src/pages/sign-in.tsx
-msgid "Use the configuration’s password."
+msgid "Use Quick Connect."
 msgstr ""
 
 #: src/pages/settings/theme.tsx
@@ -4899,10 +4907,6 @@ msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Use your configuration’s UUID or alias and its password."
-msgstr ""
-
-#: src/pages/sign-in.tsx
-msgid "Use your PIN, or the configuration’s password."
 msgstr ""
 
 #: src/pages/sign-in.tsx

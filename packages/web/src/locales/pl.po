@@ -2097,6 +2097,14 @@ msgstr "Pozwala dekoderowi telewizora samodzielnie synchronizować obraz i dźwi
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "Pozwala dekoderowi telewizora samodzielnie synchronizować obraz i dźwięk, co zapewnia płynniejsze odtwarzanie 4K i HDR na niektórych telewizorach. Wyłącz, jeśli wideo się zacina lub ekran pozostaje czarny."
 
+#: src/pages/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Library order"
+msgstr ""
+
 #: src/components/version-settings.tsx
 msgid "Link a pack someone shares, in this app's format or the one Fusion and Nuvio use. It stays up to date with its author's changes."
 msgstr "Podłącz udostępnioną paczkę w formacie tej aplikacji lub używanym przez Fusion i Nuvio. Będzie automatycznie aktualizowana wraz ze zmianami autora."
@@ -2360,6 +2368,10 @@ msgstr ""
 #: src/pages/settings/interface.tsx
 msgid "Navigation"
 msgstr "Nawigacja"
+
+#: src/pages/sign-in.tsx
+msgid "Needed to switch to this user."
+msgstr ""
 
 #: src/pages/downloads.tsx
 msgid "Needs attention"
@@ -4481,6 +4493,10 @@ msgstr "Film lub serial, którego strona jest obecnie otwarta."
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "Starsza metoda renderowania mpv dla komputerów Mac, na których inne zawodzą. Niektóre filmy w Dolby Vision mogą wyświetlać nieprawidłowe kolory."
 
+#: src/pages/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
+
 #: src/components/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "Nie udało się połączyć z drugim urządzeniem"
@@ -4561,10 +4577,6 @@ msgstr "Wyjście wideo zmieni się po ponownym uruchomieniu aplikacji."
 #: src/components/download-button.tsx
 msgid "The whole show"
 msgstr "Cały serial"
-
-#: src/pages/sign-in.tsx
-msgid "Theirs, or the configuration's. Needed to switch to this user."
-msgstr ""
 
 #: src/pages/settings/index.tsx
 #: src/pages/settings/theme.tsx
@@ -4899,12 +4911,8 @@ msgid "Upload picture"
 msgstr ""
 
 #: src/pages/sign-in.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Użyj Szybkiego łączenia (Quick Connect) lub hasła konfiguracji."
-
-#: src/pages/sign-in.tsx
-msgid "Use the configuration’s password."
-msgstr "Użyj hasła konfiguracji."
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/pages/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -4913,10 +4921,6 @@ msgstr "Używaj arkusza CSS tego serwera"
 #: src/pages/sign-in.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Użyj identyfikatora UUID lub aliasu swojej konfiguracji oraz jej hasła."
-
-#: src/pages/sign-in.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Użyj swojego kodu PIN lub hasła konfiguracji."
 
 #: src/pages/sign-in.tsx
 msgid "Use your PIN."
