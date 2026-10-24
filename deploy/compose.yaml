@@ -1,5 +1,6 @@
-# aio.natfor.work: this fork and its Redis. AIOStreams listens on the
-# Tailscale address only; Caddy on oci-selfhosted is the way in.
+# aio.natfor.work: this fork and its Redis, plus the AIOMetadata that tracks
+# for its users. AIOStreams listens on the Tailscale address only; Caddy on
+# oci-selfhosted is the way in. AIOMetadata is reached through AIOStreams alone.
 #
 #   cp deploy/.env.example deploy/.env   # then fill it in
 #   docker compose -f deploy/compose.yaml up -d --build
@@ -18,6 +19,7 @@ services:
       PORT: 3000
       DATABASE_URI: sqlite:///app/data/db.sqlite
       REDIS_URI: redis://redis:6379/0
+      WATCH_STATE_AIOMETADATA_URL: http://aiometadata:3232
     volumes:
       - aiostreams_data:/app/data
     ports:
@@ -37,6 +39,44 @@ services:
       test: [CMD, redis-cli, ping]
       interval: 10s
 
+  aiometadata:
+    image: ghcr.io/cedya77/aiometadata:3.7.0
+    container_name: aio-aiometadata
+    restart: unless-stopped
+    environment:
+      PORT: 3232
+      HOST_NAME: http://aiometadata:3232
+      DATABASE_URI: sqlite://addon/data/db.sqlite
+      REDIS_URL: redis://aiometadata-redis:6379
+      BUILT_IN_TMDB_API_KEY: ${TMDB_API_KEY:-}
+      # Sign-ins return to AIOStreams, which finishes them here.
+      SIMKL_AUTH_MODE: oauth
+      SIMKL_V2_CLIENT_ID: ${SIMKL_CLIENT_ID:-}
+      SIMKL_V2_CLIENT_SECRET: ${SIMKL_CLIENT_SECRET:-}
+      SIMKL_REDIRECT_URI: ${BASE_URL:?}/trackers/simkl/callback
+      ANILIST_CLIENT_ID: ${ANILIST_CLIENT_ID:-}
+      ANILIST_CLIENT_SECRET: ${ANILIST_CLIENT_SECRET:-}
+      ANILIST_REDIRECT_URI: ${BASE_URL:?}/trackers/anilist/callback
+    volumes:
+      - aiometadata_data:/app/addon/data
+    depends_on:
+      aiometadata-redis:
+        condition: service_healthy
+
+  # AIOMetadata needs Redis 8.
+  aiometadata-redis:
+    image: redis:8-alpine
+    container_name: aio-aiometadata-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --save 3600 1
+    volumes:
+      - aiometadata_redis_data:/data
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 10s
+
 volumes:
   aiostreams_data:
   redis_data:
+  aiometadata_data:
+  aiometadata_redis_data:
