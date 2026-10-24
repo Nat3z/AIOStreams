@@ -30,6 +30,7 @@ import playstateRouter from './playstate.js';
 import playlistsRouter from './playlists.js';
 import webRouter from './web.js';
 import profileRouter from './profile.js';
+import { trackersRouter } from './trackers.js';
 import { jellyfinWebRoot } from '../../app.js';
 
 export const jellyfinCors: express.RequestHandler = (req, res, next) => {
@@ -213,6 +214,7 @@ export function createJellyfinRouter(): Router {
   router.use(jellyfinContext);
   router.use(webRouter);
   router.use(profileRouter);
+  router.use(trackersRouter);
   router.use(systemRouter);
   router.use(syncPlayRouter);
   router.use(remoteRouter);
