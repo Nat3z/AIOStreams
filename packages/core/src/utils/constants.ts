@@ -1584,6 +1584,9 @@ const WATCH_STATE_RESOURCE = 'watch_state' as const;
 /** Root manifest key for the resource, the way `catalog` has `catalogs`. */
 export const WATCH_STATE_MANIFEST_KEY = 'watchState' as const;
 
+/** The built-in "Recommended for you" catalog, listed once for movies and once for shows. */
+export const RECOMMENDED_CATALOG_ID = 'aiostreams.recommended' as const;
+
 export const MOVIE_TYPE = 'movie' as const;
 export const SERIES_TYPE = 'series' as const;
 export const CHANNEL_TYPE = 'channel' as const;
