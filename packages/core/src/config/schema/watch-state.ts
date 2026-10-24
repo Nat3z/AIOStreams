@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { byteSize, seconds } from './helpers.js';
+import { byteSize, optionalUrlString, seconds } from './helpers.js';
 import type { RuntimeConfigSection } from '../types.js';
 
 /**
@@ -39,6 +39,16 @@ export const watchStateSchema = {
     requiresRestart: false,
     secret: false,
     ui: { min: 0 },
+  },
+  aiometadataUrl: {
+    schema: optionalUrlString,
+    default: null,
+    label: 'AIOMetadata URL',
+    description:
+      'An AIOMetadata instance of your own, such as `http://aiometadata:3232` on the same Docker network, that tracks for your users. Each user signs in to Simkl or AniList from their profile and gets a configuration of their own on it, linked as their tracker. Give it the provider OAuth credentials, with redirect URIs `<BASE_URL>/trackers/simkl/callback` and `<BASE_URL>/trackers/anilist/callback`. Signing in through it stays off until this is set.',
+    env: 'WATCH_STATE_AIOMETADATA_URL',
+    requiresRestart: false,
+    secret: false,
   },
   deliveryIntervalSeconds: {
     schema: seconds.pipe(z.number().min(10)),
