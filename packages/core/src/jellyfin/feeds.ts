@@ -63,9 +63,8 @@ async function tmdbIdOf(
 }
 
 /**
- * The movies and shows watched most recently, `SEEDS` of each so either has
- * recommendations, a show once however many episodes; and the TMDB keys of
- * everything watched, to leave out.
+ * The movies and shows watched most recently, `SEEDS` of each, a show once
+ * however many episodes; and the TMDB keys of everything watched, to leave out.
  */
 async function historyOf(
   scope: WatchScope
@@ -73,7 +72,16 @@ async function historyOf(
   const seeds: Seed[] = [];
   const watched = new Set<string>();
   const seen = new Set<string>();
-  for (const row of await WatchStateRepository.listPlayed(scope)) {
+  // Read apart, as a show's episodes would crowd out every movie.
+  const rows = (
+    await Promise.all([
+      WatchStateRepository.listPlayed(scope, ['movie']),
+      WatchStateRepository.listPlayed(scope, ['episode']),
+    ])
+  )
+    .flat()
+    .sort((a, b) => b.sortAt - a.sortAt);
+  for (const row of rows) {
     // A show's episodes all share its id, which only needs resolving once.
     if (seen.has(row.baseId)) continue;
     seen.add(row.baseId);
