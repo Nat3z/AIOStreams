@@ -56,6 +56,8 @@ export const SelfAddonSchema = z.object({
   manifestUrl: z.string().url().max(2048),
   /** Whether it tracks plays, so it is picked as the user's tracker. */
   tracker: z.boolean(),
+  /** Limits what is used from it; absent uses everything it serves. */
+  resources: z.array(z.enum(constants.RESOURCES)).optional(),
 });
 
 export type SelfAddon = z.infer<typeof SelfAddonSchema>;
@@ -115,7 +117,11 @@ function presetFor(addon: SelfAddon, instanceId: string) {
     type: 'custom',
     instanceId,
     enabled: true,
-    options: { name: addon.name, manifestUrl: addon.manifestUrl },
+    options: {
+      name: addon.name,
+      manifestUrl: addon.manifestUrl,
+      ...(addon.resources && { resources: addon.resources }),
+    },
   };
 }
 
