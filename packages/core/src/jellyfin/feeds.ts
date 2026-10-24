@@ -12,9 +12,9 @@ import { providerIdsFor } from './dto.js';
 import { titlePreviews, tmdbFor } from './tmdb-titles.js';
 
 /*
- * Home rows made from what someone watched: "Because you watched" a recent
- * title, and "Recommended for you" across their history. TMDB's per-title
- * recommendations are the source; nothing they've already seen is offered.
+ * What someone watched, made into a "Recommended for you" catalog any client
+ * lists and "Because you watched" rows. TMDB's per-title recommendations are
+ * the source; nothing they've already seen is offered.
  */
 
 export interface Seed {
@@ -25,18 +25,18 @@ export interface Seed {
   tmdbId: number;
 }
 
+/** A "Because you watched" row. */
 export interface Feed {
-  kind: 'because' | 'recommended';
-  /** The title a "because" row is about. */
-  seed?: Seed;
+  seed: Seed;
   items: MetaPreview[];
 }
 
 const SEEDS = 12;
 const BECAUSE_ROWS = 3;
 const LOOKUPS = 4;
+const CATALOG_SIZE = 40;
 /** A new watch reaches the rows within this long. */
-const FEED_TTL = 10 * 60;
+const PICKS_TTL = 10 * 60;
 /** Fewer than this and a row isn't worth showing. */
 const MIN_ROW = 4;
 
@@ -124,37 +124,30 @@ async function openable(
   );
 }
 
-const cache = Cache.getInstance<string, Feed[]>(
-  'jellyfin:feeds',
+interface Picks {
+  seeds: Seed[];
+  /** Each seed's recommendations, less what was watched. */
+  unseen: TMDBTitle[][];
+  /** All of them, best first. */
+  ranked: TMDBTitle[];
+}
+
+const picksCache = Cache.getInstance<string, Picks>(
+  'jellyfin:feed-picks',
   500,
   'memory'
 );
 
-/** Every feed for one history, or none without TMDB set up or anything watched. */
-export async function watchFeeds(
-  engine: AIOStreams,
-  userData: UserData,
-  scope: WatchScope,
-  limit: number
-): Promise<Feed[]> {
-  const key = `${scope.uuid}|${scope.persona}|${limit}`;
-  const cached = await cache.get(key);
+/** TMDB's recommendations for one history; none until something is watched. */
+async function picksFor(
+  tmdb: TMDBMetadata,
+  scope: WatchScope
+): Promise<Picks | null> {
+  const key = `${scope.uuid}|${scope.persona}`;
+  const cached = await picksCache.get(key);
   if (cached) return cached;
-  const feeds = await buildFeeds(engine, userData, scope, limit);
-  if (feeds.length) await cache.set(key, feeds, FEED_TTL);
-  return feeds;
-}
-
-async function buildFeeds(
-  engine: AIOStreams,
-  userData: UserData,
-  scope: WatchScope,
-  limit: number
-): Promise<Feed[]> {
-  const tmdb = tmdbFor(userData);
-  if (!tmdb) return [];
   const { seeds, watched } = await historyOf(scope);
-  if (!seeds.length) return [];
+  if (!seeds.length) return null;
 
   const pool = pLimit(LOOKUPS);
   const lists = await Promise.all(
@@ -172,19 +165,46 @@ async function buildFeeds(
   const unseen = lists.map((list) =>
     list.filter((t) => !watched.has(keyOf(t)))
   );
+  const picks: Picks = { seeds, unseen, ranked: rank(unseen) };
+  await picksCache.set(key, picks, PICKS_TTL);
+  return picks;
+}
+
+/** The "Because you watched" rows of one history, none without TMDB or anything watched. */
+export async function watchFeeds(
+  engine: AIOStreams,
+  userData: UserData,
+  scope: WatchScope,
+  limit: number
+): Promise<Feed[]> {
+  const tmdb = tmdbFor(userData);
+  const picks = tmdb && (await picksFor(tmdb, scope));
+  if (!picks) return [];
 
   const feeds: Feed[] = [];
-  const recommended = await openable(engine, tmdb, rank(unseen), limit);
-  if (recommended.length)
-    feeds.push({ kind: 'recommended', items: recommended });
-  let because = 0;
-  for (const [i, seed] of seeds.entries()) {
-    if (because >= BECAUSE_ROWS) break;
-    if (unseen[i].length < MIN_ROW) continue;
-    const items = await openable(engine, tmdb, unseen[i], limit);
-    if (items.length < MIN_ROW) continue;
-    feeds.push({ kind: 'because', seed, items });
-    because++;
+  for (const [i, seed] of picks.seeds.entries()) {
+    if (feeds.length >= BECAUSE_ROWS) break;
+    if (picks.unseen[i].length < MIN_ROW) continue;
+    const items = await openable(engine, tmdb, picks.unseen[i], limit);
+    if (items.length >= MIN_ROW) feeds.push({ seed, items });
   }
   return feeds;
+}
+
+/** "Recommended for you" as the catalog of one type. */
+export async function recommendedCatalog(
+  engine: AIOStreams,
+  scope: WatchScope,
+  type: string
+): Promise<MetaPreview[]> {
+  const tmdb = tmdbFor(engine.getUserData());
+  const picks = tmdb && (await picksFor(tmdb, scope));
+  if (!picks) return [];
+  const mediaType = type === 'movie' ? 'movie' : 'tv';
+  return openable(
+    engine,
+    tmdb,
+    picks.ranked.filter((t) => t.mediaType === mediaType),
+    CATALOG_SIZE
+  );
 }

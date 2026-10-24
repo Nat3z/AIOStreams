@@ -352,6 +352,12 @@ export function needsGenre(view: BaseItemDto | undefined): boolean {
   return extension?.aiostreams?.genreRequired === true;
 }
 
+/** A "Recommended for you" library, empty until something is watched. */
+export function isRecommended(view: BaseItemDto | undefined): boolean {
+  const extension = view as { aiostreams?: { recommended?: boolean } };
+  return extension?.aiostreams?.recommended === true;
+}
+
 /**
  * The genre a library opens with: None where offered, which a catalog that
  * needs a genre reads as all of it, else the first when it needs one.

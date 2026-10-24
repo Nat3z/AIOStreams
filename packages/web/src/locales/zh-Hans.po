@@ -3505,10 +3505,6 @@ msgstr "强调色"
 msgid "Recent searches"
 msgstr "最近搜索"
 
-#: src/app/home/page.tsx
-msgid "Recommended for you"
-msgstr ""
-
 #: src/features/party/party-layer.tsx
 msgid "Reconnecting to the party…"
 msgstr "正在重新连接一起观看…"
