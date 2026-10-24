@@ -3,6 +3,7 @@ import { Select } from '@aiostreams/ui/select';
 import { Combobox } from '@aiostreams/ui/combobox';
 import { Switch } from '@aiostreams/ui/switch';
 import { useViews } from '../../lib/queries';
+import { usePlaybackPrefs } from '../../lib/user-config';
 import { libraryLabel } from '../../lib/format';
 import { currentHost } from '../../lib/hosts';
 import {
@@ -31,7 +32,7 @@ import {
   type PosterSize,
 } from '../../lib/settings';
 import { SettingsCard } from '../../components/settings-card';
-import { onDevice, followsYou, seconds } from './common';
+import { LanguageList, onDevice, followsYou, seconds } from './common';
 
 const NOTHING = 'none';
 
@@ -192,6 +193,33 @@ function NavigationCard() {
           onValueChange={(value) => setBackground(value as BarBackground)}
         />
       )}
+    </SettingsCard>
+  );
+}
+
+/** The libraries in the user's order; one added to the addon later joins at the end. */
+function LibraryOrderCard() {
+  const views = useViews();
+  const { prefs, update } = usePlaybackPrefs();
+  const items = views.data?.Items ?? [];
+  if (items.length < 2) return null;
+  return (
+    <SettingsCard
+      name="library-order"
+      title={t`Library order`}
+      description={followsYou()}
+    >
+      <LanguageList
+        fixed
+        label={t`Libraries`}
+        help={t`The order of your libraries and home rows. A catalog you add to your addon later goes at the end.`}
+        options={items.map((v) => ({
+          value: v.Id!,
+          label: [v.Name, libraryLabel(v)].filter(Boolean).join(' · '),
+        }))}
+        value={items.map((v) => v.Id!)}
+        onChange={(next) => update({ OrderedViews: next })}
+      />
     </SettingsCard>
   );
 }
@@ -373,6 +401,7 @@ export function InterfaceSection() {
           />
         </SettingsCard>
       )}
+      <LibraryOrderCard />
       <SettingsCard
         name="episodes"
         title={t`Episodes`}
