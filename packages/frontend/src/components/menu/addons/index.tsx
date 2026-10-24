@@ -136,8 +136,10 @@ function Content() {
             const after = keepOrder.has(addon)
               ? modifications.findLastIndex((m) => addonOf(m.id) === addon)
               : -1;
+            // Recommendations start first, as the server lists them.
+            const first = addon === 'aiostreams';
             modifications.splice(
-              after === -1 ? modifications.length : after + 1,
+              first ? 0 : after === -1 ? modifications.length : after + 1,
               0,
               {
                 id: catalog.id,
