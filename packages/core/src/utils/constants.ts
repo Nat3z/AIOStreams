@@ -6,6 +6,7 @@ export enum ErrorCode {
   USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS',
   USER_INVALID_DETAILS = 'USER_INVALID_DETAILS',
   USER_INVALID_CONFIG = 'USER_INVALID_CONFIG',
+  USER_CONFIG_CHANGED = 'USER_CONFIG_CHANGED',
   USER_NEW_PASSWORD_TOO_SHORT = 'USER_NEW_PASSWORD_TOO_SHORT',
   USER_NEW_PASSWORD_TOO_SIMPLE = 'USER_NEW_PASSWORD_TOO_SIMPLE',
   ADDON_PASSWORD_INVALID = 'ADDON_PASSWORD_INVALID',
@@ -70,6 +71,11 @@ export const ErrorMap: Record<ErrorCode, ErrorDetails> = {
   [ErrorCode.USER_INVALID_CONFIG]: {
     statusCode: 400,
     message: 'The config for this user is invalid',
+  },
+  [ErrorCode.USER_CONFIG_CHANGED]: {
+    statusCode: 409,
+    message:
+      'The configuration changed since you opened it. Reload it, then make your change again.',
   },
   [ErrorCode.USER_NEW_PASSWORD_TOO_SHORT]: {
     statusCode: 400,
