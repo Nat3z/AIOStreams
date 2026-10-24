@@ -23,7 +23,11 @@ import {
   studioId,
   viewId,
 } from './ids.js';
-import { isPersonalCatalog } from '../utils/constants.js';
+import {
+  BECAUSE_CATALOG_PREFIX,
+  BECAUSE_ORDER_KEY,
+  isPersonalCatalog,
+} from '../utils/constants.js';
 import { imageTagsFor, rememberImages } from './images.js';
 import { listPlaceholderSources, msToTicks } from './media.js';
 import { getSimpleTextHash } from '../utils/crypto.js';
@@ -366,6 +370,10 @@ export function buildView(
       aiostreams: {
         ...(requiresGenre(catalog) && { genreRequired: true }),
         ...(isPersonalCatalog(catalog.id) && { recommended: true }),
+        // Its id follows the history, so its place in an order can't.
+        ...(catalog.id.startsWith(BECAUSE_CATALOG_PREFIX) && {
+          orderKey: BECAUSE_ORDER_KEY,
+        }),
       },
     }),
     _aio: { descriptor: { k: 'view', t: catalog.type, c: catalog.id } },
