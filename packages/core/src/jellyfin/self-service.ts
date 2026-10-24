@@ -16,7 +16,10 @@ import {
   type UserData,
 } from '../db/index.js';
 import { constants, createLogger, getSimpleTextHash } from '../utils/index.js';
-import { SELF_VARIANT_MARKER as STATE_MARKER } from '../variants/language.js';
+import {
+  isSelfVariant,
+  SELF_VARIANT_MARKER as STATE_MARKER,
+} from '../variants/language.js';
 
 const logger = createLogger('jellyfin');
 
@@ -154,6 +157,17 @@ function storedUser(
     return (userData.jellyfin.primary ??= {});
   }
   return userData.jellyfin?.personas?.find((p) => p.id === personaId) ?? null;
+}
+
+/** Drops the own variants of users removed from the configuration. */
+export function pruneSelfVariants(userData: UserData): void {
+  const live = new Set([
+    selfVariantId(null),
+    ...(userData.jellyfin?.personas ?? []).map((p) => selfVariantId(p)),
+  ]);
+  userData.variants = userData.variants?.filter(
+    (v) => !isSelfVariant(v) || live.has(v.id)
+  );
 }
 
 export function selfStateOf(
