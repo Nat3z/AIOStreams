@@ -357,6 +357,7 @@ export async function itemsFromPreviews(
 /**
  * The user's libraries, those they ordered first in their order; any they
  * haven't placed, such as a catalog added since, follow in the addon's order.
+ * "Because you watched" catalogs move together, by their shared `orderKey`.
  */
 export async function viewItems(
   ctx: JellyfinRequestContext
@@ -372,7 +373,7 @@ export async function viewItems(
     ? (config.OrderedViews as string[])
     : [];
   const rank = (item: JellyfinItem): number => {
-    const i = ordered.indexOf(item.Id);
+    const i = ordered.indexOf(orderKeyOf(item));
     return i === -1 ? ordered.length : i;
   };
   return items.sort((a, b) => rank(a) - rank(b));
@@ -420,6 +421,11 @@ export async function playlistItem(
     { ...playlist, count: playlist.items.length },
     images
   );
+}
+
+export function orderKeyOf(item: JellyfinItem): string {
+  const extension = item as { aiostreams?: { orderKey?: string } };
+  return extension.aiostreams?.orderKey ?? item.Id;
 }
 
 function episodeRef(
