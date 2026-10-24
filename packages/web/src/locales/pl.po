@@ -1778,6 +1778,10 @@ msgstr "Ukryte"
 msgid "Hide"
 msgstr "Ukryj"
 
+#: src/pages/settings/interface.tsx
+msgid "Hide {name}"
+msgstr ""
+
 #: src/pages/history.tsx
 msgid "Hide episodes"
 msgstr "Ukryj odcinki"
@@ -3796,6 +3800,7 @@ msgstr "Skróty"
 
 #. A dot under the banner that brings this title up
 #: src/components/hero.tsx
+#: src/pages/settings/interface.tsx
 msgid "Show {name}"
 msgstr "Pokaż {name}"
 
@@ -4498,7 +4503,7 @@ msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Visio
 msgstr "Starsza metoda renderowania mpv dla komputerów Mac, na których inne zawodzą. Niektóre filmy w Dolby Vision mogą wyświetlać nieprawidłowe kolory."
 
 #: src/pages/settings/interface.tsx
-msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home."
 msgstr ""
 
 #: src/components/remote-sheet.tsx

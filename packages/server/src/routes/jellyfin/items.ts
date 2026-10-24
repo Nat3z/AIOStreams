@@ -260,10 +260,12 @@ export async function itemsFromPreviews(
 /**
  * The user's libraries, those they ordered first in their order; any they
  * haven't placed, such as a catalog added since, follow in the addon's order.
- * "Because you watched" catalogs move together, by their shared `orderKey`.
+ * "Because you watched" catalogs move and hide together, by their shared
+ * `orderKey`. Hidden ones are left out unless `hidden` asks for them.
  */
 export async function viewItems(
-  ctx: JellyfinRequestContext
+  ctx: JellyfinRequestContext,
+  opts: { hidden?: boolean } = {}
 ): Promise<JellyfinItem[]> {
   const [views, config] = await Promise.all([
     ctx.views(),
@@ -272,14 +274,17 @@ export async function viewItems(
   const items = views.map((v) =>
     buildView(ctx.build, v.catalog, v.collectionType)
   );
-  const ordered = Array.isArray(config?.OrderedViews)
-    ? (config.OrderedViews as string[])
-    : [];
+  const ids = (key: string): string[] =>
+    Array.isArray(config?.[key]) ? (config[key] as string[]) : [];
+  const ordered = ids('OrderedViews');
+  const hidden = new Set(opts.hidden ? [] : ids('MyMediaExcludes'));
   const rank = (item: JellyfinItem): number => {
     const i = ordered.indexOf(orderKeyOf(item));
     return i === -1 ? ordered.length : i;
   };
-  return items.sort((a, b) => rank(a) - rank(b));
+  return items
+    .filter((item) => !hidden.has(orderKeyOf(item)))
+    .sort((a, b) => rank(a) - rank(b));
 }
 
 export function orderKeyOf(item: JellyfinItem): string {

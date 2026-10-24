@@ -385,10 +385,13 @@ async function itemsFromRows(
   });
 }
 
+// `includeHidden` is this server's own, for the settings that unhide them.
 router.get(
   ['/UserViews', '/Users/:userId/Views'],
   jf(async (req, res, ctx) => {
-    const items = await viewItems(ctx);
+    const items = await viewItems(ctx, {
+      hidden: qs(req, 'includeHidden') === 'true',
+    });
     send(req, res, items, items.length);
   })
 );
