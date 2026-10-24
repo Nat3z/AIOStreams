@@ -1020,6 +1020,7 @@ msgid "Confirm"
 msgstr ""
 
 #: src/pages/servers.tsx
+#: src/pages/settings/profile.tsx
 msgid "Connect"
 msgstr ""
 
@@ -1390,6 +1391,10 @@ msgstr ""
 
 #: src/components/people.tsx
 msgid "Director"
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Disconnect"
 msgstr ""
 
 #: src/pages/settings/apps.tsx
@@ -2692,6 +2697,10 @@ msgstr ""
 
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "Not connected"
 msgstr ""
 
 #: src/lib/hosts/shell/player.ts
@@ -4166,6 +4175,10 @@ msgstr ""
 msgid "Sign out of this server?"
 msgstr ""
 
+#: src/pages/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/pages/servers.tsx
 msgid "Signed out"
 msgstr ""
@@ -5046,6 +5059,10 @@ msgstr ""
 msgid "Track {n}"
 msgstr ""
 
+#: src/pages/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr ""
@@ -5464,6 +5481,10 @@ msgstr ""
 msgid "What you can send from a party's chat."
 msgstr ""
 
+#: src/pages/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
+
 #: src/pages/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
 msgstr ""
@@ -5611,6 +5632,10 @@ msgstr ""
 
 #: src/lib/party/party.ts
 msgid "You left the party."
+msgstr ""
+
+#: src/pages/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
 msgstr ""
 
 #: src/pages/settings/profile.tsx
