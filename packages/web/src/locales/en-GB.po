@@ -2292,6 +2292,14 @@ msgstr "Lets the TV's decoder keep picture and sound in step itself, which plays
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 
+#: src/app/settings/interface.tsx
+msgid "Libraries"
+msgstr "Libraries"
+
+#: src/app/settings/interface.tsx
+msgid "Library order"
+msgstr "Library order"
+
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr "Licences"
@@ -4906,6 +4914,10 @@ msgstr "The older way mpv draws, for Macs where the others fail. Some Dolby Visi
 msgid "The open-source software in this app, and the licence of each."
 msgstr "The open-source software in this app, and the licence of each."
 
+#: src/app/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "The other device could not be reached"
@@ -5388,12 +5400,8 @@ msgid "Usage statistics"
 msgstr "Usage statistics"
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Use Quick Connect, or the configuration’s password."
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
-msgstr "Use the configuration’s password."
+msgid "Use Quick Connect."
+msgstr "Use Quick Connect."
 
 #: src/app/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5402,10 +5410,6 @@ msgstr "Use this server's CSS"
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Use your configuration’s UUID or alias and its password."
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Use your PIN, or the configuration’s password."
 
 #: src/app/sign-in/page.tsx
 msgid "Use your PIN."
