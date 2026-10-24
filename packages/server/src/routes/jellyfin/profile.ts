@@ -170,7 +170,7 @@ router.post(
   '/AIOStreams/Profile/Avatar',
   avatarBody,
   self(async (req, res, ctx) => {
-    const url = await saveAvatar(req, ctx.uuid);
+    const url = await saveAvatar(req, ctx.uuid, ctx.userData);
     if (url) res.json({ url });
     else res.status(400).json({ Message: AVATAR_REFUSED });
   })
@@ -211,10 +211,12 @@ router.post(
     try {
       const { token, password } = welcomeBody.parse(bodyOf(req));
       const invite = await UserInviteRepository.find(token);
+      // Claimed before the save, so two submits can't both set a password.
       if (
         !invite ||
         invite.uuid !== ctx.uuid ||
-        invite.persona !== ctx.persona?.id
+        invite.persona !== ctx.persona?.id ||
+        !(await UserInviteRepository.consume(token))
       ) {
         res
           .status(403)
@@ -222,7 +224,6 @@ router.post(
         return;
       }
       await saveSelf(ctx, { password });
-      await UserInviteRepository.consume(token);
       logger.info(
         { uuid: ctx.uuid, persona: ctx.persona?.id },
         'user finished setting up'
