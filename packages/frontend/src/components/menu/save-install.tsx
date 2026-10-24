@@ -1851,6 +1851,8 @@ function Content() {
     encryptedPassword,
     setEncryptedPassword,
     setBaseline,
+    revision,
+    setRevision,
   } = useUserData();
   const { data: linkedAccounts } = useQuery(
     linkedAccountsQuery(uuid ? { uuid, password } : null)
@@ -2388,7 +2390,8 @@ function Content() {
       const result = await changePassword(
         uuid,
         changePasswordData.currentPassword,
-        changePasswordData.newPassword
+        changePasswordData.newPassword,
+        revision
       );
 
       toast.success(
@@ -2396,6 +2399,8 @@ function Content() {
       );
       setPassword(changePasswordData.newPassword);
       setEncryptedPassword(result.encryptedPassword);
+      // Re-encrypted, not edited, so unsaved edits stay unsaved.
+      setRevision(result.revision);
       changePasswordModal.close();
       setChangePasswordData({
         currentPassword: '',
