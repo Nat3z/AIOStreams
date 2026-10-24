@@ -760,6 +760,10 @@ msgstr ""
 msgid "Bar"
 msgstr ""
 
+#: src/app/settings/interface.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr ""
@@ -5076,7 +5080,7 @@ msgid "The open-source software in this app, and the licence of each."
 msgstr ""
 
 #: src/app/settings/interface.tsx
-msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
 msgstr ""
 
 #: src/features/remote/remote-sheet.tsx
