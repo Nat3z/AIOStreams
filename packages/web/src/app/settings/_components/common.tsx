@@ -1,6 +1,6 @@
 import React from 'react';
 import { plural, t } from '@lingui/core/macro';
-import { LuArrowDown, LuArrowUp, LuX } from 'react-icons/lu';
+import { LuArrowDown, LuArrowUp, LuX, LuGripVertical } from 'react-icons/lu';
 import { Trans } from '@lingui/react/macro';
 import { toast } from 'sonner';
 import { Select } from '@aiostreams/ui/select';
@@ -27,7 +27,7 @@ export const seconds = (count: number) =>
 export const languageOptions = () =>
   LANGUAGES.map((l) => ({ value: l.code, label: languageName(l) }));
 
-/** Languages in order, each movable, with a picker for another. */
+/** Languages in order, each movable by its buttons or by dragging, with a picker for another. */
 export function LanguageList({
   label,
   help,
@@ -56,6 +56,34 @@ export function LanguageList({
     const next = [...value];
     next.splice(to, 0, ...next.splice(from, 1));
     onChange(next);
+  };
+  // Dragged in a draft of its own, so the order is only saved once dropped.
+  const [draft, setDraft] = React.useState<string[] | null>(null);
+  const dragged = React.useRef<number | null>(null);
+  const shown = draft ?? value;
+  const grab = (i: number) => (e: React.PointerEvent<HTMLElement>) => {
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragged.current = i;
+    setDraft(value);
+  };
+  const drag = (e: React.PointerEvent<HTMLElement>) => {
+    const from = dragged.current;
+    if (from === null || !draft) return;
+    const rows = [...(list.current?.children ?? [])];
+    const to = rows.findIndex((row) => {
+      const { top, bottom } = row.getBoundingClientRect();
+      return e.clientY >= top && e.clientY < bottom;
+    });
+    if (to === -1 || to === from) return;
+    const next = [...draft];
+    next.splice(to, 0, ...next.splice(from, 1));
+    dragged.current = to;
+    setDraft(next);
+  };
+  const drop = () => {
+    if (draft && draft.some((code, i) => code !== value[i])) onChange(draft);
+    dragged.current = null;
+    setDraft(null);
   };
   // A removed row takes focus with it, so the next row's button takes it over.
   const removed = React.useRef<number | null>(null);
@@ -93,15 +121,29 @@ export function LanguageList({
   );
   return (
     <BasicField label={label} help={help}>
-      {value.length > 0 && (
+      {shown.length > 0 && (
         <ol ref={list} data-ui="language-list" className="space-y-1">
-          {value.map((code, i) => {
+          {shown.map((code, i) => {
             const name = nameOf(code);
             return (
               <li
                 key={code}
-                className="flex items-center gap-2 rounded-xl bg-[--subtle] py-1 ps-3 pe-1"
+                className={cn(
+                  'flex items-center gap-2 rounded-xl bg-[--subtle] py-1 ps-1 pe-1',
+                  draft && dragged.current === i && 'ring-1 ring-[--brand]'
+                )}
               >
+                <span
+                  data-name="grip"
+                  aria-hidden
+                  className="flex size-8 cursor-grab touch-none items-center justify-center text-[--muted] active:cursor-grabbing"
+                  onPointerDown={grab(i)}
+                  onPointerMove={drag}
+                  onPointerUp={drop}
+                  onPointerCancel={drop}
+                >
+                  <LuGripVertical />
+                </span>
                 <span className="w-4 text-sm tabular-nums text-[--muted]">
                   {i + 1}
                 </span>
