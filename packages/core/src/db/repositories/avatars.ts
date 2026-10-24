@@ -7,7 +7,7 @@ import { sql } from '../sql.js';
 export const AVATAR_TYPES = ['image/png', 'image/jpeg', 'image/webp'] as const;
 export type AvatarType = (typeof AVATAR_TYPES)[number];
 export const AVATAR_MAX_BYTES = 512 * 1024;
-/** Old uploads a configuration keeps, for users not saved yet. */
+/** Unused uploads a configuration keeps, for users not saved yet. */
 const KEEP_PER_CONFIG = 32;
 
 interface AvatarRow {
@@ -17,11 +17,15 @@ interface AvatarRow {
 }
 
 export class AvatarRepository {
-  /** Stores a picture, returning its id; the oldest past the cap go. */
+  /**
+   * Stores a picture, returning its id; the oldest past the cap go, except
+   * `inUse`, the ids the configuration's users still show.
+   */
   static async save(
     uuid: string,
     type: AvatarType,
-    data: Buffer
+    data: Buffer,
+    inUse: string[]
   ): Promise<string> {
     const db = getDb();
     const id = createHash('sha256')
@@ -34,11 +38,17 @@ export class AvatarRepository {
           VALUES (${id}, ${uuid}, ${type}, ${data}, ${Date.now()})
           ON CONFLICT(id) DO UPDATE SET created_at = excluded.created_at`
     );
-    await db.exec(
-      sql`DELETE FROM avatars WHERE uuid = ${uuid} AND id NOT IN (
-            SELECT id FROM avatars WHERE uuid = ${uuid}
-             ORDER BY created_at DESC LIMIT ${KEEP_PER_CONFIG})`
+    const old = await db.query<{ id: string; [k: string]: unknown }>(
+      sql`SELECT id FROM avatars WHERE uuid = ${uuid}
+           ORDER BY created_at DESC`
     );
+    const stale = old
+      .map((row) => row.id)
+      .filter((oldId) => !inUse.includes(oldId))
+      .slice(KEEP_PER_CONFIG);
+    for (const staleId of stale) {
+      await db.exec(sql`DELETE FROM avatars WHERE id = ${staleId}`);
+    }
     return id;
   }
 
