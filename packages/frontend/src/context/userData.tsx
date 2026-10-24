@@ -628,7 +628,9 @@ interface UserDataContextType {
   encryptedPassword: string | null;
   setEncryptedPassword: (encryptedPassword: string | null) => void;
   /** Edits past this point count as a draft; matching it again clears one. */
-  setBaseline: (data: UserData) => void;
+  setBaseline: (data: UserData, revision?: string | null) => void;
+  /** The stored config the baseline is, which a save must still match. */
+  revision: string | null;
   /** Null unless it belongs to the configuration currently held. */
   pendingDraft: Draft | null;
   restoreDraft: () => void;
@@ -680,10 +682,15 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   // A save leaves userData untouched, so this re-runs the draft check.
   const [baselineVersion, setBaselineVersion] = React.useState(0);
 
-  const setBaseline = React.useCallback((data: UserData) => {
-    baselineRef.current = data;
-    setBaselineVersion((v) => v + 1);
-  }, []);
+  const [revision, setRevision] = React.useState<string | null>(null);
+  const setBaseline = React.useCallback(
+    (data: UserData, next?: string | null) => {
+      baselineRef.current = data;
+      if (next !== undefined) setRevision(next);
+      setBaselineVersion((v) => v + 1);
+    },
+    []
+  );
 
   const statusApplied = React.useRef(false);
 
@@ -771,6 +778,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     (data: ((prev: UserData) => UserData | null) | null) => {
       const reset = () => {
         baselineRef.current = anonBaselineRef.current;
+        setRevision(null);
         return anonBaselineRef.current;
       };
       if (data === null) {
@@ -796,6 +804,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       encryptedPassword,
       setEncryptedPassword,
       setBaseline,
+      revision,
       pendingDraft: applicableDraft,
       restoreDraft,
       discardDraft,
@@ -808,6 +817,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       password,
       encryptedPassword,
       setBaseline,
+      revision,
       applicableDraft,
       restoreDraft,
       discardDraft,
