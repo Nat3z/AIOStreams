@@ -30,6 +30,7 @@ import {
   type UserData,
   type WatchScope,
   type WatchSessionRow,
+  watchScopeOf,
 } from '@aiostreams/core';
 import {
   jf,
@@ -46,7 +47,6 @@ import {
   userPasswordOf,
   bodyField,
   personasOf,
-  watchScopeOf,
   qs,
   resolveConfig,
   resolvePickerAlias,
