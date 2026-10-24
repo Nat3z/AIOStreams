@@ -34,6 +34,7 @@ import {
   validateVariants,
   withOwnAccountLock,
 } from '../variants/runtime.js';
+import { isSelfVariant } from '../variants/language.js';
 import { parseSyncedUrl } from './sync/index.js';
 import { ZodError } from 'zod';
 import {
@@ -271,13 +272,18 @@ export async function validateConfig(
 
   // A dangling link would degrade the user to the base config at sign-in.
   const checkLinked = (who: string, linked: string[]) => {
-    if (linked.length > appConfig.userLimits.variants.max) {
+    const variants = linked.map((id) =>
+      config.variants?.find((v) => v.id === id)
+    );
+    // Their own variant sits on top of the owner's, outside the quota.
+    const owned = variants.filter((v) => !v || !isSelfVariant(v)).length;
+    if (owned > appConfig.userLimits.variants.max) {
       throw new Error(
-        `${who} links ${linked.length} variants, but the maximum is ${appConfig.userLimits.variants.max}`
+        `${who} links ${owned} variants, but the maximum is ${appConfig.userLimits.variants.max}`
       );
     }
-    for (const id of linked) {
-      const variant = config.variants?.find((v) => v.id === id);
+    for (const [i, id] of linked.entries()) {
+      const variant = variants[i];
       if (!variant) throw new Error(`${who} links to unknown variant "${id}"`);
       if (variant.enabled === false) {
         throw new Error(`${who} links to disabled variant "${id}"`);
