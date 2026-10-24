@@ -29,6 +29,7 @@ import {
   type Profile,
   type UserData,
   type WatchSessionRow,
+  watchScopeOf,
 } from '@aiostreams/core';
 import {
   jf,
@@ -40,7 +41,6 @@ import {
   userUnlocks,
   userPasswordOpens,
   bodyField,
-  watchScopeOf,
   qs,
   resolveConfig,
   resolvePickerAlias,
