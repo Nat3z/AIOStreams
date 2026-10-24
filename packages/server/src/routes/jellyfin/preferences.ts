@@ -75,6 +75,10 @@ const isRanking = (all: readonly string[]) => (v: unknown) =>
   v.length <= all.length &&
   new Set(v).size === v.length &&
   v.every((t) => all.includes(t));
+const isIdList = (v: unknown) =>
+  Array.isArray(v) &&
+  v.length <= 200 &&
+  v.every((id) => typeof id === 'string' && id.length <= 256);
 const isLanguageList = (v: unknown) =>
   Array.isArray(v) && v.length <= 10 && v.every((l) => isLanguage(l) && l);
 
@@ -92,10 +96,8 @@ const USER_PREFERENCES: Record<string, (value: unknown) => boolean> = {
   RememberAudioSelections: (v) => typeof v === 'boolean',
   RememberSubtitleSelections: (v) => typeof v === 'boolean',
   EnableNextEpisodeAutoPlay: (v) => typeof v === 'boolean',
-  OrderedViews: (v) =>
-    Array.isArray(v) &&
-    v.length <= 200 &&
-    v.every((id) => typeof id === 'string' && id.length <= 256),
+  OrderedViews: isIdList,
+  MyMediaExcludes: isIdList,
 };
 
 function userPreferences(body: unknown): Record<string, unknown> {
