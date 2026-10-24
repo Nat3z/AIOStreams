@@ -705,6 +705,10 @@ msgstr "Badges"
 msgid "Bar"
 msgstr "Bar"
 
+#: src/pages/settings/interface.tsx
+msgid "Because you watched"
+msgstr "Because you watched"
+
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr "Before the end"
@@ -4670,8 +4674,8 @@ msgid "The open-source software in this app, and the licence of each."
 msgstr "The open-source software in this app, and the licence of each."
 
 #: src/pages/settings/interface.tsx
-msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
-msgstr "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
+msgstr "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
 
 #: src/components/remote-sheet.tsx
 msgid "The other device could not be reached"
