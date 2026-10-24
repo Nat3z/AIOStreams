@@ -672,14 +672,18 @@ export class WatchStateRepository {
     scope: WatchScope,
     kinds?: WatchKind[]
   ): Promise<WatchStateRow[]> {
+    // Filtered in SQL, so a kind with fewer rows isn't crowded past the limit.
+    const kindFilter = kinds?.length
+      ? sql` AND kind IN (${join(kinds.map((k) => sql`${k}`))})`
+      : raw('');
     const rows = await getDb().query<DbRow>(
       sql`SELECT * FROM watch_state
            WHERE uuid = ${scope.uuid} AND persona = ${scope.persona}
-             AND played = 1
+             AND played = 1${kindFilter}
            ORDER BY sort_at DESC
            LIMIT 500`
     );
-    return filterKinds(rows.map(toRow), kinds);
+    return rows.map(toRow);
   }
 
   static async listForSeries(
