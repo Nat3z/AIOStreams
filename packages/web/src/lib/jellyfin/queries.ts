@@ -17,7 +17,6 @@ import { episodeMarks, lacksDetails, pickable } from '@/lib/format';
 import type {
   BaseItemDto,
   BaseItemDtoQueryResult,
-  RecommendationDto,
   SearchHintResult,
 } from './types';
 
@@ -275,23 +274,6 @@ export function usePersonItems(personId: string, types: string) {
   });
 }
 
-/** "Because you watched" and "Recommended for you" rows, from the user's history. */
-export function useRecommendations() {
-  const { client, user } = useSession();
-  return useQuery({
-    queryKey: [...useKey(), 'recommendations'],
-    meta: { cache: 'home' },
-    queryFn: () =>
-      client.get<RecommendationDto[]>('/Movies/Recommendations', {
-        userId: user.Id,
-        ItemLimit: 20,
-        AIOStreamsFeeds: true,
-      }),
-    staleTime: 10 * 60_000,
-    enabled: useFeature('feeds'),
-  });
-}
-
 /** The next episode of each show the user is caught up on. */
 export function useUpcoming() {
   const { client, user } = useSession();
@@ -352,7 +334,7 @@ export function needsGenre(view: BaseItemDto | undefined): boolean {
   return extension?.aiostreams?.genreRequired === true;
 }
 
-/** A "Recommended for you" library, empty until something is watched. */
+/** A library made from the user's history, empty until something is watched. */
 export function isRecommended(view: BaseItemDto | undefined): boolean {
   const extension = view as { aiostreams?: { recommended?: boolean } };
   return extension?.aiostreams?.recommended === true;

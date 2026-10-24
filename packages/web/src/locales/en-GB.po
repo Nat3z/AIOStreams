@@ -737,10 +737,6 @@ msgstr "Badges"
 msgid "Bar"
 msgstr "Bar"
 
-#: src/app/home/page.tsx
-msgid "Because you watched"
-msgstr "Because you watched"
-
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Before the end"
