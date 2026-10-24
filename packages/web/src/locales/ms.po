@@ -717,10 +717,6 @@ msgstr "Lencana"
 msgid "Bar"
 msgstr "Bar"
 
-#: src/app/home/page.tsx
-msgid "Because you watched"
-msgstr ""
-
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Sebelum penamat"
