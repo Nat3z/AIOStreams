@@ -2102,6 +2102,10 @@ msgstr "Keep"
 msgid "Keep in step by changing speed"
 msgstr "Keep in step by changing speed"
 
+#: src/pages/welcome.tsx
+msgid "Keep track"
+msgstr "Keep track"
+
 #: src/components/party/party-sheet.tsx
 msgid "Keeping in step"
 msgstr "Keeping in step"
@@ -2956,6 +2960,10 @@ msgstr "Optional."
 #: src/components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Optional. An image address, shown in place of the label."
+
+#: src/pages/welcome.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
+msgstr "Optional. Connect an account and what you watch here is marked there, and the other way round."
 
 #: src/pages/welcome.tsx
 msgid "Optional. Each change saves as you make it, and you can change it later in settings."
