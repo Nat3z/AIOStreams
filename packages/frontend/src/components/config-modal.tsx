@@ -73,7 +73,7 @@ export function ConfigModal({
     async (loadUuid: string, loadPassword: string, remember = false) => {
       const result = await loadRawUserConfig(loadUuid, loadPassword);
       setUserData(() => result.userData);
-      setBaseline(result.userData);
+      setBaseline(result.userData, result.revision ?? null);
       setUuid(loadUuid);
       setPassword(loadPassword);
       setEncryptedPassword(result.encryptedPassword);
