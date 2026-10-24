@@ -730,10 +730,6 @@ msgstr ""
 msgid "Bar"
 msgstr ""
 
-#: src/pages/home.tsx
-msgid "Because you watched"
-msgstr ""
-
 #: src/pages/settings/playback.tsx
 msgid "Before the end"
 msgstr ""
