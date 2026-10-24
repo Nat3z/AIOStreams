@@ -84,6 +84,7 @@ type IgnoredKeys =
   | 'healthResults'
   | 'variantSelectorLocation'
   | 'installUrl'
+  | 'watchPersona'
   | 'addons'
   | 'proxies'
   | 'ip'

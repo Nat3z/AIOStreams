@@ -57,6 +57,8 @@ const FEATURES = {
   profile: 1,
   /** `/Movies/Recommendations?AIOStreamsFeeds=true` answers only rows made from the user's history. */
   feeds: 1,
+  /** The "Recommended for you" libraries say so, as `aiostreams.recommended`. */
+  recommended: 1,
   /** CORS lets the `X-AIOStreams-*` headers through. */
   clientHints: 1,
 } as const;
