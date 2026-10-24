@@ -652,6 +652,8 @@ interface UserDataContextType {
   setBaseline: (data: UserData, revision?: string | null) => void;
   /** The stored config the baseline is, which a save must still match. */
   revision: string | null;
+  /** For a change that re-stores the baseline as is, like a new password. */
+  setRevision: (revision: string | null) => void;
   unsaved: boolean;
   /** The top-level fields that differ from the baseline. */
   changedFields: readonly string[];
@@ -847,6 +849,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       unsaved,
       changedFields,
       revision,
+      setRevision,
       pendingDraft: applicableDraft,
       restoreDraft,
       discardDraft,
