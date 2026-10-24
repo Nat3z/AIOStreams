@@ -2224,6 +2224,10 @@ msgstr "Διατήρηση"
 msgid "Keep in step by changing speed"
 msgstr "Συγχρονισμός με αλλαγή ταχύτητας"
 
+#: src/app/welcome/page.tsx
+msgid "Keep track"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "Keeping in step"
 msgstr "Γίνεται συγχρονισμός"
@@ -3143,6 +3147,10 @@ msgstr "Προαιρετικό."
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Προαιρετικό. Διεύθυνση εικόνας που εμφανίζεται στη θέση του ονόματος της ετικέτας."
+
+#: src/app/welcome/page.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
+msgstr ""
 
 #: src/app/welcome/page.tsx
 msgid "Optional. Each change saves as you make it, and you can change it later in settings."

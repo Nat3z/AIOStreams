@@ -2224,6 +2224,10 @@ msgstr "Manter"
 msgid "Keep in step by changing speed"
 msgstr "Manter a sincronia ajustando a velocidade"
 
+#: src/app/welcome/page.tsx
+msgid "Keep track"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "Keeping in step"
 msgstr "Sincronização da sessão"
@@ -3143,6 +3147,10 @@ msgstr "Opcional."
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Opcional. Endereço de uma imagem exibida no lugar do rótulo."
+
+#: src/app/welcome/page.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
+msgstr ""
 
 #: src/app/welcome/page.tsx
 msgid "Optional. Each change saves as you make it, and you can change it later in settings."

@@ -2239,6 +2239,10 @@ msgstr "Conserver"
 msgid "Keep in step by changing speed"
 msgstr "Synchroniser en modifiant la vitesse"
 
+#: src/app/welcome/page.tsx
+msgid "Keep track"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "Keeping in step"
 msgstr "Synchronisation en cours"
@@ -3166,6 +3170,10 @@ msgstr "Facultatif."
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Facultatif. Adresse d'une image affichée à la place du libellé."
+
+#: src/app/welcome/page.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
+msgstr ""
 
 #: src/app/welcome/page.tsx
 msgid "Optional. Each change saves as you make it, and you can change it later in settings."
