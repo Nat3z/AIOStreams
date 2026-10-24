@@ -55,13 +55,17 @@ function shownLibraries(
   };
 }
 
-export function useViews() {
+/** The user's libraries; `includeHidden` for the settings that unhide them. */
+export function useViews(includeHidden = false) {
   const { client, user } = useSession();
   return useQuery({
-    queryKey: [...useKey(), 'views'],
+    queryKey: [...useKey(), 'views', includeHidden],
     meta: { cache: 'home' },
     queryFn: () =>
-      client.get<BaseItemDtoQueryResult>('/UserViews', { userId: user.Id }),
+      client.get<BaseItemDtoQueryResult>('/UserViews', {
+        userId: user.Id,
+        includeHidden: includeHidden || undefined,
+      }),
     select: shownLibraries,
     staleTime: 5 * 60_000,
   });
