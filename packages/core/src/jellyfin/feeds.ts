@@ -1,6 +1,7 @@
 import pLimit from 'p-limit';
 import { Cache } from '../utils/cache.js';
 import type { MetaPreview, UserData } from '../db/schemas.js';
+import { BECAUSE_CATALOG_PREFIX } from '../utils/constants.js';
 import type { AIOStreams } from '../main/index.js';
 import { WatchStateRepository } from '../db/repositories/watch-state.js';
 import type { WatchScope } from '../watch-state/types.js';
@@ -8,13 +9,14 @@ import { IdMappingDataset } from '../metadata/id-mappings.js';
 import { AnimeDatabase } from '../anime-database/index.js';
 import { IdParser } from '../utils/id-parser.js';
 import type { TMDBMetadata, TMDBTitle } from '../metadata/tmdb.js';
-import { providerIdsFor } from './dto.js';
+import { providerIdsFor, type Catalog } from './dto.js';
 import { titlePreviews, tmdbFor } from './tmdb-titles.js';
 
 /*
  * What someone watched, made into a "Recommended for you" catalog any client
- * lists and "Because you watched" rows. TMDB's per-title recommendations are
- * the source; nothing they've already seen is offered.
+ * lists, and "Because you watched" catalogs and rows for Jellyfin. TMDB's
+ * per-title recommendations are the source; nothing they've already seen is
+ * offered.
  */
 
 export interface Seed {
@@ -23,6 +25,8 @@ export interface Seed {
   type: string;
   id: string;
   tmdbId: number;
+  /** As it was watched, for naming its catalog. */
+  name?: string;
 }
 
 /** A "Because you watched" row. */
@@ -92,7 +96,15 @@ async function historyOf(
     if (watched.has(key)) continue;
     watched.add(key);
     if (seeds.filter((s) => s.kind === kind).length < SEEDS)
-      seeds.push({ kind, type: row.mediaType, id: row.baseId, tmdbId });
+      seeds.push({
+        kind,
+        type: row.mediaType,
+        id: row.baseId,
+        tmdbId,
+        name:
+          (kind === 'movie' ? row.snapshot?.name : row.snapshot?.seriesName) ||
+          undefined,
+      });
   }
   return { seeds, watched };
 }
@@ -174,6 +186,22 @@ async function picksFor(
   const unseen = lists.map((list) =>
     list.filter((t) => !watched.has(keyOf(t)))
   );
+  // Imported history keeps no names, so the catalogs ask TMDB for theirs.
+  await Promise.all(
+    seeds.map((seed, i) =>
+      seed.name || unseen[i].length < MIN_ROW
+        ? undefined
+        : pool(async () => {
+            const id = IdParser.parse(`tmdb:${seed.tmdbId}`, seed.kind);
+            seed.name = id
+              ? await tmdb
+                  .getMetadata(id)
+                  .then((m) => m.title)
+                  .catch(() => undefined)
+              : undefined;
+          })
+    )
+  );
   const picks: Picks = { seeds, unseen, ranked: rank(unseen) };
   await picksCache.set(key, picks, PICKS_TTL);
   return picks;
@@ -216,4 +244,50 @@ export async function recommendedCatalog(
     picks.ranked.filter((t) => t.mediaType === mediaType),
     CATALOG_SIZE
   );
+}
+
+/** The seeds with enough unseen to fill a row, as the "Because you watched" rows pick them. */
+function becauseSeeds(picks: Picks): { seed: Seed; unseen: TMDBTitle[] }[] {
+  return picks.seeds
+    .map((seed, i) => ({ seed, unseen: picks.unseen[i] }))
+    .filter((s) => s.unseen.length >= MIN_ROW)
+    .slice(0, BECAUSE_ROWS);
+}
+
+/** A "Because you watched" catalog per recent title, named after it. */
+export async function becauseCatalogs(
+  engine: AIOStreams,
+  scope: WatchScope
+): Promise<Catalog[]> {
+  const tmdb = tmdbFor(engine.getUserData());
+  const picks = tmdb && (await picksFor(tmdb, scope));
+  if (!picks) return [];
+  return becauseSeeds(picks).flatMap(({ seed }) =>
+    seed.name
+      ? [
+          {
+            id: `${BECAUSE_CATALOG_PREFIX}${seed.id}`,
+            type: seed.kind,
+            name: `Because you watched ${seed.name}`,
+          },
+        ]
+      : []
+  );
+}
+
+export async function becauseCatalog(
+  engine: AIOStreams,
+  scope: WatchScope,
+  type: string,
+  seedId: string
+): Promise<MetaPreview[]> {
+  const tmdb = tmdbFor(engine.getUserData());
+  const picks = tmdb && (await picksFor(tmdb, scope));
+  const found = picks
+    ? becauseSeeds(picks).find(
+        (s) => s.seed.id === seedId && s.seed.kind === type
+      )
+    : undefined;
+  if (!tmdb || !found) return [];
+  return openable(engine, tmdb, found.unseen, CATALOG_SIZE);
 }
