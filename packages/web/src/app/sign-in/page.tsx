@@ -161,7 +161,7 @@ function signInCopy(
     return pinSignIn
       ? { help: t`Use your PIN.`, username: t`User name`, password: t`PIN` }
       : {
-          help: t`Use Quick Connect, or the configuration’s password.`,
+          help: t`Use Quick Connect.`,
           username: t`User name`,
           password: t`Password`,
         };
@@ -175,8 +175,8 @@ function signInCopy(
     };
   const help = user
     ? pinSignIn
-      ? t`Use your PIN, or the configuration’s password.`
-      : t`Use the configuration’s password.`
+      ? t`Use your PIN.`
+      : t`Enter your password.`
     : pinSignIn
       ? t`Use your user name and PIN, or the configuration’s UUID and its password.`
       : t`Use your configuration’s UUID or alias and its password.`;
@@ -662,7 +662,7 @@ function SecretPrompt({
           {askPassword && (
             <PasswordInput
               label={t`Password`}
-              help={t`Theirs, or the configuration's. Needed to switch to this user.`}
+              help={t`Needed to switch to this user.`}
               autoFocus
               value={password}
               onValueChange={setPassword}
