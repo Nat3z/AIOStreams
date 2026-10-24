@@ -43,6 +43,7 @@ import publicBlocklistRouter from './routes/blocklist.js';
 import publicCommunityRouter from './routes/community.js';
 import webdavRouter from './routes/webdav.js';
 import { createJellyfinRouter } from './routes/jellyfin/index.js';
+import { trackerCallbackRouter } from './routes/jellyfin/trackers.js';
 import partyRouter from './party/routes.js';
 import { serveAvatar } from './utils/avatars.js';
 import { createNabRouter } from './routes/api/nab.js';
@@ -282,6 +283,7 @@ app.use('/jellyfin/u/:alias', jellyfinRouter);
 app.use('/jellyfin/:uuid/:encryptedPassword', jellyfinRouter);
 app.use('/jellyfin', jellyfinRouter);
 app.use('/party', partyRouter);
+app.use('/trackers', trackerCallbackRouter);
 
 // Content-hashed build assets. These filenames change on every content
 // change, so they are immutable and safe to cache aggressively. Deliberately
