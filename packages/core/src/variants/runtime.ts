@@ -27,6 +27,7 @@ import {
   compileCelScript,
   createCelBudget,
   CelError,
+  isSelfVariant,
   parseCelScript,
   VARIANT_ID_PATTERN,
   type CelDiagnostic,
@@ -228,10 +229,16 @@ export function validateVariants(
       'Config variants are not available on this instance. Remove them to save this configuration.'
     );
   }
-  if (variants.length > max) {
+  // Each user's own variant is bounded by the user limit, not the owner's quota.
+  const own = variants.filter((v) => !isSelfVariant(v));
+  if (own.length > max) {
     throw new Error(
-      `Too many config variants (${variants.length}); the maximum is ${max}.`
+      `Too many config variants (${own.length}); the maximum is ${max}.`
     );
+  }
+  const selfCount = variants.length - own.length;
+  if (selfCount > appConfig.jellyfin.maxPersonas + 1) {
+    throw new Error(`Too many users' own variants (${selfCount}).`);
   }
 
   const programs = new Map<string, CelProgram>();

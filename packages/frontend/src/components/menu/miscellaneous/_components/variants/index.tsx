@@ -14,6 +14,7 @@ import type { UserData } from '@aiostreams/core';
 import {
   applyCelProgram,
   createCelBudget,
+  isSelfVariant,
   parseCelScript,
 } from '../../../../../../../core/src/variants/language';
 import { useVariantWork } from '@/hooks/variants';
@@ -47,6 +48,8 @@ export function Variants() {
 
   const variants = userData.variants ?? [];
   const maxVariants = settings?.max ?? 10;
+  // Users' own variants don't count against the quota.
+  const used = variants.filter((v) => !isSelfVariant(v)).length;
 
   const updateVariants = (next: Variant[]) =>
     setUserData((prev) => ({ ...prev, variants: next }));
@@ -59,7 +62,7 @@ export function Variants() {
     );
 
   const addVariant = () => {
-    if (variants.length >= maxVariants) {
+    if (used >= maxVariants) {
       toast.error(`This instance allows at most ${maxVariants} variants.`);
       return;
     }
@@ -114,12 +117,12 @@ export function Variants() {
             rounded
             leftIcon={<FiPlus />}
             onClick={addVariant}
-            disabled={variants.length >= maxVariants}
+            disabled={used >= maxVariants}
           >
             Add variant
           </Button>
           <span className="text-xs text-[--muted]">
-            {variants.length} of {maxVariants} used
+            {used} of {maxVariants} used
           </span>
         </div>
       </div>
