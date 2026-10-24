@@ -206,9 +206,10 @@ export function updateSelf(
   patch: SelfProfilePatch
 ): Promise<void> {
   return serialised(uuid, async () => {
-    const userData = await UserRepository.getRawUser(uuid, configPassword);
-    if (!userData)
-      throw new constants.APIError(constants.ErrorCode.USER_INVALID_DETAILS);
+    const { userData, revision } = await UserRepository.getRawUserWithRevision(
+      uuid,
+      configPassword
+    );
     const user = storedUser(userData, personaId);
     if (!user)
       throw new constants.APIError(constants.ErrorCode.USER_INVALID_DETAILS);
@@ -244,7 +245,7 @@ export function updateSelf(
       writeSelfVariant(userData, user, persona, id, state);
     }
 
-    await UserRepository.updateUser(uuid, configPassword, userData);
+    await UserRepository.updateUser(uuid, configPassword, userData, revision);
   });
 }
 
