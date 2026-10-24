@@ -213,10 +213,8 @@ router.post('/', userCreateRateLimiter, async (req, res, next) => {
   }
   injectAccessKey(req, config);
   try {
-    const { uuid, encryptedPassword } = await UserRepository.createUser(
-      config,
-      password
-    );
+    const { uuid, encryptedPassword, revision } =
+      await UserRepository.createUser(config, password);
     res.status(201).json(
       createResponse({
         success: true,
@@ -224,6 +222,7 @@ router.post('/', userCreateRateLimiter, async (req, res, next) => {
         data: {
           uuid,
           encryptedPassword,
+          revision,
         },
       })
     );
