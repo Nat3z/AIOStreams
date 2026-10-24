@@ -22,6 +22,7 @@ import {
   validateHealthCheck,
   VariantSchema,
   type UserAnalyticsRange,
+  pruneSelfVariants,
   type UserData,
 } from '@aiostreams/core';
 import { z, ZodError } from 'zod';
@@ -288,6 +289,7 @@ router.put('/', async (req, res, next) => {
   try {
     config.uuid = uuid;
     injectAccessKey(req, config);
+    pruneSelfVariants(config);
     const newRevision = await UserRepository.updateUser(
       uuid,
       password,
