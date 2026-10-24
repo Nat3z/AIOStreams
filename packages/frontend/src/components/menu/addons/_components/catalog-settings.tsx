@@ -41,6 +41,7 @@ import { SearchIcon } from 'lucide-react';
 import { LuChevronDown } from 'react-icons/lu';
 import {
   SortableCatalogItem,
+  canMerge,
   hideFromHome,
   isMerged,
   onHome,
@@ -460,7 +461,7 @@ export function CatalogSettingsCard({
   const maxMergeSources =
     instanceStatus?.settings?.limits?.maxMergedCatalogSources ?? 10;
   const mergeable = visible.filter(
-    (c) => !isMerged(c) && selected.has(catalogKey(c))
+    (c) => canMerge(c) && selected.has(catalogKey(c))
   );
   const editMerged = useCallback(
     (id: string) => onMerge({ kind: 'edit', id }),
