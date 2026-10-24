@@ -22,6 +22,7 @@ import {
   validateHealthCheck,
   VariantSchema,
   type UserAnalyticsRange,
+  type UserData,
 } from '@aiostreams/core';
 import { z, ZodError } from 'zod';
 import {
@@ -129,11 +130,16 @@ router.get('/', async (req, res, next) => {
   const password = creds.password;
   const raw = req.query.raw;
   let userData = null;
+  let revision: string | undefined;
   try {
-    userData =
-      raw === 'true'
-        ? await UserRepository.getRawUser(uuid, password)
-        : await UserRepository.getUser(uuid, password);
+    if (raw === 'true') {
+      ({ userData, revision } = await UserRepository.getRawUserWithRevision(
+        uuid,
+        password
+      ));
+    } else {
+      userData = await UserRepository.getUser(uuid, password);
+    }
   } catch (error: any) {
     if (error instanceof APIError) {
       next(error);
@@ -169,6 +175,7 @@ router.get('/', async (req, res, next) => {
       data: {
         userData: userData,
         encryptedPassword: encryptedPassword,
+        revision,
       },
     })
   );
@@ -263,7 +270,10 @@ router.put('/', async (req, res, next) => {
   }
   const uuid = req.uuid || creds.uuid;
   const password = creds.password;
-  const { config } = req.body;
+  const { config, revision } = req.body as {
+    config?: UserData;
+    revision?: string;
+  };
   if (!config) {
     next(
       new APIError(
@@ -278,7 +288,12 @@ router.put('/', async (req, res, next) => {
   try {
     config.uuid = uuid;
     injectAccessKey(req, config);
-    const updatedUser = await UserRepository.updateUser(uuid, password, config);
+    const newRevision = await UserRepository.updateUser(
+      uuid,
+      password,
+      config,
+      typeof revision === 'string' ? revision : undefined
+    );
     syncTrackersAfterSave(req, uuid, password);
     res.status(200).json(
       createResponse({
@@ -286,7 +301,7 @@ router.put('/', async (req, res, next) => {
         detail: 'User updated successfully',
         data: {
           uuid,
-          userData: updatedUser,
+          revision: newRevision,
         },
       })
     );
