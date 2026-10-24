@@ -42,7 +42,9 @@ services:
       interval: 10s
 
   aiometadata:
-    image: ghcr.io/cedya77/aiometadata:3.7.0
+    # Nat3z/aiometadata, the personal fork, rebuilt by the nightly upstream sync.
+    build: ${AIOMETADATA_SRC:-../../aiometadata}
+    image: aiometadata:fork
     container_name: aio-aiometadata
     restart: unless-stopped
     environment:
@@ -61,8 +63,6 @@ services:
       ANILIST_REDIRECT_URI: ${BASE_URL:?}/trackers/anilist/callback
     volumes:
       - aiometadata_data:/app/addon/data
-      # Patched for 3.7.0 so a start sets AniList to watching; drop on upgrade.
-      - ./aiometadata/playbackHandler.js:/app/dist/server/lib/playbackHandler.js:ro
     depends_on:
       aiometadata-redis:
         condition: service_healthy
