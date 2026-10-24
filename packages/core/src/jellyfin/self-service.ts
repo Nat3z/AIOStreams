@@ -16,6 +16,7 @@ import {
   type UserData,
 } from '../db/index.js';
 import { constants, createLogger, getSimpleTextHash } from '../utils/index.js';
+import { SELF_VARIANT_MARKER as STATE_MARKER } from '../variants/language.js';
 
 const logger = createLogger('jellyfin');
 
@@ -66,8 +67,6 @@ export interface SelfState {
   preferences: SelfPreferences;
   addons: SelfAddon[];
 }
-
-const STATE_MARKER = '# self-service: ';
 
 /** The script that applies a user's own state, with the state itself kept as its first line. */
 function scriptFor(persona: JellyfinPersona | null, state: SelfState): string {
@@ -175,19 +174,26 @@ export interface SelfProfilePatch {
   addons?: { source: string; addons: SelfAddon[] };
 }
 
-// One edit at a time per configuration, so two users saving together both land.
-const queues = new Map<string, Promise<unknown>>();
-
-function serialised<T>(uuid: string, task: () => Promise<T>): Promise<T> {
-  const previous = queues.get(uuid) ?? Promise.resolve();
-  const run = previous.then(task, task);
-  const tail = run.catch(() => undefined);
-  queues.set(uuid, tail);
-  void tail.then(() => {
-    if (queues.get(uuid) === tail) queues.delete(uuid);
-  });
-  return run;
+/** Runs tasks sharing a key one after another, within this process. */
+export function serialQueue(): <T>(
+  key: string,
+  task: () => Promise<T>
+) => Promise<T> {
+  const queues = new Map<string, Promise<unknown>>();
+  return <T>(key: string, task: () => Promise<T>): Promise<T> => {
+    const previous = queues.get(key) ?? Promise.resolve();
+    const run = previous.then(task, task);
+    const tail = run.catch(() => undefined);
+    queues.set(key, tail);
+    void tail.then(() => {
+      if (queues.get(key) === tail) queues.delete(key);
+    });
+    return run;
+  };
 }
+
+// One edit at a time per configuration, so two users saving together both land.
+const serialised = serialQueue();
 
 /**
  * Applies a user's change to their own part of the configuration and saves it.
