@@ -214,6 +214,8 @@ import type {
 interface LoadUserResponse {
   userData: UserData;
   encryptedPassword: string;
+  /** The stored config's, which a save sends back; raw loads only. */
+  revision?: string;
 }
 
 interface CreateUserResponse {
@@ -223,7 +225,7 @@ interface CreateUserResponse {
 
 interface UpdateUserResponse {
   uuid: string;
-  userData: UserData;
+  revision: string;
 }
 
 interface ResolvePatternsResponse {
@@ -367,10 +369,11 @@ export async function createUserConfig(config: UserData, password: string) {
 export async function updateUserConfig(
   uuid: string,
   config: UserData,
-  password: string | null
+  password: string | null,
+  revision: string | null
 ) {
   return api<UpdateUserResponse>('PUT /user', {
-    body: { config },
+    body: { config, revision: revision ?? undefined },
     ...configAuth(uuid, password),
   });
 }
