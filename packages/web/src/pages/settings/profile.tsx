@@ -4,6 +4,8 @@ import { Trans } from '@lingui/react/macro';
 import { toast } from 'sonner';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { LuCopy, LuExternalLink, LuTrash2 } from 'react-icons/lu';
+import { SiAnilist, SiSimkl } from 'react-icons/si';
+import type { IconType } from 'react-icons';
 import { Button, IconButton } from '@aiostreams/ui/button';
 import { Modal } from '@aiostreams/ui/modal';
 import { Select } from '@aiostreams/ui/select';
@@ -138,6 +140,7 @@ export function ProfileSection() {
     <>
       <IdentityCard profile={profile.data} />
       <PreferencesCard preferences={profile.data.preferences} />
+      <TrackersCard />
       <StremioCard hasPassword={profile.data.hasPassword} />
     </>
   );
@@ -554,6 +557,126 @@ export function PreferencesCard({ preferences }: { preferences: Preferences }) {
         value={String(preferences.resultLimit ?? ANY)}
         onValueChange={(v) => set({ resultLimit: number(v) })}
       />
+    </SettingsCard>
+  );
+}
+
+type TrackerProvider = 'simkl' | 'anilist';
+
+interface Trackers {
+  available: boolean;
+  shared: boolean;
+  accounts: Record<TrackerProvider, string | null>;
+}
+
+const TRACKERS: { id: TrackerProvider; name: string; icon: IconType }[] = [
+  // eslint-disable-next-line lingui/no-unlocalized-strings -- brand names
+  { id: 'simkl', name: 'Simkl', icon: SiSimkl },
+  { id: 'anilist', name: 'AniList', icon: SiAnilist },
+];
+
+function TrackersCard() {
+  const { client } = useSession();
+  const queryClient = useQueryClient();
+  const key = [...useProfileKey(), 'trackers'] as const;
+  const trackers = useQuery({
+    queryKey: key,
+    queryFn: () => client.get<Trackers>('/AIOStreams/Profile/Trackers'),
+  });
+  const refetch = trackers.refetch;
+  const [waiting, setWaiting] = React.useState<TrackerProvider | null>(null);
+  const connect = useMutation({
+    mutationFn: (provider: TrackerProvider) =>
+      client.post<{ url: string }>(`/AIOStreams/Profile/Trackers/${provider}`),
+  });
+  const disconnect = useMutation({
+    mutationFn: (provider: TrackerProvider) =>
+      client.delete<void>(`/AIOStreams/Profile/Trackers/${provider}`),
+    onError: (error) => toast.error(error.message),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
+  });
+
+  // The sign-in ends on our own page, which says so here and closes itself.
+  React.useEffect(() => {
+    const channel = new BroadcastChannel('aiostreams-trackers');
+    const done = () => {
+      setWaiting(null);
+      void refetch();
+    };
+    channel.onmessage = done;
+    // Closed partway through, so nothing comes.
+    window.addEventListener('focus', done);
+    return () => {
+      channel.close();
+      window.removeEventListener('focus', done);
+    };
+  }, [refetch]);
+
+  const signIn = (provider: TrackerProvider) => {
+    // Opened now, while the click still allows a new window.
+    const popup = window.open('', 'aiostreams-tracker', 'width=520,height=720');
+    setWaiting(provider);
+    connect.mutate(provider, {
+      onSuccess: ({ url }) => {
+        if (popup) popup.location.href = url;
+        else window.location.href = url;
+      },
+      onError: (error) => {
+        popup?.close();
+        setWaiting(null);
+        toast.error(error.message);
+      },
+    });
+  };
+
+  const data = trackers.data;
+  if (!data?.available) return null;
+  return (
+    <SettingsCard
+      name="profile-trackers"
+      title={t`Tracking`}
+      description={
+        data.shared
+          ? t`You share the main history, so what you watch is tracked on its accounts.`
+          : t`What you watch is marked on these, and what you mark there shows here.`
+      }
+    >
+      {TRACKERS.map(({ id, name, icon: Icon }) => {
+        const account = data.accounts[id];
+        return (
+          <SettingsRow
+            key={id}
+            label={
+              <span className="flex items-center gap-3">
+                <Icon className="size-5 shrink-0 text-[--muted]" />
+                {name}
+              </span>
+            }
+            help={account ? t`Signed in as ${account}` : t`Not connected`}
+          >
+            {account ? (
+              <Button
+                intent="alert-subtle"
+                className={button}
+                loading={disconnect.isPending && disconnect.variables === id}
+                onClick={() => disconnect.mutate(id)}
+              >
+                <Trans>Disconnect</Trans>
+              </Button>
+            ) : (
+              <Button
+                intent="gray-outline"
+                className={button}
+                disabled={data.shared}
+                loading={waiting === id}
+                onClick={() => signIn(id)}
+              >
+                <Trans>Connect</Trans>
+              </Button>
+            )}
+          </SettingsRow>
+        );
+      })}
     </SettingsCard>
   );
 }
