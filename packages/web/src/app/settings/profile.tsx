@@ -94,12 +94,16 @@ export function useProfile() {
 
 /** Saves a change, shown at once and put back if the server refuses it. */
 export function useSaveProfile() {
-  const { client } = useSession();
+  const { client, renew } = useSession();
   const queryClient = useQueryClient();
   const key = useProfileKey();
   return useMutation({
+    // A PIN change answers with this session's renewed token.
     mutationFn: (change: ProfileChange) =>
-      client.post<void>('/AIOStreams/Profile', change),
+      client.post<{ AccessToken: string } | undefined>(
+        '/AIOStreams/Profile',
+        change
+      ),
     onMutate: async (change) => {
       await queryClient.cancelQueries({ queryKey: key });
       const before = queryClient.getQueryData<Profile>(key);
@@ -119,8 +123,11 @@ export function useSaveProfile() {
       toast.error(error.message);
     },
     // The name and picture show elsewhere too, as the user picker lists them.
-    onSettled: () =>
-      queryClient.invalidateQueries({ queryKey: key.slice(0, 3) }),
+    // Not after a renewal: the old token's refetch would sign the user out.
+    onSettled: (result) =>
+      result
+        ? renew(result.AccessToken)
+        : queryClient.invalidateQueries({ queryKey: key.slice(0, 3) }),
   });
 }
 
