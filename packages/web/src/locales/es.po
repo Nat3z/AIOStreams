@@ -2016,6 +2016,10 @@ msgstr "Ocultos"
 msgid "Hide"
 msgstr "Ocultar"
 
+#: src/app/settings/interface.tsx
+msgid "Hide {name}"
+msgstr ""
+
 #: src/app/history/page.tsx
 msgid "Hide episodes"
 msgstr "Ocultar episodios"
@@ -4328,6 +4332,7 @@ msgid "Shortcuts"
 msgstr "Atajos"
 
 #. A dot under the banner that brings this title up
+#: src/app/settings/interface.tsx
 #: src/components/media/hero.tsx
 msgid "Show {name}"
 msgstr "{name} de la serie"
@@ -5095,7 +5100,7 @@ msgid "The open-source software in this app, and the licence of each."
 msgstr "El software de código abierto presente en esta aplicación, así como la licencia de cada uno."
 
 #: src/app/settings/interface.tsx
-msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home."
 msgstr ""
 
 #: src/features/remote/remote-sheet.tsx

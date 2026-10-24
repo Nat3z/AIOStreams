@@ -2009,6 +2009,10 @@ msgstr "Κρυφό"
 msgid "Hide"
 msgstr "Απόκρυψη"
 
+#: src/app/settings/interface.tsx
+msgid "Hide {name}"
+msgstr ""
+
 #: src/app/history/page.tsx
 msgid "Hide episodes"
 msgstr "Απόκρυψη επεισοδίων"
@@ -4315,6 +4319,7 @@ msgid "Shortcuts"
 msgstr "Συντομεύσεις"
 
 #. A dot under the banner that brings this title up
+#: src/app/settings/interface.tsx
 #: src/components/media/hero.tsx
 msgid "Show {name}"
 msgstr "Εμφάνιση του {name}"
@@ -5079,7 +5084,7 @@ msgid "The open-source software in this app, and the licence of each."
 msgstr "Το λογισμικό ανοιχτού κώδικα αυτής της εφαρμογής και η άδεια χρήσης του καθενός."
 
 #: src/app/settings/interface.tsx
-msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home."
 msgstr ""
 
 #: src/features/remote/remote-sheet.tsx

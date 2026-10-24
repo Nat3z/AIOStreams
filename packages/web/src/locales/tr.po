@@ -2020,6 +2020,10 @@ msgstr "Gizli"
 msgid "Hide"
 msgstr "Gizle"
 
+#: src/app/settings/interface.tsx
+msgid "Hide {name}"
+msgstr ""
+
 #: src/app/history/page.tsx
 msgid "Hide episodes"
 msgstr "Bölümleri gizle"
@@ -4340,6 +4344,7 @@ msgid "Shortcuts"
 msgstr "Kısayollar"
 
 #. A dot under the banner that brings this title up
+#: src/app/settings/interface.tsx
 #: src/components/media/hero.tsx
 msgid "Show {name}"
 msgstr "{name} göster"
@@ -5109,7 +5114,7 @@ msgid "The open-source software in this app, and the licence of each."
 msgstr "Bu uygulamadaki açık kaynaklı yazılımlar ve her birinin lisansı."
 
 #: src/app/settings/interface.tsx
-msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end."
+msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home."
 msgstr ""
 
 #: src/features/remote/remote-sheet.tsx

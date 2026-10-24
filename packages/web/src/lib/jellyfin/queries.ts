@@ -45,19 +45,26 @@ function shownLibraries(
   };
 }
 
-function useViewsOptions() {
+function useViewsOptions(includeHidden = false) {
   const { client, user } = useSession();
   return queryOptions({
-    queryKey: [...useKey(), 'views'],
+    queryKey: [...useKey(), 'views', includeHidden],
     meta: { cache: 'home' },
     queryFn: () =>
-      client.get<BaseItemDtoQueryResult>('/UserViews', { userId: user.Id }),
+      client.get<BaseItemDtoQueryResult>('/UserViews', {
+        userId: user.Id,
+        includeHidden: includeHidden || undefined,
+      }),
     staleTime: 5 * 60_000,
   });
 }
 
-export function useViews() {
-  return useQuery({ ...useViewsOptions(), select: shownLibraries });
+/** The user's libraries; `includeHidden` for the settings that unhide them. */
+export function useViews(includeHidden = false) {
+  return useQuery({
+    ...useViewsOptions(includeHidden),
+    select: shownLibraries,
+  });
 }
 
 const liveTvView = (result: BaseItemDtoQueryResult) =>
