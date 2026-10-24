@@ -29,6 +29,8 @@ interface SessionValue {
   clientFor(userId: string): Promise<JellyfinClient>;
   switchUser(): void;
   signOut(): void;
+  /** Carries on with a token the server renewed, as after a PIN change. */
+  renew(token: string): void;
   /** Only in the standalone build. */
   changeServer?: () => void;
 }
@@ -439,6 +441,21 @@ export function useSessionPhase(base: string) {
     setPhase({ kind: 'signed-out' });
   }, [base, phase, queryClient]);
 
+  const renew = React.useCallback(
+    (token: string) => {
+      if (phase.kind !== 'ready') return;
+      const userId = phase.user.Id!;
+      saveCredentials(base, {
+        serverId: phase.user.ServerId ?? '',
+        token,
+        userId,
+      });
+      tokens.set(base, userId, token);
+      setPhase({ ...phase, client: phase.client.withToken(token) });
+    },
+    [base, phase]
+  );
+
   // A token the server stops taking ends the session, rather than failing every page.
   React.useEffect(() => {
     if (phase.kind !== 'ready') return;
@@ -459,6 +476,7 @@ export function useSessionPhase(base: string) {
     signInWithQuickConnect,
     switchUser,
     signOut,
+    renew,
     retry,
   };
 }
@@ -468,6 +486,7 @@ export function SessionProvider({
   user,
   switchUser,
   signOut,
+  renew,
   changeServer,
   children,
 }: {
@@ -475,6 +494,7 @@ export function SessionProvider({
   user: UserDto;
   switchUser: () => void;
   signOut: () => void;
+  renew: (token: string) => void;
   changeServer?: () => void;
   children: React.ReactNode;
 }) {
@@ -499,8 +519,16 @@ export function SessionProvider({
   );
 
   const value = React.useMemo(
-    () => ({ client, user, clientFor, switchUser, signOut, changeServer }),
-    [client, user, clientFor, switchUser, signOut, changeServer]
+    () => ({
+      client,
+      user,
+      clientFor,
+      switchUser,
+      signOut,
+      renew,
+      changeServer,
+    }),
+    [client, user, clientFor, switchUser, signOut, renew, changeServer]
   );
   return (
     <SessionContext.Provider value={value}>{children}</SessionContext.Provider>
