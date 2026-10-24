@@ -223,7 +223,11 @@ router.post(
           .json({ Message: 'This link has expired or was already used' });
         return;
       }
-      await saveSelf(ctx, { password });
+      await saveSelf(ctx, { password }).catch(async (error: unknown) => {
+        // Nothing was set, so the link still works for another try.
+        await UserInviteRepository.release(token);
+        throw error;
+      });
       logger.info(
         { uuid: ctx.uuid, persona: ctx.persona?.id },
         'user finished setting up'
