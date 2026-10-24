@@ -3,6 +3,7 @@ import {
   AIOStreams,
   APIError,
   Cache,
+  watchScopeOf,
   activateVariants,
   config as appConfig,
   constants,
@@ -297,12 +298,6 @@ export async function userForToken(token: string): Promise<TokenUser | null> {
   };
 }
 
-export function watchScopeOf(uuid: string, profile: Profile): WatchScope {
-  return profile.history === 'shared'
-    ? ownerScope(uuid)
-    : { uuid, profile: profile.id };
-}
-
 /** What a client types or posts back for a profile other than the owner: its id or name. */
 export function profileByName(
   userData: UserData,
@@ -590,7 +585,7 @@ async function buildContext(
   let scope: string | null = null;
   let views: Promise<ViewEntry[]> | null = null;
   let leafEvidence: Promise<LeafEvidence> | null = null;
-  const finalUserData = userData;
+  const finalUserData: UserData = { ...userData, watchPersona: persona?.id };
   const engineOf = (data: UserData) =>
     new AIOStreams(data, {
       skipFailedAddons: true,

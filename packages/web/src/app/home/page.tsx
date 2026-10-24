@@ -9,6 +9,7 @@ import { cn } from '@aiostreams/ui/core/styling';
 import { useSession } from '@/lib/jellyfin/session';
 import {
   libraryTypes,
+  isRecommended,
   needsGenre,
   mergeRows,
   NEWEST,
@@ -69,9 +70,12 @@ const HERO_MAX = 10;
 /** The first movie and series catalogs, or the first library without them. */
 function autoSources(views: BaseItemDto[]): FeaturedSource[] {
   const ids = ['movies', 'tvshows']
-    .map((kind) => views.find((v) => v.CollectionType === kind)?.Id)
+    .map(
+      (kind) =>
+        views.find((v) => v.CollectionType === kind && !isRecommended(v))?.Id
+    )
     .filter((id): id is string => !!id);
-  const fallback = views[0]?.Id;
+  const fallback = views.find((v) => !isRecommended(v))?.Id;
   return (ids.length ? ids : fallback ? [fallback] : []).map(
     (id) => `view:${id}`
   );
@@ -329,7 +333,7 @@ function UpcomingRow() {
   );
 }
 
-/** Rows made from what the user watched; none until they have. */
+/** "Because you watched" rows; none until something is. */
 function RecommendationRows() {
   const recommendations = useRecommendations();
   return (
@@ -348,16 +352,12 @@ function RecommendationRow({ row }: { row: RecommendationDto }) {
     <MediaRow
       id={`recommended:${row.CategoryId}`}
       title={
-        row.RecommendationType === 'SimilarToRecentlyPlayed' && seed ? (
-          <span className="inline-flex items-baseline gap-2">
-            <span className="text-[--muted]">
-              <Trans>Because you watched</Trans>
-            </span>
-            {seed}
+        <span className="inline-flex items-baseline gap-2">
+          <span className="text-[--muted]">
+            <Trans>Because you watched</Trans>
           </span>
-        ) : (
-          t`Recommended for you`
-        )
+          {seed}
+        </span>
       }
       shape="poster"
     >
