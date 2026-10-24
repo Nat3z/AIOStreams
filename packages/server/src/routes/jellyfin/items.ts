@@ -356,11 +356,28 @@ export async function itemsFromPreviews(
   return attachUserData(ctx, items);
 }
 
+/**
+ * The user's libraries, those they ordered first in their order; any they
+ * haven't placed, such as a catalog added since, follow in the addon's order.
+ */
 export async function viewItems(
   ctx: JellyfinRequestContext
 ): Promise<JellyfinItem[]> {
-  const views = await ctx.views();
-  return views.map((v) => buildView(ctx.build, v.catalog, v.collectionType));
+  const [views, config] = await Promise.all([
+    ctx.views(),
+    JellyfinRepository.getUserConfiguration(ctx.watch),
+  ]);
+  const items = views.map((v) =>
+    buildView(ctx.build, v.catalog, v.collectionType)
+  );
+  const ordered = Array.isArray(config?.OrderedViews)
+    ? (config.OrderedViews as string[])
+    : [];
+  const rank = (item: JellyfinItem): number => {
+    const i = ordered.indexOf(item.Id);
+    return i === -1 ? ordered.length : i;
+  };
+  return items.sort((a, b) => rank(a) - rank(b));
 }
 
 /** The libraries, Live TV when there are channels, and as in Jellyfin once the user has a playlist, their folder. */
