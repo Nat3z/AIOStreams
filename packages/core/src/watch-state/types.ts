@@ -5,6 +5,7 @@ import type {
   WatchSnapshot,
   WatchStateRow,
 } from '../db/repositories/watch-state.js';
+import type { Profile } from '../db/schemas.js';
 import { IdParser } from '../utils/id-parser.js';
 import { OWNER_ID } from '../utils/profiles.js';
 
@@ -27,6 +28,16 @@ export interface WatchScope {
 
 export function ownerScope(uuid: string): WatchScope {
   return { uuid, profile: OWNER_ID };
+}
+
+/** A profile with a history of its own keeps its watch state and preferences apart. */
+export function watchScopeOf(
+  uuid: string,
+  profile: Profile | null | undefined
+): WatchScope {
+  return profile && profile.history !== 'shared'
+    ? { uuid, profile: profile.id }
+    : ownerScope(uuid);
 }
 
 export function scopeOf(row: { uuid: string; profile: string }): WatchScope {
