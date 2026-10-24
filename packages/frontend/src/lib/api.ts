@@ -473,12 +473,16 @@ export async function deleteUserConfig(uuid: string, password: string) {
 export async function changePassword(
   uuid: string,
   currentPassword: string,
-  newPassword: string
+  newPassword: string,
+  revision: string | null
 ) {
-  return api<{ encryptedPassword: string }>('POST /user/password', {
-    body: { newPassword },
-    headers: { Authorization: basicAuthHeader(uuid, currentPassword) },
-  });
+  return api<{ encryptedPassword: string; revision: string }>(
+    'POST /user/password',
+    {
+      body: { newPassword, revision: revision ?? undefined },
+      headers: { Authorization: basicAuthHeader(uuid, currentPassword) },
+    }
+  );
 }
 
 /**
