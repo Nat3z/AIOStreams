@@ -451,6 +451,10 @@ msgstr "Menambah {name}"
 msgid "Added to {name}"
 msgstr "Ditambah ke {name}"
 
+#: src/pages/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
+
 #: src/pages/settings/account.tsx
 msgid "Addons, catalogs and users are set up on the configuration page."
 msgstr "Addon, katalog dan pengguna ditetapkan pada halaman konfigurasi."
@@ -462,6 +466,10 @@ msgstr "Alamat"
 #: src/pages/settings/playback.tsx
 msgid "Ads"
 msgstr "Iklan"
+
+#: src/pages/welcome.tsx
+msgid "Again"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "AIOStreams is a solo project built and maintained by me in my free time. If you find it useful, please consider supporting my work. Your donation helps me keep the project alive and improve it for everyone!"
@@ -624,6 +632,7 @@ msgid "At 0% there is no background."
 msgstr "Pada 0% tiada latar belakang."
 
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "At least {min} characters"
 msgstr ""
 
@@ -673,6 +682,7 @@ msgstr "Automatik menyenaraikan episod pada skrin sempit dan meletakkannya dalam
 #: src/pages/servers.tsx
 #: src/pages/sign-in.tsx
 #: src/pages/trailer.tsx
+#: src/pages/welcome.tsx
 msgid "Back"
 msgstr "Kembali"
 
@@ -976,16 +986,13 @@ msgid "Composer"
 msgstr "Penggubah"
 
 #: src/pages/settings/account.tsx
+#: src/pages/settings/profile.tsx
 msgid "Configuration"
 msgstr "Konfigurasi"
 
 #: src/components/send-report.tsx
 msgid "Configuration ids are left out of their copy too."
 msgstr "Id konfigurasi turut dikeluarkan daripada salinan mereka."
-
-#: src/pages/sign-in.tsx
-msgid "Configuration password"
-msgstr "Kata laluan konfigurasi"
 
 #: src/components/no-catalogs.tsx
 msgid "Configure"
@@ -996,6 +1003,7 @@ msgid "Confirm"
 msgstr "Sahkan"
 
 #: src/pages/servers.tsx
+#: src/pages/settings/profile.tsx
 msgid "Connect"
 msgstr "Sambung"
 
@@ -1009,6 +1017,7 @@ msgstr "Sambungan terputus"
 
 #: src/app.tsx
 #: src/pages/sign-in.tsx
+#: src/pages/welcome.tsx
 msgid "Continue"
 msgstr "Teruskan"
 
@@ -1367,6 +1376,10 @@ msgstr "Meninggal dunia {date} (umur {age})"
 msgid "Director"
 msgstr "Pengarah"
 
+#: src/pages/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
+
 #: src/pages/settings/apps.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -1680,6 +1693,10 @@ msgstr "Mencari versi"
 msgid "Finding versions of {name}…"
 msgstr "Mencari versi {name}…"
 
+#: src/pages/welcome.tsx
+msgid "Finish"
+msgstr ""
+
 #: src/pages/item.tsx
 msgid "First aired"
 msgstr "Mula bersiaran"
@@ -1904,6 +1921,10 @@ msgstr "Cara ini berfungsi"
 msgid "How to use the app and what each setting does."
 msgstr "Cara menggunakan aplikasi dan fungsi setiap tetapan."
 
+#: src/pages/welcome.tsx
+msgid "How you watch"
+msgstr ""
+
 #: src/lib/subtitles/style.ts
 msgid "Huge"
 msgstr "Sangat Besar"
@@ -2034,6 +2055,10 @@ msgstr "Kekalkan"
 msgid "Keep in step by changing speed"
 msgstr "Kekal segerak dengan mengubah kelajuan"
 
+#: src/pages/welcome.tsx
+msgid "Keep track"
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "Keeping in step"
 msgstr "Mengekalkan keseragaman"
@@ -2154,6 +2179,14 @@ msgstr "Membenarkan penyahsulit TV mengekalkan kesegeraan gambar dan bunyi secar
 #: src/pages/settings/playback.tsx
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "Membenarkan penyahsulit TV mengekalkan kesegeraan gambar dan bunyi secara kendiri."
+
+#: src/pages/settings/interface.tsx
+msgid "Libraries"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Library order"
+msgstr ""
 
 #: src/components/licenses.tsx
 msgid "Licences"
@@ -2415,6 +2448,7 @@ msgstr "Kekunci senyap"
 #: src/components/playlists.tsx
 #: src/components/version-settings.tsx
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome.tsx
 msgid "Name"
 msgstr "Nama"
 
@@ -2615,6 +2649,10 @@ msgstr "Kelajuan biasa"
 msgid "Not checked yet."
 msgstr "Belum disemak lagi."
 
+#: src/pages/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
 msgstr "tidak ditemui"
@@ -2812,6 +2850,7 @@ msgstr "Kelegapan: {backgroundOpacity}%"
 #: src/pages/settings/account.tsx
 #: src/pages/settings/apps.tsx
 #: src/pages/settings/downloads.tsx
+#: src/pages/settings/profile.tsx
 msgid "Open"
 msgstr "Buka"
 
@@ -2863,6 +2902,14 @@ msgstr "Pilihan."
 #: src/components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Pilihan. Alamat imej, dipaparkan menggantikan label."
+
+#: src/pages/welcome.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "Optional. Each change saves as you make it, and you can change it later in settings."
+msgstr ""
 
 #: src/components/version-settings.tsx
 msgid "Optional. Match only these parts of a version, named as the formatter names them, such as seMatched for the stream expression it matched."
@@ -2979,6 +3026,7 @@ msgstr "Lalukan audio bunyi sekeliling (Passthrough)"
 
 #: src/pages/settings/profile.tsx
 #: src/pages/sign-in.tsx
+#: src/pages/welcome.tsx
 msgid "Password"
 msgstr "Kata laluan"
 
@@ -3069,10 +3117,6 @@ msgstr "Pilih baris yang anda dengar pada {heardAt}."
 #: src/components/version-picker.tsx
 msgid "Pick the version to download."
 msgstr "Pilih versi untuk dimuat turun."
-
-#: src/pages/settings/profile.tsx
-msgid "Picture"
-msgstr ""
 
 #: src/pages/settings/apps.tsx
 msgid "Picture-in-picture"
@@ -3356,6 +3400,7 @@ msgstr "Treler sebelumnya"
 msgid "Producer"
 msgstr "Penerbit"
 
+#: src/components/layout.tsx
 #: src/pages/settings/index.tsx
 msgid "Profile"
 msgstr ""
@@ -3482,6 +3527,7 @@ msgstr "Dikeluarkan"
 msgid "Remember picks per show"
 msgstr "Ingat pilihan mengikut rancangan"
 
+#: src/components/avatar-picker.tsx
 #: src/components/version-settings.tsx
 #: src/pages/search.tsx
 #: src/pages/servers.tsx
@@ -4008,6 +4054,10 @@ msgstr "Bar sisi"
 msgid "Sign in"
 msgstr "Log masuk"
 
+#: src/pages/welcome.tsx
+msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
+msgstr ""
+
 #: src/pages/sign-in.tsx
 msgid "Sign in failed"
 msgstr "Log masuk gagal"
@@ -4028,6 +4078,10 @@ msgstr "Log keluar daripada pelayar ini?"
 #: src/pages/settings/account.tsx
 msgid "Sign out of this server?"
 msgstr "Log keluar daripada pelayan ini?"
+
+#: src/pages/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
 
 #: src/pages/servers.tsx
 msgid "Signed out"
@@ -4218,6 +4272,10 @@ msgstr "Stabil"
 msgid "Start a party"
 msgstr "Mulakan sesi tontonan"
 
+#: src/pages/welcome.tsx
+msgid "Start watching"
+msgstr ""
+
 #: src/components/remote-sheet.tsx
 msgid "Starting…"
 msgstr "Memulakan…"
@@ -4235,6 +4293,10 @@ msgstr "Statistik"
 #: src/pages/settings/apps.tsx
 msgid "Status"
 msgstr "Status"
+
+#: src/pages/welcome.tsx
+msgid "Step {number} of {total}"
+msgstr ""
 
 #: src/pages/settings/audio.tsx
 msgid "Stereo"
@@ -4487,10 +4549,6 @@ msgstr "Alamat tersebut tidak sah."
 msgid "That is not a valid regular expression."
 msgstr "Ungkapan nalar (regex) tidak sah."
 
-#: src/pages/settings/profile.tsx
-msgid "That isn't an address"
-msgstr ""
-
 #: src/lib/party/party.ts
 msgid "That party has ended."
 msgstr "Sesi tersebut telah tamat."
@@ -4534,10 +4592,6 @@ msgstr "{name} yang dipasang pada komputer ini, dalam tetingkapnya sendiri denga
 #: src/lib/servers.ts
 msgid "The address must start with http:// or https://."
 msgstr "Alamat mesti bermula dengan http:// atau https://."
-
-#: src/pages/settings/profile.tsx
-msgid "The address of an image. Empty shows your initial."
-msgstr ""
 
 #: src/pages/servers.tsx
 msgid "The address of the AIOStreams instance where you set up your addon. Other Jellyfin servers work too."
@@ -4618,6 +4672,10 @@ msgstr "Kaedah paparan mpv yang lebih lama untuk sistem Mac."
 #: src/components/licenses.tsx
 msgid "The open-source software in this app, and the licence of each."
 msgstr "Perisian sumber terbuka dalam aplikasi ini, dan lesen masing-masing."
+
+#: src/pages/settings/interface.tsx
+msgid "The order of your libraries and home rows. A catalog you add to your addon later goes at the end."
+msgstr ""
 
 #: src/components/remote-sheet.tsx
 msgid "The other device could not be reached"
@@ -4720,6 +4778,10 @@ msgstr "Tiada apa-apa di sini"
 #: src/components/version-settings.tsx
 msgid "These come before the packs' badges. Badges that share a group are alternatives: only the first that matches shows."
 msgstr "Ini mendahului lencana pek. Lencana dalam kumpulan sama adalah alternatif."
+
+#: src/pages/welcome.tsx
+msgid "These don't match"
+msgstr ""
 
 #: src/lib/subtitles/delay.ts
 msgid "These subtitles don't match the video's own"
@@ -4884,6 +4946,10 @@ msgstr "Tab atas"
 msgid "Track {n}"
 msgstr "Trek {n}"
 
+#: src/pages/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Trek"
@@ -5024,13 +5090,17 @@ msgstr "Kemas kini, mpv dan penyelesaian masalah"
 msgid "Updates, picture-in-picture, mpv and troubleshooting"
 msgstr "Kemas kini, Gambar dalam Gambar, mpv dan penyelesaian masalah"
 
-#: src/pages/sign-in.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Gunakan Sambungan Pantas, atau kata laluan konfigurasi."
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
 
 #: src/pages/sign-in.tsx
-msgid "Use the configuration’s password."
-msgstr "Gunakan kata laluan konfigurasi."
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/pages/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5039,10 +5109,6 @@ msgstr "Gunakan CSS pelayan ini"
 #: src/pages/sign-in.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Gunakan UUID atau alias konfigurasi anda serta kata laluanya."
-
-#: src/pages/sign-in.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Gunakan PIN anda, atau kata laluan konfigurasi."
 
 #: src/pages/sign-in.tsx
 msgid "Use your PIN."
@@ -5247,6 +5313,14 @@ msgstr "Menonton {name}, pada masa {at}"
 msgid "Web app"
 msgstr "Aplikasi web"
 
+#: src/pages/welcome.tsx
+msgid "Welcome, {greeting}"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "What everyone on this server sees."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "What happened"
 msgstr "Apa yang berlaku"
@@ -5278,6 +5352,10 @@ msgstr "Perkara untuk disimpan"
 #: src/components/party/reaction-setting.tsx
 msgid "What you can send from a party's chat."
 msgstr "Apa yang boleh anda hantar daripada sembang sesi."
+
+#: src/pages/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
 
 #: src/pages/settings/apps.tsx
 msgid "What your Discord profile shows. Kept on this device."
@@ -5429,11 +5507,27 @@ msgid "You left the party."
 msgstr "Anda telah meninggalkan sesi."
 
 #: src/pages/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
+
+#: src/pages/settings/profile.tsx
 msgid "You sign in with the shared one. Set your own so only you can."
 msgstr ""
 
 #: src/pages/settings/index.tsx
 msgid "You, your streams and Stremio"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set."
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You're set, {name}"
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "You've been added to this server. A few steps and it's yours."
 msgstr ""
 
 #: src/pages/settings/playback.tsx
@@ -5451,6 +5545,10 @@ msgstr ""
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "{name} anda sendiri"
+
+#: src/pages/welcome.tsx
+msgid "Your password"
+msgstr ""
 
 #: src/pages/settings/profile.tsx
 msgid "Your password confirms it's you."
