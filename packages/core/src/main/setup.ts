@@ -561,9 +561,16 @@ export function buildResources(ctx: AIOStreamsContext): void {
         type,
       }))
     );
+    // Advertised under the types they're shown as.
+    const shown = types.map(
+      (type) =>
+        ctx.userData.catalogModifications?.find(
+          (m) => m.id === constants.RECOMMENDED_CATALOG_ID && m.type === type
+        )?.overrideType ?? type
+    );
     const catalog = ctx.finalResources.find((r) => r.name === 'catalog');
-    if (catalog) catalog.types = [...new Set([...catalog.types, ...types])];
-    else ctx.finalResources.push({ name: 'catalog', types });
+    if (catalog) catalog.types = [...new Set([...catalog.types, ...shown])];
+    else ctx.finalResources.push({ name: 'catalog', types: shown });
   }
 
   // Add enabled merged catalogs to finalCatalogs BEFORE sorting
