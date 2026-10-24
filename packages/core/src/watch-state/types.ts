@@ -5,6 +5,7 @@ import type {
   WatchSnapshot,
   WatchStateRow,
 } from '../db/repositories/watch-state.js';
+import type { JellyfinPersona } from '../db/schemas.js';
 import { IdParser } from '../utils/id-parser.js';
 
 export type {
@@ -29,6 +30,16 @@ export interface WatchScope {
 
 export function accountScope(uuid: string): WatchScope {
   return { uuid, persona: ACCOUNT_PERSONA };
+}
+
+/** A persona with a history of its own keeps its watch state and preferences apart. */
+export function watchScopeOf(
+  uuid: string,
+  persona: JellyfinPersona | null | undefined
+): WatchScope {
+  return persona && persona.history !== 'shared'
+    ? { uuid, persona: persona.id }
+    : accountScope(uuid);
 }
 
 export function scopeOf(row: { uuid: string; persona: string }): WatchScope {
