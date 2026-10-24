@@ -2173,6 +2173,10 @@ msgstr ""
 msgid "Keep in step by changing speed"
 msgstr ""
 
+#: src/pages/welcome.tsx
+msgid "Keep track"
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "Keeping in step"
 msgstr ""
@@ -3066,6 +3070,10 @@ msgstr ""
 
 #: src/components/version-settings.tsx
 msgid "Optional. An image address, shown in place of the label."
+msgstr ""
+
+#: src/pages/welcome.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
 msgstr ""
 
 #: src/pages/welcome.tsx
