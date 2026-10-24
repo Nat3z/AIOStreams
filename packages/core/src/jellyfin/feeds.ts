@@ -86,10 +86,10 @@ async function historyOf(
     .flat()
     .sort((a, b) => b.sortAt - a.sortAt);
   for (const row of rows) {
-    // A show's episodes all share its id, which only needs resolving once.
-    if (seen.has(row.baseId)) continue;
-    seen.add(row.baseId);
     const kind = row.kind === 'movie' ? 'movie' : 'series';
+    // A show's episodes all share its id, which only needs resolving once.
+    if (seen.has(`${kind}:${row.baseId}`)) continue;
+    seen.add(`${kind}:${row.baseId}`);
     const tmdbId = await tmdbIdOf(kind, row.baseId);
     if (!tmdbId) continue;
     const key = `${kind === 'movie' ? 'movie' : 'tv'}:${tmdbId}`;
