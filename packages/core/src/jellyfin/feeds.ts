@@ -5,6 +5,8 @@ import type { AIOStreams } from '../main/index.js';
 import { WatchStateRepository } from '../db/repositories/watch-state.js';
 import type { WatchScope } from '../watch-state/types.js';
 import { IdMappingDataset } from '../metadata/id-mappings.js';
+import { AnimeDatabase } from '../anime-database/index.js';
+import { IdParser } from '../utils/id-parser.js';
 import type { TMDBMetadata, TMDBTitle } from '../metadata/tmdb.js';
 import { providerIdsFor } from './dto.js';
 import { titlePreviews, tmdbFor } from './tmdb-titles.js';
@@ -38,15 +40,26 @@ const FEED_TTL = 10 * 60;
 /** Fewer than this and a row isn't worth showing. */
 const MIN_ROW = 4;
 
-function tmdbIdOf(kind: 'movie' | 'series', id: string): number | undefined {
+/** Through the anime mappings for ids TMDB has no lookup of, as trackers' anime lists are keyed. */
+async function tmdbIdOf(
+  kind: 'movie' | 'series',
+  id: string
+): Promise<number | undefined> {
   const ids = providerIdsFor({ id, type: kind });
-  return (
+  const mappings = IdMappingDataset.getInstance();
+  const imdbId =
+    ids.Imdb ??
+    (ids.Tvdb ? mappings.imdbIdFor(kind, 'tvdb', Number(ids.Tvdb)) : undefined);
+  const direct =
     Number(ids.Tmdb) ||
-    (ids.Imdb
-      ? IdMappingDataset.getInstance().resolve(kind, { imdbId: ids.Imdb })
-          .tmdbId
-      : undefined)
-  );
+    (imdbId ? mappings.resolve(kind, { imdbId }).tmdbId : undefined);
+  if (direct) return direct;
+  const parsed = IdParser.parse(id, kind);
+  if (!parsed) return undefined;
+  const entry = await AnimeDatabase.getInstance()
+    .getEntryById(parsed.type, parsed.value)
+    .catch(() => null);
+  return entry?.mappings?.themoviedbId;
 }
 
 /**
@@ -58,9 +71,13 @@ async function historyOf(
 ): Promise<{ seeds: Seed[]; watched: Set<string> }> {
   const seeds: Seed[] = [];
   const watched = new Set<string>();
+  const seen = new Set<string>();
   for (const row of await WatchStateRepository.listPlayed(scope)) {
+    // A show's episodes all share its id, which only needs resolving once.
+    if (seen.has(row.baseId)) continue;
+    seen.add(row.baseId);
     const kind = row.kind === 'movie' ? 'movie' : 'series';
-    const tmdbId = tmdbIdOf(kind, row.baseId);
+    const tmdbId = await tmdbIdOf(kind, row.baseId);
     if (!tmdbId) continue;
     const key = `${kind === 'movie' ? 'movie' : 'tv'}:${tmdbId}`;
     if (watched.has(key)) continue;
