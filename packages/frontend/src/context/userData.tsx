@@ -742,9 +742,14 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     if (draftIdentity.current === uuid) return;
     draftIdentity.current = uuid;
     const draft = readDraftFor(uuid);
+    // Saved over since it was edited, restoring it would undo whatever changed.
+    const current = !uuid || (!!draft?.revision && draft.revision === revision);
     let differs = false;
     try {
-      differs = !!draft && !sameConfig(resolveDraft(draft, status), userData);
+      differs =
+        !!draft &&
+        current &&
+        !sameConfig(resolveDraft(draft, status), userData);
     } catch {
       /* unusable draft */
     }
@@ -770,11 +775,11 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         clearDrafts(uuid);
         return;
       }
-      writeSessionDraft(userData, uuid, userData.addonName);
-      writeLocalDraft(userData, uuid, userData.addonName);
+      writeSessionDraft(userData, uuid, revision, userData.addonName);
+      writeLocalDraft(userData, uuid, revision, userData.addonName);
     }, 400);
     return () => clearTimeout(handle);
-  }, [userData, uuid, baselineReady, baselineVersion]);
+  }, [userData, uuid, revision, baselineReady, baselineVersion]);
 
   const restoreDraft = React.useCallback(() => {
     setPendingDraft((draft) => {
