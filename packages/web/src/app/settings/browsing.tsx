@@ -6,6 +6,8 @@ import { useLiveTvView, useViews, orderKeyOf } from '@/lib/jellyfin/queries';
 import { usePlaybackPrefs } from '@/lib/jellyfin/user-config';
 import { libraryLabel } from '@/lib/format';
 import { currentHost } from '@/lib/hosts';
+import { IconButton } from '@aiostreams/ui/button';
+import { LuEye, LuEyeOff } from 'react-icons/lu';
 import {
   settings,
   useSetting,
@@ -140,10 +142,17 @@ function HomeCard() {
   );
 }
 
-/** The libraries in the user's order; one added to the addon later joins at the end. */
+/** The libraries in the user's order, each hideable; one added to the addon later joins at the end. */
 function LibraryOrderCard() {
-  const views = useViews();
-  const { update } = usePlaybackPrefs();
+  const views = useViews(true);
+  const { prefs, update } = usePlaybackPrefs();
+  const hidden = new Set(prefs.MyMediaExcludes ?? []);
+  const toggle = (key: string) =>
+    update({
+      MyMediaExcludes: hidden.has(key)
+        ? [...hidden].filter((k) => k !== key)
+        : [...hidden, key],
+    });
   // "Because you watched" rows change with the history, so they move as one.
   const entries = new Map<string, string>();
   for (const v of views.data?.Items ?? []) {
@@ -166,9 +175,21 @@ function LibraryOrderCard() {
       <LanguageList
         fixed
         label={t`Libraries`}
-        help={t`The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end.`}
+        help={t`The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home.`}
         options={[...entries].map(([value, label]) => ({ value, label }))}
         value={[...entries.keys()]}
+        muted={(key) => hidden.has(key)}
+        actions={(key, name) => (
+          <IconButton
+            size="sm"
+            intent="gray-subtle"
+            className="size-8 rounded-full"
+            icon={hidden.has(key) ? <LuEyeOff /> : <LuEye />}
+            aria-label={hidden.has(key) ? t`Show ${name}` : t`Hide ${name}`}
+            aria-pressed={hidden.has(key)}
+            onClick={() => toggle(key)}
+          />
+        )}
         onChange={(next) => update({ OrderedViews: next })}
       />
     </SettingsCard>
