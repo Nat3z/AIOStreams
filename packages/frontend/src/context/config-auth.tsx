@@ -18,19 +18,32 @@ import {
 import { clearDrafts } from '@/lib/drafts';
 
 /**
- * Signs the web app out too, by its own keys: `jellyfin_credentials` and the
- * marker that stops the configure sign-in from signing it straight back in.
+ * Signs the web app out too, by its own keys: `jellyfin_credentials`, the
+ * user's saved switch token, and the marker that stops the configure sign-in
+ * from signing it straight back in.
  */
 function leaveWebApp(): void {
   try {
     const key = 'jellyfin_credentials';
     const stored = JSON.parse(localStorage.getItem(key) ?? 'null') as {
-      Servers?: { ManualAddress: string }[];
+      Servers?: { ManualAddress: string; UserId?: string }[];
     } | null;
     const base = `${window.location.origin}/jellyfin`;
     if (stored?.Servers) {
+      const userId = stored.Servers.find(
+        (s) => s.ManualAddress === base
+      )?.UserId;
       stored.Servers = stored.Servers.filter((s) => s.ManualAddress !== base);
       localStorage.setItem(key, JSON.stringify(stored));
+      // Otherwise the picker switches back to this user without a password.
+      const tokensKey = `aiostreams-web-user-tokens:${base}`;
+      const tokens = JSON.parse(
+        localStorage.getItem(tokensKey) ?? '{}'
+      ) as Record<string, string>;
+      if (userId && tokens[userId]) {
+        delete tokens[userId];
+        localStorage.setItem(tokensKey, JSON.stringify(tokens));
+      }
     }
     localStorage.setItem(`aiostreams-web-signed-out:${base}`, 'true');
   } catch {
