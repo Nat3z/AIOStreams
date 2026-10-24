@@ -27,6 +27,8 @@ export function LanguageList({
   value,
   max,
   fixed,
+  actions,
+  muted,
   onChange,
 }: {
   label: string;
@@ -37,6 +39,10 @@ export function LanguageList({
   max?: number;
   /** Every option always listed, only reordered. */
   fixed?: boolean;
+  /** More buttons for a row, before its arrows. */
+  actions?: (code: string, name: string) => React.ReactNode;
+  /** Rows shown dimmed, such as hidden ones. */
+  muted?: (code: string) => boolean;
   onChange: (next: string[]) => void;
 }) {
   const list = React.useRef<HTMLOListElement>(null);
@@ -139,7 +145,15 @@ export function LanguageList({
                 <span className="w-4 text-sm tabular-nums text-[--muted]">
                   {i + 1}
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm">{name}</span>
+                <span
+                  className={cn(
+                    'min-w-0 flex-1 truncate text-sm',
+                    muted?.(code) && 'text-[--muted] line-through'
+                  )}
+                >
+                  {name}
+                </span>
+                {actions?.(code, name)}
                 {button(
                   'up',
                   t`Move ${name} up`,
