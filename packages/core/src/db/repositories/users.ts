@@ -83,7 +83,7 @@ export class UserRepository {
   static async createUser(
     config: UserData,
     password: string
-  ): Promise<{ uuid: string; encryptedPassword: string }> {
+  ): Promise<{ uuid: string; encryptedPassword: string; revision: string }> {
     if (password.length < 6) {
       throw new APIError(constants.ErrorCode.USER_NEW_PASSWORD_TOO_SHORT);
     }
@@ -164,7 +164,7 @@ export class UserRepository {
         );
       });
       logger.info(`Created a new user with UUID: ${uuid}`);
-      return { uuid, encryptedPassword };
+      return { uuid, encryptedPassword, revision: revisionOf(encryptedConfig) };
     } catch (error) {
       const msg = error instanceof Error ? error.message : String(error);
       logger.error(`Failed to create user: ${msg}`);
