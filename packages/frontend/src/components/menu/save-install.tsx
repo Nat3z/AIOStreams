@@ -1936,6 +1936,8 @@ export function useSaveInstall({ offerStremio = true } = {}) {
     encryptedPassword,
     setEncryptedPassword,
     setBaseline,
+    revision,
+    setRevision,
   } = useUserData();
   const { data: linkedAccounts } = useQuery(
     linkedAccountsQuery(uuid ? { uuid, password } : null)
@@ -2479,7 +2481,8 @@ export function useSaveInstall({ offerStremio = true } = {}) {
       const result = await changePassword(
         uuid,
         changePasswordData.currentPassword,
-        changePasswordData.newPassword
+        changePasswordData.newPassword,
+        revision
       );
 
       toast.success(
@@ -2487,6 +2490,8 @@ export function useSaveInstall({ offerStremio = true } = {}) {
       );
       setPassword(changePasswordData.newPassword);
       setEncryptedPassword(result.encryptedPassword);
+      // Re-encrypted, not edited, so unsaved edits stay unsaved.
+      setRevision(result.revision);
       changePasswordModal.close();
       setChangePasswordData({
         currentPassword: '',
