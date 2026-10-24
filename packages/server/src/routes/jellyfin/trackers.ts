@@ -196,22 +196,30 @@ trackersRouter.delete(
     const provider = String(req.params.provider);
     const aiom = service();
     const persona = ctx.persona?.id ?? null;
-    const linked = linkedOf(ctx.userData, persona);
-    const userUUID = linked && aiom.userOf(linked.manifestUrl);
-    if (!isProvider(provider) || !userUUID) {
+    if (!isProvider(provider)) {
       res.status(404).json({ Message: 'Not signed in' });
       return;
     }
     const password = passwordFor(ctx.uuid, persona);
-    await serialised(userKey(ctx.uuid, persona), async () => {
+    const done = await serialised(userKey(ctx.uuid, persona), async () => {
+      // Read here, as a sign-in queued before this one may have relinked them.
+      const raw = await UserRepository.getRawUser(
+        ctx.uuid,
+        configPassword(ctx.encryptedPassword)
+      );
+      const linked = raw && linkedOf(raw, persona);
+      const userUUID = linked && aiom.userOf(linked.manifestUrl);
+      if (!userUUID) return false;
       await aiom.disconnect(provider, userUUID, password);
       // Nothing left to track with, so it stops being their tracker.
       const accounts = await aiom.accounts(userUUID, password);
       if (!Object.values(accounts).some(Boolean)) {
         await link(aiom, { ...ctx, persona }, null);
       }
+      return true;
     });
-    res.status(204).end();
+    if (done) res.status(204).end();
+    else res.status(404).json({ Message: 'Not signed in' });
   })
 );
 
