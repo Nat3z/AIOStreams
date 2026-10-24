@@ -23,6 +23,7 @@ import {
   studioId,
   viewId,
 } from './ids.js';
+import { RECOMMENDED_CATALOG_ID } from '../utils/constants.js';
 import { imageTagsFor, rememberImages } from './images.js';
 import { listPlaceholderSources, msToTicks } from './media.js';
 import { getSimpleTextHash } from '../utils/crypto.js';
@@ -361,7 +362,12 @@ export function buildView(
     ChildCount: 0,
     Path: `/aiostreams/${catalog.type}/${catalog.id}`,
     PrimaryImageAspectRatio: 1.7777,
-    ...(requiresGenre(catalog) && { aiostreams: { genreRequired: true } }),
+    ...((requiresGenre(catalog) || catalog.id === RECOMMENDED_CATALOG_ID) && {
+      aiostreams: {
+        ...(requiresGenre(catalog) && { genreRequired: true }),
+        ...(catalog.id === RECOMMENDED_CATALOG_ID && { recommended: true }),
+      },
+    }),
     _aio: { descriptor: { k: 'view', t: catalog.type, c: catalog.id } },
   };
 }

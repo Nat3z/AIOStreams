@@ -93,7 +93,10 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       id: catalog.id,
       name: catalog.name,
       type: catalog.type,
-      addonName: aio.getAddon(catalog.id.split('.')[0])?.name,
+      addonName:
+        catalog.id === constants.RECOMMENDED_CATALOG_ID
+          ? 'AIOStreams'
+          : aio.getAddon(catalog.id.split('.')[0])?.name,
 
       hideable: catalog.extra
         ? catalog.extra.every((e) => !e.isRequired)

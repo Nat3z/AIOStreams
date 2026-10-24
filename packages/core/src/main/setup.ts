@@ -14,6 +14,7 @@ import { createProxy } from '../proxy/index.js';
 import { getAddonName } from '../utils/general.js';
 import type { Addon, Resource, UserData } from '../db/index.js';
 import type { AIOStreamsContext } from './types.js';
+import { tmdbFor } from '../jellyfin/tmdb-titles.js';
 
 const logger = createLogger('core');
 
@@ -550,6 +551,21 @@ export function buildResources(ctx: AIOStreamsContext): void {
     }
   }
 
+  // First, then ordered, renamed or hidden like any other catalog.
+  if (tmdbFor(ctx.userData)) {
+    const types = [constants.MOVIE_TYPE, constants.SERIES_TYPE];
+    ctx.finalCatalogs.unshift(
+      ...types.map((type) => ({
+        id: constants.RECOMMENDED_CATALOG_ID,
+        name: 'Recommended for you',
+        type,
+      }))
+    );
+    const catalog = ctx.finalResources.find((r) => r.name === 'catalog');
+    if (catalog) catalog.types = [...new Set([...catalog.types, ...types])];
+    else ctx.finalResources.push({ name: 'catalog', types });
+  }
+
   // Add enabled merged catalogs to finalCatalogs BEFORE sorting
   // so they participate in the natural catalogModifications-based sort
   if (ctx.userData.mergedCatalogs?.length) {
@@ -588,6 +604,8 @@ export function buildResources(ctx: AIOStreamsContext): void {
         (mod) => mod.id === c.id && mod.type === c.type
       );
       if (i !== -1) return i;
+      // First until it's moved.
+      if (c.id === constants.RECOMMENDED_CATALOG_ID) return -1;
       const last = lastPosition.get(addonOf(c.id));
       return last === undefined ? Infinity : last + 0.5;
     };
@@ -605,7 +623,10 @@ export function buildResources(ctx: AIOStreamsContext): void {
     ctx.finalCatalogs = sorted
       .map((c) => queues.get(addonOf(c.id))?.shift() ?? c)
       .filter((catalog) => {
-        if (catalog.id.startsWith('aiostreams.merged.')) {
+        if (
+          catalog.id.startsWith('aiostreams.merged.') ||
+          catalog.id === constants.RECOMMENDED_CATALOG_ID
+        ) {
           const modification = modifications.find(
             (mod) => mod.id === catalog.id && mod.type === catalog.type
           );
