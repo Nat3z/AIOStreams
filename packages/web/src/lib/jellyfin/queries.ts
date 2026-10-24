@@ -318,6 +318,12 @@ export function needsGenre(view: BaseItemDto | undefined): boolean {
 }
 
 /** A library made from the user's history, empty until something is watched. */
+/** Where a library sits in the user's order; "Because you watched" ones share it. */
+export function orderKeyOf(view: BaseItemDto): string {
+  const extension = view as { aiostreams?: { orderKey?: string } };
+  return extension.aiostreams?.orderKey ?? view.Id!;
+}
+
 export function isRecommended(view: BaseItemDto | undefined): boolean {
   const extension = view as { aiostreams?: { recommended?: boolean } };
   return extension?.aiostreams?.recommended === true;
