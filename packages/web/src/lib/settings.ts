@@ -711,7 +711,7 @@ export const settings = {
         return lines.length ? lines.join(',') : 'none';
       }
     ),
-    mergeNextUp: syncedFlag('mergeNextUp'),
+    mergeNextUp: syncedFlag('mergeNextUp', true),
     combineSearch: syncedFlag('combineSearch'),
     heroMode: syncedChoice<HeroMode>('heroMode', HERO_MODES, 'rotate'),
     heroSeconds: syncedChoice<number>('heroSeconds', HERO_SECONDS, 9),
