@@ -5,8 +5,9 @@ import { makeRequest } from '../utils/http.js';
 /*
  * The instance's own AIOMetadata, which tracks for its users: each one gets a
  * configuration on it holding their Simkl or AniList sign-in, linked to them as
- * a tracker addon. Its sign-in pages end on a token to copy, so the callback is
- * routed through us and the token read from that page instead.
+ * a tracker addon, whose history our home rows are made from. Its sign-in pages
+ * end on a token to copy, so the callback is routed through us and the token
+ * read from that page instead.
  */
 
 export const TRACKER_PROVIDERS = ['simkl', 'anilist'] as const;
@@ -138,15 +139,11 @@ export class AIOMetadata {
       playbackReporting: true,
       apiKeys: { ...existing?.apiKeys, [key]: tokenId },
       [tracking]: true,
+      // The history we read comes from one account, and Automatic never picks AniList.
+      jellyfinResumeSource: provider,
     };
     if (existing && userUUID) {
-      await this.json(
-        await this.request(
-          `/api/config/update/${userUUID}`,
-          { config, password },
-          'PUT'
-        )
-      );
+      await this.save(userUUID, config, password);
       return userUUID;
     }
     const body = (await this.json(
@@ -162,6 +159,31 @@ export class AIOMetadata {
   ): Promise<void> {
     await this.json(
       await this.request(PROVIDERS[provider].disconnect, { userUUID, password })
+    );
+    // The history moves to the account left, if there is one.
+    const config = await this.load(userUUID, password);
+    if (config?.jellyfinResumeSource !== provider) return;
+    const left = TRACKER_PROVIDERS.find(
+      (p) => p !== provider && config.apiKeys?.[PROVIDERS[p].key]
+    );
+    await this.save(
+      userUUID,
+      { ...config, jellyfinResumeSource: left ?? 'auto' },
+      password
+    );
+  }
+
+  private async save(
+    userUUID: string,
+    config: AIOMetadataConfig,
+    password: string
+  ): Promise<void> {
+    await this.json(
+      await this.request(
+        `/api/config/update/${userUUID}`,
+        { config, password },
+        'PUT'
+      )
     );
   }
 
