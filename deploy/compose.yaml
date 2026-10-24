@@ -20,6 +20,8 @@ services:
       DATABASE_URI: sqlite:///app/data/db.sqlite
       REDIS_URI: redis://redis:6379/0
       WATCH_STATE_AIOMETADATA_URL: http://aiometadata:3232
+      # Trackers mark an episode watched at 80%, not at the end.
+      WATCH_STATE_PLAYED_PERCENT: 80
     volumes:
       - aiostreams_data:/app/data
     ports:
@@ -59,6 +61,8 @@ services:
       ANILIST_REDIRECT_URI: ${BASE_URL:?}/trackers/anilist/callback
     volumes:
       - aiometadata_data:/app/addon/data
+      # Patched for 3.7.0 so a start sets AniList to watching; drop on upgrade.
+      - ./aiometadata/playbackHandler.js:/app/dist/server/lib/playbackHandler.js:ro
     depends_on:
       aiometadata-redis:
         condition: service_healthy
