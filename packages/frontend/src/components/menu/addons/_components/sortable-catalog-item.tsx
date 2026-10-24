@@ -1,5 +1,6 @@
 import React, { memo, useState } from 'react';
-import { CatalogModification, constants } from '@aiostreams/core';
+import type { CatalogModification } from '@aiostreams/core';
+import * as constants from '../../../../../../core/src/utils/constants';
 import type {
   DraggableAttributes,
   DraggableSyntheticListeners,
