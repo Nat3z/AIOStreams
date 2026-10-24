@@ -111,6 +111,10 @@ const USER_PREFERENCES: Record<string, (value: unknown) => boolean> = {
   RememberAudioSelections: (v) => typeof v === 'boolean',
   RememberSubtitleSelections: (v) => typeof v === 'boolean',
   EnableNextEpisodeAutoPlay: (v) => typeof v === 'boolean',
+  OrderedViews: (v) =>
+    Array.isArray(v) &&
+    v.length <= 200 &&
+    v.every((id) => typeof id === 'string' && id.length <= 256),
 };
 
 function userPreferences(body: unknown): Record<string, unknown> {
