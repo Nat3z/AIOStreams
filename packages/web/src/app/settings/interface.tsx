@@ -2,7 +2,7 @@ import { t } from '@lingui/core/macro';
 import { Select } from '@aiostreams/ui/select';
 import { Combobox } from '@aiostreams/ui/combobox';
 import { Switch } from '@aiostreams/ui/switch';
-import { useViews } from '@/lib/jellyfin/queries';
+import { useViews, orderKeyOf } from '@/lib/jellyfin/queries';
 import { usePlaybackPrefs } from '@/lib/jellyfin/user-config';
 import { dateFormat, libraryLabel } from '@/lib/format';
 import { currentHost } from '@/lib/hosts';
@@ -211,9 +211,20 @@ function NavigationCard() {
 /** The libraries in the user's order; one added to the addon later joins at the end. */
 function LibraryOrderCard() {
   const views = useViews();
-  const { prefs, update } = usePlaybackPrefs();
-  const items = views.data?.Items ?? [];
-  if (items.length < 2) return null;
+  const { update } = usePlaybackPrefs();
+  // "Because you watched" rows change with the history, so they move as one.
+  const entries = new Map<string, string>();
+  for (const v of views.data?.Items ?? []) {
+    const key = orderKeyOf(v);
+    if (entries.has(key)) continue;
+    entries.set(
+      key,
+      key === v.Id
+        ? [v.Name, libraryLabel(v)].filter(Boolean).join(' · ')
+        : t`Because you watched`
+    );
+  }
+  if (entries.size < 2) return null;
   return (
     <SettingsCard
       name="library-order"
@@ -223,12 +234,9 @@ function LibraryOrderCard() {
       <LanguageList
         fixed
         label={t`Libraries`}
-        help={t`The order of your libraries and home rows. A catalog you add to your addon later goes at the end.`}
-        options={items.map((v) => ({
-          value: v.Id!,
-          label: [v.Name, libraryLabel(v)].filter(Boolean).join(' · '),
-        }))}
-        value={items.map((v) => v.Id!)}
+        help={t`The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end.`}
+        options={[...entries].map(([value, label]) => ({ value, label }))}
+        value={[...entries.keys()]}
         onChange={(next) => update({ OrderedViews: next })}
       />
     </SettingsCard>
