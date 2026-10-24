@@ -160,6 +160,7 @@ export const userDataMiddleware = async (
         ? (persona.variants ?? [])
         : (userData.jellyfin?.primary?.variants ?? []);
       userData.installUrl = `${appConfig.bootstrap.baseUrl}/s/${req.params.stremioToken}`;
+      userData.watchPersona = persona?.id;
     }
 
     if (resource !== 'configure') {
