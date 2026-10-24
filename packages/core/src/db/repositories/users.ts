@@ -91,6 +91,7 @@ export class UserRepository {
     config.healthResults = undefined;
     config.variantSelectorLocation = undefined;
     config.installUrl = undefined;
+    config.watchPersona = undefined;
 
     let configToValidate: UserData = config;
     if (config.parentConfig?.uuid) {
@@ -264,6 +265,7 @@ export class UserRepository {
     decryptedConfig.healthResults = undefined;
     decryptedConfig.variantSelectorLocation = undefined;
     decryptedConfig.installUrl = undefined;
+    decryptedConfig.watchPersona = undefined;
     return applyMigrations(decryptedConfig);
   }
 
@@ -384,6 +386,7 @@ export class UserRepository {
     config.healthResults = undefined;
     config.variantSelectorLocation = undefined;
     config.installUrl = undefined;
+    config.watchPersona = undefined;
 
     const db = getDb();
     const current = await db.maybeOne<UserRow>(

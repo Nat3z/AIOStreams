@@ -5,7 +5,15 @@ import {
   StrictManifestResource,
   UserData,
 } from '../db/index.js';
-import { Cache, createLogger, IdParser, userScopeKey } from '../utils/index.js';
+import type { MetaPreview } from '../db/schemas.js';
+import {
+  Cache,
+  createLogger,
+  ExtrasParser,
+  IdParser,
+  RECOMMENDED_CATALOG_ID,
+  userScopeKey,
+} from '../utils/index.js';
 import { withVariantSelector } from '../variants/runtime.js';
 import Proxifier from '../streams/proxifier.js';
 import StreamLimiter from '../streams/limiter.js';
@@ -17,7 +25,11 @@ import {
   StreamPrecomputer as Precomputer,
   StreamContext,
 } from '../streams/index.js';
-import type { AIOStreamsContext, AIOStreamsOptions } from './types.js';
+import type {
+  AIOStreamsContext,
+  AIOStreamsOptions,
+  AIOStreamsResponse,
+} from './types.js';
 import {
   applyPresets,
   assignPublicIps,
@@ -29,6 +41,8 @@ import {
   type ResolvedPlaybackSink,
 } from '../watch-state/handoff/index.js';
 import { getCatalog as _getCatalog } from './catalog.js';
+import { recommendedCatalog } from '../jellyfin/feeds.js';
+import { watchScopeOf } from '../watch-state/types.js';
 import {
   getStreams as _getStreams,
   getMeta as _getMeta,
@@ -101,7 +115,24 @@ export class AIOStreams {
     return _getStreams(this.ctx, id, type, preCaching);
   }
 
-  public async getCatalog(type: string, id: string, extras?: string) {
+  public async getCatalog(
+    type: string,
+    id: string,
+    extras?: string
+  ): Promise<AIOStreamsResponse<MetaPreview[]>> {
+    if (id === RECOMMENDED_CATALOG_ID) {
+      // One page: a client paging on gets nothing more.
+      if (new ExtrasParser(extras).skip)
+        return { success: true, data: [], errors: [] };
+      const { uuid, watchPersona, jellyfin } = this.ctx.userData;
+      const persona = jellyfin?.personas?.find((p) => p.id === watchPersona);
+      const data = await recommendedCatalog(
+        this,
+        watchScopeOf(uuid ?? '', persona),
+        type
+      );
+      return { success: true, data, errors: [] };
+    }
     return _getCatalog(this.ctx, type, id, extras);
   }
 

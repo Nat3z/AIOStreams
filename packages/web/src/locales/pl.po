@@ -3484,10 +3484,6 @@ msgstr "Podsumowania"
 msgid "Recent searches"
 msgstr "Ostatnie wyszukiwania"
 
-#: src/pages/home.tsx
-msgid "Recommended for you"
-msgstr ""
-
 #: src/components/party/party-layer.tsx
 msgid "Reconnecting to the party…"
 msgstr "Ponowne łączenie ze wspólnym oglądaniem…"
