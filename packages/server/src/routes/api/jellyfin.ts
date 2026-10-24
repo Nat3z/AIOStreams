@@ -530,7 +530,11 @@ router.post('/avatars', avatarBody, async (req, res, next) => {
       next(new APIError(constants.ErrorCode.UNAUTHORIZED));
       return;
     }
-    const url = await saveAvatar(req, creds.uuid);
+    const url = await saveAvatar(
+      req,
+      creds.uuid,
+      await UserRepository.getUser(creds.uuid, creds.password)
+    );
     res
       .status(url ? 200 : 400)
       .json(
