@@ -15,7 +15,6 @@ import {
   mergeRows,
   useLibraryHeads,
   useNextUp,
-  useRecommendations,
   useResume,
   useUpcoming,
   useViews,
@@ -52,7 +51,7 @@ import {
 } from '../components/version-picker';
 import { NoCatalogs } from '../components/no-catalogs';
 import { FILL_WINDOW } from '../components/layout';
-import type { BaseItemDto, RecommendationDto } from '../lib/types';
+import type { BaseItemDto } from '../lib/types';
 import { currentHost } from '../lib/hosts';
 import { Anchor } from '../components/anchor';
 
@@ -173,7 +172,6 @@ export function HomePage() {
         />
       )}
       <UpcomingRow />
-      <RecommendationRows />
       {noCatalogs ? (
         <div className="flex flex-1 flex-col justify-center">
           <NoCatalogs />
@@ -316,56 +314,6 @@ function UpcomingRow() {
               ) : undefined
             }
             meta={item.PremiereDate ? untilLabel(item.PremiereDate) : undefined}
-          />
-        </ItemMenu>
-      ))}
-    </MediaRow>
-  );
-}
-
-/** "Because you watched" rows; none until something is. */
-function RecommendationRows() {
-  const recommendations = useRecommendations();
-  return (
-    <>
-      {recommendations.data?.map((row) => (
-        <RecommendationRow key={row.CategoryId} row={row} />
-      ))}
-    </>
-  );
-}
-
-function RecommendationRow({ row }: { row: RecommendationDto }) {
-  const { client } = useSession();
-  const seed = row.BaselineItemName;
-  return (
-    <MediaRow
-      id={`recommended:${row.CategoryId}`}
-      title={
-        <span className="inline-flex items-baseline gap-2">
-          <span className="text-[--muted]">
-            <Trans>Because you watched</Trans>
-          </span>
-          {seed}
-        </span>
-      }
-      shape="poster"
-    >
-      {row.Items?.map((item) => (
-        <ItemMenu key={item.Id} item={item}>
-          <PosterCard
-            href={href(itemPath(item))}
-            shape={cardShape(item)}
-            image={(width) =>
-              cardImages(client, item, cardShape(item), { maxWidth: width })
-            }
-            animated={animatedPosterOf(item)}
-            title={item.Name ?? ''}
-            subtitle={itemSubtitle(item)}
-            itemType={item.Type}
-            watched={item.UserData?.Played}
-            favourite={item.UserData?.IsFavorite}
-            progress={progressOf(item)}
           />
         </ItemMenu>
       ))}

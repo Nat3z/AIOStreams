@@ -7,7 +7,7 @@ import {
   encodeImageTag,
   suggestTitles,
   watchFeeds,
-  RECOMMENDED_CATALOG_ID,
+  isPersonalCatalog,
   filmographyPage,
   findPerson,
   recommendedPreviews,
@@ -1434,8 +1434,7 @@ router.get(
     const views = withoutRequiredGenre(await ctx.views())
       .filter(
         (v) =>
-          v.collectionType === 'movies' &&
-          v.catalog.id !== RECOMMENDED_CATALOG_ID
+          v.collectionType === 'movies' && !isPersonalCatalog(v.catalog.id)
       )
       .slice(0, 3);
     const out = [];
