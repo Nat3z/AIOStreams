@@ -391,7 +391,7 @@ export const settings = {
         return lines.length ? lines.join(',') : 'none';
       }
     ),
-    mergeNextUp: syncedFlag('mergeNextUp'),
+    mergeNextUp: syncedFlag('mergeNextUp', true),
     combineSearch: syncedFlag('combineSearch'),
     blurSpoilers: syncedFlag('blurSpoilers'),
     heroMode: syncedChoice<HeroMode>('heroMode', HERO_MODES, 'rotate'),
