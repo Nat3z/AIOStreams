@@ -1853,6 +1853,7 @@ function Content() {
     setPassword,
     encryptedPassword,
     setEncryptedPassword,
+    setBaseline,
   } = useUserData();
   const { data: linkedAccounts } = useQuery(
     linkedAccountsQuery(uuid ? { uuid, password } : null)
@@ -2026,6 +2027,8 @@ function Content() {
       toast.success(
         'Configuration created successfully, your UUID and password are below'
       );
+      // Saves from here on must still match what was created.
+      setBaseline(userData, result.revision);
       setUuid(result.uuid);
       setEncryptedPassword((result as CreateUserResponse).encryptedPassword);
       setPassword(newPassword);
