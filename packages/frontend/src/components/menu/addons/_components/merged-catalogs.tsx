@@ -3,6 +3,7 @@ import { MergedCatalog, UserData } from '@aiostreams/core';
 import { useStatus } from '@/context/status';
 import { useUserData } from '@/context/userData';
 import { useMenu } from '@/context/menu';
+import { canMerge } from './sortable-catalog-item';
 import { SettingsCard } from '../../../shared/settings-card';
 import { Button, CloseButton, IconButton } from '@aiostreams/ui/button';
 import { Modal } from '@aiostreams/ui/modal';
@@ -95,7 +96,7 @@ export function MergedCatalogsCard({
   };
 
   const allCatalogs = (userData.catalogModifications || [])
-    .filter((c) => !c.id.startsWith('aiostreams.merged.')) // Exclude merged catalogs from being selected as sources
+    .filter(canMerge)
     .map((c) => ({
       value: encodeMergeSource(c),
       name: c.name || c.id,
