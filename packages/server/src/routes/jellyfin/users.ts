@@ -324,14 +324,19 @@ router.get(
 );
 
 /** `Pw` may be `<password>/<pin>`; the whole value is tried first, so a password holding a slash works. */
+/** The whole secret as the password first, then split as `password/PIN`. */
+function passwordAndPin(pw: string): [string, string][] {
+  const slash = pw.lastIndexOf('/');
+  const candidates: [string, string][] = [[pw, '']];
+  if (slash > 0) candidates.push([pw.slice(0, slash), pw.slice(slash + 1)]);
+  return candidates;
+}
+
 async function checkPassword(
   uuid: string,
   pw: string
 ): Promise<{ encryptedPassword: string; pin: string } | null> {
-  const slash = pw.lastIndexOf('/');
-  const candidates: [string, string][] = [[pw, '']];
-  if (slash > 0) candidates.push([pw.slice(0, slash), pw.slice(slash + 1)]);
-  for (const [password, pin] of candidates) {
+  for (const [password, pin] of passwordAndPin(pw)) {
     const enc = encryptString(password);
     if (!enc.success || !enc.data) throw new Error('Encryption failure');
     if (await resolveConfig(uuid, enc.data))
@@ -403,12 +408,12 @@ async function pinOnlySignIn(
   return !!target.profile.lock && userUnlocks(mount.uuid, target.profile, pin);
 }
 
-/** A picker sign-in with the profile's own password in place of the configuration's. */
+/** A picker sign-in with the profile's own password in place of the configuration's, and the PIN given with it. */
 async function ownPasswordSignIn(
   mount: PickerMount,
   name: string,
   pw: string
-): Promise<PickerTarget | null> {
+): Promise<(PickerTarget & { pin: string }) | null> {
   let target: PickerTarget | null;
   if (mount.profile) {
     target = await pickerTarget(mount, name);
@@ -417,10 +422,12 @@ async function ownPasswordSignIn(
     const profile = userData ? resolveSignIn(userData, name) : null;
     target = userData && profile ? { userData, profile } : null;
   }
-  return target &&
-    (await userPasswordOpens(mount.uuid, target.profile, pw))
-    ? target
-    : null;
+  if (!target) return null;
+  for (const [password, pin] of passwordAndPin(pw)) {
+    if (await userPasswordOpens(mount.uuid, target.profile, password))
+      return { ...target, pin };
+  }
+  return null;
 }
 
 router.post(
@@ -462,6 +469,12 @@ router.post(
     const byOwn =
       !proven && mount ? await ownPasswordSignIn(mount, wanted, pw) : null;
     if (mount && byOwn) {
+      if (
+        !(await userUnlocks(mount.uuid, byOwn.profile, byOwn.pin))
+      ) {
+        res.status(401).json({ Message: PIN_REQUIRED });
+        return;
+      }
       const client = clientOf(req);
       logger.info(
         {
