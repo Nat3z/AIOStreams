@@ -504,7 +504,10 @@ router.post('/password', async (req, res, next) => {
   }
   const uuid = req.uuid || creds.uuid;
   const currentPassword = creds.password;
-  const { newPassword } = req.body;
+  const { newPassword, revision } = req.body as {
+    newPassword?: string;
+    revision?: string;
+  };
 
   if (!newPassword) {
     next(
@@ -526,10 +529,11 @@ router.post('/password', async (req, res, next) => {
       ? await ConfigSessionRepository.rememberedFor(token, uuid)
       : null;
 
-    const { encryptedPassword } = await UserRepository.changePassword(
+    const changed = await UserRepository.changePassword(
       uuid,
       currentPassword,
-      newPassword
+      newPassword,
+      typeof revision === 'string' ? revision : undefined
     );
 
     if (remembered !== null) {
@@ -558,9 +562,7 @@ router.post('/password', async (req, res, next) => {
       createResponse({
         success: true,
         detail: 'Password changed successfully',
-        data: {
-          encryptedPassword,
-        },
+        data: changed,
       })
     );
   } catch (error) {
