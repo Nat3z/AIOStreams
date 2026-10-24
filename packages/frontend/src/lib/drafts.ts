@@ -24,6 +24,8 @@ export interface Draft {
   /** The configuration this draft belongs to; null for a signed-out draft. */
   uuid: string | null;
   addonName?: string;
+  /** The stored config's revision it was edited from, which its save must match. */
+  revision?: string | null;
   data: UserData;
 }
 
@@ -79,6 +81,7 @@ function parse(raw: string | null): Draft | null {
 function build(
   data: UserData,
   uuid: DraftIdentity,
+  revision: string | null,
   addonName?: string
 ): string {
   const draft: Draft = {
@@ -86,6 +89,7 @@ function build(
     savedAt: Date.now(),
     uuid,
     addonName,
+    revision,
     data,
   };
   return JSON.stringify(draft);
@@ -116,9 +120,10 @@ export function readSessionDraft(): Draft | null {
 export function writeSessionDraft(
   data: UserData,
   uuid: DraftIdentity,
+  revision: string | null,
   addonName?: string
 ): void {
-  safeSet(sessionStorage, SESSION_KEY, build(data, uuid, addonName));
+  safeSet(sessionStorage, SESSION_KEY, build(data, uuid, revision, addonName));
 }
 
 export function clearSessionDraft(): void {
@@ -146,10 +151,11 @@ export function readLocalDraft(uuid: DraftIdentity): Draft | null {
 export function writeLocalDraft(
   data: UserData,
   uuid: DraftIdentity,
+  revision: string | null,
   addonName?: string
 ): void {
   if (isDraftOptOut()) return;
-  safeSet(localStorage, localKey(uuid), build(data, uuid, addonName));
+  safeSet(localStorage, localKey(uuid), build(data, uuid, revision, addonName));
 }
 
 export function clearLocalDraft(uuid: DraftIdentity): void {
@@ -218,7 +224,7 @@ export function migrateLegacyDraft(hasWork: (data: UserData) => boolean) {
   try {
     const data = JSON.parse(raw) as UserData;
     if (!data || !hasWork(data)) return;
-    safeSet(localStorage, localKey(null), build(data, null));
+    safeSet(localStorage, localKey(null), build(data, null, null));
   } catch {
     /* unparseable legacy blob; nothing worth carrying over */
   }
