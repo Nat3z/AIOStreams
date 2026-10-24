@@ -221,6 +221,7 @@ interface LoadUserResponse {
 interface CreateUserResponse {
   uuid: string;
   encryptedPassword: string;
+  revision: string;
 }
 
 interface UpdateUserResponse {
