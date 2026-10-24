@@ -86,6 +86,13 @@ export class UserInviteRepository {
     return row ? targetOf(row) : null;
   }
 
+  /** Reopens a link whose setup failed after {@link consume} claimed it. */
+  static async release(token: string): Promise<void> {
+    await getDb().exec(
+      sql`UPDATE user_invites SET used_at = NULL WHERE id = ${hashToken(token)}`
+    );
+  }
+
   static async list(uuid: string): Promise<UserInviteInfo[]> {
     const rows = await getDb().query<InviteRow>(
       sql`SELECT * FROM user_invites WHERE uuid = ${uuid}`
