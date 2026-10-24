@@ -22,13 +22,13 @@ import {
   type WatchHistoryCursor,
   type WatchScope,
   type WatchStateRow,
+  watchScopeOf,
 } from '@aiostreams/core';
 import {
   bodyOf,
   jf,
   userUnlocks,
   userPasswordOpens,
-  watchScopeOf,
   qi,
   qs,
   type JellyfinRequestContext,

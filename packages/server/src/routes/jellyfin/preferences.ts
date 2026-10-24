@@ -7,8 +7,9 @@ import {
   SUBTITLE_MODES,
   SUBTITLE_TYPES,
   type WatchScope,
+  watchScopeOf,
 } from '@aiostreams/core';
-import { watchScopeOf, type JellyfinRequestContext } from './context.js';
+import { type JellyfinRequestContext } from './context.js';
 
 /** The partition of everyone's defaults, which no profile id can take. */
 const EVERYONE = '*';

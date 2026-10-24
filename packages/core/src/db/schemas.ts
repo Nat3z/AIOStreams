@@ -754,6 +754,8 @@ export const UserDataSchema = z.object({
   variantSelectorLocation: VariantSelectorLocationSchema.optional(),
   /** Request scoped: the install link the request came through, which replaces the configuration's own URL. Never persisted. */
   installUrl: z.string().optional(),
+  /** Request scoped: the persona being served, whose history recommendations read. Never persisted. */
+  watchPersona: z.string().optional(),
   encryptedPassword: z.string().min(1).optional(),
   trusted: z.boolean().optional(),
   showChanges: z.boolean().optional(),
