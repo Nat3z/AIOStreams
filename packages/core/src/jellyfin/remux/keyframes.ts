@@ -22,10 +22,18 @@ const CUE_POINT_ID = 0xbb;
 const CUE_TIME_ID = 0xb3;
 const CUE_TRACK_POSITIONS_ID = 0xb7;
 const CUE_TRACK_ID = 0xf7;
+const ATTACHMENTS_ID = 0x1941a469;
+const ATTACHED_FILE_ID = 0x61a7;
+const FILE_NAME_ID = 0x466e;
+const FILE_MIME_TYPE_ID = 0x4660;
+const FILE_DATA_ID = 0x465c;
 
 const HEAD_BYTES = 64 * 1024;
-/** Cues for hours of video are tens of kilobytes; anything past this is not one. */
-const MAX_ELEMENT_BYTES = 32 * 1024 * 1024;
+/**
+ * Cues for hours of video are tens of kilobytes, but an anime release can
+ * carry tens of megabytes of fonts; anything past this is not one.
+ */
+const MAX_ELEMENT_BYTES = 128 * 1024 * 1024;
 
 interface Element {
   id: number;
@@ -33,6 +41,12 @@ interface Element {
   start: number;
   dataStart: number;
   size: number;
+}
+
+export interface Attachment {
+  name: string;
+  mimeType: string;
+  data: Buffer;
 }
 
 export interface KeyframeIndex {
@@ -98,7 +112,7 @@ async function payloadOf(
   head: Buffer,
   signal: AbortSignal
 ): Promise<Buffer> {
-  if (el.size > MAX_ELEMENT_BYTES) throw new Error('index element too large');
+  if (el.size > MAX_ELEMENT_BYTES) throw new Error('header element too large');
   const end = el.dataStart + el.size;
   if (end <= head.length) return head.subarray(el.dataStart, end);
   return readRange(file, el.dataStart, end, signal);
@@ -114,14 +128,8 @@ async function elementAt(
   return elementsIn(header, 0, header.length, at)[0];
 }
 
-/**
- * The keyframes of a Matroska file's video, from its Cues index, without
- * reading its clusters. Throws when the file has no such index.
- */
-export async function matroskaKeyframes(
-  file: FileReader,
-  signal: AbortSignal
-): Promise<KeyframeIndex> {
+/** The top-level elements of a Matroska file, found through its SeekHead. */
+async function matroskaElements(file: FileReader, signal: AbortSignal) {
   const head = await readRange(file, 0, HEAD_BYTES, signal);
   const [ebml, segment] = elementsIn(head, 0, head.length, 0);
   if (ebml?.id !== EBML_HEADER_ID || segment?.id !== SEGMENT_ID) {
@@ -168,6 +176,19 @@ export async function matroskaKeyframes(
     const el = await elementAt(file, at, signal);
     return el?.id === id ? el : undefined;
   };
+  const payload = (el: Element) => payloadOf(file, el, head, signal);
+  return { locate, payload };
+}
+
+/**
+ * The keyframes of a Matroska file's video, from its Cues index, without
+ * reading its clusters. Throws when the file has no such index.
+ */
+export async function matroskaKeyframes(
+  file: FileReader,
+  signal: AbortSignal
+): Promise<KeyframeIndex> {
+  const { locate, payload } = await matroskaElements(file, signal);
   const [info, tracks, cues] = await Promise.all([
     locate(INFO_ID),
     locate(TRACKS_ID),
@@ -178,7 +199,7 @@ export async function matroskaKeyframes(
   let scale = 1_000_000;
   let duration: number | undefined;
   if (info) {
-    const body = await payloadOf(file, info, head, signal);
+    const body = await payload(info);
     for (const f of elementsIn(body, 0, body.length, info.dataStart)) {
       const off = f.dataStart - info.dataStart;
       if (f.id === TIMESTAMP_SCALE_ID) scale = uint(body, off, f.size);
@@ -186,7 +207,7 @@ export async function matroskaKeyframes(
     }
   }
 
-  const trackBody = await payloadOf(file, tracks, head, signal);
+  const trackBody = await payload(tracks);
   let videoTrack: number | undefined;
   for (const entry of elementsIn(trackBody, 0, trackBody.length, 0)) {
     if (entry.id !== TRACK_ENTRY_ID) continue;
@@ -209,7 +230,7 @@ export async function matroskaKeyframes(
   }
   if (videoTrack === undefined) throw new Error('no video track');
 
-  const cueBody = await payloadOf(file, cues, head, signal);
+  const cueBody = await payload(cues);
   const times: number[] = [];
   for (const point of elementsIn(cueBody, 0, cueBody.length, 0)) {
     if (point.id !== CUE_POINT_ID) continue;
@@ -241,4 +262,34 @@ export async function matroskaKeyframes(
     durationSeconds:
       duration !== undefined ? (duration * scale) / 1e9 : undefined,
   };
+}
+
+/**
+ * The files a Matroska file carries, such as the fonts its styled subtitles
+ * use. Most keep them at the start, so this reads a little of the file.
+ */
+export async function matroskaAttachments(
+  file: FileReader,
+  signal: AbortSignal
+): Promise<Attachment[]> {
+  const { locate, payload } = await matroskaElements(file, signal);
+  const attachments = await locate(ATTACHMENTS_ID);
+  if (!attachments) return [];
+  const body = await payload(attachments);
+  const out: Attachment[] = [];
+  for (const entry of elementsIn(body, 0, body.length, 0)) {
+    if (entry.id !== ATTACHED_FILE_ID) continue;
+    let name = '';
+    let mimeType = '';
+    let data: Buffer | undefined;
+    const end = entry.dataStart + entry.size;
+    for (const f of elementsIn(body, entry.dataStart, end, 0)) {
+      const bytes = body.subarray(f.dataStart, f.dataStart + f.size);
+      if (f.id === FILE_NAME_ID) name = bytes.toString('utf8');
+      if (f.id === FILE_MIME_TYPE_ID) mimeType = bytes.toString('utf8');
+      if (f.id === FILE_DATA_ID) data = Buffer.from(bytes);
+    }
+    if (data) out.push({ name, mimeType, data });
+  }
+  return out;
 }

@@ -502,6 +502,7 @@ const ANONYMOUS_OK = [
   /^\/videos\/[^/]+\/(master|main|live)\.m3u8$/i,
   /^\/videos\/[^/]+\/hls1\//i,
   /^\/videos\/[^/]+\/[^/]+\/subtitles\//i,
+  /^\/videos\/[^/]+\/[^/]+\/attachments(\/|$)/i,
   /^\/items\/[^/]+\/(download|file)$/i,
   /^\/items\/[^/]+\/playbackinfo$/i,
   /^\/items\/[^/]+\/mediasources$/i,
