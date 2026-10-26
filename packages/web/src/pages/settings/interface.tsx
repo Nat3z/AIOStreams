@@ -1,11 +1,11 @@
+import React from 'react';
 import { t } from '@lingui/core/macro';
+import { LuCompass, LuHeart, LuHouse, LuSearch } from 'react-icons/lu';
 import { Select } from '@aiostreams/ui/select';
 import { Combobox } from '@aiostreams/ui/combobox';
 import { Switch } from '@aiostreams/ui/switch';
-import { IconButton } from '@aiostreams/ui/button';
-import { LuEye, LuEyeOff } from 'react-icons/lu';
-import { orderKeyOf, useViews } from '../../lib/queries';
-import { usePlaybackPrefs } from '../../lib/user-config';
+import { cn } from '@aiostreams/ui/core/styling';
+import { useViews } from '../../lib/queries';
 import { libraryLabel } from '../../lib/format';
 import { currentHost } from '../../lib/hosts';
 import {
@@ -24,8 +24,8 @@ import {
   type DesktopNavigation,
   type RailNames,
   type RailShape,
-  type TopBar,
   type TabNames,
+  type TopBar,
   type TouchNavigation,
   type TvNavigation,
   HERO_SECONDS,
@@ -33,254 +33,37 @@ import {
   type PosterLine,
   type PosterSize,
 } from '../../lib/settings';
-import { SettingsCard } from '../../components/settings-card';
-import { LanguageList, onDevice, followsYou, seconds } from './common';
+import {
+  Answer,
+  AnswerGroup,
+  Pills,
+  followsYou,
+  onDevice,
+  seconds,
+} from './common';
+import { Example, cover, useArt, type Art } from './example';
+
+/*
+ * What follows the user comes first, then what's kept on this device. It
+ * opens on an example: a mock of the app with the quick answers beside it.
+ */
 
 const NOTHING = 'none';
 
-/** How the navigation looks, with only what this device shows. */
-function NavigationCard() {
-  const tv = !!currentHost().tv;
-  const touch = matchMedia('(pointer: coarse)').matches;
-  const [touchNavigation, setTouchNavigation] = useSetting(
-    settings.interface.touchNavigation
-  );
-  const [tvNavigation, setTvNavigation] = useSetting(
-    settings.interface.tvNavigation
-  );
-  const [desktopNavigation, setDesktopNavigation] = useSetting(
-    settings.interface.desktopNavigation
-  );
-  const [topBar, setTopBar] = useSetting(settings.interface.topBar);
-  const [tabNames, setTabNames] = useSetting(settings.interface.tabNames);
-  const [railShape, setRailShape] = useSetting(settings.interface.railShape);
-  const [railNames, setRailNames] = useSetting(settings.interface.railNames);
-  const [background, setBackground] = useSetting(
-    settings.interface.barBackground
-  );
-  const rail = tv
-    ? tvNavigation === 'rail'
-    : touch && touchNavigation === 'rail';
-  const topTabs =
-    (tv ? tvNavigation : touch ? touchNavigation : desktopNavigation) === 'top';
-  // A TV's docked rail and fade sit on nothing.
-  const onBar = !tv || (rail ? railShape !== 'docked' : topBar !== 'fade');
-  return (
-    <SettingsCard
-      name="navigation"
-      title={t`Navigation`}
-      description={onDevice()}
-    >
-      {tv && (
-        <Select
-          label={t`Style`}
-          help={t`Side rail runs down the side of the screen; Top tabs sit along the top of each page.`}
-          options={[
-            { value: 'rail', label: t`Side rail` },
-            { value: 'top', label: t`Top tabs` },
-          ]}
-          value={tvNavigation}
-          onValueChange={(value) => setTvNavigation(value as TvNavigation)}
-        />
-      )}
-      {!tv && touch && (
-        <Select
-          label={t`On wide screens`}
-          help={t`Where the navigation goes when the screen is wide enough for a sidebar, such as a tablet held sideways.`}
-          options={[
-            { value: 'rail', label: t`Side rail` },
-            { value: 'bar', label: t`Bottom bar` },
-            { value: 'top', label: t`Top tabs` },
-          ]}
-          value={touchNavigation}
-          onValueChange={(value) =>
-            setTouchNavigation(value as TouchNavigation)
-          }
-        />
-      )}
-      {!tv && !touch && (
-        <Select
-          label={t`On wide screens`}
-          help={t`Where the navigation goes when the window is wide enough for a sidebar.`}
-          options={[
-            { value: 'sidebar', label: t`Sidebar` },
-            { value: 'top', label: t`Top tabs` },
-          ]}
-          value={desktopNavigation}
-          onValueChange={(value) =>
-            setDesktopNavigation(value as DesktopNavigation)
-          }
-        />
-      )}
-      {rail && (
-        <Select
-          label={t`Rail`}
-          help={t`Docked keeps it in a column of its own. Floating hovers it over the page, a little in from the edge. Corner button shrinks it to the current page's button in the top corner, which opens into the whole menu.`}
-          options={[
-            { value: 'docked', label: t`Docked` },
-            { value: 'floating', label: t`Floating` },
-            { value: 'corner', label: t`Corner button` },
-          ]}
-          value={railShape}
-          onValueChange={(value) => setRailShape(value as RailShape)}
-        />
-      )}
-      {rail && railShape !== 'corner' && (
-        <Select
-          label={t`Page names`}
-          help={
-            tv
-              ? t`Whether the rail names each page only while you're in it, or all the time.`
-              : t`Whether the rail names each page under its icon.`
-          }
-          options={
-            tv
-              ? [
-                  { value: 'auto', label: t`While you're in it` },
-                  { value: 'always', label: t`Always` },
-                ]
-              : [
-                  { value: 'auto', label: t`Shown` },
-                  { value: 'never', label: t`Hidden` },
-                ]
-          }
-          value={railNames}
-          onValueChange={(value) => setRailNames(value as RailNames)}
-        />
-      )}
-      {topTabs && (
-        <Select
-          label={t`Top bar`}
-          help={t`How the tabs sit over the page: as floating pills, on a bar across the top, or on nothing but a fade down from the top edge.`}
-          options={[
-            { value: 'pill', label: t`Floating pills` },
-            { value: 'bar', label: t`Bar` },
-            { value: 'fade', label: t`Fade` },
-          ]}
-          value={topBar}
-          onValueChange={(value) => setTopBar(value as TopBar)}
-        />
-      )}
-      {/* Narrow screens other than a TV always have the bottom bar. */}
-      {(!tv || topTabs) && (
-        <Select
-          label={t`Tab names`}
-          help={
-            tv
-              ? t`Whether the tabs name each page beside its icon.`
-              : t`Whether the bar at the bottom, and tabs along the top, name each page.`
-          }
-          options={[
-            { value: 'shown', label: t`Shown` },
-            { value: 'hidden', label: t`Hidden` },
-          ]}
-          value={tabNames}
-          onValueChange={(value) => setTabNames(value as TabNames)}
-        />
-      )}
-      {onBar && (
-        <Select
-          label={t`Background`}
-          help={t`What the navigation sits on over the page: the app's own colour, or glass that shows the page through it. Liquid glass also bends what's behind its edges, which costs more on a slow device.`}
-          options={[
-            { value: 'solid', label: t`Solid` },
-            { value: 'frosted', label: t`Frosted glass` },
-            ...(canRefract
-              ? [{ value: 'liquid', label: t`Liquid glass` }]
-              : []),
-          ]}
-          value={
-            background === 'liquid' && !canRefract ? 'frosted' : background
-          }
-          onValueChange={(value) => setBackground(value as BarBackground)}
-        />
-      )}
-    </SettingsCard>
-  );
-}
-
-/** The libraries in the user's order, each hideable; one added to the addon later joins at the end. */
-function LibraryOrderCard() {
-  const views = useViews(true);
-  const { prefs, update } = usePlaybackPrefs();
-  const hidden = new Set(prefs.MyMediaExcludes ?? []);
-  const toggle = (key: string) =>
-    update({
-      MyMediaExcludes: hidden.has(key)
-        ? [...hidden].filter((k) => k !== key)
-        : [...hidden, key],
-    });
-  // "Because you watched" rows change with the history, so they move as one.
-  const entries = new Map<string, string>();
-  for (const v of views.data?.Items ?? []) {
-    const key = orderKeyOf(v);
-    if (entries.has(key)) continue;
-    entries.set(
-      key,
-      key === v.Id
-        ? [v.Name, libraryLabel(v)].filter(Boolean).join(' · ')
-        : t`Because you watched`
-    );
-  }
-  if (entries.size < 2) return null;
-  return (
-    <SettingsCard
-      name="library-order"
-      title={t`Library order`}
-      description={followsYou()}
-    >
-      <LanguageList
-        fixed
-        label={t`Libraries`}
-        help={t`The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home.`}
-        options={[...entries].map(([value, label]) => ({ value, label }))}
-        value={[...entries.keys()]}
-        muted={(key) => hidden.has(key)}
-        actions={(key, name) => (
-          <IconButton
-            size="sm"
-            intent="gray-subtle"
-            className="size-8 rounded-full"
-            icon={hidden.has(key) ? <LuEyeOff /> : <LuEye />}
-            aria-label={hidden.has(key) ? t`Show ${name}` : t`Hide ${name}`}
-            aria-pressed={hidden.has(key)}
-            onClick={() => toggle(key)}
-          />
-        )}
-        onChange={(next) => update({ OrderedViews: next })}
-      />
-    </SettingsCard>
-  );
-}
-
-/** The app's own language, each user's. */
-function LanguageCard() {
-  const [language, setLanguage] = useSetting(settings.interface.language);
-  const listed = LOCALES.filter(
-    (l) => !HIDDEN_LOCALES.includes(l) || import.meta.env.DEV || l === language
-  )
-    .map((l) => ({ value: l, label: localeName(l) }))
-    .sort((a, b) => a.label.localeCompare(b.label));
-  const system = localeName(systemLocale());
-  return (
-    <SettingsCard
-      name="language"
-      title={t`Language`}
-      description={followsYou()}
-    >
-      <Select
-        label={t`App language`}
-        help={t`Titles, synopses and stream names stay in the language your addons send.`}
-        options={[{ value: 'auto', label: t`System (${system})` }, ...listed]}
-        value={LOCALES.includes(language) ? language : 'auto'}
-        onValueChange={setLanguage}
-      />
-    </SettingsCard>
-  );
-}
-
 export function InterfaceSection() {
+  return (
+    <div className="space-y-12">
+      <Home />
+      <Grids />
+      <ThisDevice />
+    </div>
+  );
+}
+
+/** The app's language and what home opens on. */
+function Home() {
   const views = useViews();
+  const [language, setLanguage] = useSetting(settings.interface.language);
   const [featured, setFeatured] = useSetting(settings.interface.featured);
   const [heroMode, setHeroMode] = useSetting(settings.interface.heroMode);
   const [heroSeconds, setHeroSeconds] = useSetting(
@@ -289,20 +72,13 @@ export function InterfaceSection() {
   const [mergeNextUp, setMergeNextUp] = useSetting(
     settings.interface.mergeNextUp
   );
-  const [combineSearch, setCombineSearch] = useSetting(
-    settings.interface.combineSearch
-  );
-  const [posterSize, setPosterSize] = useSetting(settings.interface.posterSize);
-  const [posterLines, setPosterLines] = useSetting(
-    settings.interface.posterLines
-  );
-  const [episodeLayout, setEpisodeLayout] = useSetting(
-    settings.interface.episodeLayout
-  );
-  const [cardPreviews, setCardPreviews] = useSetting(
-    settings.interface.cardPreviews
-  );
-  const touch = !currentHost().tv && matchMedia('(pointer: coarse)').matches;
+
+  const listed = LOCALES.filter(
+    (l) => !HIDDEN_LOCALES.includes(l) || import.meta.env.DEV || l === language
+  )
+    .map((l) => ({ value: l, label: localeName(l) }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+  const system = localeName(systemLocale());
 
   const option = (value: string, label: string) => ({
     value,
@@ -341,114 +117,738 @@ export function InterfaceSection() {
   };
 
   return (
-    <>
-      <LanguageCard />
-      <SettingsCard
-        name="home-and-grids"
-        title={t`Home and grids`}
-        description={followsYou()}
+    <AnswerGroup
+      name="language"
+      title={t`Language and home`}
+      description={followsYou()}
+    >
+      <Answer
+        label={t`Language`}
+        help={t`Titles, synopses and stream names stay in the language your addons send.`}
       >
-        <Combobox
-          multiple
-          label={t`Featured on home`}
-          help={t`Up to ${MAX_FEATURED}, mixed together. Left empty, your first movie and series catalogs are featured.`}
-          placeholder={t`Automatic`}
-          emptyMessage={t`Nothing matches.`}
-          options={featuredOptions}
-          maxItems={MAX_FEATURED}
-          value={featuredValue}
-          onValueChange={changeFeatured}
-        />
-        <Select
+        <div className="max-w-md">
+          <Select
+            aria-label={t`App language`}
+            options={[
+              { value: 'auto', label: t`System (${system})` },
+              ...listed,
+            ]}
+            value={LOCALES.includes(language) ? language : 'auto'}
+            onValueChange={setLanguage}
+          />
+        </div>
+      </Answer>
+      <Answer
+        label={t`Featured`}
+        help={t`Up to ${MAX_FEATURED}, mixed together. Left empty, your first movie and series catalogs are featured.`}
+      >
+        <div className="max-w-md">
+          <Combobox
+            multiple
+            aria-label={t`Featured on home`}
+            placeholder={t`Automatic`}
+            emptyMessage={t`Nothing matches.`}
+            options={featuredOptions}
+            maxItems={MAX_FEATURED}
+            value={featuredValue}
+            onValueChange={changeFeatured}
+          />
+        </div>
+      </Answer>
+      <Answer
+        label={t`Hero`}
+        help={
+          heroMode === 'rotate'
+            ? t`Rotates through the featured titles.`
+            : t`Pinned above the rows, showing the card the pointer, keyboard or remote is on. Touch screens and narrow windows keep it rotating.`
+        }
+      >
+        <Pills
           label={t`Hero`}
-          help={t`Following pins it above the rows and shows the card the pointer, keyboard or remote is on, starting with a featured title, behind the whole page or in its top corner. Touch screens and narrow windows keep it rotating.`}
-          options={[
-            { value: 'rotate', label: t`Rotates through featured titles` },
-            { value: 'follow', label: t`Follows the selected card` },
-            {
-              value: 'corner',
-              label: t`Follows the selected card, in the corner`,
-            },
-          ]}
-          value={heroMode}
-          onValueChange={(value) => setHeroMode(value as HeroMode)}
+          options={heroOptions()}
+          isOn={(v) => v === heroMode}
+          onPick={(v) => setHeroMode(v as HeroMode)}
         />
-        <Select
-          label={t`Time on each title`}
-          help={t`How long the hero stays on a featured title while it rotates.`}
-          options={HERO_SECONDS.map((s) => ({
-            value: String(s),
-            label: seconds(s),
-          }))}
-          value={String(heroSeconds)}
-          onValueChange={(v) => setHeroSeconds(Number(v))}
-        />
+      </Answer>
+      <Answer
+        label={t`Time on each title`}
+        help={t`How long the hero stays on a featured title while it rotates.`}
+      >
+        <div className="max-w-md">
+          <Select
+            aria-label={t`Time on each title`}
+            options={HERO_SECONDS.map((s) => ({
+              value: String(s),
+              label: seconds(s),
+            }))}
+            value={String(heroSeconds)}
+            onValueChange={(v) => setHeroSeconds(Number(v))}
+          />
+        </div>
+      </Answer>
+      <Answer label={t`Rows`}>
         <Switch
           side="right"
           label={t`Merge continue watching and next up`}
-          help={t`Shows next episodes in the continue watching row, after what you are partway through.`}
+          help={t`Next episodes join the continue watching row, after what you are partway through.`}
           value={mergeNextUp}
           onValueChange={setMergeNextUp}
         />
-        <Switch
-          side="right"
-          label={t`Combine movie and show results`}
-          help={t`Shows search results in one grid instead of a row each for movies and shows.`}
-          value={combineSearch}
-          onValueChange={setCombineSearch}
-        />
-        <Select
+      </Answer>
+    </AnswerGroup>
+  );
+}
+
+const heroOptions = () => [
+  { value: 'rotate', label: t`Rotates` },
+  { value: 'follow', label: t`Follows the card` },
+  { value: 'corner', label: t`In the corner` },
+];
+
+const posterSizeOptions = () => [
+  { value: 'small', label: t`Small` },
+  { value: 'medium', label: t`Medium` },
+  { value: 'large', label: t`Large` },
+];
+
+const posterLineOptions = () => [
+  { value: 'title', label: t`Title` },
+  { value: 'year', label: t`Year` },
+];
+
+const episodeOptions = () => [
+  { value: 'auto', label: t`Automatic` },
+  { value: 'row', label: t`Row` },
+  { value: 'list', label: t`List` },
+];
+
+const backgroundOptions = () => [
+  { value: 'solid', label: t`Solid` },
+  { value: 'frosted', label: t`Frosted glass` },
+  ...(canRefract ? [{ value: 'liquid', label: t`Liquid glass` }] : []),
+];
+
+/** Glass that can't bend falls back to frosted. */
+const shownBackground = (background: BarBackground): BarBackground =>
+  background === 'liquid' && !canRefract ? 'frosted' : background;
+
+const toggled = (lines: PosterLine[], line: PosterLine): PosterLine[] =>
+  lines.includes(line) ? lines.filter((l) => l !== line) : [...lines, line];
+
+/** How posters and results are laid out. */
+function Grids() {
+  const [posterSize, setPosterSize] = useSetting(settings.interface.posterSize);
+  const [posterLines, setPosterLines] = useSetting(
+    settings.interface.posterLines
+  );
+  const [combineSearch, setCombineSearch] = useSetting(
+    settings.interface.combineSearch
+  );
+  const [cardPreviews, setCardPreviews] = useSetting(
+    settings.interface.cardPreviews
+  );
+  const touch = !currentHost().tv && matchMedia('(pointer: coarse)').matches;
+
+  return (
+    <AnswerGroup
+      name="home-and-grids"
+      title={t`Posters and search`}
+      description={followsYou()}
+    >
+      <Answer label={t`Poster size`} help={t`How large cards are in a grid.`}>
+        <Pills
           label={t`Poster size`}
-          help={t`How large cards are in a grid.`}
-          options={[
-            { value: 'small', label: t`Small` },
-            { value: 'medium', label: t`Medium` },
-            { value: 'large', label: t`Large` },
-          ]}
-          value={posterSize}
-          onValueChange={(value) => setPosterSize(value as PosterSize)}
+          options={posterSizeOptions()}
+          isOn={(v) => v === posterSize}
+          onPick={(v) => setPosterSize(v as PosterSize)}
         />
-        <Combobox
+      </Answer>
+      <Answer
+        label={t`Under posters`}
+        help={t`With neither, posters stand alone. One without artwork still shows its title.`}
+      >
+        <Pills
           multiple
           label={t`Under posters`}
-          help={t`Left empty, posters stand alone. A poster without artwork still shows its title.`}
-          placeholder={t`Nothing`}
-          emptyMessage={t`Nothing matches.`}
-          options={[option('title', t`Title`), option('year', t`Year`)]}
-          value={posterLines}
-          onValueChange={(value) => setPosterLines(value as PosterLine[])}
+          options={posterLineOptions()}
+          isOn={(v) => posterLines.includes(v as PosterLine)}
+          onPick={(v) => setPosterLines(toggled(posterLines, v as PosterLine))}
         />
-      </SettingsCard>
+      </Answer>
       {!touch && (
-        <SettingsCard name="cards" title={t`Cards`} description={onDevice()}>
+        <Answer label={t`Cards`}>
           <Switch
             side="right"
             label={t`Previews`}
-            help={t`A card you rest on grows into a bigger preview with its details, while the hero rotates.`}
+            help={t`A card you rest on grows into a bigger preview with its details, while the hero rotates. Kept on this device.`}
             value={cardPreviews}
             onValueChange={setCardPreviews}
           />
-        </SettingsCard>
+        </Answer>
       )}
-      <LibraryOrderCard />
-      <SettingsCard
-        name="episodes"
-        title={t`Episodes`}
-        description={onDevice()}
-      >
-        <Select
-          label={t`Episode layout`}
-          help={t`Automatic lists episodes on narrow screens and puts them in a row on wide ones.`}
-          options={[
-            { value: 'auto', label: t`Automatic` },
-            { value: 'row', label: t`Row` },
-            { value: 'list', label: t`List` },
-          ]}
-          value={episodeLayout}
-          onValueChange={(value) => setEpisodeLayout(value as EpisodeLayout)}
+      <Answer label={t`Search`}>
+        <Switch
+          side="right"
+          label={t`Combine movie and show results`}
+          help={t`One grid instead of a row each for movies and shows.`}
+          value={combineSearch}
+          onValueChange={setCombineSearch}
         />
-      </SettingsCard>
-      <NavigationCard />
-    </>
+      </Answer>
+    </AnswerGroup>
+  );
+}
+
+/** Episodes and navigation, with only what this device shows. */
+function ThisDevice() {
+  const tv = !!currentHost().tv;
+  const touch = matchMedia('(pointer: coarse)').matches;
+  const [episodeLayout, setEpisodeLayout] = useSetting(
+    settings.interface.episodeLayout
+  );
+  const [touchNavigation, setTouchNavigation] = useSetting(
+    settings.interface.touchNavigation
+  );
+  const [tvNavigation, setTvNavigation] = useSetting(
+    settings.interface.tvNavigation
+  );
+  const [desktopNavigation, setDesktopNavigation] = useSetting(
+    settings.interface.desktopNavigation
+  );
+  const [topBar, setTopBar] = useSetting(settings.interface.topBar);
+  const [tabNames, setTabNames] = useSetting(settings.interface.tabNames);
+  const [railShape, setRailShape] = useSetting(settings.interface.railShape);
+  const [railNames, setRailNames] = useSetting(settings.interface.railNames);
+  const [background, setBackground] = useSetting(
+    settings.interface.barBackground
+  );
+  const rail = tv
+    ? tvNavigation === 'rail'
+    : touch && touchNavigation === 'rail';
+  const topTabs =
+    (tv ? tvNavigation : touch ? touchNavigation : desktopNavigation) === 'top';
+  // A TV's docked rail and fade sit on nothing.
+  const onBar = !tv || (rail ? railShape !== 'docked' : topBar !== 'fade');
+  const shown = shownBackground(background);
+
+  return (
+    <AnswerGroup
+      name="navigation"
+      title={t`This device`}
+      description={onDevice()}
+    >
+      <Answer
+        label={t`Episodes`}
+        help={
+          episodeLayout === 'auto'
+            ? t`Listed on narrow screens, in a row on wide ones.`
+            : undefined
+        }
+      >
+        <Pills
+          label={t`Episodes`}
+          options={episodeOptions()}
+          isOn={(v) => v === episodeLayout}
+          onPick={(v) => setEpisodeLayout(v as EpisodeLayout)}
+        />
+      </Answer>
+      {tv && (
+        <Answer label={t`Navigation`}>
+          <Pills
+            label={t`Navigation`}
+            options={[
+              { value: 'rail', label: t`Side rail` },
+              { value: 'top', label: t`Top tabs` },
+            ]}
+            isOn={(v) => v === tvNavigation}
+            onPick={(v) => setTvNavigation(v as TvNavigation)}
+          />
+        </Answer>
+      )}
+      {!tv && touch && (
+        <Answer
+          label={t`Wide screens`}
+          help={t`Where the navigation goes when there's room for a sidebar, such as a tablet held sideways.`}
+        >
+          <Pills
+            label={t`Wide screens`}
+            options={[
+              { value: 'rail', label: t`Side rail` },
+              { value: 'bar', label: t`Bottom bar` },
+              { value: 'top', label: t`Top tabs` },
+            ]}
+            isOn={(v) => v === touchNavigation}
+            onPick={(v) => setTouchNavigation(v as TouchNavigation)}
+          />
+        </Answer>
+      )}
+      {!tv && !touch && (
+        <Answer
+          label={t`Wide screens`}
+          help={t`Where the navigation goes when the window is wide enough for a sidebar.`}
+        >
+          <Pills
+            label={t`Wide screens`}
+            options={[
+              { value: 'sidebar', label: t`Sidebar` },
+              { value: 'top', label: t`Top tabs` },
+            ]}
+            isOn={(v) => v === desktopNavigation}
+            onPick={(v) => setDesktopNavigation(v as DesktopNavigation)}
+          />
+        </Answer>
+      )}
+      {rail && (
+        <Answer
+          label={t`Rail`}
+          help={
+            railShape === 'docked'
+              ? t`In a column of its own.`
+              : railShape === 'floating'
+                ? t`Hovering over the page, a little in from the edge.`
+                : t`Just the current page's button in the top corner, which opens into the whole menu.`
+          }
+        >
+          <Pills
+            label={t`Rail`}
+            options={[
+              { value: 'docked', label: t`Docked` },
+              { value: 'floating', label: t`Floating` },
+              { value: 'corner', label: t`Corner button` },
+            ]}
+            isOn={(v) => v === railShape}
+            onPick={(v) => setRailShape(v as RailShape)}
+          />
+        </Answer>
+      )}
+      {rail && railShape !== 'corner' && (
+        <Answer label={t`Page names`}>
+          <Pills
+            label={t`Page names`}
+            options={
+              tv
+                ? [
+                    { value: 'auto', label: t`While you're in it` },
+                    { value: 'always', label: t`Always` },
+                  ]
+                : [
+                    { value: 'auto', label: t`Shown` },
+                    { value: 'never', label: t`Hidden` },
+                  ]
+            }
+            isOn={(v) => v === railNames}
+            onPick={(v) => setRailNames(v as RailNames)}
+          />
+        </Answer>
+      )}
+      {topTabs && (
+        <Answer label={t`Top bar`}>
+          <Pills
+            label={t`Top bar`}
+            options={[
+              { value: 'pill', label: t`Floating pills` },
+              { value: 'bar', label: t`Bar` },
+              { value: 'fade', label: t`Fade` },
+            ]}
+            isOn={(v) => v === topBar}
+            onPick={(v) => setTopBar(v as TopBar)}
+          />
+        </Answer>
+      )}
+      {/* Narrow screens other than a TV always have the bottom bar. */}
+      {(!tv || topTabs) && (
+        <Answer
+          label={t`Tab names`}
+          help={
+            tv
+              ? t`Whether the tabs name each page beside its icon.`
+              : t`Whether the bar at the bottom, and tabs along the top, name each page.`
+          }
+        >
+          <Pills
+            label={t`Tab names`}
+            options={[
+              { value: 'shown', label: t`Shown` },
+              { value: 'hidden', label: t`Hidden` },
+            ]}
+            isOn={(v) => v === tabNames}
+            onPick={(v) => setTabNames(v as TabNames)}
+          />
+        </Answer>
+      )}
+      {onBar && (
+        <Answer
+          label={t`Navigation background`}
+          help={
+            shown === 'liquid'
+              ? t`Glass that also bends what's behind its edges, which costs more on a slow device.`
+              : shown === 'frosted'
+                ? t`Glass that shows the page through it.`
+                : t`The app's own colour.`
+          }
+        >
+          <Pills
+            label={t`Navigation background`}
+            options={backgroundOptions()}
+            isOn={(v) => v === shown}
+            onPick={(v) => setBackground(v as BarBackground)}
+          />
+        </Answer>
+      )}
+    </AnswerGroup>
+  );
+}
+
+/* ------------------------------------------------------------ the example */
+
+interface Look {
+  hero: HeroMode;
+  size: PosterSize;
+  lines: PosterLine[];
+  episodes: EpisodeLayout;
+  background: BarBackground;
+}
+
+type LookScene = 'home' | 'show';
+
+interface LookQuestion {
+  id: keyof Look;
+  scene: LookScene;
+  title: string;
+  multiple?: boolean;
+  options: { value: string; label: string }[];
+  isOn: (v: string) => boolean;
+  pick: (v: string) => void;
+  peek: (v: string) => Partial<Look>;
+}
+
+const POSTERS_ACROSS: Record<PosterSize, number> = {
+  small: 6,
+  medium: 5,
+  large: 4,
+};
+
+function explainLook(look: Look, id: keyof Look): string {
+  switch (id) {
+    case 'hero':
+      return look.hero === 'rotate'
+        ? t`The hero rotates through featured titles above the rows.`
+        : look.hero === 'follow'
+          ? t`The hero shows the card you're on, behind the whole page.`
+          : t`The card you're on shows in the top corner, leaving the page to the rows.`;
+    case 'size': {
+      const across = POSTERS_ACROSS[look.size];
+      return t`${across} posters fit across a row in a wide window.`;
+    }
+    case 'lines':
+      return !look.lines.length
+        ? t`Posters stand alone.`
+        : look.lines.length === 2
+          ? t`Each poster has its title and year under it.`
+          : look.lines[0] === 'title'
+            ? t`Each poster has its title under it.`
+            : t`Each poster has its year under it.`;
+    case 'episodes':
+      return look.episodes === 'auto'
+        ? t`Episodes sit in a row on a wide screen, and in a list on a narrow one.`
+        : look.episodes === 'row'
+          ? t`Episodes sit in a row you scroll sideways.`
+          : t`Episodes are listed one under another, with more about each.`;
+    case 'background':
+      return look.background === 'solid'
+        ? t`The navigation sits on the app's own colour.`
+        : look.background === 'frosted'
+          ? t`The navigation is frosted glass, the page blurred through it.`
+          : t`The navigation is liquid glass, bending the page at its edges.`;
+  }
+}
+
+/** Interface's example: a mock of the app, the quick answers beside it. */
+export function InterfaceExample() {
+  const [heroMode, setHeroMode] = useSetting(settings.interface.heroMode);
+  const [posterSize, setPosterSize] = useSetting(settings.interface.posterSize);
+  const [posterLines, setPosterLines] = useSetting(
+    settings.interface.posterLines
+  );
+  const [episodeLayout, setEpisodeLayout] = useSetting(
+    settings.interface.episodeLayout
+  );
+  const [background, setBackground] = useSetting(
+    settings.interface.barBackground
+  );
+  const art = useArt();
+  const look: Look = {
+    hero: heroMode,
+    size: posterSize,
+    lines: posterLines,
+    episodes: episodeLayout,
+    background: shownBackground(background),
+  };
+  const [peek, setPeek] = React.useState<Partial<Look> | null>(null);
+  const [at, setAt] = React.useState<keyof Look>('hero');
+  const view: Look = { ...look, ...peek };
+
+  const questions: LookQuestion[] = [
+    {
+      id: 'hero',
+      scene: 'home',
+      title: t`Hero`,
+      options: heroOptions(),
+      isOn: (v) => v === look.hero,
+      pick: (v) => setHeroMode(v as HeroMode),
+      peek: (v) => ({ hero: v as HeroMode }),
+    },
+    {
+      id: 'size',
+      scene: 'home',
+      title: t`Poster size`,
+      options: posterSizeOptions(),
+      isOn: (v) => v === look.size,
+      pick: (v) => setPosterSize(v as PosterSize),
+      peek: (v) => ({ size: v as PosterSize }),
+    },
+    {
+      id: 'lines',
+      scene: 'home',
+      title: t`Under posters`,
+      multiple: true,
+      options: posterLineOptions(),
+      isOn: (v) => look.lines.includes(v as PosterLine),
+      pick: (v) => setPosterLines(toggled(look.lines, v as PosterLine)),
+      peek: (v) => ({ lines: toggled(look.lines, v as PosterLine) }),
+    },
+    {
+      id: 'background',
+      scene: 'home',
+      title: t`Navigation background`,
+      options: backgroundOptions(),
+      isOn: (v) => v === look.background,
+      pick: (v) => setBackground(v as BarBackground),
+      peek: (v) => ({ background: v as BarBackground }),
+    },
+    {
+      id: 'episodes',
+      scene: 'show',
+      title: t`Episodes`,
+      options: episodeOptions(),
+      isOn: (v) => v === look.episodes,
+      pick: (v) => setEpisodeLayout(v as EpisodeLayout),
+      peek: (v) => ({ episodes: v as EpisodeLayout }),
+    },
+  ];
+  const scene = questions.find((q) => q.id === at)?.scene ?? 'home';
+
+  return (
+    <Example
+      frame={<MockApp look={view} scene={scene} art={art} />}
+      note={explainLook(view, at)}
+      peeking={peek !== null}
+      questions={questions.map((q) => ({
+        id: q.id,
+        title: q.title,
+        onAt: () => setAt(q.id),
+        body: (
+          <Pills
+            label={q.title}
+            multiple={q.multiple}
+            options={q.options}
+            isOn={q.isOn}
+            onPick={q.pick}
+            onPeek={(v) => setPeek(v === null ? null : q.peek(v))}
+          />
+        ),
+      }))}
+    />
+  );
+}
+
+/** A mock of the app from the user's own titles, sized in em so it reads the same at any width. */
+function MockApp({
+  look,
+  scene,
+  art,
+}: {
+  look: Look;
+  scene: LookScene;
+  art: Art[];
+}) {
+  // The card the pointer is on, which a following hero shows.
+  const focused = art[1];
+  const behind = scene === 'show' || look.hero === 'follow';
+  return (
+    <div
+      aria-hidden
+      className="relative aspect-video overflow-hidden rounded-2xl bg-gray-950 bg-cover bg-center ring-1 ring-white/10 [container-type:inline-size]"
+      style={behind ? cover(focused?.backdrop) : undefined}
+    >
+      {behind && (
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 via-gray-950/70 to-black/30" />
+      )}
+      <div
+        className="absolute inset-0 overflow-hidden"
+        style={{ fontSize: 'min(1.9cqw, 13px)' }}
+      >
+        {scene === 'home' ? (
+          <MockHome look={look} art={art} />
+        ) : (
+          <MockShow look={look} art={art} />
+        )}
+        <MockNav background={look.background} />
+      </div>
+    </div>
+  );
+}
+
+function MockHome({ look, art }: { look: Look; art: Art[] }) {
+  const across = POSTERS_ACROSS[look.size];
+  const [lead, focused] = [art[0], art[1]];
+  return (
+    <div className="space-y-[1.2em] p-[1.2em]">
+      {look.hero === 'rotate' && (
+        <div
+          className="relative flex h-[11em] items-end overflow-hidden rounded-[0.8em] bg-gray-800 bg-cover bg-center p-[1em]"
+          style={cover(lead?.backdrop)}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="relative">
+            <p className="text-[1.6em] font-bold leading-tight">{lead?.name}</p>
+            <p className="text-[0.85em] text-white/70">{lead?.year}</p>
+          </div>
+          <div className="absolute bottom-[1em] end-[1em] flex gap-[0.3em]">
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className={cn(
+                  'h-[0.35em] rounded-full bg-white',
+                  i ? 'w-[0.35em] opacity-40' : 'w-[1em]'
+                )}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+      {look.hero === 'follow' && (
+        <div className="flex h-[8em] flex-col justify-end">
+          <p className="text-[1.8em] font-bold leading-tight">
+            {focused?.name}
+          </p>
+          <p className="text-[0.85em] text-white/70">{focused?.year}</p>
+        </div>
+      )}
+      {look.hero === 'corner' && (
+        <div className="flex items-start justify-between gap-[1em]">
+          <p className="pt-[0.3em] text-[1.4em] font-bold">{t`Home`}</p>
+          <div
+            className="relative flex aspect-video w-[42%] items-end overflow-hidden rounded-[0.6em] bg-gray-800 bg-cover bg-center p-[0.6em]"
+            style={cover(focused?.backdrop)}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+            <p className="relative text-[0.9em] font-semibold">
+              {focused?.name}
+            </p>
+          </div>
+        </div>
+      )}
+      {[0, 1].map((row) => (
+        <div key={row} className="space-y-[0.5em]">
+          <span className="block h-[0.9em] w-[8em] rounded-full bg-white/15" />
+          <div
+            className="grid gap-[0.6em]"
+            style={{ gridTemplateColumns: `repeat(${across}, minmax(0, 1fr))` }}
+          >
+            {Array.from({ length: across }, (_, i) => {
+              const item = art.length
+                ? art[(i + row * 3) % art.length]
+                : undefined;
+              return (
+                <div key={i} className="min-w-0 space-y-[0.25em]">
+                  <div
+                    className={cn(
+                      'aspect-[2/3] rounded-[0.5em] bg-gray-800 bg-cover bg-center transition-all',
+                      look.hero !== 'rotate' &&
+                        row === 0 &&
+                        i === 1 &&
+                        'ring-[0.15em] ring-white'
+                    )}
+                    style={cover(item?.poster)}
+                  />
+                  {look.lines.includes('title') && (
+                    <p className="truncate text-[0.75em]">
+                      {item?.name || ' '}
+                    </p>
+                  )}
+                  {look.lines.includes('year') && (
+                    <p className="text-[0.7em] text-white/60">
+                      {item?.year || ' '}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function MockShow({ look, art }: { look: Look; art: Art[] }) {
+  const list = look.episodes === 'list';
+  const show = art[1];
+  return (
+    <div className="space-y-[1.2em] p-[1.2em]">
+      <div className="flex h-[9em] flex-col justify-end">
+        <p className="text-[1.8em] font-bold leading-tight">{show?.name}</p>
+        <p className="text-[0.85em] text-white/70">{t`Season 1`}</p>
+      </div>
+      <div
+        className={cn(
+          list
+            ? 'space-y-[0.6em]'
+            : 'flex gap-[0.8em] [&>*]:w-[38%] [&>*]:flex-none'
+        )}
+      >
+        {[1, 2, 3, 4].map((n) => (
+          <div key={n} className={cn(list && 'flex items-center gap-[0.8em]')}>
+            <div
+              className={cn(
+                'aspect-video rounded-[0.5em] bg-gray-800 bg-cover bg-center',
+                list ? 'w-[9em] flex-none' : 'w-full'
+              )}
+              style={cover(art[n + 1]?.backdrop)}
+            />
+            <div className={cn('min-w-0', !list && 'pt-[0.4em]')}>
+              <p className="truncate text-[0.85em] font-medium">
+                {t`Episode ${n}`}
+              </p>
+              {list && (
+                <span className="mt-[0.4em] block h-[0.7em] w-[80%] rounded-full bg-white/10" />
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** The bottom bar over the page, on what the background answer says. */
+function MockNav({ background }: { background: BarBackground }) {
+  return (
+    <div
+      className={cn(
+        'absolute inset-x-0 bottom-[1em] mx-auto flex w-fit gap-[1.6em] rounded-full border px-[1.6em] py-[0.8em] text-[1.1em] transition-all',
+        background === 'solid' && 'border-white/10 bg-gray-900',
+        background === 'frosted' &&
+          'border-white/15 bg-white/10 backdrop-blur-md',
+        background === 'liquid' &&
+          'border-white/30 bg-white/5 shadow-[inset_0_1px_0_rgb(255_255_255/0.4),inset_0_-1px_0_rgb(255_255_255/0.15)] backdrop-blur-sm backdrop-saturate-150'
+      )}
+    >
+      <LuHouse />
+      <LuCompass className="opacity-60" />
+      <LuSearch className="opacity-60" />
+      <LuHeart className="opacity-60" />
+    </div>
   );
 }

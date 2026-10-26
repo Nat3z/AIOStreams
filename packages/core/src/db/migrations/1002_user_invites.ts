@@ -20,7 +20,7 @@ const ddl = (int: string) => `
 `;
 
 export const userInvites: Migration = {
-  id: 50,
+  id: 1002,
   name: 'user_invites',
   up: { sqlite: ddl('INTEGER'), postgres: ddl('BIGINT') },
 };
