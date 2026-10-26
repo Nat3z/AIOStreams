@@ -24,6 +24,7 @@ import remoteRouter from './remote.js';
 import libraryRouter from './library.js';
 import playbackRouter from './playback.js';
 import subtitlesRouter from './subtitles.js';
+import remuxRouter from './remux.js';
 import imagesRouter from './images.js';
 import playstateRouter from './playstate.js';
 import playlistsRouter from './playlists.js';
@@ -68,6 +69,8 @@ const LOGIN_LIKE =
 const IMAGE_LIKE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general)(\/|$)/i;
 const STREAM_LIKE = /^\/items\/[^/]+\/(playbackinfo|mediasources)$/i;
+/* A remux's parts, which a seeking player asks for in bursts. */
+const REMUX_PART = /^\/videos\/[^/]+\/(main\.m3u8$|hls1\/)/i;
 /* Routes whose bodies are worth revalidating rather than re-sending. */
 const CACHEABLE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general|videos\/)/i;
@@ -180,7 +183,7 @@ export function createJellyfinRouter(): Router {
       !(req.method === 'GET' && /^\/aiostreams\/profile\//i.test(req.path))
     ) {
       jellyfinLoginRateLimiter(req, res, next);
-    } else if (IMAGE_LIKE.test(req.path)) {
+    } else if (IMAGE_LIKE.test(req.path) || REMUX_PART.test(req.path)) {
       jellyfinImageRateLimiter(req, res, next);
     } else if (STREAM_LIKE.test(req.path)) {
       stremioStreamRateLimiter(req, res, next);
@@ -220,6 +223,7 @@ export function createJellyfinRouter(): Router {
   router.use(usersRouter);
   router.use(quickConnectRouter);
   router.use(playbackRouter);
+  router.use(remuxRouter);
   router.use(subtitlesRouter);
   router.use(imagesRouter);
   router.use(playstateRouter);
