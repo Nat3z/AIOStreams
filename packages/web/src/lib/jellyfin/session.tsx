@@ -333,9 +333,14 @@ export function useSessionPhase(base: string, askAll?: () => void) {
       const invite = inviteToken();
       if (invite) {
         const auth = await anonymous
-          .post<AuthenticationResult>('/AIOStreams/Invite', { Token: invite })
+          .post<AuthenticationResult & { SetUp?: boolean }>(
+            '/AIOStreams/Invite',
+            { Token: invite }
+          )
           .catch(() => null);
         if (auth?.AccessToken) {
+          // Reopened where it was already set up: the app, not the welcome steps.
+          if (auth.SetUp) await startOver(to.home);
           if (!cancelled) adopt(anonymous, auth);
           return;
         }

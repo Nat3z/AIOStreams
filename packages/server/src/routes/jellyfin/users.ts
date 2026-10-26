@@ -59,6 +59,7 @@ import { saveSelf } from './profile.js';
 import { serverName } from './system.js';
 import { sessionIdOf } from './session-sockets.js';
 import { controllableDevices, type RemoteDevice } from './remote.js';
+import { inviteDevice } from '../../middlewares/auth.js';
 
 const logger = createLogger('jellyfin');
 const router: Router = Router({ mergeParams: true });
@@ -619,13 +620,17 @@ router.post(
   })
 );
 
-// Whoever holds a setup link signs in as its user until they finish with it.
+// A setup link signs in as its user on the first device to open it, and only
+// there after, even once they've finished with it.
 router.post(
   '/AIOStreams/Invite',
   jfOptional(async (req, res) => {
     const body = (req.body ?? {}) as Record<string, unknown>;
     const token = String(body.Token ?? body.token ?? '');
-    const found = token ? await UserInviteRepository.find(token) : null;
+    const opened = token
+      ? await UserInviteRepository.open(token, inviteDevice(req, res))
+      : null;
+    const found = opened?.target;
     const mount = req.jfMount;
     const invite =
       found &&
@@ -639,25 +644,27 @@ router.post(
       : null;
     const persona =
       invite && userData ? personaById(userData, invite.persona) : null;
-    if (!invite || !userData || !persona) {
+    if (!opened || !invite || !userData || !persona) {
       res
         .status(401)
-        .json({ Message: 'This link has expired or was already used' });
+        .json({ Message: 'This link has expired or was opened elsewhere' });
       return;
     }
     logger.info(
-      { uuid: invite.uuid, persona: persona.id },
+      { uuid: invite.uuid, persona: persona.id, done: opened.done },
       'setup link opened'
     );
-    res.json(
-      await authenticationResult(
+    res.json({
+      ...(await authenticationResult(
         req,
         invite.uuid,
         invite.encryptedPassword,
         userData,
         persona
-      )
-    );
+      )),
+      // Already set up, so the app opens rather than the welcome steps.
+      SetUp: opened.done,
+    });
   })
 );
 
