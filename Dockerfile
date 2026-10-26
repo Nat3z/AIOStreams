@@ -102,7 +102,9 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/* \
   && cp /usr/lib/*/libmimalloc.so.2 /usr/local/lib/libmimalloc.so.2
 
-# zlib is linked statically: the runtime image has no libz.
+# zlib is linked statically: the runtime image has no libz. ffmpeg only
+# remuxes for browsers: it copies video, decodes audio to AAC and reads text
+# subtitles as WebVTT, so it encodes nothing else.
 FROM debian:12-slim AS ffprobe
 ARG FFMPEG_VERSION=8.1.3
 ARG FFMPEG_SHA256=7138d28c96d9d3e3af4ee3d8cad72741f8ffb40da90c1112235dea3ecd3178a3
@@ -116,15 +118,18 @@ RUN curl -fsSL -o ffmpeg.tar.xz "https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VER
   && tar -xJf ffmpeg.tar.xz --strip-components=1 \
   && ./configure \
     --disable-everything --disable-autodetect --disable-doc --disable-debug \
-    --disable-programs --enable-ffprobe \
-    --disable-avdevice --disable-avfilter --disable-swscale --disable-swresample \
+    --disable-programs --enable-ffprobe --enable-ffmpeg \
+    --disable-avdevice --disable-swscale \
     --disable-x86asm --enable-zlib \
-    --enable-protocol=file,http,tcp \
+    --enable-protocol=file,http,tcp,pipe \
     --enable-demuxer=asf,avi,flv,matroska,mov,mpegps,mpegts,ogg \
     --enable-parser=aac,aac_latm,ac3,av1,dca,dvbsub,dvdsub,flac,h264,hevc,mlp,mpeg4video,mpegaudio,mpegvideo,opus,vc1,vorbis,vp8,vp9 \
     --enable-decoder=aac,aac_latm,ac3,alac,dca,eac3,flac,mlp,mp2,mp3,opus,truehd,vorbis,pcm_bluray,pcm_dvd,pcm_s16le,pcm_s24le,h264,hevc,mpeg2video,mpeg4,vc1,vp8,vp9,ass,ssa,subrip,srt,webvtt,movtext,pgssub,dvdsub,dvbsub \
-  && make -j"$(nproc)" ffprobe \
-  && strip ffprobe
+    --enable-encoder=aac,webvtt \
+    --enable-muxer=mp4,webvtt \
+    --enable-filter=aresample,aformat \
+  && make -j"$(nproc)" ffprobe ffmpeg \
+  && strip ffprobe ffmpeg
 
 FROM gcr.io/distroless/nodejs24-debian13 AS production
 
@@ -140,6 +145,7 @@ COPY --from=busybox:1.36.0-uclibc /bin/sh /bin/sh
 COPY --from=mimalloc /usr/local/lib/libmimalloc.so.2 /usr/local/lib/libmimalloc.so.2
 ENV LD_PRELOAD=/usr/local/lib/libmimalloc.so.2
 COPY --from=ffprobe /src/ffprobe /usr/local/bin/ffprobe
+COPY --from=ffprobe /src/ffmpeg /usr/local/bin/ffmpeg
 ENV NODE_OPTIONS="--max-semi-space-size=8 --expose-gc"
 COPY --from=runtime /runtime /app
 
