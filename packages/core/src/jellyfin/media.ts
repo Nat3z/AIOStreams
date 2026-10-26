@@ -6,6 +6,7 @@ import { applyMediaInfo } from '../media-info/apply.js';
 import { mediaInfoIdentity, storedMediaInfoFor } from '../media-info/lookup.js';
 import { probeBeforePlay } from '../media-info/play.js';
 import type { ContributionIds } from '../media-info/contribute.js';
+import type { OpenedFile } from '../media-info/probe.js';
 import { languageToIso6392 } from '../utils/languages.js';
 import { subtitleLanguage } from './enrichment.js';
 import {
@@ -13,6 +14,7 @@ import {
   type TrackPreferences,
 } from './track-defaults.js';
 import { mediaSourceId } from './ids.js';
+import { remuxableSubtitle } from './remux/session.js';
 import {
   mergeSubtitleTracks,
   subtitleCodecFor,
@@ -211,7 +213,13 @@ export function extensionFor(
 export async function applyStoredMediaInfo(
   record: MediaSourceRecord,
   metadata: TitleMetadata | undefined,
-  opts: { waitMs?: number; clientIp?: string; ids?: ContributionIds } = {}
+  opts: {
+    waitMs?: number;
+    clientIp?: string;
+    ids?: ContributionIds;
+    /** Probes through this when the file will be remuxed here anyway. */
+    open?: (signal: AbortSignal) => Promise<OpenedFile>;
+  } = {}
 ): Promise<boolean> {
   if (record.notice || hasTrackLists(record.parsedFile)) return false;
   const stored = () =>
@@ -228,6 +236,7 @@ export async function applyStoredMediaInfo(
           mediaInfo: record.mediaInfo,
           service: record.extension.service,
           proxied: record.extension.proxied,
+          open: opts.open,
         },
         { timeoutMs: opts.waitMs, clientIp: opts.clientIp, ids: opts.ids }
       )) ?? (await stored());
@@ -616,6 +625,46 @@ function embeddedStreams(
   return ordered.map((row, i) => ({ ...row, Index: i }));
 }
 
+export interface FileStream {
+  /** The MediaStream index clients name it by. */
+  streamIndex: number;
+  /** Its stream index in the container. */
+  fileIndex: number;
+  type: JellyfinMediaStream['Type'];
+  codec?: string;
+  channels?: number;
+  default: boolean;
+  text: boolean;
+}
+
+/**
+ * The file's own streams with their container indexes, which only a probe
+ * that gave every one of them knows; undefined otherwise.
+ */
+export function fileStreamsOf(
+  record: MediaSourceRecord
+): FileStream[] | undefined {
+  const pf = record.parsedFile;
+  if (pf?.mediaInfoQuality !== 'probe') return undefined;
+  const audio = audioStreams(pf);
+  const subtitles = embeddedSubtitleStreams(pf);
+  const indexes = fileIndexes(pf, audio.length, subtitles.length);
+  if (!indexes) return undefined;
+  const rows = [videoStream(pf, record.bitrate), ...audio, ...subtitles];
+  return rows
+    .map((row, i) => ({ row, at: indexes[i] }))
+    .sort((a, b) => a.at - b.at)
+    .map(({ row, at }, i) => ({
+      streamIndex: i,
+      fileIndex: at,
+      type: row.Type,
+      codec: row.Codec as string | undefined,
+      channels: row.Channels as number | undefined,
+      default: row.IsDefault === true,
+      text: row.IsTextSubtitleStream === true,
+    }));
+}
+
 function externalSubtitleTitle(
   sub: SubtitleTrack,
   language: string | undefined
@@ -652,6 +701,13 @@ export interface MediaSourceBuildOptions {
   /** The user's choices, which pick the tracks a version starts with. */
   tracks?: TrackPreferences;
   originalLanguage?: string;
+  /**
+   * The version's remux playlist, which a client that can't play the file
+   * plays instead; its embedded text subtitles are then delivered as files.
+   */
+  remuxUrl?: string;
+  /** An embedded subtitle's WebVTT, by its MediaStream index, for a remux. */
+  remuxSubtitleUrl?: (streamIndex: number) => string;
 }
 
 /**
@@ -676,7 +732,11 @@ export function buildMediaStreams(
   record: MediaSourceRecord,
   opts: Pick<
     MediaSourceBuildOptions,
-    'subtitleFormat' | 'subtitleUrl' | 'subtitleToken' | 'playSessionId'
+    | 'subtitleFormat'
+    | 'subtitleUrl'
+    | 'subtitleToken'
+    | 'playSessionId'
+    | 'remuxSubtitleUrl'
   >
 ): JellyfinMediaStream[] {
   const query = [
@@ -685,7 +745,25 @@ export function buildMediaStreams(
   ]
     .filter(Boolean)
     .join('&');
+  const withQuery = (url: string) => (query ? `${url}?${query}` : url);
   const streams = embeddedStreams(record.parsedFile, record.bitrate);
+  const remuxed = opts.remuxSubtitleUrl;
+  if (remuxed) {
+    const text = new Set(
+      (fileStreamsOf(record) ?? [])
+        .filter((s) => s.type === 'Subtitle' && remuxableSubtitle(s.codec))
+        .map((s) => s.streamIndex)
+    );
+    for (const stream of streams) {
+      if (!text.has(stream.Index)) continue;
+      const url = remuxed(stream.Index);
+      stream.DeliveryMethod = 'External';
+      stream.DeliveryUrl = withQuery(url);
+      stream.SupportsExternalStream = true;
+      stream.IsExternalUrl = false;
+      stream.Path = url;
+    }
+  }
   const externalStart = streams.length;
   record.subtitles.forEach((sub, i) => {
     const index = externalStart + i;
@@ -707,7 +785,7 @@ export function buildMediaStreams(
       IsHearingImpaired: sub.hearingImpaired ?? false,
       IsTextSubtitleStream: true,
       DeliveryMethod: 'External',
-      DeliveryUrl: query ? `${url}?${query}` : url,
+      DeliveryUrl: withQuery(url),
       IsExternalUrl: false,
       // No token here: clients read the format off its end.
       Path: url,
@@ -779,6 +857,12 @@ export function buildMediaSource(
     DefaultAudioStreamIndex: defaults.audio,
     DefaultSubtitleStreamIndex: defaults.subtitle,
   };
+  if (opts.remuxUrl) {
+    source.SupportsTranscoding = true;
+    source.TranscodingUrl = opts.remuxUrl;
+    source.TranscodingSubProtocol = 'hls';
+    source.TranscodingContainer = 'mp4';
+  }
   if (opts.includeExtension)
     source.aiostreams = { ...record.extension, id: record.msid };
   return source;

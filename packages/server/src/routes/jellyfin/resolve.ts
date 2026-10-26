@@ -25,8 +25,11 @@ import {
   sourceIdentities,
   sourceRecordFrom,
   generateBingeGroup,
+  mayRemux,
+  openVersion,
   writePlaybackMemo,
   type ContentDescriptor,
+  type RemuxSupport,
   type MediaSourceRecord,
   type ParsedMeta,
   type ParsedStream,
@@ -98,8 +101,7 @@ export async function playTargetFor(
   if (d.k === 'episode') {
     const meta = await getMeta(ctx, d.t, d.i).catch(() => null);
     const video = meta?.videos?.find((v) => v.id === d.v) as
-      | MetaVideo
-      | undefined;
+      MetaVideo | undefined;
     return {
       type: d.t,
       videoId: d.v,
@@ -114,8 +116,7 @@ export async function playTargetFor(
     const hinted = d.p ? undefined : meta?.behaviorHints?.defaultVideoId;
     const videoId = typeof hinted === 'string' && hinted ? hinted : d.i;
     const video = meta?.videos?.find((v) => v.id === videoId) as
-      | MetaVideo
-      | undefined;
+      MetaVideo | undefined;
     const runtimeMs =
       parseRuntimeMs(video?.runtime) ??
       (d.p
@@ -476,7 +477,7 @@ export async function applyProbedMediaInfo(
   memo: PlaybackMemo,
   msid?: string,
   /* A play, rather than a listing, may wait for its version's probe. */
-  opts: { playing?: boolean } = {}
+  opts: { playing?: boolean; remux?: RemuxSupport } = {}
 ): Promise<void> {
   const record = msid
     ? memo.sources.find((s) => s.msid === msid)
@@ -488,6 +489,11 @@ export async function applyProbedMediaInfo(
       : 0,
     clientIp: ctx.userData.ip,
     ids: idsFromVideoId(memo.videoId),
+    // A remux reads it here anyway, so a probe may too.
+    open:
+      opts.remux && mayRemux(record, opts.remux)
+        ? (signal) => openVersion(record, signal)
+        : undefined,
   }).catch(() => false);
   if (!applied) return;
   logger.debug(
