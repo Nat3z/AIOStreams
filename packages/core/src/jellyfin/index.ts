@@ -20,3 +20,4 @@ export * from './suggestions/index.js';
 export * from './livetv.js';
 export * from './self-service.js';
 export * from './feeds.js';
+export * from './remux/index.js';

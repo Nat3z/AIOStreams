@@ -47,6 +47,8 @@ import {
   itemKeyFor,
   placeholderMediaSource,
   offeredSources,
+  remuxSupportOf,
+  wantsRemux,
   playableSources,
   airedEpisodeRefs,
   rememberedShowEpisodes,
@@ -940,6 +942,28 @@ export function subtitleUrlFor(itemId: string, msid: string) {
     `/Videos/${itemId}/${msid}/Subtitles/${index}/0/Stream.${format}`;
 }
 
+/**
+ * A version's remux, which carries its play session and the client's token
+ * as the player asks for its parts without headers.
+ */
+function remuxUrlsFor(
+  itemId: string,
+  msid: string,
+  playSessionId: string,
+  token: string | undefined
+) {
+  const query = new URLSearchParams({
+    MediaSourceId: msid,
+    PlaySessionId: playSessionId,
+    ...(token && { ApiKey: token }),
+  });
+  return {
+    playlist: `/Videos/${itemId}/master.m3u8?${query}`,
+    subtitle: (streamIndex: number) =>
+      `/Videos/${itemId}/${msid}/Subtitles/${streamIndex}/remux/Stream.vtt`,
+  };
+}
+
 export function nothingToPlayPath(
   req: Request,
   ctx: JellyfinRequestContext
@@ -973,6 +997,7 @@ export function mediaSourcesFrom(
 ): JellyfinMediaSource[] {
   const format = (sourceExtension: string) =>
     subtitleFormatFor(opts.profile, ctx.client.name, sourceExtension);
+  const remuxSupport = remuxSupportOf(opts.profile);
   // Not ctx.token, which is minted when the request had none.
   const token = ctx.apiKey
     ? undefined
@@ -992,8 +1017,11 @@ export function mediaSourcesFrom(
         ...ordered.slice(idx + 1),
       ];
   }
-  return ordered.map((record, i) =>
-    buildMediaSource(record, {
+  return ordered.map((record, i) => {
+    const remux = wantsRemux(record, remuxSupport)
+      ? remuxUrlsFor(memo.itemId, record.msid, memo.psid, token)
+      : undefined;
+    return buildMediaSource(record, {
       id: i === 0 ? opts.firstId : record.msid,
       subtitleFormat: format,
       subtitleUrl: subtitleUrlFor(memo.itemId, record.msid),
@@ -1007,8 +1035,10 @@ export function mediaSourcesFrom(
       tracks: opts.tracks,
       originalLanguage: memo.titleMetadata?.originalLanguage,
       fields: opts.fields,
-    })
-  );
+      remuxUrl: remux?.playlist,
+      remuxSubtitleUrl: remux?.subtitle,
+    });
+  });
 }
 
 /** Lets the "Load versions" id, a hash, lead back to its item. */
