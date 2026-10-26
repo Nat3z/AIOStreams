@@ -83,6 +83,7 @@ import {
   stremioCatalogRateLimiter,
   stremioSubtitleRateLimiter,
   requireSessionIfAuthRequired,
+  hasSessionCookie,
 } from './middlewares/index.js';
 import { isTrustedIp } from './middlewares/ip.js';
 
@@ -192,6 +193,14 @@ stremioRouter.use(corsMiddleware);
 // Public routes - no auth needed
 stremioRouter.use('/manifest.json', stremioManifestRateLimiter, manifest);
 stremioRouter.use('/stream', stremioStreamRateLimiter, stream);
+// An instance's configure page is its admins'; a cookieless visitor gets the web app.
+stremioRouter.use('/configure', (req, res, next) => {
+  if (!appConfig.jellyfin.instanceAlias || hasSessionCookie(req)) {
+    next();
+    return;
+  }
+  res.redirect(302, '/jellyfin/web/');
+});
 stremioRouter.use('/configure', requireSessionIfAuthRequired, configure);
 
 stremioRouter.use('/u', alias);

@@ -20,6 +20,7 @@ import { PageBackground } from './components/layout';
 import { apiBase, JellyfinClient } from './lib/client';
 import { navigate, startOver, to } from './lib/paths';
 import { WelcomePage } from './pages/welcome';
+import { previewingAppsStep } from './pages/welcome-apps.prototype';
 import {
   NO_SERVER_INFO,
   ServerInfoProvider,
@@ -327,9 +328,9 @@ function Session({
           renew={renew}
           changeServer={changeServer}
         >
-          {invite && inviteToken() === invite ? (
+          {(invite && inviteToken() === invite) || previewingAppsStep() ? (
             <WelcomePage
-              invite={invite}
+              invite={invite ?? ''}
               onDone={() => void startOver(to.home).then(() => setInvite(null))}
             />
           ) : (
