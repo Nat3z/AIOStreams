@@ -70,6 +70,18 @@ export async function withLoopbackUrl<T>(
   file: FileReader,
   use: (url: string) => Promise<T>
 ): Promise<T> {
+  const loopback = await openLoopback(file);
+  try {
+    return await use(loopback.url);
+  } finally {
+    await loopback.close();
+  }
+}
+
+/** {@link withLoopbackUrl} for a file that stays served until closed. */
+export async function openLoopback(
+  file: FileReader
+): Promise<{ url: string; close(): Promise<void> }> {
   const path = `/${randomBytes(16).toString('hex')}`;
   const server = createServer((req, res) => {
     if (req.url !== path || (req.method !== 'GET' && req.method !== 'HEAD')) {
@@ -85,11 +97,12 @@ export async function withLoopbackUrl<T>(
     server.once('error', reject);
     server.listen(0, '127.0.0.1', resolve);
   });
-  try {
-    const { port } = server.address() as AddressInfo;
-    return await use(`http://127.0.0.1:${port}${path}`);
-  } finally {
-    server.closeAllConnections();
-    await new Promise<void>((resolve) => server.close(() => resolve()));
-  }
+  const { port } = server.address() as AddressInfo;
+  return {
+    url: `http://127.0.0.1:${port}${path}`,
+    close: () => {
+      server.closeAllConnections();
+      return new Promise<void>((resolve) => server.close(() => resolve()));
+    },
+  };
 }
