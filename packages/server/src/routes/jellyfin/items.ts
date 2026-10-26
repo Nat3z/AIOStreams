@@ -83,6 +83,7 @@ import {
   type MediaSourceRecord,
   type PlaybackMemo,
   type PlaySupport,
+  type RemuxSubtitleFormat,
   type WatchStateRow,
   type SeasonGroup,
   type TrackPreferences,
@@ -959,8 +960,8 @@ function remuxUrlsFor(
   });
   return {
     playlist: `/Videos/${itemId}/master.m3u8?${query}`,
-    subtitle: (streamIndex: number) =>
-      `/Videos/${itemId}/${msid}/Subtitles/${streamIndex}/remux/Stream.vtt`,
+    subtitle: (streamIndex: number, format: RemuxSubtitleFormat) =>
+      `/Videos/${itemId}/${msid}/Subtitles/${streamIndex}/remux/Stream.${format === 'pgs' ? 'sup' : format}`,
   };
 }
 
