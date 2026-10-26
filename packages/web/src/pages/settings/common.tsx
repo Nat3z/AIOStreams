@@ -1,6 +1,12 @@
 import React from 'react';
 import { plural, t } from '@lingui/core/macro';
-import { LuArrowDown, LuArrowUp, LuGripVertical, LuX } from 'react-icons/lu';
+import {
+  LuArrowDown,
+  LuArrowUp,
+  LuCheck,
+  LuGripVertical,
+  LuX,
+} from 'react-icons/lu';
 import { Select } from '@aiostreams/ui/select';
 import { IconButton } from '@aiostreams/ui/button';
 import { BasicField } from '@aiostreams/ui/basic-field';
@@ -192,5 +198,134 @@ export function LanguageList({
         />
       )}
     </BasicField>
+  );
+}
+
+/** A headed group of answers, each labelled to its side on wider screens. */
+export function AnswerGroup({
+  name,
+  title,
+  description,
+  children,
+}: {
+  /** `data-name`, which custom CSS matches, so it stays in English. */
+  name: string;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section data-ui="settings-card" data-name={name} className="space-y-5">
+      <div>
+        <p data-ui="settings-card-title" className="font-semibold">
+          {title}
+        </p>
+        <p
+          data-ui="settings-card-description"
+          className="text-sm text-[--muted]"
+        >
+          {description}
+        </p>
+      </div>
+      {children}
+    </section>
+  );
+}
+
+export function Answer({
+  label,
+  help,
+  children,
+}: {
+  label: string;
+  help?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      data-ui="settings-answer"
+      className="grid grid-cols-1 gap-3 border-t border-white/10 pt-5 md:grid-cols-[9rem,minmax(0,1fr)] md:gap-6"
+    >
+      <p className="text-sm font-medium text-[--muted] md:pt-1.5">{label}</p>
+      <div className="min-w-0 space-y-4">
+        {children}
+        {help && <p className="-mt-2 text-sm text-[--muted]">{help}</p>}
+      </div>
+    </div>
+  );
+}
+
+/** Choices as pills, several on when `multiple`; the one pointed at or focused is passed to `onPeek`. */
+export function Pills({
+  label,
+  options,
+  isOn,
+  onPick,
+  onPeek,
+  multiple = false,
+  stacked = false,
+}: {
+  label: string;
+  options: { value: string; label: string }[];
+  isOn: (value: string) => boolean;
+  onPick: (value: string) => void;
+  /** Null once none is. */
+  onPeek?: (value: string | null) => void;
+  multiple?: boolean;
+  /** One under another, in two columns when there are many. */
+  stacked?: boolean;
+}) {
+  return (
+    <div
+      role={multiple ? 'group' : 'radiogroup'}
+      aria-label={label}
+      onMouseLeave={() => onPeek?.(null)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) onPeek?.(null);
+      }}
+      className={cn(
+        stacked
+          ? cn('grid gap-2', options.length > 3 && 'grid-cols-2')
+          : 'flex flex-wrap gap-2'
+      )}
+    >
+      {options.map((o) => {
+        const on = isOn(o.value);
+        return (
+          <button
+            key={o.value}
+            type="button"
+            role={multiple ? undefined : 'radio'}
+            aria-checked={multiple ? undefined : on}
+            aria-pressed={multiple ? on : undefined}
+            onClick={() => {
+              onPick(o.value);
+              onPeek?.(null);
+            }}
+            onMouseEnter={() => onPeek?.(o.value)}
+            onFocus={() => onPeek?.(o.value)}
+            className={cn(
+              'flex items-center gap-2 rounded-full border text-start text-sm font-medium transition active:scale-[0.98]',
+              stacked ? 'px-4 py-2.5' : 'px-4 py-1.5',
+              on
+                ? 'border-[--brand] bg-brand-500/15'
+                : 'border-white/15 hover:bg-white/10'
+            )}
+          >
+            {stacked ? (
+              <>
+                <span className="flex-1">{o.label}</span>
+                {on && <LuCheck className="flex-none" />}
+              </>
+            ) : (
+              <>
+                {on && <LuCheck />}
+                {o.label}
+              </>
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }
