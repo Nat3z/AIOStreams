@@ -47,6 +47,24 @@ export function directUrl(
     : streamUrl(client, itemId, source);
 }
 
+/**
+ * A version this server remuxes, which only the page's own player is offered.
+ * It still plays as it is elsewhere, unlike a stock server's conversion.
+ */
+export const remuxes = (source: SourceInfo): boolean =>
+  !!source.aiostreams &&
+  !!source.TranscodingUrl &&
+  source.TranscodingSubProtocol === 'hls' &&
+  source.SupportsDirectPlay !== false;
+
+/** The server's remux of a version; null when the version plays as it is. */
+export function remuxedUrl(
+  client: JellyfinClient,
+  source: SourceInfo
+): string | null {
+  return remuxes(source) ? client.base + source.TranscodingUrl : null;
+}
+
 export function requiredHeaders(
   source: SourceInfo
 ): Record<string, string> | undefined {
