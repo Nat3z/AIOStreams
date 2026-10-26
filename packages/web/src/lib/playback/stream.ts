@@ -34,6 +34,20 @@ export function directUrl(
     : streamUrl(client, itemId, source);
 }
 
+/**
+ * The server's remux of a version a browser can't play as it is, which only
+ * the page's own player is offered; null when the version plays as it is.
+ */
+export function remuxedUrl(
+  client: JellyfinClient,
+  source: SourceInfo
+): string | null {
+  const path = source.TranscodingUrl;
+  return path && source.TranscodingSubProtocol === 'hls'
+    ? client.base + path
+    : null;
+}
+
 export function requiredHeaders(
   source: SourceInfo
 ): Record<string, string> | undefined {

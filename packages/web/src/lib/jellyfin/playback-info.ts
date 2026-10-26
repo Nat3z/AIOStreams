@@ -7,7 +7,8 @@ import {
 } from '@tanstack/react-query';
 import type { JellyfinClient, Purpose } from './client';
 import { useSession } from './session';
-import { playerSupport } from '@/lib/playback/player-choice';
+import { playerSupport, playsRemux } from '@/lib/playback/player-choice';
+import { remuxProfile } from '@/lib/playback/remux';
 import type {
   MediaSegmentDtoQueryResult,
   PlaybackInfoResponse,
@@ -18,15 +19,19 @@ import { useKey } from './queries';
 /**
  * Any file plays as it is. A server gives a text subtitle an address only for
  * a client that says it takes one; a styled script keeps its own, and the
- * player asks for WebVTT otherwise.
+ * player asks for WebVTT otherwise. The page's own player also takes a remux
+ * of what a browser can't play.
  */
-const DEVICE_PROFILE = {
-  DirectPlayProfiles: [{ Type: 'Video' }],
-  SubtitleProfiles: [
-    { Format: 'ass', Method: 'External' },
-    { Format: 'vtt', Method: 'External' },
-  ],
-};
+function deviceProfile(): object {
+  return {
+    DirectPlayProfiles: [{ Type: 'Video' }],
+    SubtitleProfiles: [
+      { Format: 'ass', Method: 'External' },
+      { Format: 'vtt', Method: 'External' },
+    ],
+    TranscodingProfiles: playsRemux() ? remuxProfile() : [],
+  };
+}
 
 /** The first version carries the item's id; the web app keys every version by its own. */
 function withOwnId(source: SourceInfo): SourceInfo {
@@ -67,7 +72,7 @@ export async function requestPlaybackInfo(
     `/Items/${itemId}/PlaybackInfo`,
     {
       UserId: userId,
-      DeviceProfile: opts.profile ?? DEVICE_PROFILE,
+      DeviceProfile: opts.profile ?? deviceProfile(),
       ...(opts.sourceId
         ? { MediaSourceId: opts.sourceId }
         : !opts.kept && { Fresh: true }),

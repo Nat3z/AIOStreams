@@ -23,12 +23,8 @@ import type {
 } from './engine';
 import { ownTrackLabel } from './controller';
 import { isFullscreen, toggleDocumentFullscreen } from './fullscreen';
-import {
-  drawSubtitle,
-  ownLines,
-  ownSubtitleTrack,
-  ownTrackLost,
-} from './page-subtitles';
+import { drawSubtitle, ownLines, ownSubtitleTrack, ownTrackLost } from './page-subtitles';
+import { remuxAudio, remuxTracks, remuxUrl } from './remux';
 
 /** A cue would show `{\an8}`-style tags as text. */
 const cueText = (text: string) => text.replace(/\{\\[^}]*\}/g, '');
@@ -83,7 +79,8 @@ interface FileTrack {
 
 /**
  * The page's own `<video>`. Styled scripts and a file's own pictures draw in
- * layers over it; text shows as its text tracks.
+ * layers over it; text shows as its text tracks. A version the server remuxes
+ * plays its HLS through hls.js, one audio track at a time.
  */
 export function videoEngine(
   video: React.RefObject<HTMLVideoElement | null>
@@ -104,6 +101,9 @@ export function videoEngine(
     let ownText: { el: HTMLVideoElement; track: TextTrack } | null = null;
     let stopOwnText = () => {};
     let detach = () => {};
+    // The remux playing, and the audio track it was asked for.
+    let remux: { stop(): void } | null = null;
+    let remuxedAudio: string | null = null;
     // A text track's cues load late, so each one remembers the shift it has.
     const shifted = new WeakMap<TextTrack, number>();
     // Browsers disagree on where a cue the file leaves unplaced goes.
@@ -181,6 +181,22 @@ export function videoEngine(
       return true;
     };
     const listTracks = () => {
+      if (remux && file) {
+        emit({
+          type: 'tracks',
+          tracks: [
+            ...remuxTracks(file.source),
+            ...files.map(({ id, label }) => ({
+              id,
+              type: 'subtitle' as const,
+              label,
+              external: true,
+            })),
+          ],
+        });
+        set({ audio: remuxedAudio });
+        return;
+      }
       const audio = video.current && audioTracksOf(video.current);
       const audioTracks = audio ? listed(audio) : [];
       const tracks: EngineTrack[] = [
@@ -259,120 +275,145 @@ export function videoEngine(
       ownTracks = [];
     };
 
-    return {
-      load(next) {
-        const el = video.current;
-        if (!el) return;
-        detach();
-        removeElements();
-        file = next;
-        delayMs = next.subtitleDelayMs;
-        elements = next.subtitles.map((s) => {
-          const track = document.createElement('track');
-          track.kind = 'subtitles';
-          track.src = s.url;
-          track.label = s.label;
-          if (s.lang) track.srclang = s.lang;
-          el.append(track);
-          return track;
+    const stopRemux = () => {
+      remux?.stop();
+      remux = null;
+    };
+
+    /** `switching` reloads for another audio track, which the picks were already made for. */
+    const load = (next: EngineFile, switching = false) => {
+      const el = video.current;
+      if (!el) return;
+      detach();
+      stopRemux();
+      removeElements();
+      file = next;
+      delayMs = next.subtitleDelayMs;
+      elements = next.subtitles.map((s) => {
+        const track = document.createElement('track');
+        track.kind = 'subtitles';
+        track.src = s.url;
+        track.label = s.label;
+        if (s.lang) track.srclang = s.lang;
+        el.append(track);
+        return track;
+      });
+      if (next.volume) {
+        el.volume = Math.min(1, next.volume.volume);
+        el.muted = next.volume.muted;
+      }
+      if (readsOwnSubtitles(next.source)) {
+        const opened = embeddedSubtitles(
+          next.url,
+          next.headers,
+          currentHost().fetchFile
+        );
+        embedded = opened;
+        void opened.subtitles.then((found) => {
+          if (embedded !== opened) return;
+          ownTracks = found;
+          if (ownTracks.length) listTracks();
         });
-        if (next.volume) {
-          el.volume = Math.min(1, next.volume.volume);
-          el.muted = next.volume.muted;
-        }
-        if (readsOwnSubtitles(next.source)) {
-          const opened = embeddedSubtitles(
-            next.url,
-            next.headers,
-            currentHost().fetchFile
-          );
-          embedded = opened;
-          void opened.subtitles.then((found) => {
-            if (embedded !== opened) return;
-            ownTracks = found;
-            if (ownTracks.length) listTracks();
+      }
+      const loaded = () => {
+        const reading = embedded;
+        if (!reading) return emit({ type: 'loaded' });
+        void reading.listed().then(() => {
+          if (embedded === reading) emit({ type: 'loaded' });
+        });
+      };
+      // Each read is a new snapshot, whose ranges may have merged since the last.
+      const buffered = () => {
+        const ranges = el.buffered;
+        return Array.from({ length: ranges.length }, (_, i) => ({
+          startMs: ranges.start(i) * 1000,
+          endMs: ranges.end(i) * 1000,
+        }));
+      };
+      const handlers: Record<string, () => void> = {
+        loadedmetadata: () => {
+          if (next.startMs) el.currentTime = next.startMs / 1000;
+          set({ durationMs: el.duration * 1000 || 0 });
+          listTracks();
+          if (!switching) loaded();
+        },
+        durationchange: () => set({ durationMs: el.duration * 1000 || 0 }),
+        playing: () => {
+          embedded?.setPlaying(true);
+          set({ started: true, paused: false, waiting: false });
+        },
+        pause: () => set({ paused: true }),
+        play: () => set({ paused: false }),
+        waiting: () => set({ waiting: true }),
+        canplay: () => set({ waiting: false }),
+        timeupdate: () => {
+          embedded?.setPosition(el.currentTime * 1000, bufferedAhead(el));
+          emit({
+            type: 'position',
+            positionMs: el.currentTime * 1000,
+            buffered: buffered(),
           });
-        }
-        const loaded = () => {
-          const reading = embedded;
-          if (!reading) return emit({ type: 'loaded' });
-          void reading.listed().then(() => {
-            if (embedded === reading) emit({ type: 'loaded' });
-          });
-        };
-        // Each read is a new snapshot, whose ranges may have merged since the last.
-        const buffered = () => {
-          const ranges = el.buffered;
-          return Array.from({ length: ranges.length }, (_, i) => ({
-            startMs: ranges.start(i) * 1000,
-            endMs: ranges.end(i) * 1000,
-          }));
-        };
-        const handlers: Record<string, () => void> = {
-          loadedmetadata: () => {
-            if (next.startMs) el.currentTime = next.startMs / 1000;
-            set({ durationMs: el.duration * 1000 || 0 });
-            listTracks();
-            loaded();
-          },
-          durationchange: () => set({ durationMs: el.duration * 1000 || 0 }),
-          playing: () => {
-            embedded?.setPlaying(true);
-            set({ started: true, paused: false, waiting: false });
-          },
-          pause: () => set({ paused: true }),
-          play: () => set({ paused: false }),
-          waiting: () => set({ waiting: true }),
-          canplay: () => set({ waiting: false }),
-          timeupdate: () => {
-            embedded?.setPosition(el.currentTime * 1000, bufferedAhead(el));
-            emit({
-              type: 'position',
-              positionMs: el.currentTime * 1000,
-              buffered: buffered(),
-            });
-          },
-          progress: () => emit({ type: 'position', buffered: buffered() }),
-          volumechange: () => set({ volume: el.volume, muted: el.muted }),
-          ratechange: () => set({ rate: el.playbackRate }),
-          ended: () => emit({ type: 'ended' }),
-          error: () =>
-            emit({
-              type: 'failed',
-              error: t({
-                comment: 'Follows "Playback failed:"',
-                message:
-                  'this browser cannot play this version. Nothing is converted on the server, so try another version, an external player or the desktop app.',
-              }),
-              unsupported: declinesLink(el, next.url),
-            }),
-        };
+        },
+        progress: () => emit({ type: 'position', buffered: buffered() }),
+        volumechange: () => set({ volume: el.volume, muted: el.muted }),
+        ratechange: () => set({ rate: el.playbackRate }),
+        ended: () => emit({ type: 'ended' }),
+        error: () =>
+          emit({
+            type: 'failed',
+            error: remux
+              ? t({
+                  comment: 'Follows "Playback failed:"',
+                  message:
+                    "this browser cannot play this version's video, which the server only repackages. Try another version, an external player or the desktop app.",
+                })
+              : t({
+                  comment: 'Follows "Playback failed:"',
+                  message:
+                    'this browser cannot play this version. Nothing is converted on the server, so try another version, an external player or the desktop app.',
+                }),
+            unsupported: !remux && declinesLink(el, next.url),
+          }),
+      };
+      for (const [event, handler] of Object.entries(handlers))
+        el.addEventListener(event, handler);
+      const audio = audioTracksOf(el);
+      const audioEvents = ['addtrack', 'removetrack', 'change'];
+      for (const event of audioEvents)
+        audio?.addEventListener(event, listTracks);
+      for (const e of elements) e.addEventListener('load', onTrackLoad);
+      const onFullscreen = () => set({ fullscreen: isFullscreen() });
+      document.addEventListener('fullscreenchange', onFullscreen);
+      detach = () => {
         for (const [event, handler] of Object.entries(handlers))
-          el.addEventListener(event, handler);
-        const audio = audioTracksOf(el);
-        const audioEvents = ['addtrack', 'removetrack', 'change'];
+          el.removeEventListener(event, handler);
         for (const event of audioEvents)
-          audio?.addEventListener(event, listTracks);
-        for (const e of elements) e.addEventListener('load', onTrackLoad);
-        const onFullscreen = () => set({ fullscreen: isFullscreen() });
-        document.addEventListener('fullscreenchange', onFullscreen);
-        detach = () => {
-          for (const [event, handler] of Object.entries(handlers))
-            el.removeEventListener(event, handler);
-          for (const event of audioEvents)
-            audio?.removeEventListener(event, listTracks);
-          for (const e of elements) e.removeEventListener('load', onTrackLoad);
-          document.removeEventListener('fullscreenchange', onFullscreen);
-        };
-        onFullscreen();
-        el.autoplay = !next.paused;
-        if (next.paused) set({ paused: true });
-        el.src = next.url;
-      },
+          audio?.removeEventListener(event, listTracks);
+        for (const e of elements) e.removeEventListener('load', onTrackLoad);
+        document.removeEventListener('fullscreenchange', onFullscreen);
+      };
+      onFullscreen();
+      el.autoplay = !next.paused;
+      if (next.paused) set({ paused: true });
+      const remuxed = remuxUrl(next.source, next.url);
+      if (remuxed) {
+        remuxedAudio ??= remuxAudio(next.source);
+        remux = remuxed.play(el, {
+          audio: remuxedAudio,
+          startMs: next.startMs,
+          onError: (error) => emit({ type: 'failed', error }),
+        });
+      } else el.src = next.url;
+    };
+
+    return {
+      load: (next) => load(next),
       // Browsers keep a closed player in their media controls until its video drops the stream.
       close() {
         detach();
         detach = () => {};
+        stopRemux();
+        remuxedAudio = null;
         removeElements();
         const el = video.current;
         if (!el) return;
@@ -399,6 +440,16 @@ export function videoEngine(
         if (video.current) video.current.playbackRate = rate;
       },
       setAudio(id) {
+        const el = video.current;
+        if (remux && file && el && id !== remuxedAudio) {
+          // Each audio track is a remux of its own, which picks up where this left off.
+          remuxedAudio = id;
+          const at = el.currentTime * 1000;
+          const paused = el.paused;
+          load({ ...file, startMs: at, paused }, true);
+          return;
+        }
+        if (remux) return;
         const audio = video.current && audioTracksOf(video.current);
         if (!audio) return;
         listed(audio).forEach((t, i) => (t.enabled = String(i) === id));
