@@ -35,6 +35,7 @@ import {
   ownTrackLost,
 } from './page-subtitles';
 import { remuxAudio, remuxTracks, remuxUrl } from './remux';
+import { overlayKind, startOverlay, type Overlay } from './overlay-subtitles';
 
 /** A cue would show `{\an8}`-style tags as text. */
 const cueText = (text: string) => text.replace(/\{\\[^}]*\}/g, '');
@@ -130,7 +131,8 @@ interface FileTrack {
 
 /**
  * The page's own `<video>`. Styled scripts and a file's own pictures draw in
- * layers over it; text shows as its text tracks. A version the server remuxes
+ * layers over it; text shows as its text tracks. A remux's styled and picture
+ * subtitles are drawn over the video too. A version the server remuxes
  * plays its HLS through hls.js, one audio track at a time.
  */
 export function videoEngine(
@@ -160,6 +162,9 @@ export function videoEngine(
     // The remux playing, and the audio track it was asked for.
     let remux: { stop(): void } | null = null;
     let remuxedAudio: string | null = null;
+    // The subtitle drawn over the video, and what stops it starting late.
+    let overlay: Overlay | null = null;
+    let overlayStart: AbortController | null = null;
     // A text track's cues load late, so each one remembers the shift it has.
     const shifted = new WeakMap<TextTrack, number>();
     // Browsers disagree on where a cue the file leaves unplaced goes.
@@ -279,12 +284,35 @@ export function videoEngine(
       placeCues();
       shiftCues();
     };
+    const stopOverlay = () => {
+      overlayStart?.abort();
+      overlayStart = null;
+      overlay?.destroy();
+      overlay = null;
+    };
     const setSubtitle = (id: string | null) => {
+      stopOverlay();
       const at = file?.subtitles.findIndex((s) => s.id === id) ?? -1;
       layer?.destroy();
       layer = null;
       hideOwnText();
       const el = video.current;
+      const drawn = at >= 0 ? overlayKind(file!.subtitles[at]) : null;
+      if (drawn && el) {
+        // Its <track> stays off; the overlay draws it in its place.
+        for (const e of elements) e.track.mode = 'disabled';
+        for (const f of files) f.track.mode = 'disabled';
+        const start = new AbortController();
+        overlayStart = start;
+        void startOverlay(el, file!.subtitles[at], drawn, delayMs, start.signal)
+          .then((started) => {
+            if (start.signal.aborted) started?.destroy();
+            else overlay = started;
+          })
+          .catch(() => {});
+        set({ subtitle: id });
+        return;
+      }
       const picked = drawSubtitle(
         id,
         { own: ownTracks, embedded, server: file?.subtitles ?? [] },
@@ -341,6 +369,7 @@ export function videoEngine(
       const el = video.current;
       if (!el) return;
       detach();
+      stopOverlay();
       stopRemux();
       dropHls();
       removeElements();
@@ -349,7 +378,8 @@ export function videoEngine(
       elements = next.subtitles.map((s) => {
         const track = document.createElement('track');
         track.kind = 'subtitles';
-        track.src = s.url;
+        // A drawn subtitle keeps an empty track, so the lists still line up.
+        if (!overlayKind(s)) track.src = s.url;
         track.label = s.label;
         if (s.lang) track.srclang = s.lang;
         el.append(track);
@@ -490,6 +520,7 @@ export function videoEngine(
       close() {
         detach();
         detach = () => {};
+        stopOverlay();
         stopRemux();
         remuxedAudio = null;
         dropHls();
@@ -538,6 +569,7 @@ export function videoEngine(
       setSubtitle,
       setSubtitleDelay(ms) {
         delayMs = ms;
+        overlay?.setDelay(ms);
         shiftCues();
         layer?.setDelay(ms);
       },
