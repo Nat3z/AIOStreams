@@ -312,6 +312,35 @@ body::-webkit-scrollbar {
   display: none;
 }
 
+/* A settings row's label beside its field on wider screens, its help under the label. */
+@media (min-width: 768px) {
+  [data-ui='settings-card-item']
+    .UI-BasicField__field:has(> .UI-Input__inputContainer) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 18rem);
+    column-gap: 1.5rem;
+    align-items: center;
+  }
+  [data-ui='settings-card-item']
+    .UI-BasicField__field:has(> .UI-Input__inputContainer)
+    > :first-child {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  [data-ui='settings-card-item']
+    .UI-BasicField__field:has(> .UI-Input__inputContainer)
+    > .UI-Input__inputContainer {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  [data-ui='settings-card-item']
+    .UI-BasicField__field:has(> .UI-Input__inputContainer)
+    > .UI-BasicField__fieldDetails {
+    grid-column: 1;
+    grid-row: 2;
+  }
+}
+
 /* One focus mark everywhere, in the accent, over the shared components' faint
    rings. Fields keep their own, and anything else drawing one sets
    data-focus="own". Chained :not()s, since older TV browsers take no list. */
