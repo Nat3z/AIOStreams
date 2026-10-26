@@ -2,6 +2,7 @@ import { Router, type Request } from 'express';
 import {
   channelOf,
   checkInWatchSession,
+  closeRemuxSessions,
   closeWatchSession,
   encodeItemId,
   getWatchStateProvider,
@@ -411,6 +412,9 @@ router.post(
 router.post(
   '/Sessions/Playing/Stopped',
   jf(async (req, res, ctx) => {
+    const psid = playSessionIdOf(req);
+    // Its remux is no longer read, so it stops now rather than idling out.
+    if (psid) closeRemuxSessions((s) => s.source.playSessionId === psid);
     const id = idFrom(req);
     if (id)
       await record(
@@ -509,7 +513,8 @@ async function setPlayed(
     identity,
     snapshot: snapshotOf(item),
   });
-  if (played || was?.played) await reportPlayback(ctx, kind, ref, { row, item });
+  if (played || was?.played)
+    await reportPlayback(ctx, kind, ref, { row, item });
 }
 
 /** An episode and every aired one before it, specials aside, as one bulk mark. */
