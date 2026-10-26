@@ -113,8 +113,5 @@ router.get('/ClientLog/Document', (_req, res) => {
 router.post('/ClientLog/Document', (_req, res) => {
   res.json({ FileName: 'client.log' });
 });
-router.delete('/Videos/ActiveEncodings', (_req, res) => {
-  res.status(204).end();
-});
 
 export default router;
