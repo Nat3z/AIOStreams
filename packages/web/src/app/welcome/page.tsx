@@ -18,14 +18,16 @@ import {
   useSaveProfile,
   useTrackers,
 } from '../settings/profile';
+import { AppsStepBody, previewingAppsStep } from './welcome-apps.prototype';
 
 /*
  * Where a setup link lands: the user, signed in by the link, picks their name,
  * picture and preferences, connects a tracker if the server has them, then a
- * password of their own, which ends the link.
+ * password of their own, after which the link only signs this device back in,
+ * and last how to add the server to their other apps.
  */
 
-const STEPS = ['you', 'streams', 'tracking', 'password'] as const;
+const STEPS = ['you', 'streams', 'tracking', 'password', 'apps'] as const;
 type Step = (typeof STEPS)[number] | 'done';
 
 const CARD =
@@ -42,7 +44,9 @@ export function WelcomePage({
   // Tracking only shows where the server has it and the user keeps their own history.
   const tracks = !!trackers.data?.available && !trackers.data.shared;
   const steps = STEPS.filter((s) => s !== 'tracking' || tracks);
-  const [step, setStep] = React.useState<Step>('you');
+  const [step, setStep] = React.useState<Step>(
+    previewingAppsStep() ? 'apps' : 'you'
+  );
   const at = steps.indexOf(step as never);
   const next = () => setStep(steps[at + 1] ?? 'done');
   const back = () => setStep(steps[at - 1] ?? 'you');
@@ -57,6 +61,7 @@ export function WelcomePage({
           {step === 'password' && (
             <PasswordStep invite={invite} onBack={back} onNext={next} />
           )}
+          {step === 'apps' && <AppsStep onNext={next} />}
           {step === 'done' && <DoneStep onDone={onDone} />}
         </motion.div>
       </AnimatePresence>
@@ -267,7 +272,7 @@ function PasswordStep({
     >
       <StepHead
         title={t`Your password`}
-        help={t`You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set.`}
+        help={t`You'll sign in with your name and this, here and in Jellyfin apps. Once it's set, this link only opens on this device.`}
       />
       <PasswordInput
         label={t`Password`}
@@ -291,6 +296,25 @@ function PasswordStep({
         busy={finish.isPending}
         disabled={password.length < min || again !== password}
       />
+    </form>
+  );
+}
+
+function AppsStep({ onNext }: { onNext: () => void }) {
+  return (
+    <form
+      className={CARD}
+      onSubmit={(e) => {
+        e.preventDefault();
+        onNext();
+      }}
+    >
+      <StepHead
+        title={t`Your other apps`}
+        help={t`Optional. Watch on your phone or computer by adding this server to an app there.`}
+      />
+      <AppsStepBody />
+      <StepButtons next={t`Continue`} />
     </form>
   );
 }

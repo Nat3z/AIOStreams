@@ -1,6 +1,6 @@
 import { t } from '@lingui/core/macro';
 import type Hls from 'hls.js';
-import type { SourceInfo } from '../types';
+import type { SourceInfo } from '@/lib/jellyfin/types';
 import { ofType, trackLabel } from './controller';
 import type { EngineTrack } from './engine';
 

@@ -15,6 +15,10 @@ msgstr ""
 msgid "(you)"
 msgstr "(你)"
 
+#: src/app/settings/interface.tsx
+msgid "{across} posters fit across a row in a wide window."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "{address} did not answer. Check that it is running, then try again."
 msgstr "{address} 无响应。请检查其是否正在运行，然后重试。"
@@ -319,12 +323,14 @@ msgstr "0 到 9"
 msgid "1 jumps a tenth of the way in, 5 halfway and 0 back to the start."
 msgstr "按 1 跳到播放进度的十分之一处，按 5 跳到一半，按 0 返回开头。"
 
+#. placeholder {0}: sampleTime('h12')
 #: src/app/settings/interface.tsx
-msgid "12-hour ({twelve})"
+msgid "12-hour ({0})"
 msgstr ""
 
+#. placeholder {0}: sampleTime('h23')
 #: src/app/settings/interface.tsx
-msgid "24-hour ({twentyFour})"
+msgid "24-hour ({0})"
 msgstr ""
 
 #: src/app/settings/profile.tsx
@@ -339,9 +345,17 @@ msgstr "5.1 环绕声"
 msgid "7.1 surround"
 msgstr "7.1 环绕声"
 
+#: src/app/settings/player-example.tsx
+msgid "8s"
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "A badge shows on each version whose text matches its pattern: the name and description your formatter writes, the file name, and the tags read from it."
 msgstr "当某个版本的文本符合标签的匹配规则时，就会显示该标签。匹配内容包括格式化器生成的名称和描述、文件名，以及从文件中读取的标签。"
+
+#: src/app/settings/player-example.tsx
+msgid "A button lets you skip the intro."
+msgstr ""
 
 #: src/features/party/not-in-party.tsx
 msgid "A code is looked up on the relay picked above."
@@ -400,6 +414,10 @@ msgstr "账户"
 #: src/app/settings/cache.tsx
 msgid "Account and server"
 msgstr "账户与服务器"
+
+#: src/app/settings/profile.tsx
+msgid "Accounts"
+msgstr ""
 
 #: src/app/history/page.tsx
 msgid "Actions"
@@ -563,6 +581,7 @@ msgstr "Alt"
 
 #: src/app/settings/audio.tsx
 #: src/app/settings/interface.tsx
+#: src/app/settings/player-example.tsx
 #: src/app/settings/subtitles.tsx
 msgid "Always"
 msgstr "始终"
@@ -596,10 +615,6 @@ msgstr ""
 
 #: src/features/player/keys.ts
 msgid "Anime upscaling: on"
-msgstr ""
-
-#: src/app/settings/profile.tsx
-msgid "Another device"
 msgstr ""
 
 #: src/features/party/not-in-party.tsx
@@ -663,17 +678,21 @@ msgstr "封面图"
 msgid "As the host"
 msgstr "作为主持人"
 
+#: src/app/settings/player-example.tsx
+msgid "As the version marks them"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Ask if you are still watching"
 msgstr "询问是否仍在观看"
 
+#: src/app/settings/player-example.tsx
+msgid "Ask me"
+msgstr ""
+
 #: src/app/settings/account.tsx
 msgid "Ask when the app opens"
 msgstr "应用打开时询问"
-
-#: src/app/settings/profile.tsx
-msgid "Asked when someone switches to you on a shared device."
-msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "At 0% there is no background."
@@ -716,10 +735,6 @@ msgstr "自动播放第一个版本"
 msgid "Automatic"
 msgstr "自动"
 
-#: src/app/settings/interface.tsx
-msgid "Automatic lists episodes on narrow screens and puts them in a row on wide ones."
-msgstr "在窄屏上自动以列表显示剧集，在宽屏上则将剧集横向排列。"
-
 #: src/app/player/page.tsx
 #: src/app/servers/page.tsx
 #: src/app/settings/_components/licenses.tsx
@@ -744,7 +759,6 @@ msgid "Back in the player"
 msgstr "内置播放器"
 
 #: src/app/settings/_components/version-settings.tsx
-#: src/app/settings/interface.tsx
 #: src/app/settings/subtitles.tsx
 #: src/app/settings/theme.tsx
 msgid "Background"
@@ -762,7 +776,7 @@ msgstr "标签"
 msgid "Bar"
 msgstr "栏"
 
-#: src/app/settings/interface.tsx
+#: src/app/settings/profile.tsx
 msgid "Because you watched"
 msgstr ""
 
@@ -916,7 +930,6 @@ msgid "Catalog"
 msgstr "目录"
 
 #: src/app/settings/downloads.tsx
-#: src/app/settings/profile.tsx
 msgid "Change"
 msgstr "更改"
 
@@ -926,6 +939,10 @@ msgstr "更改文件夹"
 
 #: src/app/settings/profile.tsx
 msgid "Change password"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Change PIN"
 msgstr ""
 
 #: src/app/settings/_components/reaction-setting.tsx
@@ -1098,6 +1115,7 @@ msgid "Confirm"
 msgstr "确认"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/player-example.tsx
 #: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "连接"
@@ -1125,6 +1143,10 @@ msgstr "继续观看"
 #: src/app/settings/playback.tsx
 msgid "Controls"
 msgstr "控制项"
+
+#: src/app/welcome/welcome-apps.prototype.tsx
+msgid "Copied"
+msgstr ""
 
 #: src/app/settings/_components/version-settings.tsx
 msgid "Copied as JSON"
@@ -1171,6 +1193,7 @@ msgid "Could not connect: {message}"
 msgstr "连接失败：{message}"
 
 #: src/app/settings/profile.tsx
+#: src/app/welcome/welcome-apps.prototype.tsx
 #: src/components/shell/crash-report.tsx
 msgid "Could not copy it"
 msgstr "无法复制"
@@ -1481,6 +1504,7 @@ msgstr "逝世于 {date}，享年 {age} 岁"
 msgid "Director"
 msgstr "导演"
 
+#: src/app/settings/player-example.tsx
 #: src/app/settings/profile.tsx
 msgid "Disconnect"
 msgstr ""
@@ -1516,10 +1540,6 @@ msgstr "不执行任何操作"
 #: src/app/settings/interface.tsx
 msgid "Docked"
 msgstr "停靠"
-
-#: src/app/settings/interface.tsx
-msgid "Docked keeps it in a column of its own. Floating hovers it over the page, a little in from the edge. Corner button shrinks it to the current page's button in the top corner, which opens into the whole menu."
-msgstr "「停靠」会将其固定在独立栏中；「浮动」会让其悬浮在页面上，并与边缘保持少许距离；「角落按钮」会将其缩为页面顶部角落的按钮，点击后可展开完整菜单。"
 
 #: src/app/settings/about.tsx
 msgid "Documentation"
@@ -1612,6 +1632,10 @@ msgstr "同时下载数"
 msgid "Downloads wait for Wi-Fi or another unmetered network rather than use mobile data."
 msgstr "下载任务会等待 Wi-Fi 或其他不按流量计费的网络，不会使用移动数据。"
 
+#: src/app/settings/profile.tsx
+msgid "Drag one, or use its arrows. A hidden one is left out of your libraries and home."
+msgstr ""
+
 #: src/lib/i18n.ts
 msgid "Drawer"
 msgstr "抽屉菜单"
@@ -1642,10 +1666,26 @@ msgstr "每个筛选条件都会以胶囊标签显示在版本列表上方。筛
 msgid "Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use."
 msgstr ""
 
+#: src/app/settings/interface.tsx
+msgid "Each poster has its title and year under it."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Each poster has its title under it."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Each poster has its year under it."
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/profile.tsx
 msgid "Edit"
 msgstr "编辑"
+
+#: src/app/settings/profile.tsx
+msgid "Edit name and picture"
+msgstr ""
 
 #: src/features/player/controls.tsx
 msgid "Ends at {endsAt}"
@@ -1679,6 +1719,10 @@ msgstr "在已登录的应用中前往「快速连接」并输入此代码，或
 msgid "Enter your password."
 msgstr "请输入密码。"
 
+#: src/app/settings/interface.tsx
+msgid "Episode {n}"
+msgstr ""
+
 #: src/components/media/episodes.tsx
 #: src/features/player/pause-screen.tsx
 msgid "Episode {number}"
@@ -1688,10 +1732,6 @@ msgstr "第 {number} 集"
 msgid "Episode details"
 msgstr "剧集详情"
 
-#: src/app/settings/interface.tsx
-msgid "Episode layout"
-msgstr "剧集布局"
-
 #: src/app/item/_components/seasons.tsx
 #: src/app/settings/interface.tsx
 #: src/features/player/episodes.tsx
@@ -1699,9 +1739,21 @@ msgstr "剧集布局"
 msgid "Episodes"
 msgstr "剧集"
 
+#: src/app/settings/interface.tsx
+msgid "Episodes are listed one under another, with more about each."
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Episodes end without offering the next one."
 msgstr "剧集结束后不会提示播放下一集。"
+
+#: src/app/settings/interface.tsx
+msgid "Episodes sit in a row on a wide screen, and in a list on a narrow one."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Episodes sit in a row you scroll sideways."
+msgstr ""
 
 #: src/app/settings/playback.tsx
 msgid "Episodes that haven't aired yet show as unaired, ask before playing, and are passed over when playing on or downloading a season. Turn off if their air dates are often wrong."
@@ -1784,6 +1836,10 @@ msgid "Favourites"
 msgstr "收藏"
 
 #: src/app/settings/interface.tsx
+msgid "Featured"
+msgstr ""
+
+#: src/app/settings/interface.tsx
 msgid "Featured on home"
 msgstr "在首页精选展示"
 
@@ -1855,16 +1911,8 @@ msgid "Folder"
 msgstr "文件夹"
 
 #: src/app/settings/interface.tsx
-msgid "Following pins it above the rows and shows the card the pointer, keyboard or remote is on, starting with a featured title, behind the whole page or in its top corner. Touch screens and narrow windows keep it rotating."
-msgstr "启用跟随后，卡片会固定显示在内容行上方，并展示鼠标指针、键盘或遥控器当前选中的内容；可从精选内容开始，显示在整个页面后方或页面顶部角落。触摸屏和窄窗口仍会使用轮播布局。"
-
-#: src/app/settings/interface.tsx
-msgid "Follows the selected card"
-msgstr "跟随当前选中的卡片"
-
-#: src/app/settings/interface.tsx
-msgid "Follows the selected card, in the corner"
-msgstr "在角落跟随当前选中的卡片"
+msgid "Follows the card"
+msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "Font"
@@ -1929,6 +1977,14 @@ msgstr "常规"
 #: src/components/send-report.tsx
 msgid "Give this code to whoever looks into it."
 msgstr "将此代码提供给负责排查问题的人。"
+
+#: src/app/settings/interface.tsx
+msgid "Glass that also bends what's behind its edges, which costs more on a slow device."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Glass that shows the page through it."
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "GLSL shader files for the built-in mpv, applied in name order to what plays. Heavy ones can make video stutter."
@@ -2021,7 +2077,7 @@ msgstr "隐藏"
 msgid "Hide"
 msgstr "隐藏"
 
-#: src/app/settings/interface.tsx
+#: src/app/settings/profile.tsx
 msgid "Hide {name}"
 msgstr ""
 
@@ -2032,6 +2088,10 @@ msgstr "隐藏剧集"
 #: src/features/party/in-party.tsx
 msgid "Hide QR code"
 msgstr "隐藏二维码"
+
+#: src/app/settings/profile.tsx
+msgid "Highest quality"
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "Highest resolution"
@@ -2049,10 +2109,6 @@ msgstr "按住"
 msgid "Home"
 msgstr "首页"
 
-#: src/app/settings/interface.tsx
-msgid "Home and grids"
-msgstr "首页与网格"
-
 #: src/app/settings/cache.tsx
 msgid "Home and libraries"
 msgstr "首页与媒体库"
@@ -2060,6 +2116,14 @@ msgstr "首页与媒体库"
 #: src/features/party/in-party.tsx
 msgid "Host"
 msgstr "主持人"
+
+#: src/app/settings/interface.tsx
+msgid "Hovering over the page, a little in from the edge."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "How big?"
+msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "How far subtitles sit above their usual place near the bottom, or below it down to the edge."
@@ -2089,10 +2153,6 @@ msgstr "设置播放器在内存中缓存的视频量：前方缓存可应对网
 msgid "How much the volume keys and the scroll wheel change the volume."
 msgstr "设置音量键和滚轮每次调整音量的幅度。"
 
-#: src/app/settings/interface.tsx
-msgid "How the tabs sit over the page: as floating pills, on a bar across the top, or on nothing but a fade down from the top edge."
-msgstr "设置标签页在页面上的显示方式：浮动胶囊、顶部横栏，或仅在顶部边缘显示渐隐效果。"
-
 #: src/app/settings/_components/version-settings.tsx
 msgid "How these work"
 msgstr "这些功能的工作方式"
@@ -2109,6 +2169,14 @@ msgstr ""
 msgid "Huge"
 msgstr "特大"
 
+#: src/app/settings/player-example.tsx
+msgid "I didn't think you'd come back."
+msgstr ""
+
+#: src/app/settings/example.tsx
+msgid "If you pick it:"
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "Image"
 msgstr "图像"
@@ -2116,6 +2184,10 @@ msgstr "图像"
 #: src/app/settings/_components/version-settings.tsx
 msgid "Import"
 msgstr "导入"
+
+#: src/app/settings/interface.tsx
+msgid "In a column of its own."
+msgstr ""
 
 #: src/lib/discord.ts
 msgid "In Activity"
@@ -2138,6 +2210,10 @@ msgstr "同步中"
 #: src/features/downloads/download-button.tsx
 msgid "In the app's downloads"
 msgstr "在应用的下载中"
+
+#: src/app/settings/interface.tsx
+msgid "In the corner"
+msgstr ""
 
 #: src/app/item/_components/collection.tsx
 msgid "In this collection"
@@ -2168,6 +2244,14 @@ msgstr "界面"
 msgid "Intros"
 msgstr "片头"
 
+#: src/app/settings/player-example.tsx
+msgid "Intros, recaps and credits are each set their own way below."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "Intros, recaps and credits?"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "Invite"
 msgstr "邀请"
@@ -2192,12 +2276,20 @@ msgstr "其中包含此设备的详细信息和应用近期日志，不会包含
 msgid "It didn't reach the developer, only this server: {forwardError}"
 msgstr "未能发送给开发者，仅发送到了此服务器：{forwardError}"
 
+#: src/app/settings/player-example.tsx
+msgid "It stops, and you choose what's next."
+msgstr ""
+
 #: src/app/settings/theme.tsx
 msgid "It will be undone unless you keep it."
 msgstr "除非选择保留，否则此操作将被撤销。"
 
 #: src/app/settings/profile.tsx
 msgid "It won't be shown again. Copy it now, or open it in Stremio on this device."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "It's marked watched on {marked}."
 msgstr ""
 
 #: src/app/settings/about.tsx
@@ -2232,6 +2324,10 @@ msgstr "跳转视频进度"
 #: src/lib/format.ts
 msgid "just now"
 msgstr "刚刚"
+
+#: src/app/settings/interface.tsx
+msgid "Just the current page's button in the top corner, which opens into the whole menu."
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Keep"
@@ -2289,6 +2385,10 @@ msgstr "标签"
 msgid "Language"
 msgstr "语言"
 
+#: src/app/settings/interface.tsx
+msgid "Language and home"
+msgstr ""
+
 #: src/app/settings/page.tsx
 msgid "Language and how subtitles look"
 msgstr "语言与字幕外观"
@@ -2335,6 +2435,10 @@ msgstr "离开 {from} 以在 {target} 上打开此内容？"
 msgid "Leave the party"
 msgstr "离开一起观看"
 
+#: src/app/settings/player-example.tsx
+msgid "Leave them"
+msgstr ""
+
 #: src/app.tsx
 msgid "Leave this server to add {adding}?"
 msgstr "离开此服务器以添加 {adding}？"
@@ -2346,10 +2450,6 @@ msgstr "离开应用"
 #: src/lib/input/actions.ts
 msgid "Left"
 msgstr "向左"
-
-#: src/app/settings/interface.tsx
-msgid "Left empty, posters stand alone. A poster without artwork still shows its title."
-msgstr "留空时，海报会独立显示。即使没有封面图，海报仍会显示标题。"
 
 #: src/features/player/options.tsx
 msgid "Less dialogue boost"
@@ -2367,14 +2467,6 @@ msgstr "让电视的解码器自行同步画面和声音，在部分电视上可
 msgid "Lets the TV's decoder keep picture and sound in step itself, which plays 4K and HDR more smoothly on some TVs. Turn it off if video stutters or stays black."
 msgstr "让电视的解码器自行同步画面和声音，在部分电视上可更流畅地播放 4K 和 HDR。如果画面卡顿或黑屏，请关闭此选项。"
 
-#: src/app/settings/interface.tsx
-msgid "Libraries"
-msgstr ""
-
-#: src/app/settings/interface.tsx
-msgid "Library order"
-msgstr ""
-
 #: src/app/settings/_components/licenses.tsx
 msgid "Licences"
 msgstr ""
@@ -2384,11 +2476,19 @@ msgid "Link a pack someone shares, in this app's format or the one Fusion and Nu
 msgstr "导入他人分享的配置包，支持本应用格式以及 Fusion 和 Nuvio 使用的格式。作者更新后，配置包也会保持同步。"
 
 #: src/app/settings/profile.tsx
+msgid "Link another device"
+msgstr ""
+
+#: src/app/settings/profile.tsx
 msgid "Link copied"
 msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "Link revoked"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Links"
 msgstr ""
 
 #: src/app/settings/interface.tsx
@@ -2402,6 +2502,10 @@ msgstr "列表"
 #: src/app/settings/subtitles.tsx
 msgid "List only my languages"
 msgstr "仅列出我的语言"
+
+#: src/app/settings/interface.tsx
+msgid "Listed on narrow screens, in a row on wide ones."
+msgstr ""
 
 #: src/app/search/page.tsx
 msgid "Listening…"
@@ -2468,10 +2572,6 @@ msgstr ""
 msgid "Made {made}, used {used}"
 msgstr ""
 
-#: src/app/settings/profile.tsx
-msgid "Made once, shown once."
-msgstr ""
-
 #: src/lib/i18n.ts
 msgid "Magenta"
 msgstr "洋红色"
@@ -2483,6 +2583,10 @@ msgstr "主要"
 #: src/features/versions/external-prompt.tsx
 msgid "Mark as watched"
 msgstr "标记为已观看"
+
+#: src/app/settings/player-example.tsx
+msgid "Mark it watched on"
+msgstr ""
 
 #: src/app/settings/playback.tsx
 #, fuzzy
@@ -2511,6 +2615,10 @@ msgstr "已标记为已观看"
 #: src/app/history/page.tsx
 msgid "Marked unwatched"
 msgstr "已标记为未观看"
+
+#: src/app/settings/player-example.tsx
+msgid "Marked watched on {marked}"
+msgstr ""
 
 #: src/app/settings/playback.tsx
 msgid "Match the video's frame rate"
@@ -2674,6 +2782,10 @@ msgstr ""
 msgid "Navigation"
 msgstr "导航"
 
+#: src/app/settings/interface.tsx
+msgid "Navigation background"
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "Needed to switch to this user."
 msgstr ""
@@ -2683,16 +2795,13 @@ msgid "Needs attention"
 msgstr "需要处理"
 
 #: src/app/settings/playback.tsx
+#: src/app/settings/player-example.tsx
 msgid "Never"
 msgstr "从不"
 
 #: src/app/sign-in/page.tsx
 msgid "New code"
 msgstr "新代码"
-
-#: src/app/settings/profile.tsx
-msgid "New link"
-msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "New password"
@@ -2732,6 +2841,7 @@ msgid "Next chapter"
 msgstr "下一章"
 
 #: src/app/settings/playback.tsx
+#: src/app/settings/player-example.tsx
 #: src/features/player/controls.tsx
 #: src/features/player/next-episode.tsx
 #: src/lib/input/actions.ts
@@ -2741,6 +2851,10 @@ msgstr "下一集"
 #: src/app/settings/page.tsx
 msgid "Next episode, controls and players"
 msgstr "下一集、控制项和播放器"
+
+#: src/app/settings/interface.tsx
+msgid "Next episodes join the continue watching row, after what you are partway through."
+msgstr ""
 
 #: src/features/player/next-episode.tsx
 msgid "Next in {playlistName}"
@@ -2818,6 +2932,10 @@ msgstr "不限"
 #: src/features/player/subtitle-sync.tsx
 msgid "No line matches."
 msgstr "没有匹配的台词。"
+
+#: src/app/settings/profile.tsx
+msgid "No links yet"
+msgstr ""
 
 #: src/app/live-tv/page.tsx
 msgid "No live TV here"
@@ -3004,10 +3122,6 @@ msgstr "现在，请在看到该句台词时点击「已看到」。"
 msgid "Now: {shown}"
 msgstr "当前：{shown}"
 
-#: src/app/settings/interface.tsx
-msgid "Nowhere"
-msgstr ""
-
 #: src/app/settings/theme.tsx
 msgid "Ocean"
 msgstr "海洋"
@@ -3060,10 +3174,6 @@ msgstr "在此服务器上"
 msgid "On top of what the owner set up, for you alone. Left alone, theirs stands."
 msgstr ""
 
-#: src/app/settings/interface.tsx
-msgid "On wide screens"
-msgstr "在宽屏上"
-
 #: src/components/shell/usage-stats.tsx
 msgid "Once a day, the app sends an anonymous count with your type of device, system, app version, language, and country and region. Nothing that identifies you or what you watch is kept."
 msgstr ""
@@ -3073,13 +3183,14 @@ msgid "Once one of the controls is selected, the arrow keys move between the con
 msgstr "选中其中一个控件后，方向键会改为在各控件之间移动。"
 
 #: src/app/settings/interface.tsx
-msgid "Once you rest on a title for a moment. In the hero, only one you went to."
+msgid "One grid instead of a row each for movies and shows."
 msgstr ""
 
 #: src/lib/subtitles/files.ts
 msgid "Only {names} files can be added"
 msgstr "只能添加 {names} 文件"
 
+#: src/app/settings/player-example.tsx
 #: src/app/settings/subtitles.tsx
 msgid "Only forced"
 msgstr "仅强制字幕"
@@ -3200,6 +3311,10 @@ msgstr "可选。仅匹配版本中的指定部分，名称需与格式化器使
 msgid "Optional. Only the first badge of a group that matches shows."
 msgstr "可选。每组匹配的标签中仅显示第一个。"
 
+#: src/app/welcome/page.tsx
+msgid "Optional. Watch on your phone or computer by adding this server to an app there."
+msgstr ""
+
 #: src/lib/input/actions.ts
 msgid "Options"
 msgstr "选项"
@@ -3219,6 +3334,14 @@ msgstr "应用内部使用的选项。"
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Or type one"
 msgstr "或手动输入"
+
+#: src/app/settings/profile.tsx
+msgid "Order"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "Original"
+msgstr ""
 
 #: src/app/settings/audio.tsx
 msgid "Original language"
@@ -3447,9 +3570,14 @@ msgstr ""
 msgid "Pink"
 msgstr "粉色"
 
+#: src/app/settings/interface.tsx
+msgid "Pinned above the rows, showing the card the pointer, keyboard or remote is on. Touch screens and narrow windows keep it rotating."
+msgstr ""
+
 #: src/app/item/_components/header.tsx
 #: src/app/item/_components/no-details.tsx
 #: src/app/live-tv/_components/channel-details.tsx
+#: src/app/settings/player-example.tsx
 #: src/components/media/hero.tsx
 #: src/components/media/item-menu.tsx
 #: src/components/media/random-pick.tsx
@@ -3474,6 +3602,10 @@ msgstr "立即播放"
 
 #: src/app/settings/interface.tsx
 msgid "Play by themselves"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Play by themselves once you rest on a title for a moment. In the hero, only one you went to. Kept on this device."
 msgstr ""
 
 #: src/app/item/_components/header.tsx
@@ -3534,6 +3666,10 @@ msgstr "播放第一个版本"
 #: src/app/settings/playback.tsx
 msgid "Play the first version when none matches"
 msgstr "没有匹配项时播放第一个版本"
+
+#: src/app/settings/player-example.tsx
+msgid "Play the next one"
+msgstr ""
 
 #: src/features/player/options.tsx
 msgid "Play the sound earlier"
@@ -3665,6 +3801,14 @@ msgstr "位置"
 #: src/app/settings/interface.tsx
 msgid "Poster size"
 msgstr "海报大小"
+
+#: src/app/settings/interface.tsx
+msgid "Posters and search"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Posters stand alone."
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Posters, backdrops, logos and photos."
@@ -4075,8 +4219,12 @@ msgid "Right"
 msgstr "向右"
 
 #: src/app/settings/interface.tsx
-msgid "Rotates through featured titles"
-msgstr "轮播精选内容"
+msgid "Rotates"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Rotates through the featured titles."
+msgstr ""
 
 #: src/components/media/scores.tsx
 msgid "Rotten Tomatoes audience"
@@ -4085,6 +4233,10 @@ msgstr ""
 #: src/app/settings/interface.tsx
 msgid "Row"
 msgstr "行"
+
+#: src/app/settings/interface.tsx
+msgid "Rows"
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Rows, catalogs and the calendar."
@@ -4191,6 +4343,7 @@ msgstr "SDH 字幕（包含声音描述）"
 #: src/app/settings/_components/licenses.tsx
 #: src/app/settings/_components/version-settings.tsx
 #: src/app/settings/apps.tsx
+#: src/app/settings/interface.tsx
 #: src/components/shell/layout.tsx
 #: src/lib/input/actions.ts
 msgid "Search"
@@ -4220,6 +4373,10 @@ msgstr "正在搜索"
 #, fuzzy
 msgid "Season {season}"
 msgstr "为整季评分"
+
+#: src/app/settings/interface.tsx
+msgid "Season 1"
+msgstr ""
 
 #: src/components/media/item-menu.tsx
 msgid "See the download"
@@ -4303,11 +4460,11 @@ msgid "server error"
 msgstr "服务器错误"
 
 #: src/app/settings/profile.tsx
-msgid "Set"
+msgid "Set a password"
 msgstr ""
 
 #: src/app/settings/profile.tsx
-msgid "Set a password"
+msgid "Set a PIN"
 msgstr ""
 
 #: src/features/player/options.tsx
@@ -4348,7 +4505,7 @@ msgid "Shortcuts"
 msgstr "快捷键"
 
 #. A dot under the banner that brings this title up
-#: src/app/settings/interface.tsx
+#: src/app/settings/profile.tsx
 #: src/components/media/hero.tsx
 msgid "Show {name}"
 msgstr "显示 {name}"
@@ -4432,14 +4589,6 @@ msgstr "在进度条上显示鼠标指向、拖动到或跳转到位置的视频
 msgid "Shows HDR video in HDR on a screen that can show it, instead of converting it to SDR. Leave it off on a screen without HDR."
 msgstr ""
 
-#: src/app/settings/interface.tsx
-msgid "Shows next episodes in the continue watching row, after what you are partway through."
-msgstr "在「继续观看」内容行中，显示你正在观看内容之后的下一集。"
-
-#: src/app/settings/interface.tsx
-msgid "Shows search results in one grid instead of a row each for movies and shows."
-msgstr "将搜索结果合并到一个网格中，而不是分别为电影和剧集显示内容行。"
-
 #: src/app/settings/subtitles.tsx
 msgid "Shows subtitles in your language unless the audio already is."
 msgstr "除非音频本身已是你的语言，否则显示对应语言的字幕。"
@@ -4455,10 +4604,6 @@ msgstr ""
 #: src/app/settings/interface.tsx
 msgid "Side rail"
 msgstr "侧边栏"
-
-#: src/app/settings/interface.tsx
-msgid "Side rail runs down the side of the screen; Top tabs sit along the top of each page."
-msgstr "侧边栏沿屏幕侧边排列；顶部标签页则显示在每个页面的顶部。"
 
 #: src/app/settings/interface.tsx
 #, fuzzy
@@ -4508,9 +4653,6 @@ msgid "Signs and songs"
 msgstr "标志与歌曲"
 
 #: src/app/settings/profile.tsx
-msgid "Signs you in on the web app and in Jellyfin apps."
-msgstr ""
-
 #: src/app/settings/subtitles.tsx
 #: src/features/player/options.tsx
 msgid "Size"
@@ -4552,6 +4694,7 @@ msgstr "向前跳过"
 msgid "Skip HDR and Dolby Vision"
 msgstr ""
 
+#: src/app/settings/player-example.tsx
 #: src/features/player/segments.ts
 msgid "Skip intro"
 msgstr "跳过片头"
@@ -4576,6 +4719,10 @@ msgstr "跳过剧情回顾集"
 msgid "Skip the intro or credits"
 msgstr "跳过片头或片尾"
 
+#: src/app/settings/player-example.tsx
+msgid "Skip them"
+msgstr ""
+
 #: src/features/player/segments.ts
 msgid "Skipped ad"
 msgstr "已跳过广告"
@@ -4599,6 +4746,10 @@ msgstr "已跳过剧情回顾"
 #: src/features/player/segments.ts
 msgid "Skipped segment"
 msgstr "已跳过片段"
+
+#: src/app/settings/player-example.tsx
+msgid "Skipped the intro"
+msgstr ""
 
 #: src/app/settings/playback.tsx
 msgid "Skipping"
@@ -4739,6 +4890,10 @@ msgstr "立体声"
 msgid "Stop"
 msgstr "停止"
 
+#: src/app/settings/player-example.tsx
+msgid "Stop and wait"
+msgstr ""
+
 #: src/app/search/page.tsx
 msgid "Stop listening"
 msgstr "停止聆听"
@@ -4773,7 +4928,6 @@ msgstr "拉伸"
 msgid "Studios"
 msgstr "制片公司"
 
-#: src/app/settings/interface.tsx
 #: src/features/player/options.tsx
 msgid "Style"
 msgstr "样式"
@@ -5058,6 +5212,10 @@ msgstr "应用会保存下载内容，让你在离线时也能播放。"
 msgid "The app's downloads"
 msgstr "应用下载"
 
+#: src/app/settings/interface.tsx
+msgid "The app's own colour."
+msgstr ""
+
 #: src/lib/hosts/native-shell.ts
 msgid "The app's own settings"
 msgstr "应用自身的设置"
@@ -5070,6 +5228,18 @@ msgstr "应用自带的播放器"
 msgid "The app's player and its options, such as starting videos in landscape."
 msgstr "应用自带的播放器及其选项，例如以横屏启动视频。"
 
+#: src/app/settings/interface.tsx
+msgid "The card you're on shows in the top corner, leaving the page to the rows."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "The hero rotates through featured titles above the rows."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "The hero shows the card you're on, behind the whole page."
+msgstr ""
+
 #: src/lib/party/party.ts
 msgid "The host removed you from the party."
 msgstr "主持人已将你移出一起观看。"
@@ -5077,6 +5247,14 @@ msgstr "主持人已将你移出一起观看。"
 #: src/app/settings/about.tsx
 msgid "The interface is built on its components."
 msgstr "界面基于这些组件构建。"
+
+#: src/app/settings/player-example.tsx
+msgid "The intro is skipped before you see it."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "The intro plays like any other part."
+msgstr ""
 
 #: src/app/settings/_components/licenses.tsx
 #, fuzzy
@@ -5112,6 +5290,22 @@ msgstr ""
 msgid "The movie or show whose page is open."
 msgstr "当前打开页面的电影或剧集。"
 
+#: src/app/settings/interface.tsx
+msgid "The navigation is frosted glass, the page blurred through it."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "The navigation is liquid glass, bending the page at its edges."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "The navigation sits on the app's own colour."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "The next episode starts after a countdown you can cancel."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "mpv 的旧式渲染方式，适用于其他方式无法正常工作的 Mac。部分杜比视界视频可能会显示错误的颜色。"
@@ -5120,8 +5314,8 @@ msgstr "mpv 的旧式渲染方式，适用于其他方式无法正常工作的 M
 msgid "The open-source software in this app, and the licence of each."
 msgstr ""
 
-#: src/app/settings/interface.tsx
-msgid "The order of your libraries and home rows. Drag one, or use its arrows. A catalog you add to your addon later goes at the end. A hidden one is left out of your libraries and home."
+#: src/app/settings/profile.tsx
+msgid "The order of your libraries and home rows. A catalog added to your addon later goes at the end."
 msgstr ""
 
 #: src/features/remote/remote-sheet.tsx
@@ -5179,6 +5373,24 @@ msgstr "其余内容会等待轮到自己。"
 #: src/app/settings/playback.tsx
 msgid "The same for episodes marked as a recap."
 msgstr "对标记为剧情回顾的剧集也执行相同操作。"
+
+#. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "the server could not convert this version."
+msgstr ""
+
+#. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "the server is converting as many versions as it can."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "The shared password and a PIN"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "The shared password, no PIN"
+msgstr ""
 
 #. Follows "Playback failed:"
 #: src/lib/playback/use-player.ts
@@ -5263,9 +5475,21 @@ msgid "This browser"
 msgstr ""
 
 #. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "this browser cannot play streams."
+msgstr ""
+
+#. Follows "Playback failed:"
 #: src/lib/playback/video.ts
 msgid "this browser cannot play this version. Nothing is converted on the server, so try another version, an external player or the desktop app."
 msgstr "此浏览器无法播放该版本。服务器不会转换视频格式，请尝试其他版本、外部播放器或桌面应用。"
+
+#. Follows "Playback failed:"
+#. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+#: src/lib/playback/video.ts
+msgid "this browser cannot play this version's video, which the server only repackages. Try another version, an external player or the desktop app."
+msgstr ""
 
 #: src/lib/playback/shaders.ts
 msgid "This browser keeps no files for this site."
@@ -5282,6 +5506,10 @@ msgstr "此代码已过期。"
 #: src/lib/hosts/shell/index.ts
 msgid "This copy does not update itself."
 msgstr "此副本不会自动更新。"
+
+#: src/app/settings/interface.tsx
+msgid "This device"
+msgstr ""
 
 #: src/lib/party/follow.ts
 msgid "This device couldn't read what the party is playing."
@@ -5846,6 +6074,10 @@ msgstr ""
 msgid "What happened"
 msgstr "发生了什么"
 
+#: src/app/settings/player-example.tsx
+msgid "What language do you watch in?"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "What others send shows over the video for a few seconds. It always stays in the chat."
 msgstr "其他人发送的内容会在视频上显示几秒钟，但始终保留在聊天中。"
@@ -5853,10 +6085,6 @@ msgstr "其他人发送的内容会在视频上显示几秒钟，但始终保留
 #: src/app/settings/apps.tsx
 msgid "What the app did each day, kept for a week."
 msgstr "应用每天的活动记录，保留一周。"
-
-#: src/app/settings/interface.tsx
-msgid "What the navigation sits on over the page: the app's own colour, or glass that shows the page through it. Liquid glass also bends what's behind its edges, which costs more on a slow device."
-msgstr "设置导航栏覆盖在页面上时的外观：使用应用本身的颜色，或使用可透出页面内容的玻璃效果。液态玻璃还会扭曲边缘后方的画面，在性能较弱的设备上开销更大。"
 
 #: src/features/party/chat.tsx
 msgid "What the others say shows here."
@@ -5910,6 +6138,18 @@ msgstr "当某个版本包含多种音轨时，会播放列表中优先级最高
 msgid "When a version has more than one subtitle in your language, the first of these it has shows. Commentary comes last."
 msgstr "当某个版本包含多条你所用语言的字幕时，会显示列表中优先级最高且该版本具备的字幕。评论字幕优先级最低。"
 
+#: src/app/settings/player-example.tsx
+msgid "When an episode ends?"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "When I don't understand"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "When should subtitles show?"
+msgstr ""
+
 #: src/app/settings/subtitles.tsx
 msgid "When the audio is not in my language"
 msgstr "当音频不是我的语言时"
@@ -5935,13 +6175,13 @@ msgid "Where the app is made, and where to report a problem."
 msgstr "了解应用的开发来源，以及如何报告问题。"
 
 #: src/app/settings/interface.tsx
-msgid "Where the navigation goes when the screen is wide enough for a sidebar, such as a tablet held sideways."
-msgstr "当屏幕足够宽、可以显示侧边栏时（例如横屏平板），设置导航栏的位置。"
-
-#: src/app/settings/interface.tsx
 #, fuzzy
 msgid "Where the navigation goes when the window is wide enough for a sidebar."
 msgstr "当屏幕足够宽、可以显示侧边栏时（例如横屏平板），设置导航栏的位置。"
+
+#: src/app/settings/interface.tsx
+msgid "Where the navigation goes when there's room for a sidebar, such as a tablet held sideways."
+msgstr ""
 
 #: src/app/settings/page.tsx
 msgid "Where they go and how many run at once"
@@ -5950,14 +6190,6 @@ msgstr "设置保存位置及同时运行的数量"
 #: src/app/settings/interface.tsx
 msgid "Whether the bar at the bottom, and tabs along the top, name each page."
 msgstr ""
-
-#: src/app/settings/interface.tsx
-msgid "Whether the rail names each page only while you're in it, or all the time."
-msgstr "设置侧栏是否仅在当前页面显示页面名称，还是始终显示。"
-
-#: src/app/settings/interface.tsx
-msgid "Whether the rail names each page under its icon."
-msgstr "设置是否在侧栏图标下方显示页面名称。"
 
 #: src/app/settings/interface.tsx
 #, fuzzy
@@ -5973,7 +6205,7 @@ msgid "While syncing subtitles by ear."
 msgstr "通过听觉同步字幕时使用。"
 
 #: src/app/settings/interface.tsx
-msgid "While the hero rotates. Under a mouse a card always pops out, so the cards beside it stay put."
+msgid "While the hero rotates. Under a mouse a card always pops out, so the cards beside it stay put. Kept on this device."
 msgstr ""
 
 #: src/app/settings/interface.tsx
@@ -6000,6 +6232,10 @@ msgstr "谁在观看"
 msgid "Who's watching?"
 msgstr "谁在观看？"
 
+#: src/app/settings/interface.tsx
+msgid "Wide screens"
+msgstr ""
+
 #: src/app/settings/subtitles.tsx
 msgid "Width"
 msgstr "宽度"
@@ -6011,6 +6247,10 @@ msgstr "Win 键"
 #: src/features/party/not-in-party.tsx
 msgid "With {names}"
 msgstr "使用 {names}"
+
+#: src/app/settings/interface.tsx
+msgid "With neither, posters stand alone. One without artwork still shows its title."
+msgstr ""
 
 #: src/app/settings/_components/version-settings.tsx
 msgid "Words or /pattern/"
@@ -6032,7 +6272,6 @@ msgstr "黄色"
 msgid "Yesterday"
 msgstr ""
 
-#: src/app/settings/profile.tsx
 #: src/components/shell/nav/account.tsx
 #: src/components/shell/nav/corner-menu.tsx
 #: src/components/shell/nav/mobile-nav.tsx
@@ -6045,20 +6284,32 @@ msgstr "你"
 msgid "You can change this later in Settings, under About."
 msgstr ""
 
+#: src/app/settings/player-example.tsx
+msgid "You hear {heard}, so subtitles stay out of the way."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "You hear {heard}, with {reads} subtitles."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "You hear {heard}. Subtitles stay off."
+msgstr ""
+
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "你已离开一起观看。"
+
+#: src/app/settings/player-example.tsx
+msgid "You share the main history, so it's marked on its accounts."
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "You share the main history, so what you watch is tracked on its accounts."
 msgstr ""
 
-#: src/app/settings/profile.tsx
-msgid "You sign in with the shared one. Set your own so only you can."
-msgstr ""
-
 #: src/app/settings/page.tsx
-msgid "You, your streams and Stremio"
+msgid "You, tracking, your streams and Stremio"
 msgstr ""
 
 #: src/app/live-tv/page.tsx
@@ -6066,7 +6317,7 @@ msgid "You'll be reminded at {time}"
 msgstr ""
 
 #: src/app/welcome/page.tsx
-msgid "You'll sign in with your name and this, here and in Jellyfin apps. This link stops working once it's set."
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. Once it's set, this link only opens on this device."
 msgstr ""
 
 #: src/app/welcome/page.tsx
@@ -6089,9 +6340,25 @@ msgstr "你的标签"
 msgid "Your devices stay signed in."
 msgstr ""
 
+#: src/app/settings/profile.tsx
+msgid "Your libraries"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Your other apps"
+msgstr ""
+
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "你自己的 {name}"
+
+#: src/app/settings/profile.tsx
+msgid "Your own password and a PIN"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Your own password, no PIN"
+msgstr ""
 
 #: src/app/welcome/page.tsx
 msgid "Your password"
@@ -6120,6 +6387,10 @@ msgstr "你正在使用其他应用中的播放器，该播放器无法与一起
 #: src/app/item/_components/rating.tsx
 msgid "Your rating"
 msgstr "你的评分"
+
+#: src/app/settings/profile.tsx
+msgid "Your streams"
+msgstr ""
 
 #: src/app/settings/profile.tsx
 msgid "Your Stremio link"
