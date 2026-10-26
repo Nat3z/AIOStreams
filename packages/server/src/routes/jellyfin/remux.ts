@@ -34,7 +34,8 @@ async function sessionFor(
   try {
     return await remuxSession(
       remuxSourceOf(source, memo!.psid),
-      audio !== undefined ? Number(audio) : undefined
+      audio !== undefined ? Number(audio) : undefined,
+      startSecondsOf(req)
     );
   } catch (err) {
     const message = (err as Error).message;
@@ -44,6 +45,12 @@ async function sessionFor(
       .json({ Message: `Remux unavailable: ${message}` });
     return null;
   }
+}
+
+/** Where the player starts, which it names in ticks. */
+function startSecondsOf(req: Request): number {
+  const start = Number(qs(req, 'StartTimeTicks') ?? 0) / 10_000_000;
+  return Number.isFinite(start) && start > 0 ? start : 0;
 }
 
 /** Every part's address keeps the query the playlist was asked with, which carries the token. */
@@ -91,7 +98,7 @@ async function mediaPlaylist(req: Request, res: Response) {
   const query = new URLSearchParams(partQuery(req).slice(1));
   query.set('RemuxSessionId', session.id);
   const { bounds } = session;
-  const start = Number(qs(req, 'StartTimeTicks') ?? 0) / 10_000_000;
+  const start = startSecondsOf(req);
   const lines = [
     '#EXTM3U',
     '#EXT-X-VERSION:7',
@@ -118,8 +125,7 @@ async function mediaPlaylist(req: Request, res: Response) {
 async function initPart(req: Request, res: Response) {
   const session = await namedSession(req, res);
   if (!session) return;
-  const start = Number(qs(req, 'StartTimeTicks') ?? 0) / 10_000;
-  const init = await session.initSegment(Number.isFinite(start) ? start : 0);
+  const init = await session.initSegment(startSecondsOf(req) * 1000);
   if (!init) {
     res.status(502).json({ Message: 'The remux did not start' });
     return;
