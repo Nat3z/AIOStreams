@@ -252,7 +252,7 @@ export function videoEngine(
       if (next.paused) set({ paused: true });
       const remuxed = remuxUrl(next.source, next.url);
       if (remuxed) {
-        remuxedAudio ??= remuxAudio(next.source);
+        remuxedAudio ??= remuxAudio(next.source, next.prefs);
         remux = remuxed.play(el, {
           audio: remuxedAudio,
           startMs: next.startMs,
