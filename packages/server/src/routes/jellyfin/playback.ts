@@ -12,6 +12,7 @@ import {
   resolveByMediaSource,
   resolveByPlaySession,
   resolveByClient,
+  remuxSupportOf,
   writeClientSession,
   type ContentDescriptor,
   type DeviceProfile,
@@ -254,6 +255,7 @@ async function playbackInfo(req: Request, res: Response) {
   await enrichSourceSubtitles(loc.ctx, memo, target);
   await applyProbedMediaInfo(loc.ctx, memo, target, {
     playing: isPlaying(req, loc),
+    remux: remuxSupportOf(profile),
   });
   // A version no longer listed must not lend its id to another.
   const requested = offered.some((s) => s.msid === loc.requestedMsid)
@@ -305,21 +307,6 @@ const STREAM_PATHS = [
 ];
 router.get(STREAM_PATHS, jfOptional(streamHandler));
 router.head(STREAM_PATHS, jfOptional(streamHandler));
-
-router.get(
-  [
-    '/Videos/:itemId/master.m3u8',
-    '/Videos/:itemId/main.m3u8',
-    '/Videos/:itemId/live.m3u8',
-    '/Videos/:itemId/hls1/{*rest}',
-    '/Videos/:itemId/hls/{*rest}',
-  ],
-  (_req, res) => {
-    res.status(501).json({
-      Message: 'Transcoding is not available; this server only direct plays.',
-    });
-  }
-);
 
 export { locate, ensureMemo, pickSource };
 export default router;
