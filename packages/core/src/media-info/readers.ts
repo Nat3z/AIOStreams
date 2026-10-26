@@ -70,7 +70,9 @@ function totalSize(range: string | null): number | undefined {
 export async function httpReader(
   url: string,
   signal: AbortSignal,
-  headers: Record<string, string> = {}
+  headers: Record<string, string> = {},
+  /** Bytes it may read in all; a remux reads the whole file. */
+  cap = HTTP_READ_CAP
 ): Promise<OpenedFile> {
   // Through makeRequest, so reads take the instance's proxy and host rules.
   const read = (target: string, range: string, readSignal: AbortSignal) =>
@@ -123,7 +125,7 @@ export async function httpReader(
       const counted = new Transform({
         transform(chunk: Buffer, _encoding, done) {
           bytesRead += chunk.length;
-          if (bytesRead > HTTP_READ_CAP) done(new Error('read cap reached'));
+          if (bytesRead > cap) done(new Error('read cap reached'));
           else done(null, chunk);
         },
       });
