@@ -5,7 +5,7 @@ import type { RuntimeConfigSection } from '../types.js';
 
 /**
  * The Jellyfin-compatible API: every configuration presented as a Jellyfin
- * server under /jellyfin. Direct play only, nothing is transcoded.
+ * server under /jellyfin. Versions direct play, or remux for browsers.
  */
 export const jellyfinSchema = {
   enabled: {
@@ -295,6 +295,38 @@ export const jellyfinSchema = {
       requiresRestart: false,
       secret: false,
       ui: { min: 0 },
+    },
+  },
+  remux: {
+    enabled: {
+      schema: z.boolean(),
+      default: true,
+      label: 'Remux for browsers',
+      description:
+        "Lets the web app play versions a browser can't play as they are, such as MKV files with AC3, DTS or TrueHD audio, and show their own text subtitles. The server reads the file, keeps the video as it is, turns the audio into AAC and serves both over HLS. Only MKV and MP4 files with a keyframe index can be remuxed, and the video is never converted, so a browser that can't decode HEVC still can't play it. Every byte of a remuxed play passes through this server, and debrid services see this server's IP instead of the viewer's.",
+      env: 'JELLYFIN_REMUX_ENABLED',
+      requiresRestart: false,
+      secret: false,
+    },
+    maxSessions: {
+      schema: z.number().int().min(1).max(64),
+      default: 3,
+      label: 'Max remuxes at once',
+      description:
+        'How many files may be remuxed at the same time across every configuration. Each runs ffmpeg and keeps up to a few minutes of video on disk; a play over the limit fails until one ends.',
+      env: 'JELLYFIN_REMUX_MAX_SESSIONS',
+      requiresRestart: false,
+      secret: false,
+    },
+    ffmpegPath: {
+      schema: z.string().min(1),
+      default: 'ffmpeg',
+      label: 'ffmpeg path',
+      description:
+        'The ffmpeg program to run. Leave it as **ffmpeg** to use the one on the PATH, which the Docker image includes.',
+      env: 'FFMPEG_PATH',
+      requiresRestart: false,
+      secret: false,
     },
   },
   streamCacheTtl: {
