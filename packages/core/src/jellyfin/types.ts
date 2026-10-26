@@ -188,5 +188,11 @@ export interface JellyfinMediaSource {
 
 export interface DeviceProfile {
   SubtitleProfiles?: { Format?: string; Method?: string }[];
+  TranscodingProfiles?: {
+    Type?: string;
+    Protocol?: string;
+    Container?: string;
+    VideoCodec?: string;
+  }[];
   [key: string]: unknown;
 }
