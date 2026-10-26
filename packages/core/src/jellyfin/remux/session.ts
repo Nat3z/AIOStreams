@@ -12,6 +12,11 @@ const logger = createLogger('remux');
 /** Segments are cut at the first keyframe at least this far past the last. */
 const TARGET_SEGMENT_SECONDS = 6;
 /**
+ * The first few are shorter, as a player waits for a whole segment before it
+ * shows a frame, and a remux of a high-bitrate file is megabytes a second.
+ */
+const START_SEGMENT_SECONDS = [2, 2, 4];
+/**
  * Output timestamps are shifted this far ahead, so a file whose audio starts
  * before its video, or whose B-frames show late, never goes negative.
  */
@@ -118,9 +123,10 @@ export class RemuxSession {
     private readonly url: string,
     private readonly keyframes: number[],
     durationSeconds: number,
+    startSeconds: number,
     private readonly onClose: () => void
   ) {
-    this.bounds = segmentBounds(keyframes, durationSeconds);
+    this.bounds = segmentBounds(keyframes, durationSeconds, startSeconds);
     this.idle = setInterval(() => {
       if (Date.now() - this.lastUsed > IDLE_MS) this.close();
     }, 30_000);
@@ -416,15 +422,33 @@ function readSubtitles(
   });
 }
 
-/** Keyframes at least a target length apart, from the file's start to its end. */
+/**
+ * Keyframes at least a target length apart, from the file's start to its end,
+ * cut short from 0 and from `startSeconds`, where playback begins.
+ */
 export function segmentBounds(
   keyframes: number[],
-  durationSeconds: number
+  durationSeconds: number,
+  startSeconds = 0
 ): number[] {
   const bounds = [0];
+  // How many segments the current short run has had.
+  let short = 0;
+  let restarted = startSeconds <= 0;
   for (const k of keyframes) {
     if (k >= durationSeconds - 1) break;
-    if (k >= bounds[bounds.length - 1] + TARGET_SEGMENT_SECONDS) bounds.push(k);
+    if (!restarted && k > startSeconds) {
+      // The keyframe playback starts from begins a segment of its own.
+      restarted = true;
+      const at = keyframes.filter((f) => f <= startSeconds).pop();
+      if (at !== undefined && at > bounds[bounds.length - 1]) bounds.push(at);
+      short = 0;
+    }
+    const target = START_SEGMENT_SECONDS[short] ?? TARGET_SEGMENT_SECONDS;
+    if (k >= bounds[bounds.length - 1] + target) {
+      bounds.push(k);
+      short++;
+    }
   }
   bounds.push(durationSeconds);
   return bounds;
@@ -489,7 +513,9 @@ export class RemuxLimitError extends Error {}
  */
 export function remuxSession(
   source: RemuxSource,
-  audioStreamIndex: number | undefined
+  audioStreamIndex: number | undefined,
+  /** Where playback begins, which gets short segments for a quick start. */
+  startSeconds = 0
 ): Promise<RemuxSession> {
   // Without a track named, the one playing, or about to, will do.
   if (audioStreamIndex === undefined) {
@@ -521,7 +547,7 @@ export function remuxSession(
   }
   const pending = opening.get(sessionKey);
   if (pending) return pending;
-  const work = openSession(source, audio);
+  const work = openSession(source, audio, startSeconds);
   opening.set(sessionKey, work);
   void work.finally(() => opening.delete(sessionKey)).catch(() => undefined);
   return work;
@@ -529,7 +555,8 @@ export function remuxSession(
 
 async function openSession(
   source: RemuxSource,
-  audio: RemuxTrack
+  audio: RemuxTrack,
+  startSeconds: number
 ): Promise<RemuxSession> {
   // Another audio track of the same file replaces its session.
   closeRemuxSessions((s) => s.source.key === source.key);
@@ -550,6 +577,7 @@ async function openSession(
       loopback.url,
       index.keyframes,
       duration,
+      startSeconds,
       () => {
         sessions.delete(session.id);
         logger.info({ session: session.id }, 'remux session closed');
