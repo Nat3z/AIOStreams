@@ -3,7 +3,13 @@ import { t } from '@lingui/core/macro';
 import { Trans } from '@lingui/react/macro';
 import { toast } from 'sonner';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { LuCopy, LuExternalLink, LuTrash2 } from 'react-icons/lu';
+import {
+  LuCopy,
+  LuEye,
+  LuEyeOff,
+  LuExternalLink,
+  LuTrash2,
+} from 'react-icons/lu';
 import { SiAnilist, SiSimkl } from 'react-icons/si';
 import type { IconType } from 'react-icons';
 import { Button, IconButton } from '@aiostreams/ui/button';
@@ -20,17 +26,20 @@ import {
   useConfirmationDialog,
 } from '@aiostreams/ui/shared/confirmation-dialog';
 import { LANGUAGES as FILTER_LANGUAGES } from '@aiostreams/core/src/utils/language-list';
-import { useSession } from '../../lib/session';
-import { relativeTime } from '../../lib/format';
-import { UserAvatar } from '../../components/user-avatar';
-import { AvatarPicker } from '../../components/avatar-picker';
-import { SettingsCard, SettingsRow } from '../../components/settings-card';
-import { LanguageList, followsYou } from './common';
+import { useSession } from '@/lib/jellyfin/session';
+import { libraryLabel, relativeTime } from '@/lib/format';
+import { orderKeyOf, useViews } from '@/lib/jellyfin/queries';
+import { usePlaybackPrefs } from '@/lib/jellyfin/user-config';
+import { UserAvatar } from '@/components/user-avatar';
+import { AvatarPicker } from '@/components/avatar-picker';
+import { SettingsCard, SettingsRow } from './_components/settings-card';
+import { Answer, AnswerGroup, LanguageList, Pills } from './_components/common';
 
 /*
  * The signed-in user's own part of the shared configuration: who they are,
- * how they sign in, a few stream preferences on top of the owner's, and
- * the links that install their streams in Stremio.
+ * how they sign in, the trackers they keep, a few stream preferences on top
+ * of the owner's, their libraries' order, and the links that install their
+ * streams in Stremio.
  */
 
 const RESOLUTIONS = ['2160p', '1440p', '1080p', '720p'] as const;
@@ -138,22 +147,24 @@ export function ProfileSection() {
       <p className="text-sm text-[--muted]">{profile.error.message}</p>
     ) : (
       <div className="space-y-6">
-        <Skeleton className="h-36 rounded-xl" />
+        <Skeleton className="h-24 rounded-xl" />
         <Skeleton className="h-72 rounded-xl" />
       </div>
     );
   }
   return (
-    <>
-      <IdentityCard profile={profile.data} />
-      <PreferencesCard preferences={profile.data.preferences} />
-      <TrackersCard />
-      <StremioCard hasPassword={profile.data.hasPassword} />
-    </>
+    <div className="space-y-12">
+      <Identity profile={profile.data} />
+      <Tracking />
+      <Streams preferences={profile.data.preferences} />
+      <LibraryOrder />
+      <Stremio hasPassword={profile.data.hasPassword} />
+    </div>
   );
 }
 
-function IdentityCard({ profile }: { profile: Profile }) {
+/** Who they are and how they sign in, in one line with its buttons beside it. */
+function Identity({ profile }: { profile: Profile }) {
   const { user } = useSession();
   const [editing, setEditing] = React.useState<
     'face' | 'pin' | 'password' | null
@@ -171,71 +182,75 @@ function IdentityCard({ profile }: { profile: Profile }) {
   });
   const close = () => setEditing(null);
   const name = profile.name ?? user.Name ?? '';
+  const signIn = profile.hasPassword
+    ? profile.hasPin
+      ? t`Your own password and a PIN`
+      : t`Your own password, no PIN`
+    : profile.hasPin
+      ? t`The shared password and a PIN`
+      : t`The shared password, no PIN`;
 
   return (
-    <>
-      <SettingsCard name="profile" title={t`You`} description={followsYou()}>
-        <SettingsRow
-          label={
-            <span className="flex items-center gap-3">
-              <UserAvatar
-                name={name}
-                src={profile.avatar}
-                className="size-12"
-              />
-              <span className="block text-base">{name}</span>
-            </span>
-          }
+    <section data-ui="settings-card" data-name="profile" className="space-y-3">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+        <button
+          type="button"
+          onClick={() => setEditing('face')}
+          aria-label={t`Edit name and picture`}
+          className="group flex min-w-0 flex-1 items-center gap-4 text-start"
         >
+          <UserAvatar
+            name={name}
+            src={profile.avatar}
+            className="size-16 flex-none text-xl ring-2 ring-transparent transition group-hover:ring-white/30"
+          />
+          <span className="min-w-0">
+            <span className="block truncate text-xl font-semibold">{name}</span>
+            <span className="block text-sm text-[--muted]">{signIn}</span>
+          </span>
+        </button>
+        <div className="flex flex-wrap gap-2">
           <Button
             intent="gray-outline"
-            className={button}
+            size="sm"
+            className="rounded-full"
             onClick={() => setEditing('face')}
           >
             <Trans>Edit</Trans>
           </Button>
-        </SettingsRow>
-        <SettingsRow
-          label={t`Password`}
-          help={
-            profile.hasPassword
-              ? t`Signs you in on the web app and in Jellyfin apps.`
-              : t`You sign in with the shared one. Set your own so only you can.`
-          }
-        >
           <Button
             intent="gray-outline"
-            className={button}
+            size="sm"
+            className="rounded-full"
             onClick={() => setEditing('password')}
           >
-            {profile.hasPassword ? <Trans>Change</Trans> : <Trans>Set</Trans>}
+            {profile.hasPassword ? t`Change password` : t`Set a password`}
           </Button>
-        </SettingsRow>
-        <SettingsRow
-          label={t`PIN`}
-          help={t`Asked when someone switches to you on a shared device.`}
-        >
-          <div className="flex flex-col gap-2 sm:flex-row">
-            {profile.hasPin && (
-              <Button
-                intent="alert-subtle"
-                className={button}
-                onClick={() => removePin.open()}
-              >
-                <Trans>Remove</Trans>
-              </Button>
-            )}
+          <Button
+            intent="gray-outline"
+            size="sm"
+            className="rounded-full"
+            onClick={() => setEditing('pin')}
+          >
+            {profile.hasPin ? t`Change PIN` : t`Set a PIN`}
+          </Button>
+          {profile.hasPin && (
             <Button
-              intent="gray-outline"
-              className={button}
-              onClick={() => setEditing('pin')}
+              intent="alert-subtle"
+              size="sm"
+              className="rounded-full"
+              onClick={() => removePin.open()}
             >
-              {profile.hasPin ? <Trans>Change</Trans> : <Trans>Set</Trans>}
+              {t`Remove PIN`}
             </Button>
-          </div>
-        </SettingsRow>
-        {profile.configure && <ConfigureRow />}
-      </SettingsCard>
+          )}
+        </div>
+      </div>
+      {profile.configure && (
+        <div className="rounded-xl border border-white/10 px-4 py-3">
+          <ConfigureRow />
+        </div>
+      )}
       <FaceModal open={editing === 'face'} profile={profile} onClose={close} />
       <PinModal open={editing === 'pin'} onClose={close} />
       <PasswordModal
@@ -244,7 +259,7 @@ function IdentityCard({ profile }: { profile: Profile }) {
         onClose={close}
       />
       <ConfirmationDialog {...removePin} />
-    </>
+    </section>
   );
 }
 
@@ -504,6 +519,87 @@ const sizeOptions = (sizes: number[]) => [
 const languageOptions = () =>
   FILTER_LANGUAGES.map((name) => ({ value: name, label: name }));
 
+const resultLimitOptions = () => [
+  { value: ANY, label: t`The owner's choice` },
+  ...RESULT_LIMITS.map((n) => ({ value: String(n), label: String(n) })),
+];
+
+/** Their stream choices, as a few short answers. */
+function Streams({ preferences }: { preferences: Preferences }) {
+  const save = useSaveProfile();
+  // Everything is sent each time, as the server keeps the whole set.
+  const set = (change: Preferences) =>
+    save.mutate({ preferences: { ...preferences, ...change } });
+  const number = (v: string) => (v === ANY ? undefined : Number(v));
+  const resolution = preferences.maxResolution ?? ANY;
+
+  return (
+    <AnswerGroup
+      name="profile-streams"
+      title={t`Your streams`}
+      description={t`On top of what the owner set up, for you alone. Left alone, theirs stands.`}
+    >
+      <Answer label={t`Highest quality`}>
+        <Pills
+          label={t`Highest quality`}
+          options={[ANY, ...RESOLUTIONS].map((r) => ({
+            value: r,
+            label: r === ANY ? t`Any` : r,
+          }))}
+          isOn={(r) => r === resolution}
+          onPick={(r) =>
+            set({ maxResolution: r === ANY ? undefined : (r as Resolution) })
+          }
+        />
+        <Switch
+          side="right"
+          label={t`Skip HDR and Dolby Vision`}
+          help={t`For a screen that shows them washed out.`}
+          value={!!preferences.skipHdr}
+          onValueChange={(v) => set({ skipHdr: v || undefined })}
+        />
+      </Answer>
+      <Answer label={t`Size`}>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <Select
+            label={t`Largest movie`}
+            options={sizeOptions(MOVIE_SIZES)}
+            value={String(preferences.maxMovieSize ?? ANY)}
+            onValueChange={(v) => set({ maxMovieSize: number(v) })}
+          />
+          <Select
+            label={t`Largest episode`}
+            options={sizeOptions(EPISODE_SIZES)}
+            value={String(preferences.maxEpisodeSize ?? ANY)}
+            onValueChange={(v) => set({ maxEpisodeSize: number(v) })}
+          />
+          <Select
+            label={t`Versions to show`}
+            options={resultLimitOptions()}
+            value={String(preferences.resultLimit ?? ANY)}
+            onValueChange={(v) => set({ resultLimit: number(v) })}
+          />
+        </div>
+      </Answer>
+      <Answer label={t`Languages`}>
+        <div className="max-w-md">
+          <LanguageList
+            label=""
+            help={t`Streams in these come first, in this order.`}
+            options={languageOptions()}
+            value={preferences.languages ?? []}
+            max={MAX_LANGUAGES}
+            onChange={(next) =>
+              set({ languages: next.length ? next : undefined })
+            }
+          />
+        </div>
+      </Answer>
+    </AnswerGroup>
+  );
+}
+
+/** The welcome's stream step, as cards. */
 export function PreferencesCard({ preferences }: { preferences: Preferences }) {
   const save = useSaveProfile();
   // Everything is sent each time, as the server keeps the whole set.
@@ -557,10 +653,7 @@ export function PreferencesCard({ preferences }: { preferences: Preferences }) {
       />
       <Select
         label={t`Versions to show`}
-        options={[
-          { value: ANY, label: t`The owner's choice` },
-          ...RESULT_LIMITS.map((n) => ({ value: String(n), label: String(n) })),
-        ]}
+        options={resultLimitOptions()}
         value={String(preferences.resultLimit ?? ANY)}
         onValueChange={(v) => set({ resultLimit: number(v) })}
       />
@@ -568,7 +661,7 @@ export function PreferencesCard({ preferences }: { preferences: Preferences }) {
   );
 }
 
-type TrackerProvider = 'simkl' | 'anilist';
+export type TrackerProvider = 'simkl' | 'anilist';
 
 interface Trackers {
   available: boolean;
@@ -576,11 +669,12 @@ interface Trackers {
   accounts: Record<TrackerProvider, string | null>;
 }
 
-const TRACKERS: { id: TrackerProvider; name: string; icon: IconType }[] = [
-  // eslint-disable-next-line lingui/no-unlocalized-strings -- brand names
-  { id: 'simkl', name: 'Simkl', icon: SiSimkl },
-  { id: 'anilist', name: 'AniList', icon: SiAnilist },
-];
+export const TRACKERS: { id: TrackerProvider; name: string; icon: IconType }[] =
+  [
+    // eslint-disable-next-line lingui/no-unlocalized-strings -- brand names
+    { id: 'simkl', name: 'Simkl', icon: SiSimkl },
+    { id: 'anilist', name: 'AniList', icon: SiAnilist },
+  ];
 
 function useTrackersKey() {
   return [...useProfileKey(), 'trackers'] as const;
@@ -594,7 +688,8 @@ export function useTrackers() {
   });
 }
 
-export function TrackersCard() {
+/** The tracker accounts, with signing in to and out of them. */
+export function useTrackerAccounts() {
   const { client } = useSession();
   const queryClient = useQueryClient();
   const key = useTrackersKey();
@@ -645,17 +740,23 @@ export function TrackersCard() {
     });
   };
 
-  const data = trackers.data;
+  return { data: trackers.data, waiting, signIn, disconnect };
+}
+
+const trackingHelp = (shared: boolean) =>
+  shared
+    ? t`You share the main history, so what you watch is tracked on its accounts.`
+    : t`What you watch is marked on these, and what you mark there shows here.`;
+
+/** The welcome's tracking step, as a card. */
+export function TrackersCard() {
+  const { data, waiting, signIn, disconnect } = useTrackerAccounts();
   if (!data?.available) return null;
   return (
     <SettingsCard
       name="profile-trackers"
       title={t`Tracking`}
-      description={
-        data.shared
-          ? t`You share the main history, so what you watch is tracked on its accounts.`
-          : t`What you watch is marked on these, and what you mark there shows here.`
-      }
+      description={trackingHelp(data.shared)}
     >
       {TRACKERS.map(({ id, name, icon: Icon }) => {
         const account = data.accounts[id];
@@ -701,7 +802,125 @@ function useStremioLinksKey() {
   return [...useProfileKey(), 'stremio'] as const;
 }
 
-function StremioCard({ hasPassword }: { hasPassword: boolean }) {
+/** The trackers what they watch is marked on, a row each to connect or leave. */
+function Tracking() {
+  const { data, waiting, signIn, disconnect } = useTrackerAccounts();
+  if (!data?.available) return null;
+  return (
+    <AnswerGroup
+      name="profile-trackers"
+      title={t`Tracking`}
+      description={trackingHelp(data.shared)}
+    >
+      <Answer label={t`Accounts`}>
+        <ul className="divide-y divide-white/10">
+          {TRACKERS.map(({ id, name, icon: Icon }) => {
+            const account = data.accounts[id];
+            return (
+              <li
+                key={id}
+                className="flex items-center gap-3 py-2 first:pt-0 last:pb-0"
+              >
+                <Icon className="size-5 flex-none text-[--muted]" />
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-medium">{name}</span>
+                  <span className="block truncate text-xs text-[--muted]">
+                    {account ? t`Signed in as ${account}` : t`Not connected`}
+                  </span>
+                </span>
+                {account ? (
+                  <Button
+                    intent="alert-subtle"
+                    size="sm"
+                    className="rounded-full"
+                    loading={
+                      disconnect.isPending && disconnect.variables === id
+                    }
+                    onClick={() => disconnect.mutate(id)}
+                  >
+                    <Trans>Disconnect</Trans>
+                  </Button>
+                ) : (
+                  <Button
+                    intent="gray-outline"
+                    size="sm"
+                    className="rounded-full"
+                    disabled={data.shared}
+                    loading={waiting === id}
+                    onClick={() => signIn(id)}
+                  >
+                    <Trans>Connect</Trans>
+                  </Button>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      </Answer>
+    </AnswerGroup>
+  );
+}
+
+/** Their libraries and home rows in their order, each hideable; one added to the addon later joins at the end. */
+function LibraryOrder() {
+  const views = useViews(true);
+  const { prefs, update } = usePlaybackPrefs();
+  const hidden = new Set(prefs.MyMediaExcludes ?? []);
+  const toggle = (key: string) =>
+    update({
+      MyMediaExcludes: hidden.has(key)
+        ? [...hidden].filter((k) => k !== key)
+        : [...hidden, key],
+    });
+  // "Because you watched" rows change with the history, so they move as one.
+  const entries = new Map<string, string>();
+  for (const v of views.data?.Items ?? []) {
+    const key = orderKeyOf(v);
+    if (entries.has(key)) continue;
+    entries.set(
+      key,
+      key === v.Id
+        ? [v.Name, libraryLabel(v)].filter(Boolean).join(' · ')
+        : t`Because you watched`
+    );
+  }
+  if (entries.size < 2) return null;
+  return (
+    <AnswerGroup
+      name="library-order"
+      title={t`Your libraries`}
+      description={t`The order of your libraries and home rows. A catalog added to your addon later goes at the end.`}
+    >
+      <Answer label={t`Order`}>
+        <div className="max-w-xl">
+          <LanguageList
+            fixed
+            label=""
+            help={t`Drag one, or use its arrows. A hidden one is left out of your libraries and home.`}
+            options={[...entries].map(([value, label]) => ({ value, label }))}
+            value={[...entries.keys()]}
+            muted={(key) => hidden.has(key)}
+            actions={(key, name) => (
+              <IconButton
+                size="sm"
+                intent="gray-subtle"
+                className="size-8 rounded-full"
+                icon={hidden.has(key) ? <LuEyeOff /> : <LuEye />}
+                aria-label={hidden.has(key) ? t`Show ${name}` : t`Hide ${name}`}
+                aria-pressed={hidden.has(key)}
+                onClick={() => toggle(key)}
+              />
+            )}
+            onChange={(next) => update({ OrderedViews: next })}
+          />
+        </div>
+      </Answer>
+    </AnswerGroup>
+  );
+}
+
+/** Their Stremio links, one per device, and a button for another. */
+function Stremio({ hasPassword }: { hasPassword: boolean }) {
   const { client } = useSession();
   const queryClient = useQueryClient();
   const key = useStremioLinksKey();
@@ -717,58 +936,64 @@ function StremioCard({ hasPassword }: { hasPassword: boolean }) {
     onError: (error) => toast.error(error.message),
     onSettled: () => queryClient.invalidateQueries({ queryKey: key }),
   });
+  const count = links.data?.length ?? 0;
 
   return (
-    <>
-      <SettingsCard
-        name="profile-stremio"
-        title={t`Stremio`}
-        description={t`Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use.`}
-      >
-        {links.data?.map((l) => {
-          const label = l.label;
-          const made = relativeTime(l.createdAt);
-          const used = relativeTime(l.lastUsedAt);
-          return (
-            <SettingsRow
-              key={l.id}
-              label={label}
-              help={
-                used
-                  ? t`Made ${made}, used ${used}`
-                  : t`Made ${made}, never used`
-              }
-            >
-              <IconButton
-                size="sm"
-                intent="alert-subtle"
-                className="size-9 rounded-full"
-                icon={<LuTrash2 />}
-                aria-label={t`Revoke ${label}`}
-                onClick={() => revoke.mutate(l.id)}
-              />
-            </SettingsRow>
-          );
-        })}
-        <SettingsRow
-          label={links.data?.length ? t`Another device` : t`Install in Stremio`}
-          help={t`Made once, shown once.`}
+    <AnswerGroup
+      name="profile-stremio"
+      title={t`Stremio`}
+      description={t`Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use.`}
+    >
+      <Answer label={count ? t`Links` : t`No links yet`}>
+        {count > 0 && (
+          <ul className="divide-y divide-white/10">
+            {links.data?.map((l) => {
+              const label = l.label;
+              const made = relativeTime(l.createdAt);
+              const used = relativeTime(l.lastUsedAt);
+              return (
+                <li
+                  key={l.id}
+                  className="flex items-center gap-3 py-2 first:pt-0"
+                >
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-medium">
+                      {label}
+                    </span>
+                    <span className="block text-xs text-[--muted]">
+                      {used
+                        ? t`Made ${made}, used ${used}`
+                        : t`Made ${made}, never used`}
+                    </span>
+                  </span>
+                  <IconButton
+                    size="sm"
+                    intent="alert-subtle"
+                    className="size-8 rounded-full"
+                    icon={<LuTrash2 />}
+                    aria-label={t`Revoke ${label}`}
+                    onClick={() => revoke.mutate(l.id)}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        <Button
+          intent="gray-outline"
+          size="sm"
+          className="rounded-full"
+          onClick={() => setCreating(true)}
         >
-          <Button
-            intent="gray-outline"
-            className={button}
-            onClick={() => setCreating(true)}
-          >
-            <Trans>New link</Trans>
-          </Button>
-        </SettingsRow>
-      </SettingsCard>
+          {count ? t`Link another device` : t`Install in Stremio`}
+        </Button>
+      </Answer>
       <StremioLinkModal
         open={creating}
         hasPassword={hasPassword}
         onClose={() => setCreating(false)}
       />
-    </>
+    </AnswerGroup>
   );
 }
 
