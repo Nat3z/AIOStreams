@@ -329,6 +329,10 @@ msgstr ""
 msgid "A card you rest on grows into a bigger preview with its details, while the hero rotates. Kept on this device."
 msgstr ""
 
+#: src/pages/welcome-apps.tsx
+msgid "A cleaner Jellyfin app, with downloads."
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "A code is looked up on the relay picked above."
 msgstr "Der Code wird über das oben gewählte Relay abgefragt."
@@ -453,6 +457,10 @@ msgstr "Aus \"Weiterschauen\" hinzufügen"
 #: src/pages/item.tsx
 msgid "Add to playlist"
 msgstr "Zur Playlist hinzfügen"
+
+#: src/pages/welcome-apps.tsx
+msgid "Add to the app"
+msgstr ""
 
 #: src/components/playlists.tsx
 msgid "Add to this playlist"
@@ -1004,6 +1012,10 @@ msgstr "Kompatibilität"
 msgid "Composer"
 msgstr "Komponist"
 
+#: src/pages/welcome-apps.tsx
+msgid "Computer"
+msgstr ""
+
 #: src/pages/settings/account.tsx
 #: src/pages/settings/profile.tsx
 msgid "Configuration"
@@ -1051,7 +1063,7 @@ msgstr "Weiterschauen"
 msgid "Controls"
 msgstr "Steuerung"
 
-#: src/pages/welcome-apps.prototype.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Copied"
 msgstr ""
 
@@ -1101,7 +1113,7 @@ msgstr "Verbindung fehlgeschlagen: {message}"
 
 #: src/components/crash-report.tsx
 #: src/pages/settings/profile.tsx
-#: src/pages/welcome-apps.prototype.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Could not copy it"
 msgstr "Kopieren fehlgeschlagen"
 
@@ -1472,6 +1484,7 @@ msgstr "Unten"
 #: src/components/item-menu.tsx
 #: src/components/version-picker.tsx
 #: src/pages/settings/about.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Download"
 msgstr "Herunterladen"
 
@@ -1580,6 +1593,10 @@ msgstr "Engine"
 #: src/lib/input/keys.ts
 msgid "Enter"
 msgstr "Eingabetaste"
+
+#: src/pages/welcome-apps.tsx
+msgid "Enter {address} as the address."
+msgstr ""
 
 #: src/components/party/party-sheet.tsx
 msgid "Enter an invite link, or a code and its relay"
@@ -1829,6 +1846,10 @@ msgstr "Vollbild"
 msgid "General"
 msgstr "Allgemein"
 
+#: src/pages/welcome-apps.tsx
+msgid "Get {name}."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "Give this code to whoever looks into it."
 msgstr "Gib diesen Code an die Person weiter, die das Problem untersucht."
@@ -2029,6 +2050,10 @@ msgstr "Unter \"Entdecken\""
 msgid "In Favourites"
 msgstr "Unter \"Favoriten\""
 
+#: src/pages/welcome-apps.tsx
+msgid "In Infuse, tap Add Files and pick Jellyfin."
+msgstr ""
+
 #: src/lib/playback/sound.ts
 #: src/lib/subtitles/delay.ts
 msgid "In sync"
@@ -2057,6 +2082,10 @@ msgstr "Installiere Katalog-Add-ons unter \"Addons\" → \"Marketplace\". Für A
 
 #: src/pages/settings/profile.tsx
 msgid "Install in Stremio"
+msgstr ""
+
+#: src/pages/welcome-apps.tsx
+msgid "Install it and open it once."
 msgstr ""
 
 #: src/pages/settings/index.tsx
@@ -2994,6 +3023,10 @@ msgstr ""
 msgid "Open its page"
 msgstr "Titelseite öffnen"
 
+#: src/pages/welcome-apps.tsx
+msgid "Open Jellyfin and add {address} as a server."
+msgstr ""
+
 #: src/components/version-picker.tsx
 msgid "Open link"
 msgstr "Link öffnen"
@@ -3005,6 +3038,10 @@ msgstr "Hauptmenü öffnen"
 #: src/components/playlists.tsx
 msgid "Open playlist"
 msgstr "Playlist öffnen"
+
+#: src/pages/welcome-apps.tsx
+msgid "Open Streamyfin and enter {address} as the server."
+msgstr ""
 
 #: src/pages/downloads.tsx
 msgid "Open the app's downloads"
@@ -3228,6 +3265,10 @@ msgstr "Personen"
 #: src/components/party/party-sheet.tsx
 msgid "People and invite"
 msgstr "Personen und Einladung"
+
+#: src/pages/welcome-apps.tsx
+msgid "Phone or tablet"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "Pick a colour"
@@ -3466,6 +3507,10 @@ msgstr "Spielt <0>{title}</0> für alle ab, die beitreten."
 msgid "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 msgstr "Spielt etwas schneller oder langsamer, um sich mit der Watch-Party zu synchronisieren. Wenn deaktiviert, springt das Video stattdessen."
 
+#: src/pages/welcome-apps.tsx
+msgid "Plays almost anything, on iPhone, iPad and Apple TV."
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
 msgstr "Spielt Dolby Vision auf unterstützten Bildschirmen ab. Deaktiviere dies bei dunklem oder flackerndem Bild, um stattdessen das in den meisten dieser Videos ebenfalls enthaltene HDR10-Bild zu verwenden. Videos ohne HDR10-Bild werden weiterhin in Dolby Vision abgespielt."
@@ -3505,6 +3550,10 @@ msgstr "Vorlagen"
 #: src/components/shortcut-settings.tsx
 msgid "Press a key"
 msgstr "Drücke eine Taste"
+
+#: src/pages/welcome-apps.tsx
+msgid "Press Add to the app below, or enter {address} in it yourself."
+msgstr ""
 
 #: src/lib/hosts/shell/android.ts
 msgid "Press Back again to leave"
@@ -4217,6 +4266,14 @@ msgstr "Anmelden"
 msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
 msgstr ""
 
+#: src/pages/welcome-apps.tsx
+msgid "Sign in as {name} with your password, then save."
+msgstr ""
+
+#: src/pages/welcome-apps.tsx
+msgid "Sign in as {name} with your password."
+msgstr ""
+
 #: src/pages/sign-in.tsx
 msgid "Sign in failed"
 msgstr "Anmeldung fehlgeschlagen"
@@ -4873,6 +4930,10 @@ msgstr ""
 msgid "The next episode starts after a countdown you can cancel."
 msgstr ""
 
+#: src/pages/welcome-apps.tsx
+msgid "The official Jellyfin app."
+msgstr ""
+
 #: src/pages/settings/apps.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "Die ältere Videoausgabe von mpv für Macs, auf denen die anderen Verfahren nicht funktionieren. Manche Dolby-Vision-Videos werden mit falschen Farben dargestellt."
@@ -5032,6 +5093,10 @@ msgstr "Dünn"
 #: src/pages/settings/audio.tsx
 msgid "This app decodes Dolby and DTS audio itself, which loses Atmos."
 msgstr "Diese App dekodiert Dolby- und DTS-Ton selbst. Dabei geht Atmos verloren."
+
+#: src/pages/welcome-apps.tsx
+msgid "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
+msgstr ""
 
 #. Follows "Playback failed:"
 #: src/lib/playback/remux.ts
