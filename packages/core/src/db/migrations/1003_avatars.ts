@@ -17,7 +17,7 @@ const ddl = (int: string, bytes: string) => `
 `;
 
 export const avatars: Migration = {
-  id: 51,
+  id: 1003,
   name: 'avatars',
   up: { sqlite: ddl('INTEGER', 'BLOB'), postgres: ddl('BIGINT', 'BYTEA') },
 };
