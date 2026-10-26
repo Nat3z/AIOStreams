@@ -42,6 +42,7 @@ import {
 } from './identity.js';
 import { mediaInfoProber } from './probe.js';
 import { engineReader, httpReader } from './readers.js';
+import type { OpenedFile } from './probe.js';
 import { isSharedKey } from './remote.js';
 import type { MediaInfoRecord } from './record.js';
 
@@ -328,6 +329,11 @@ export interface PrePlayVersion {
   mediaInfo?: MediaInfoIdentity;
   service?: string;
   proxied?: boolean;
+  /**
+   * Reads the file on this server, for a version a remux will read here in
+   * any case; it is probed this way when no safe read is.
+   */
+  open?(signal: AbortSignal): Promise<OpenedFile>;
 }
 
 async function queuePrePlay(
@@ -403,6 +409,39 @@ async function queuePrePlay(
   return undefined;
 }
 
+/** A probe through the remux's own read of the file. */
+function queueRemuxProbe(
+  version: PrePlayVersion,
+  ids: ContributionIds | undefined
+): string | undefined {
+  const { open, mediaInfo: identity } = version;
+  if (!open) return undefined;
+  const releaseKeys = identity?.releaseKeys ?? [];
+  const infoHash = releaseKeys
+    .find((k) => k.startsWith('btih:'))
+    ?.slice('btih:'.length);
+  return mediaInfoProber.queue({
+    releaseKeys,
+    file: identity?.file,
+    releaseFiles: 0,
+    title: identity?.title,
+    path: 'jellyfin',
+    kind: infoHash ? 'torrent' : 'usenet',
+    reader: 'http',
+    dedupeKey: `remux:${md5(version.url)}`,
+    onStored: async (record, file) => {
+      if (infoHash)
+        contribute({
+          source: { kind: 'torrent', infoHash },
+          file,
+          record,
+          ...ids,
+        });
+    },
+    open,
+  });
+}
+
 /**
  * Read a version's file now when that is safe. Returns nothing when it was
  * skipped, failed, or read too recently to read again.
@@ -415,7 +454,9 @@ export async function probeBeforePlay(
   const deadline = Date.now() + opts.timeoutMs;
   const remaining = () => deadline - Date.now();
   try {
-    const key = await queuePrePlay(version, opts.clientIp, remaining, opts.ids);
+    const key =
+      (await queuePrePlay(version, opts.clientIp, remaining, opts.ids)) ??
+      queueRemuxProbe(version, opts.ids);
     return key ? await mediaInfoProber.waitFor(key, remaining()) : undefined;
   } catch (err) {
     logger.debug(

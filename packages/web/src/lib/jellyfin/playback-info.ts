@@ -7,8 +7,10 @@ import {
 } from '@tanstack/react-query';
 import type { JellyfinClient, Purpose } from './client';
 import { useSession } from './session';
-import { playerSupport } from '@/lib/playback/player-choice';
+import { playerSupport, playsRemux } from '@/lib/playback/player-choice';
 import { deviceProfile } from '@/lib/playback/device-profile';
+import { remuxProfile } from '@/lib/playback/remux';
+import { streamsItself } from '@/lib/playback/stream';
 import { settings, useSetting } from '@/lib/settings';
 import { mayConvert } from '@/lib/playback/quality';
 import { textSubtitles } from '@/lib/subtitles/tracks';
@@ -26,6 +28,19 @@ export function useMaxBitrate(): number | undefined {
   const { user } = useSession();
   const [quality] = useSetting(settings.player.quality);
   return quality && mayConvert(user) ? quality : undefined;
+}
+
+/**
+ * A stock server converts what the player can't take. This one converts
+ * nothing: it only remuxes what the page's own player can't open as it is.
+ */
+function profileFor(client: JellyfinClient, maxBitrate?: number): object {
+  const profile = deviceProfile(maxBitrate);
+  if (streamsItself(client.base)) return profile;
+  return {
+    ...profile,
+    TranscodingProfiles: playsRemux() ? remuxProfile() : [],
+  };
 }
 
 /** The first version carries the item's id; the web app keys every version by its own. */
@@ -79,7 +94,7 @@ export async function requestPlaybackInfo(
       {
         ...extra,
         UserId: userId,
-        DeviceProfile: opts.profile ?? deviceProfile(opts.maxBitrate),
+        DeviceProfile: opts.profile ?? profileFor(client, opts.maxBitrate),
         ...(opts.maxBitrate && { MaxStreamingBitrate: opts.maxBitrate }),
         ...(opts.sourceId
           ? { MediaSourceId: opts.sourceId }
@@ -94,12 +109,17 @@ export async function requestPlaybackInfo(
       opts.purpose
     );
   let info = await ask();
-  // A server that converts weighs a file by the sound named, else it can skip
-  // the check; subtitles are the player's own to draw.
+  // A stock server that converts weighs a file by the sound named, else it can
+  // skip the check; subtitles are the player's own to draw. This one's remux
+  // takes the sound when it plays.
   const named = opts.sourceId
     ? info.MediaSources?.find((s) => s.Id === opts.sourceId)
     : undefined;
-  if (named?.SupportsTranscoding && named.DefaultAudioStreamIndex != null)
+  if (
+    streamsItself(client.base) &&
+    named?.SupportsTranscoding &&
+    named.DefaultAudioStreamIndex != null
+  )
     info = await ask({
       AudioStreamIndex: named.DefaultAudioStreamIndex,
       SubtitleStreamIndex: -1,
