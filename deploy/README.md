@@ -15,10 +15,14 @@ It runs on oci-selfhosted beside Caddy, from `/srv/stacks/aio/aiostreams`, with 
 
 1. `cp deploy/.env.example deploy/.env` and fill it in, leaving `ALIASED_CONFIGURATIONS` empty.
 2. `docker compose -f deploy/compose.yaml up -d --build`
-3. Add `deploy/Caddyfile`'s block to `/etc/caddy/Caddyfile` and `sudo systemctl reload caddy`.
+3. Add `deploy/Caddyfile`'s block to `/etc/caddy/Caddyfile` and `sudo systemctl restart caddy` (its admin API is off, so reload fails).
 4. Sign in at `https://aio.natfor.work/stremio/configure` with `AIOSTREAMS_AUTH`. Build the configuration, add users under Save & Install → Jellyfin → Users, and save it.
 5. Put `home:<uuid>:<encryptedPassword>` from the saved install URL in `ALIASED_CONFIGURATIONS`, then run `docker compose -f deploy/compose.yaml up -d`.
 
 For tracking, make a Simkl and an AniList app with the redirect URIs in `.env.example`, fill in their credentials, and run `docker compose -f deploy/compose.yaml up -d`. Each person then connects their own account from Settings → Profile → Tracking.
+
+## Deploying
+
+Edit and commit here, then `deploy/oci.sh` (or `deploy/oci.sh aiostreams` / `aiometadata`). It syncs this checkout and `../aiometadata` to oci-selfhosted, leaving its `deploy/.env` alone, then builds there and waits for each service to report healthy.
 
 People then sign in at `https://aio.natfor.work/` (the web app) or add `https://aio.natfor.work/jellyfin` as a server in a Jellyfin app.
