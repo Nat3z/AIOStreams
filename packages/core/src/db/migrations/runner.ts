@@ -67,6 +67,38 @@ function assertNotForeign(applied: Map<number, string>): void {
   );
 }
 
+/**
+ * Moves applied rows to their migration's current id, matched by name, so a
+ * renumbered migration isn't mistaken for a foreign one. Rows go through
+ * negative ids first so two that swap places never collide.
+ */
+async function realignRenumbered(
+  driver: DbDriver,
+  applied: Map<number, string>
+): Promise<Map<number, string>> {
+  const moves = MIGRATIONS.flatMap((m) => {
+    const from = [...applied].find(([, name]) => name === m.name)?.[0];
+    return from !== undefined && from !== m.id ? [{ from, to: m.id }] : [];
+  });
+  if (!moves.length) return applied;
+
+  await driver.tx(async (tx) => {
+    for (const { from } of moves) {
+      await tx.exec(`UPDATE _migrations SET id = ? WHERE id = ?`, [
+        -from,
+        from,
+      ]);
+    }
+    for (const { from, to } of moves) {
+      await tx.exec(`UPDATE _migrations SET id = ? WHERE id = ?`, [to, -from]);
+    }
+  });
+  logger.info(
+    `Renumbered applied migrations: ${moves.map((m) => `${m.from} -> ${m.to}`).join(', ')}`
+  );
+  return getApplied(driver);
+}
+
 async function withMigrationLock<T>(
   driver: DbDriver,
   fn: () => Promise<T>
@@ -138,7 +170,10 @@ export async function runMigrations(driver: DbDriver): Promise<void> {
   return withMigrationLock(driver, async () => {
     await ensureMigrationsTable(driver);
 
-    const appliedRows = await getApplied(driver);
+    const appliedRows = await realignRenumbered(
+      driver,
+      await getApplied(driver)
+    );
     assertNotForeign(appliedRows);
     const applied = new Set(appliedRows.keys());
 

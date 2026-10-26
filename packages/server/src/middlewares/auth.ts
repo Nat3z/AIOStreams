@@ -1,4 +1,5 @@
-﻿import { Request, Response, NextFunction } from 'express';
+﻿import { randomBytes } from 'crypto';
+import { Request, Response, NextFunction } from 'express';
 import {
   APIError,
   constants,
@@ -95,6 +96,33 @@ export function clearConfigSessionCookie(res: Response): void {
   res.clearCookie(CONFIG_SESSION_MARKER_COOKIE, {
     path: CONFIG_SESSION_MARKER_PATH,
   });
+}
+
+/** Whether the browser holds a login or config session, valid or not. */
+export function hasSessionCookie(req: Request): boolean {
+  return (
+    readCookie(req, SESSION_COOKIE) !== undefined ||
+    readCookie(req, CONFIG_SESSION_MARKER_COOKIE) !== undefined
+  );
+}
+
+export const INVITE_DEVICE_COOKIE = 'aiostreams.invite-device';
+const INVITE_DEVICE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+/** The secret this browser claims setup links with, minted on its first. */
+export function inviteDevice(req: Request, res: Response): string {
+  const device =
+    readCookie(req, INVITE_DEVICE_COOKIE) ??
+    randomBytes(24).toString('base64url');
+  // Renewed on each open so it outlives any link it claims.
+  res.cookie(INVITE_DEVICE_COOKIE, device, {
+    httpOnly: true,
+    secure: req.secure,
+    sameSite: 'strict',
+    path: '/',
+    maxAge: INVITE_DEVICE_TTL_MS,
+  });
+  return device;
 }
 
 export const OIDC_STATE_COOKIE = 'aiostreams.oidc';
