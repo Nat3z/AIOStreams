@@ -151,6 +151,15 @@ export function chosenPlayer(): PlayerChoice {
   return { kind: 'app' };
 }
 
+/**
+ * Whether Play opens the page's own `<video>`, which takes a remux; an app's
+ * player, a launched one or a link plays the file as it is.
+ */
+export function playsRemux(): boolean {
+  const host = currentHost();
+  return !host.play && !host.player && chosenPlayer().kind === 'app';
+}
+
 /** What the player chosen here plays besides a plain address. */
 export function playerSupport(): { headers: boolean; youtube: boolean } {
   const host = currentHost();
