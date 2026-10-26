@@ -51,9 +51,10 @@ function videoCodecs(): string[] {
     ['av1', 'av01.0.08M.08'],
     ['vp9', 'vp09.00.40.08'],
   ];
-  const ms = (
-    window as { MediaSource?: { isTypeSupported(t: string): boolean } }
-  ).MediaSource;
+  type Source = { isTypeSupported(t: string): boolean };
+  const ms =
+    (window as { MediaSource?: Source }).MediaSource ??
+    (window as { ManagedMediaSource?: Source }).ManagedMediaSource;
   const video = document.createElement('video');
   return types
     .filter(([, codec]) => {
