@@ -320,6 +320,10 @@ msgstr "A badge shows on each version whose text matches its pattern: the name a
 msgid "A button lets you skip the intro."
 msgstr "A button lets you skip the intro."
 
+#: src/pages/welcome-apps.tsx
+msgid "A cleaner Jellyfin app, with downloads."
+msgstr "A cleaner Jellyfin app, with downloads."
+
 #: src/components/party/party-sheet.tsx
 msgid "A code is looked up on the relay picked above."
 msgstr "A code is looked up on the relay picked above."
@@ -444,6 +448,10 @@ msgstr "Add from Continue watching"
 #: src/pages/item.tsx
 msgid "Add to playlist"
 msgstr "Add to playlist"
+
+#: src/pages/welcome-apps.tsx
+msgid "Add to the app"
+msgstr "Add to the app"
 
 #: src/components/playlists.tsx
 msgid "Add to this playlist"
@@ -994,6 +1002,10 @@ msgstr "Compatibility"
 msgid "Composer"
 msgstr "Composer"
 
+#: src/pages/welcome-apps.tsx
+msgid "Computer"
+msgstr "Computer"
+
 #: src/pages/settings/account.tsx
 #: src/pages/settings/profile.tsx
 msgid "Configuration"
@@ -1041,6 +1053,10 @@ msgstr "Continue watching"
 msgid "Controls"
 msgstr "Controls"
 
+#: src/pages/welcome-apps.tsx
+msgid "Copied"
+msgstr "Copied"
+
 #: src/components/version-settings.tsx
 msgid "Copied as JSON"
 msgstr "Copied as JSON"
@@ -1087,6 +1103,7 @@ msgstr "Could not connect: {message}"
 
 #: src/components/crash-report.tsx
 #: src/pages/settings/profile.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Could not copy it"
 msgstr "Could not copy it"
 
@@ -1457,6 +1474,7 @@ msgstr "Down"
 #: src/components/item-menu.tsx
 #: src/components/version-picker.tsx
 #: src/pages/settings/about.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Download"
 msgstr "Download"
 
@@ -1565,6 +1583,10 @@ msgstr "Engine"
 #: src/lib/input/keys.ts
 msgid "Enter"
 msgstr "Enter"
+
+#: src/pages/welcome-apps.tsx
+msgid "Enter {address} as the address."
+msgstr "Enter {address} as the address."
 
 #: src/components/party/party-sheet.tsx
 msgid "Enter an invite link, or a code and its relay"
@@ -1808,6 +1830,10 @@ msgstr "Full screen"
 msgid "General"
 msgstr "General"
 
+#: src/pages/welcome-apps.tsx
+msgid "Get {name}."
+msgstr "Get {name}."
+
 #: src/components/send-report.tsx
 msgid "Give this code to whoever looks into it."
 msgstr "Give this code to whoever looks into it."
@@ -2008,6 +2034,10 @@ msgstr "In Discover"
 msgid "In Favourites"
 msgstr "In Favourites"
 
+#: src/pages/welcome-apps.tsx
+msgid "In Infuse, tap Add Files and pick Jellyfin."
+msgstr "In Infuse, tap Add Files and pick Jellyfin."
+
 #: src/lib/playback/sound.ts
 #: src/lib/subtitles/delay.ts
 msgid "In sync"
@@ -2037,6 +2067,10 @@ msgstr "Install catalog addons from Addons → Marketplace. For one that isn't l
 #: src/pages/settings/profile.tsx
 msgid "Install in Stremio"
 msgstr "Install in Stremio"
+
+#: src/pages/welcome-apps.tsx
+msgid "Install it and open it once."
+msgstr "Install it and open it once."
 
 #: src/pages/settings/index.tsx
 msgid "Interface"
@@ -2956,6 +2990,10 @@ msgstr "Open in Stremio"
 msgid "Open its page"
 msgstr "Open its page"
 
+#: src/pages/welcome-apps.tsx
+msgid "Open Jellyfin and add {address} as a server."
+msgstr "Open Jellyfin and add {address} as a server."
+
 #: src/components/version-picker.tsx
 msgid "Open link"
 msgstr "Open link"
@@ -2967,6 +3005,10 @@ msgstr "Open main menu"
 #: src/components/playlists.tsx
 msgid "Open playlist"
 msgstr "Open playlist"
+
+#: src/pages/welcome-apps.tsx
+msgid "Open Streamyfin and enter {address} as the server."
+msgstr "Open Streamyfin and enter {address} as the server."
 
 #: src/pages/downloads.tsx
 msgid "Open the app's downloads"
@@ -3007,6 +3049,10 @@ msgstr "Optional. Match only these parts of a version, named as the formatter na
 #: src/components/version-settings.tsx
 msgid "Optional. Only the first badge of a group that matches shows."
 msgstr "Optional. Only the first badge of a group that matches shows."
+
+#: src/pages/welcome.tsx
+msgid "Optional. Watch on your phone or computer by adding this server to an app there."
+msgstr "Optional. Watch on your phone or computer by adding this server to an app there."
 
 #: src/lib/input/actions.ts
 msgid "Options"
@@ -3186,6 +3232,10 @@ msgstr "People"
 #: src/components/party/party-sheet.tsx
 msgid "People and invite"
 msgstr "People and invite"
+
+#: src/pages/welcome-apps.tsx
+msgid "Phone or tablet"
+msgstr "Phone or tablet"
 
 #: src/lib/i18n.ts
 msgid "Pick a colour"
@@ -3424,6 +3474,10 @@ msgstr "Plays <0>{title}</0> for everyone who joins."
 msgid "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 msgstr "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 
+#: src/pages/welcome-apps.tsx
+msgid "Plays almost anything, on iPhone, iPad and Apple TV."
+msgstr "Plays almost anything, on iPhone, iPad and Apple TV."
+
 #: src/pages/settings/playback.tsx
 msgid "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
 msgstr "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
@@ -3463,6 +3517,10 @@ msgstr "Presets"
 #: src/components/shortcut-settings.tsx
 msgid "Press a key"
 msgstr "Press a key"
+
+#: src/pages/welcome-apps.tsx
+msgid "Press Add to the app below, or enter {address} in it yourself."
+msgstr "Press Add to the app below, or enter {address} in it yourself."
 
 #: src/lib/hosts/shell/android.ts
 msgid "Press Back again to leave"
@@ -4144,6 +4202,14 @@ msgstr "Sign in"
 msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
 msgstr "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
 
+#: src/pages/welcome-apps.tsx
+msgid "Sign in as {name} with your password, then save."
+msgstr "Sign in as {name} with your password, then save."
+
+#: src/pages/welcome-apps.tsx
+msgid "Sign in as {name} with your password."
+msgstr "Sign in as {name} with your password."
+
 #: src/pages/sign-in.tsx
 msgid "Sign in failed"
 msgstr "Sign in failed"
@@ -4788,6 +4854,10 @@ msgstr "The navigation sits on the app's own colour."
 msgid "The next episode starts after a countdown you can cancel."
 msgstr "The next episode starts after a countdown you can cancel."
 
+#: src/pages/welcome-apps.tsx
+msgid "The official Jellyfin app."
+msgstr "The official Jellyfin app."
+
 #: src/pages/settings/apps.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
@@ -4943,6 +5013,10 @@ msgstr "Thin"
 #: src/pages/settings/audio.tsx
 msgid "This app decodes Dolby and DTS audio itself, which loses Atmos."
 msgstr "This app decodes Dolby and DTS audio itself, which loses Atmos."
+
+#: src/pages/welcome-apps.tsx
+msgid "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
+msgstr "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
 
 #. Follows "Playback failed:"
 #: src/lib/playback/remux.ts
@@ -5704,6 +5778,10 @@ msgstr "Your devices stay signed in."
 #: src/pages/settings/profile.tsx
 msgid "Your libraries"
 msgstr "Your libraries"
+
+#: src/pages/welcome.tsx
+msgid "Your other apps"
+msgstr "Your other apps"
 
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"

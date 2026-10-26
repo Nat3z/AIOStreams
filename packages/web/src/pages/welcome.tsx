@@ -18,7 +18,7 @@ import {
   useSaveProfile,
   useTrackers,
 } from './settings/profile';
-import { AppsStepBody, previewingAppsStep } from './welcome-apps.prototype';
+import { AppsGuide } from './welcome-apps';
 
 /*
  * Where a setup link lands: the user, signed in by the link, picks their name,
@@ -44,9 +44,7 @@ export function WelcomePage({
   // Tracking only shows where the server has it and the user keeps their own history.
   const tracks = !!trackers.data?.available && !trackers.data.shared;
   const steps = STEPS.filter((s) => s !== 'tracking' || tracks);
-  const [step, setStep] = React.useState<Step>(
-    previewingAppsStep() ? 'apps' : 'you'
-  );
+  const [step, setStep] = React.useState<Step>('you');
   const at = steps.indexOf(step as never);
   const next = () => setStep(steps[at + 1] ?? 'done');
   const back = () => setStep(steps[at - 1] ?? 'you');
@@ -313,7 +311,7 @@ function AppsStep({ onNext }: { onNext: () => void }) {
         title={t`Your other apps`}
         help={t`Optional. Watch on your phone or computer by adding this server to an app there.`}
       />
-      <AppsStepBody />
+      <AppsGuide />
       <StepButtons next={t`Continue`} />
     </form>
   );
