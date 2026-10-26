@@ -486,6 +486,9 @@ export async function enrichSourceSubtitles(
   await writePlaybackMemo(memo, ctx.scope(), ctx.profile.id || undefined);
 }
 
+/** How long a play that may be remuxed waits for its file's tracks. */
+const REMUX_PROBE_WAIT_MS = 20_000;
+
 export async function applyProbedMediaInfo(
   ctx: JellyfinRequestContext,
   memo: PlaybackMemo,
@@ -497,17 +500,17 @@ export async function applyProbedMediaInfo(
     ? memo.sources.find((s) => s.msid === msid)
     : memo.sources[0];
   if (!record) return;
+  // A remux needs the file's tracks, and reads it here anyway, so a play
+  // that may get one waits for a probe however short the wait is set.
+  const remux = opts.playing && opts.remux && mayRemux(record, opts.remux);
+  const waitMs = opts.playing
+    ? (ctx.userData.jellyfin?.playWait ?? appConfig.mediaInfo.playWait) * 1000
+    : 0;
   const applied = await applyStoredMediaInfo(record, memo.titleMetadata, {
-    waitMs: opts.playing
-      ? (ctx.userData.jellyfin?.playWait ?? appConfig.mediaInfo.playWait) * 1000
-      : 0,
+    waitMs: remux ? Math.max(waitMs, REMUX_PROBE_WAIT_MS) : waitMs,
     clientIp: ctx.userData.ip,
     ids: idsFromVideoId(memo.videoId),
-    // A remux reads it here anyway, so a probe may too.
-    open:
-      opts.remux && mayRemux(record, opts.remux)
-        ? (signal) => openVersion(record, signal)
-        : undefined,
+    open: remux ? (signal) => openVersion(record, signal) : undefined,
   }).catch(() => false);
   if (!applied) return;
   logger.debug(
