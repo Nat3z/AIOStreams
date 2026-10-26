@@ -15,7 +15,8 @@ import { useSession } from './session';
 import { useFeature } from './server-info';
 import { settings, useSetting } from './settings';
 import { episodeMarks, ticksToMs, unavailableKind } from './format';
-import { playerSupport } from './playback/player-choice';
+import { playerSupport, playsRemux } from './playback/player-choice';
+import { remuxProfile } from './playback/remux';
 import type {
   BaseItemDto,
   BaseItemDtoQueryResult,
@@ -601,11 +602,15 @@ export function useSimilar(itemId: string, enabled: boolean) {
 /**
  * Any file plays as it is. A server gives a text subtitle an address only for
  * a client that says it takes one; the player asks for WebVTT whatever it is.
+ * The page's own player also takes a remux of what a browser can't play.
  */
-const DEVICE_PROFILE = {
-  DirectPlayProfiles: [{ Type: 'Video' }],
-  SubtitleProfiles: [{ Format: 'vtt', Method: 'External' }],
-};
+function deviceProfile(): object {
+  return {
+    DirectPlayProfiles: [{ Type: 'Video' }],
+    SubtitleProfiles: [{ Format: 'vtt', Method: 'External' }],
+    TranscodingProfiles: playsRemux() ? remuxProfile() : [],
+  };
+}
 
 /** The first version carries the item's id; the web app keys every version by its own. */
 function withOwnId(source: SourceInfo): SourceInfo {
@@ -634,7 +639,7 @@ export async function requestPlaybackInfo(
     `/Items/${itemId}/PlaybackInfo`,
     {
       UserId: userId,
-      DeviceProfile: opts.profile ?? DEVICE_PROFILE,
+      DeviceProfile: opts.profile ?? deviceProfile(),
       ...(opts.sourceId
         ? { MediaSourceId: opts.sourceId }
         : !opts.kept && { Fresh: true }),
