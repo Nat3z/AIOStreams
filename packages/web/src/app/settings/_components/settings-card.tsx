@@ -19,6 +19,32 @@ export const hasWords = (
 
 export const SettingsSearch = React.createContext<readonly string[]>([]);
 
+/**
+ * Hides the lines under `root` that the search's words miss, and `root` when
+ * none are left. By the text each line shows, so a search covers whatever this
+ * device lists.
+ */
+export function useSearchHiding(
+  root: React.RefObject<HTMLElement | null>,
+  title: string | undefined,
+  lines: string
+) {
+  const words = React.useContext(SettingsSearch);
+  React.useLayoutEffect(() => {
+    const card = root.current;
+    if (!card || !words.length) return;
+    const items = [...card.querySelectorAll<HTMLElement>(lines)];
+    const whole = hasWords(title, words);
+    for (const item of items)
+      item.hidden = !whole && !hasWords(item.textContent, words);
+    card.hidden = items.every((item) => item.hidden);
+    return () => {
+      card.hidden = false;
+      for (const item of items) item.hidden = false;
+    };
+  });
+}
+
 export function SettingsCard({
   name,
   title,
@@ -31,24 +57,8 @@ export function SettingsCard({
   description?: React.ReactNode;
   children: React.ReactNode;
 }) {
-  const words = React.useContext(SettingsSearch);
   const root = React.useRef<HTMLDivElement>(null);
-  // By the text each line shows, so a search covers whatever this device lists.
-  React.useLayoutEffect(() => {
-    const card = root.current;
-    if (!card || !words.length) return;
-    const items = [
-      ...card.querySelectorAll<HTMLElement>('[data-ui=settings-card-item]'),
-    ];
-    const whole = hasWords(title, words);
-    for (const item of items)
-      item.hidden = !whole && !hasWords(item.textContent, words);
-    card.hidden = items.every((item) => item.hidden);
-    return () => {
-      card.hidden = false;
-      for (const item of items) item.hidden = false;
-    };
-  });
+  useSearchHiding(root, title, '[data-ui=settings-card-item]');
   return (
     <div
       ref={root}
@@ -75,13 +85,13 @@ export function SettingsCard({
       )}
       <Card
         data-ui="settings-card-body"
-        className="divide-y-2 divide-gray-700/40 overflow-clip rounded-xl border-white/10 bg-gray-950/70"
+        className="divide-y-2 divide-gray-700/40 overflow-clip rounded-xl border-white/[0.08] bg-transparent"
       >
         {React.Children.map(children, (child) =>
           child ? (
             <div
               data-ui="settings-card-item"
-              className="p-3 transition-colors hover:bg-gray-900 empty:hidden"
+              className="px-4 py-3.5 transition-colors hover:bg-gray-900 empty:hidden"
             >
               {child}
             </div>
@@ -92,6 +102,7 @@ export function SettingsCard({
   );
 }
 
+/** The open section's title; `leading` (a back button) takes the icon's place. */
 export function SettingsPageHeader({
   title,
   description,
@@ -100,21 +111,27 @@ export function SettingsPageHeader({
 }: {
   title: string;
   description: string;
-  icon: IconType;
+  icon?: IconType;
   leading?: React.ReactNode;
 }) {
+  const lead =
+    leading ??
+    (Icon && (
+      <div className="rounded-lg border border-brand-500/15 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-2">
+        <Icon className="text-2xl text-brand-400" />
+      </div>
+    ));
   return (
     <div data-ui="settings-header" className="flex items-center gap-3">
-      {leading ?? (
-        <div className="rounded-lg border border-brand-500/15 bg-gradient-to-br from-brand-500/10 to-purple-500/10 p-2">
-          <Icon className="text-2xl text-brand-400" />
-        </div>
-      )}
+      {lead}
       <div>
         <h2 data-ui="section-title" className="text-xl font-semibold">
           {title}
         </h2>
-        <p data-ui="settings-header-description" className="text-[--muted]">
+        <p
+          data-ui="settings-header-description"
+          className="text-sm text-[--muted]"
+        >
           {description}
         </p>
       </div>

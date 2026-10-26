@@ -53,7 +53,7 @@ import { PlayerSection } from './player';
 import { AudioSection } from './audio';
 import { SubtitlesSection } from './subtitles';
 import { InterfaceSection } from './interface';
-import { BrowsingSection } from './browsing';
+import { BrowsingExample, BrowsingSection } from './browsing';
 import { ThemeSection } from './theme';
 import { CacheSection } from './cache';
 import { DownloadsSection } from './downloads';
@@ -61,6 +61,7 @@ import { AccountSection } from './account';
 import { ProfileSection } from './profile';
 import { AppSection, DesktopSection, AndroidSection } from './apps';
 import { AboutSection } from './about';
+import { PlayerExample } from './player-example';
 
 type Group = 'watching' | 'look' | 'app';
 
@@ -70,8 +71,17 @@ interface Section {
   description: string;
   icon: IconType;
   group: Group;
+  /** Quick answers beside a mock of what they change, above the rest. */
+  Example?: React.ComponentType;
   Content: React.ComponentType;
 }
+
+/* Tracking is asked where it happens, at the end of an episode. */
+const PlaybackExample = () => (
+  <PlayerExample ids={['skips', 'next']} tracking />
+);
+const AudioExample = () => <PlayerExample ids={['audio']} />;
+const SubtitlesExample = () => <PlayerExample ids={['subtitles', 'size']} />;
 
 const groupLabel = (group: Group) =>
   ({ watching: t`Watching`, look: t`Look and feel`, app: t`App` })[group];
@@ -85,7 +95,7 @@ function sections(profile: boolean): Section[] {
           {
             id: 'profile',
             label: t`Profile`,
-            description: t`You, your streams and Stremio`,
+            description: t`You, tracking, your streams and Stremio`,
             icon: LuUserPen,
             group: 'watching' as const,
             Content: ProfileSection,
@@ -98,6 +108,7 @@ function sections(profile: boolean): Section[] {
       description: t`Versions, next episode and skipping`,
       icon: LuCirclePlay,
       group: 'watching' as const,
+      Example: PlaybackExample,
       Content: PlaybackSection,
     },
     {
@@ -116,6 +127,7 @@ function sections(profile: boolean): Section[] {
       description: shellHost() ? t`Language and output` : t`Language`,
       icon: LuVolume2,
       group: 'watching' as const,
+      Example: AudioExample,
       Content: AudioSection,
     },
     {
@@ -124,6 +136,7 @@ function sections(profile: boolean): Section[] {
       description: t`Language and how subtitles look`,
       icon: LuCaptions,
       group: 'watching' as const,
+      Example: SubtitlesExample,
       Content: SubtitlesSection,
     },
     {
@@ -140,6 +153,7 @@ function sections(profile: boolean): Section[] {
       description: t`Home, posters, trailers and episodes`,
       icon: LuLayoutGrid,
       group: 'look' as const,
+      Example: BrowsingExample,
       Content: BrowsingSection,
     },
     {
@@ -264,8 +278,8 @@ const SectionPanel = React.memo(function SectionPanel({
       <SettingsPageHeader
         title={section.label}
         description={section.description}
-        icon={section.icon}
       />
+      {section.Example && <section.Example />}
       <section.Content />
     </>
   );
@@ -339,11 +353,7 @@ function SearchResults({
             data-name={s.id}
             className="space-y-6"
           >
-            <SettingsPageHeader
-              title={s.label}
-              description={s.description}
-              icon={s.icon}
-            />
+            <SettingsPageHeader title={s.label} description={s.description} />
             <SettingsSearch.Provider
               value={hasWords(s.label, words) ? WHOLE : words}
             >
@@ -463,14 +473,14 @@ function NarrowSettings({
             <div
               data-ui="settings-panel"
               data-name={picked.id}
-              className="space-y-6 duration-300 animate-in fade-in-0 slide-in-from-bottom-2"
+              className="space-y-8 duration-300 animate-in fade-in-0 slide-in-from-bottom-2"
             >
               <SettingsPageHeader
                 title={picked.label}
                 description={picked.description}
-                icon={picked.icon}
                 leading={<BackButton fallback={to.settings()} />}
               />
+              {picked.Example && <picked.Example />}
               <SectionContent section={picked} />
             </div>
           </PageBody>
@@ -509,30 +519,30 @@ function WideSettings({
 
   return (
     <PageBody>
-      <h1 data-ui="page-title" className="text-3xl font-bold">
-        <Trans>Settings</Trans>
-      </h1>
       <Tabs
         value={searching ? '' : shown}
         onValueChange={open}
         activationMode="manual"
         marked={focused ?? undefined}
         variant="pill"
-        className="grid w-full grid-cols-[240px,1fr] gap-6"
+        className="mx-auto grid w-full max-w-6xl grid-cols-[200px,minmax(0,1fr)] gap-8"
         triggerClass={cn(
-          'h-9 w-full justify-start rounded-lg border-0 px-3 text-base',
+          'h-9 w-full justify-start rounded-lg border-0 px-3 text-sm',
           'data-[state=active]:bg-[--subtle] data-[state=active]:text-white dark:hover:text-white',
           'transition duration-200 hover:bg-white/[0.03] focus-visible:ring-0 focus-visible:ring-offset-0',
           'motion-reduce:[[data-tv]_&]:focus-visible:bg-white/20'
         )}
         // The sliding marker carries the focus mark, so the two move together.
         indicatorClass="group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 group-focus-visible:outline-[--ring] [[data-tv]_&]:group-focus-visible:bg-white/20 [[data-tv]_&]:group-focus-visible:outline-none [html[data-pointer-focus]_&]:!outline-none"
-        listClass="block h-fit w-full space-y-3"
+        listClass="block h-fit w-full space-y-4"
       >
         <div
           data-sticky
-          className="sticky top-6 z-[1] flex max-h-[calc(100vh-3rem)] flex-col gap-3 self-start"
+          className="sticky top-6 z-[1] flex max-h-[calc(100vh-3rem)] flex-col gap-4 self-start"
         >
+          <h1 data-ui="page-title" className="text-3xl font-bold">
+            <Trans>Settings</Trans>
+          </h1>
           <SearchField value={query} onChange={onQuery} />
           <TabsList
             data-ui="settings-tabs"
@@ -540,13 +550,13 @@ function WideSettings({
             className="min-h-0 overflow-y-auto"
           >
             {grouped(all).map(([group, items]) => (
-              <Card
+              <div
                 key={group}
                 data-ui="settings-tab-group"
                 data-name={group}
-                className="border border-white/10 bg-gray-950/70 p-2"
+                className="space-y-0.5"
               >
-                <p className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-[--muted]">
+                <p className="px-3 pb-1 text-[10px] font-semibold uppercase tracking-wider text-[--muted]">
                   {groupLabel(group)}
                 </p>
                 {items.map((s) => (
@@ -567,11 +577,11 @@ function WideSettings({
                     }}
                     onBlur={() => setFocused(null)}
                   >
-                    <s.icon className="me-3 text-xl transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
+                    <s.icon className="me-2 text-base transition-transform duration-200 group-hover:translate-x-0.5 rtl:group-hover:-translate-x-0.5" />
                     {s.label}
                   </TabsTrigger>
                 ))}
-              </Card>
+              </div>
             ))}
             <DonateButton onClick={onDonate} />
           </TabsList>
@@ -587,7 +597,7 @@ function WideSettings({
                 tabIndex={-1}
                 data-ui="settings-panel"
                 data-name={s.id}
-                className="space-y-6 duration-300 animate-in fade-in-0 slide-in-from-bottom-2"
+                className="space-y-8 duration-300 animate-in fade-in-0 slide-in-from-bottom-2"
               >
                 {s.id === shown && <SectionPanel section={s} />}
               </TabsContent>
