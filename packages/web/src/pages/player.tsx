@@ -17,6 +17,7 @@ import { lastVersions, playableSources } from '../lib/playback/play';
 import { chosenPlayer } from '../lib/playback/player-choice';
 import {
   directUrl,
+  remuxedUrl,
   requiredHeaders,
   useYouTubeStream,
 } from '../lib/playback/stream';
@@ -656,7 +657,9 @@ function Player({
     item,
     url: local?.local
       ? local.local.video
-      : (youTube ?? directUrl(client, item.Id!, source)),
+      : (youTube ??
+        remuxedUrl(client, source) ??
+        directUrl(client, item.Id!, source)),
     headers: local?.local ? undefined : requiredHeaders(source),
     subtitleUrl: local ? localSubtitle : undefined,
     source,
