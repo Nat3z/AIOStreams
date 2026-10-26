@@ -3,7 +3,7 @@ import {
   canRemux,
   closeRemuxSessions,
   createLogger,
-  cuesToVtt,
+  convertSubtitle,
   remuxSession,
   remuxSessionById,
   remuxSourceOf,
@@ -150,24 +150,72 @@ async function segmentPart(req: Request, res: Response) {
   res.send(segment.bytes);
 }
 
-/** An embedded text subtitle as WebVTT, once the file's subtitles are read. */
+const SUBTITLE_TYPES = {
+  ass: 'text/x-ssa; charset=utf-8',
+  sup: 'application/octet-stream',
+  vtt: 'text/vtt; charset=utf-8',
+} as const;
+
+/**
+ * An embedded subtitle as far as the remux has read the file around `At`
+ * seconds: a styled script as itself or as WebVTT, and PGS pictures as they
+ * are. `X-Read-To` says how far that is, so a player asks again past it.
+ */
 async function remuxSubtitle(req: Request, res: Response) {
-  const session = await sessionFor(req, res);
-  if (!session) return;
-  const index = Number(param(req, 'index'));
-  const cues = session.subtitleCues(index);
-  if (!cues) {
+  const asked = param(req, 'format').toLowerCase();
+  if (asked !== 'ass' && asked !== 'sup' && asked !== 'vtt') {
     res.status(404).end();
     return;
   }
-  const read = await cues;
-  if (!read) {
-    res.status(502).end();
+  const session = await sessionFor(req, res);
+  if (!session) return;
+  const at = Number(qs(req, 'At') ?? 0);
+  const sub = session.subtitle(
+    Number(param(req, 'index')),
+    Number.isFinite(at) ? at : 0
+  );
+  if (!sub) {
+    res.status(404).end();
     return;
   }
-  res.type('text/vtt; charset=utf-8').setHeader('Cache-Control', 'no-store');
+  let body: Buffer | string = sub.data;
+  if (asked === 'vtt' && sub.format === 'ass')
+    body = convertSubtitle(sub.data.toString('utf8'), 'ass', 'vtt').body;
+  else if (asked !== (sub.format === 'pgs' ? 'sup' : sub.format)) {
+    res.status(404).end();
+    return;
+  }
+  res.type(SUBTITLE_TYPES[asked]).setHeader('Cache-Control', 'no-store');
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.send(cuesToVtt(read));
+  res.setHeader('Access-Control-Expose-Headers', 'X-Read-To, X-Read-Complete');
+  res.setHeader('X-Read-To', sub.readTo.toFixed(3));
+  if (sub.complete) res.setHeader('X-Read-Complete', '1');
+  res.send(body);
+}
+
+/** The fonts a styled subtitle needs, which the file carries: their names first. */
+async function remuxFonts(req: Request, res: Response) {
+  const session = await sessionFor(req, res);
+  if (!session) return;
+  const fonts = await session.attachedFonts();
+  res.setHeader('Cache-Control', 'no-store');
+  res.json(
+    fonts.map((f, i) => ({ index: i, name: f.name, size: f.data.length }))
+  );
+}
+
+async function remuxFont(req: Request, res: Response) {
+  const session = await sessionFor(req, res);
+  if (!session) return;
+  const font = (await session.attachedFonts())[Number(param(req, 'font'))];
+  if (!font) {
+    res.status(404).end();
+    return;
+  }
+  res
+    .type(font.mimeType || 'font/ttf')
+    .setHeader('Cache-Control', 'private, max-age=86400');
+  res.send(font.data);
 }
 
 router.get(
@@ -178,8 +226,16 @@ router.get('/Videos/:itemId/main.m3u8', jfOptional(mediaPlaylist));
 router.get('/Videos/:itemId/hls1/main/init.mp4', jfOptional(initPart));
 router.get('/Videos/:itemId/hls1/main/:segment.mp4', jfOptional(segmentPart));
 router.get(
-  '/Videos/:itemId/:mediaSourceId/Subtitles/:index/remux/Stream.vtt',
+  '/Videos/:itemId/:mediaSourceId/Subtitles/:index/remux/Stream.:format',
   jfOptional(remuxSubtitle)
+);
+router.get(
+  '/Videos/:itemId/:mediaSourceId/Attachments',
+  jfOptional(remuxFonts)
+);
+router.get(
+  '/Videos/:itemId/:mediaSourceId/Attachments/:font',
+  jfOptional(remuxFont)
 );
 router.delete('/Videos/ActiveEncodings', (req, res) => {
   const psid = qs(req, 'PlaySessionId');
