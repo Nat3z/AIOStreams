@@ -20,7 +20,7 @@ const ddl = (int: string) => `
 `;
 
 export const stremioTokens: Migration = {
-  id: 49,
+  id: 1001,
   name: 'stremio_tokens',
   up: { sqlite: ddl('INTEGER'), postgres: ddl('BIGINT') },
 };
