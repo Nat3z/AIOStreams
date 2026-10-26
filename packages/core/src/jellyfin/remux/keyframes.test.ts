@@ -92,10 +92,19 @@ describe('matroskaKeyframes', () => {
 });
 
 describe('segmentBounds', () => {
-  it('cuts at the first keyframe a target length on, through to the end', () => {
+  it('cuts short segments first, then a target length apart, to the end', () => {
     assert.deepEqual(
-      segmentBounds([0, 2, 4, 6.5, 7, 13, 19.5], 20),
-      [0, 6.5, 13, 20]
+      segmentBounds([0, 1, 2.5, 4, 5, 8, 9, 15.5, 22], 25),
+      [0, 2.5, 5, 9, 15.5, 22, 25]
+    );
+  });
+
+  it('cuts short segments again from where playback starts', () => {
+    const keyframes = Array.from({ length: 60 }, (_, i) => i);
+    const bounds = segmentBounds(keyframes, 60, 30.4);
+    assert.deepEqual(
+      bounds.filter((b) => b >= 24 && b <= 44),
+      [26, 30, 32, 34, 38, 44]
     );
   });
 });
