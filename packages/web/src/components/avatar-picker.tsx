@@ -4,7 +4,7 @@ import { Trans } from '@lingui/react/macro';
 import { toast } from 'sonner';
 import { Button } from '@aiostreams/ui/button';
 import { avatarImage } from '@aiostreams/ui/utils/avatar-image';
-import { useSession } from '../lib/session';
+import { useSession } from '@/lib/jellyfin/session';
 import { UserAvatar } from './user-avatar';
 
 /** A user's picture with a way to upload a new one or clear it. */
