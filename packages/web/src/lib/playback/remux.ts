@@ -4,6 +4,8 @@ import type { SourceInfo } from '@/lib/jellyfin/types';
 import { remuxes } from './stream';
 import { ofType, trackLabel } from './controller';
 import type { EngineTrack } from './engine';
+import { chooseTracks } from './track-picks';
+import type { PlaybackPrefs } from '../user-config';
 
 /**
  * The tracks of a remuxed version, which the server lists as the browser
@@ -21,11 +23,28 @@ export function remuxTracks(source: SourceInfo): EngineTrack[] {
   }));
 }
 
-/** The server's pick, which the player's own picks then replace. */
-export function remuxAudio(source: SourceInfo): string | null {
-  const index =
-    source.DefaultAudioStreamIndex ?? ofType(source, 'Audio')[0]?.Index;
-  return index === undefined || index === null ? null : `server:${index}`;
+/**
+ * The audio track to remux first: the one the player's picks will settle on,
+ * as switching starts the remux over.
+ */
+export function remuxAudio(
+  source: SourceInfo,
+  prefs: PlaybackPrefs
+): string | null {
+  const tracks = remuxTracks(source);
+  const server = source.DefaultAudioStreamIndex;
+  const current =
+    server === undefined || server === null ? null : `server:${server}`;
+  return (
+    chooseTracks(
+      tracks,
+      [],
+      { audio: current, subtitle: null },
+      prefs,
+      source,
+      false
+    ).audio ?? current
+  );
 }
 
 const hasMediaSource = () =>
