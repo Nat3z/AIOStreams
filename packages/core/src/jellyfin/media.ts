@@ -16,7 +16,10 @@ import {
   type TrackPreferences,
 } from './track-defaults.js';
 import { mediaSourceId } from './ids.js';
-import { remuxableSubtitle } from './remux/session.js';
+import {
+  remuxSubtitleFormat,
+  type RemuxSubtitleFormat,
+} from './remux/session.js';
 import {
   mergeSubtitleTracks,
   subtitleCodecFor,
@@ -718,8 +721,14 @@ export interface MediaSourceBuildOptions {
    * plays instead; its embedded text subtitles are then delivered as files.
    */
   remuxUrl?: string;
-  /** An embedded subtitle's WebVTT, by its MediaStream index, for a remux. */
-  remuxSubtitleUrl?: (streamIndex: number) => string;
+  /**
+   * An embedded subtitle's address, by its MediaStream index, for a remux:
+   * styled scripts stay ASS and pictures stay PGS, the rest are WebVTT.
+   */
+  remuxSubtitleUrl?: (
+    streamIndex: number,
+    format: RemuxSubtitleFormat
+  ) => string;
 }
 
 function onlyFields<T extends object>(
@@ -771,14 +780,16 @@ export function buildMediaStreams(
   const streams = embeddedStreams(record.parsedFile, record.bitrate);
   const remuxed = opts.remuxSubtitleUrl;
   if (remuxed) {
-    const text = new Set(
-      (fileStreamsOf(record) ?? [])
-        .filter((s) => s.type === 'Subtitle' && remuxableSubtitle(s.codec))
-        .map((s) => s.streamIndex)
+    const formats = new Map(
+      (fileStreamsOf(record) ?? []).flatMap((s) => {
+        const format = s.type === 'Subtitle' && remuxSubtitleFormat(s.codec);
+        return format ? [[s.streamIndex, format] as const] : [];
+      })
     );
     for (const stream of streams) {
-      if (!text.has(stream.Index)) continue;
-      const url = remuxed(stream.Index);
+      const format = formats.get(stream.Index);
+      if (!format) continue;
+      const url = remuxed(stream.Index, format);
       stream.DeliveryMethod = 'External';
       stream.DeliveryUrl = withQuery(url);
       stream.SupportsExternalStream = true;
