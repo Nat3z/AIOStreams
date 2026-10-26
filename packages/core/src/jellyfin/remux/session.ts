@@ -3,8 +3,11 @@ import { randomBytes } from 'node:crypto';
 import { appConfig, createLogger } from '../../utils/index.js';
 import { openLoopback } from '../../media-info/loopback.js';
 import type { OpenedFile } from '../../media-info/probe.js';
-import { parseCues } from '../subtitles.js';
-import { matroskaKeyframes } from './keyframes.js';
+import {
+  matroskaAttachments,
+  matroskaKeyframes,
+  type Attachment,
+} from './keyframes.js';
 import { BoxReader, fragmentVideoTime, videoTrackOf } from './fmp4.js';
 
 const logger = createLogger('remux');
@@ -45,6 +48,8 @@ const TEXT_SUBTITLE_CODECS = new Set([
   'mov_text',
   'text',
 ]);
+const ASS_CODECS = new Set(['ass', 'ssa']);
+const PGS_CODECS = new Set(['hdmv_pgs_subtitle', 'pgssub']);
 
 export interface RemuxTrack {
   /** The track's MediaStream index, as clients name it. */
@@ -69,18 +74,48 @@ export interface RemuxSource {
   playSessionId: string;
 }
 
-export function remuxableSubtitle(codec: string | undefined): boolean {
-  return !!codec && TEXT_SUBTITLE_CODECS.has(codec.toLowerCase());
+/**
+ * How a remux delivers an embedded subtitle: `ass` keeps a styled script as
+ * it is, `pgs` copies the pictures, and `vtt` converts the rest to WebVTT.
+ */
+export type RemuxSubtitleFormat = 'ass' | 'pgs' | 'vtt';
+
+export function remuxSubtitleFormat(
+  codec: string | undefined
+): RemuxSubtitleFormat | undefined {
+  const c = codec?.toLowerCase() ?? '';
+  if (ASS_CODECS.has(c)) return 'ass';
+  if (PGS_CODECS.has(c)) return 'pgs';
+  return TEXT_SUBTITLE_CODECS.has(c) ? 'vtt' : undefined;
+}
+
+export const remuxableSubtitle = (codec: string | undefined) =>
+  remuxSubtitleFormat(codec) !== undefined;
+
+/**
+ * An embedded subtitle as far as the runs have read it: a styled script's
+ * header and the events after it, or PGS display sets, each kept once.
+ */
+export interface RemuxSubtitle {
+  format: RemuxSubtitleFormat;
+  data: Buffer;
+  /** How far into the file it is read, in seconds. */
+  readTo: number;
+  /** It is read to the end. */
+  complete: boolean;
+}
+
+/** One subtitle's pieces as runs write them. */
+interface SubtitleStore {
+  format: RemuxSubtitleFormat;
+  /** A script's header, which every run writes the same. */
+  header?: string;
+  /** Events or display sets by their start, which runs that overlap write twice. */
+  pieces: Map<string, { at: number; data: Buffer }>;
 }
 
 interface Segment {
   bytes: Buffer;
-}
-
-export interface RemuxCue {
-  startMs: number;
-  endMs: number;
-  text: string;
 }
 
 interface Waiter {
@@ -91,7 +126,8 @@ interface Waiter {
 /** One ffmpeg reading the file from a segment onwards. */
 interface Run {
   proc: ChildProcess;
-  /** The segment it writes next. */
+  /** The segment it began at, and the one it writes next. */
+  from: number;
   next: number;
   pending: Buffer[];
   ended: boolean;
@@ -105,7 +141,10 @@ export class RemuxSession {
   private readonly segments = new Map<number, Segment>();
   private readonly waiters = new Map<number, Waiter[]>();
   private readonly restarts = new Map<number, number>();
-  private subtitlePass: Promise<Map<number, RemuxCue[]>> | null = null;
+  private readonly subtitles = new Map<number, SubtitleStore>();
+  /** Time ranges every subtitle is read over, as runs cover them. */
+  private readSpans: [number, number][] = [];
+  private fonts: Promise<Attachment[]> | null = null;
   private run: Run | null = null;
   private init: Buffer | null = null;
   private ftyp: Buffer | null = null;
@@ -121,12 +160,18 @@ export class RemuxSession {
     readonly source: RemuxSource,
     readonly audio: RemuxTrack,
     private readonly url: string,
+    private readonly file: OpenedFile,
     private readonly keyframes: number[],
     durationSeconds: number,
     startSeconds: number,
     private readonly onClose: () => void
   ) {
     this.bounds = segmentBounds(keyframes, durationSeconds, startSeconds);
+    for (const sub of source.subtitles)
+      this.subtitles.set(sub.streamIndex, {
+        format: remuxSubtitleFormat(sub.codec) ?? 'vtt',
+        pieces: new Map(),
+      });
     this.idle = setInterval(() => {
       if (Date.now() - this.lastUsed > IDLE_MS) this.close();
     }, 30_000);
@@ -172,25 +217,109 @@ export class RemuxSession {
   }
 
   /**
-   * An embedded subtitle's cues, once one pass over the file has read them
-   * all; null when it isn't one of this session's subtitles or the pass fails.
+   * An embedded subtitle as far as the runs have read the file around `at`
+   * seconds. The video run writes it as it reads, so this costs no read of
+   * its own; null when it isn't one of this session's.
    */
-  subtitleCues(streamIndex: number): Promise<RemuxCue[] | null> {
+  subtitle(streamIndex: number, at = 0): RemuxSubtitle | null {
     this.touch();
-    if (!this.source.subtitles.some((s) => s.streamIndex === streamIndex))
-      return Promise.resolve(null);
-    this.subtitlePass ??= readSubtitles(
-      this.url,
-      this.source.subtitles,
-      this.subtitleAbort.signal
-    );
-    return this.subtitlePass.then(
-      (all) => all.get(streamIndex) ?? [],
-      () => {
-        this.subtitlePass = null;
-        return null;
+    const store = this.subtitles.get(streamIndex);
+    if (!store) return null;
+    const pieces = [...store.pieces.values()].sort((a, b) => a.at - b.at);
+    const span = this.readSpans.find(([from, to]) => from <= at && at <= to);
+    const readTo = span?.[1] ?? at;
+    const end = this.bounds[this.count];
+    const data =
+      store.format === 'pgs'
+        ? Buffer.concat(pieces.map((p) => p.data))
+        : Buffer.from(
+            (store.header ?? '') +
+              pieces.map((p) => p.data.toString('utf8')).join(''),
+            'utf8'
+          );
+    return {
+      format: store.format,
+      data,
+      readTo,
+      complete: !!span && span[0] <= 0 && readTo >= end,
+    };
+  }
+
+  /** The fonts the file carries for its styled subtitles. */
+  attachedFonts(): Promise<Attachment[]> {
+    this.touch();
+    this.fonts ??= matroskaAttachments(this.file, this.subtitleAbort.signal)
+      .then((all) => all.filter((a) => isFont(a)))
+      .catch(() => []);
+    return this.fonts;
+  }
+
+  /** Stores what a run's subtitle output carried, piece by piece. */
+  private collect(streamIndex: number, chunk: string | Buffer): void {
+    const store = this.subtitles.get(streamIndex);
+    if (!store) return;
+    if (store.format === 'pgs') {
+      // Display sets end with an END segment; their PTS is their start.
+      const buf = chunk as Buffer;
+      let at = 0;
+      while (
+        at + 13 <= buf.length &&
+        buf[at] === 0x50 &&
+        buf[at + 1] === 0x47
+      ) {
+        const size = 13 + buf.readUInt16BE(at + 11);
+        if (at + size > buf.length) break;
+        const pts = buf.readUInt32BE(at + 2) / 90000;
+        const key = `${pts}:${buf.subarray(at + 10, at + size).toString('base64')}`;
+        store.pieces.set(key, { at: pts, data: buf.subarray(at, at + size) });
+        at += size;
       }
+      return;
+    }
+    const text = chunk as string;
+    if (store.format === 'ass') {
+      const events = text.indexOf('[Events]');
+      if (store.header === undefined && events >= 0) {
+        const format = text.indexOf('\n', text.indexOf('Format:', events));
+        store.header = text.slice(0, format + 1);
+      }
+      for (const line of text.split('\n')) {
+        if (!line.startsWith('Dialogue:')) continue;
+        const start = /^Dialogue:\s*[^,]*,([^,]*)/.exec(line)?.[1] ?? '';
+        store.pieces.set(line, {
+          at: assSeconds(start),
+          data: Buffer.from(line + '\n'),
+        });
+      }
+      return;
+    }
+    // WebVTT: the header once, then a cue per block.
+    for (const block of text.split(/\n{2,}/)) {
+      if (!block.includes('-->')) {
+        if (store.header === undefined && block.startsWith('WEBVTT'))
+          store.header = 'WEBVTT\n\n';
+        continue;
+      }
+      const start = /([\d:.]+)\s*-->/.exec(block)?.[1] ?? '';
+      store.pieces.set(block, {
+        at: vttSeconds(start),
+        data: Buffer.from(block.trim() + '\n\n'),
+      });
+    }
+  }
+
+  /** Notes that every subtitle is read from `from` to `to` seconds. */
+  private markRead(from: number, to: number): void {
+    const spans = [...this.readSpans, [from, to] as [number, number]].sort(
+      (a, b) => a[0] - b[0]
     );
+    const merged: [number, number][] = [];
+    for (const [a, b] of spans) {
+      const last = merged[merged.length - 1];
+      if (last && a <= last[1] + 0.5) last[1] = Math.max(last[1], b);
+      else merged.push([a, b]);
+    }
+    this.readSpans = merged;
   }
 
   close(): void {
@@ -234,13 +363,44 @@ export class RemuxSession {
     // The player has moved on from what it waited for before the seek.
     for (const n of [...this.waiters.keys()])
       if (n < from) this.settle(n, null);
+    const subs = this.source.subtitles;
     const proc = spawn(
       appConfig.jellyfin.remux.ffmpegPath,
       ffmpegArgs(this.url, this.seekTime(from), this.source, this.audio),
-      { stdio: ['ignore', 'pipe', 'pipe'] }
+      { stdio: ['ignore', 'pipe', 'pipe', ...subs.map(() => 'pipe' as const)] }
     );
-    const run: Run = { proc, next: from, pending: [], ended: false };
+    const run: Run = {
+      proc,
+      from: this.bounds[from],
+      next: from,
+      pending: [],
+      ended: false,
+    };
     this.run = run;
+    subs.forEach((sub, i) => {
+      const pipe = proc.stdio[3 + i] as NodeJS.ReadableStream;
+      const pgs = this.subtitles.get(sub.streamIndex)?.format === 'pgs';
+      // A piece can arrive split, so the tail waits for the rest.
+      let held: Buffer = Buffer.alloc(0);
+      pipe.on('data', (chunk: Buffer) => {
+        if (run.ended) return;
+        const all = Buffer.concat([held, chunk]);
+        let cut = all.length;
+        if (pgs) {
+          cut = 0;
+          while (cut + 13 <= all.length) {
+            const size = 13 + all.readUInt16BE(cut + 11);
+            if (cut + size > all.length) break;
+            cut += size;
+          }
+          this.collect(sub.streamIndex, all.subarray(0, cut));
+        } else {
+          cut = all.lastIndexOf(0x0a) + 1;
+          this.collect(sub.streamIndex, all.subarray(0, cut).toString('utf8'));
+        }
+        held = all.subarray(cut);
+      });
+    });
     logger.debug({ session: this.id, from }, 'remux run started');
 
     let stderr = '';
@@ -334,6 +494,8 @@ export class RemuxSession {
   /** Closes the segment being written and any it ran past, which index a keyframe ffmpeg didn't cut at. */
   private finish(run: Run, upTo: number): void {
     if (run.next >= upTo) return;
+    // A cue comes out once the video passes it, so what is cut is read.
+    this.markRead(run.from, this.bounds[upTo]);
     const segment = { bytes: Buffer.concat(run.pending) };
     run.pending = [];
     for (let n = run.next; n < upTo; n++) {
@@ -351,75 +513,30 @@ export class RemuxSession {
   }
 }
 
-/**
- * A file's text subtitles, read in one pass that demuxes nothing else. It
- * still reads every block of the file, but no faster than the store sends it.
- */
-function readSubtitles(
-  url: string,
-  subtitles: RemuxTrack[],
-  signal: AbortSignal
-): Promise<Map<number, RemuxCue[]>> {
-  const texts = subtitles.map(() => [] as Buffer[]);
-  return new Promise((resolve, reject) => {
-    const proc = spawn(
-      appConfig.jellyfin.remux.ffmpegPath,
-      [
-        '-hide_banner',
-        '-nostdin',
-        '-loglevel',
-        'error',
-        '-discard:v',
-        'all',
-        '-discard:a',
-        'all',
-        '-i',
-        url,
-        ...subtitles.flatMap((sub, i) => [
-          '-map',
-          sub.map,
-          '-c:s',
-          'webvtt',
-          '-f',
-          'webvtt',
-          `pipe:${3 + i}`,
-        ]),
-      ],
-      {
-        stdio: [
-          'ignore',
-          'ignore',
-          'pipe',
-          ...subtitles.map(() => 'pipe' as const),
-        ],
-        signal,
-      }
-    );
-    subtitles.forEach((_, i) =>
-      (proc.stdio[3 + i] as NodeJS.ReadableStream).on('data', (c: Buffer) =>
-        texts[i].push(c)
-      )
-    );
-    let stderr = '';
-    proc.stderr!.on('data', (c: Buffer) => {
-      stderr = (stderr + c.toString()).slice(-500);
-    });
-    proc.on('error', reject);
-    proc.on('close', (code) => {
-      if (code !== 0) {
-        reject(new Error(stderr.trim().split('\n').pop() || `ffmpeg ${code}`));
-        return;
-      }
-      resolve(
-        new Map(
-          subtitles.map((sub, i) => [
-            sub.streamIndex,
-            parseCues(Buffer.concat(texts[i]).toString('utf8')),
-          ])
-        )
-      );
-    });
-  });
+const FONT_FILE = /\.(ttf|otf|ttc|woff2?)$/i;
+
+function isFont(a: Attachment): boolean {
+  return (
+    /font|truetype|opentype|sfnt/i.test(a.mimeType) || FONT_FILE.test(a.name)
+  );
+}
+
+/** ffmpeg's output for one subtitle, in the form it is delivered in. */
+const SUBTITLE_OUTPUT: Record<RemuxSubtitleFormat, string[]> = {
+  // Events come out as they are read, not held back for their read order.
+  ass: ['-c:s', 'copy', '-f', 'ass', '-ignore_readorder', '1'],
+  pgs: ['-c:s', 'copy', '-f', 'sup'],
+  vtt: ['-c:s', 'webvtt', '-f', 'webvtt'],
+};
+
+function assSeconds(time: string): number {
+  const [h, m, sec] = time.trim().split(':').map(Number);
+  return (h || 0) * 3600 + (m || 0) * 60 + (sec || 0);
+}
+
+function vttSeconds(time: string): number {
+  const parts = time.trim().split(':').map(Number);
+  return parts.reduce((total, part) => total * 60 + (part || 0), 0);
 }
 
 /**
@@ -499,6 +616,14 @@ function ffmpegArgs(
     '-f',
     'mp4',
     'pipe:1',
+    ...source.subtitles.flatMap((sub, i) => [
+      '-map',
+      sub.map,
+      ...SUBTITLE_OUTPUT[remuxSubtitleFormat(sub.codec) ?? 'vtt'],
+      '-flush_packets',
+      '1',
+      `pipe:${3 + i}`,
+    ]),
   ];
 }
 
@@ -575,6 +700,7 @@ async function openSession(
       source,
       audio,
       loopback.url,
+      file,
       index.keyframes,
       duration,
       startSeconds,
