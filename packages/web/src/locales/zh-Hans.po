@@ -357,6 +357,10 @@ msgstr "当某个版本的文本符合标签的匹配规则时，就会显示该
 msgid "A button lets you skip the intro."
 msgstr ""
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "A cleaner Jellyfin app, with downloads."
+msgstr ""
+
 #: src/features/party/not-in-party.tsx
 msgid "A code is looked up on the relay picked above."
 msgstr "代码会在上方选择的中继服务器中查询。"
@@ -488,6 +492,10 @@ msgstr "从「继续观看」添加"
 #: src/features/playlists/playlists.tsx
 msgid "Add to playlist"
 msgstr "添加到播放列表"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Add to the app"
+msgstr ""
 
 #: src/features/playlists/playlists.tsx
 msgid "Add to this playlist"
@@ -1096,6 +1104,10 @@ msgstr "兼容性"
 msgid "Composer"
 msgstr "创作者"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Computer"
+msgstr ""
+
 #: src/app/settings/account.tsx
 #: src/app/settings/profile.tsx
 msgid "Configuration"
@@ -1144,7 +1156,7 @@ msgstr "继续观看"
 msgid "Controls"
 msgstr "控制项"
 
-#: src/app/welcome/welcome-apps.prototype.tsx
+#: src/app/welcome/welcome-apps.tsx
 msgid "Copied"
 msgstr ""
 
@@ -1193,7 +1205,7 @@ msgid "Could not connect: {message}"
 msgstr "连接失败：{message}"
 
 #: src/app/settings/profile.tsx
-#: src/app/welcome/welcome-apps.prototype.tsx
+#: src/app/welcome/welcome-apps.tsx
 #: src/components/shell/crash-report.tsx
 msgid "Could not copy it"
 msgstr "无法复制"
@@ -1575,6 +1587,7 @@ msgstr "向下"
 
 #: src/app/item/_components/actions.tsx
 #: src/app/settings/about.tsx
+#: src/app/welcome/welcome-apps.tsx
 #: src/components/media/item-menu.tsx
 #: src/features/downloads/download-button.tsx
 #: src/features/versions/version-list.tsx
@@ -1698,6 +1711,10 @@ msgstr "引擎"
 #: src/lib/input/keys.ts
 msgid "Enter"
 msgstr "回车"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Enter {address} as the address."
+msgstr ""
 
 #: src/features/party/not-in-party.tsx
 msgid "Enter an invite link, or a code and its relay"
@@ -1974,6 +1991,10 @@ msgstr "全屏"
 msgid "General"
 msgstr "常规"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Get {name}."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "Give this code to whoever looks into it."
 msgstr "将此代码提供给负责排查问题的人。"
@@ -2201,6 +2222,10 @@ msgstr "在「发现」中"
 msgid "In Favourites"
 msgstr "在收藏中"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "In Infuse, tap Add Files and pick Jellyfin."
+msgstr ""
+
 #: src/lib/playback/sound.ts
 #: src/lib/subtitles/delay.ts
 msgid "In sync"
@@ -2234,6 +2259,10 @@ msgstr "前往「插件 → 市场」安装目录插件。若列表中没有所�
 
 #: src/app/settings/profile.tsx
 msgid "Install in Stremio"
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Install it and open it once."
 msgstr ""
 
 #: src/app/settings/page.tsx
@@ -3250,6 +3279,10 @@ msgstr ""
 msgid "Open its page"
 msgstr "打开其页面"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Open Jellyfin and add {address} as a server."
+msgstr ""
+
 #: src/features/versions/version-list.tsx
 msgid "Open link"
 msgstr "打开链接"
@@ -3261,6 +3294,10 @@ msgstr "打开主菜单"
 #: src/features/playlists/playlists.tsx
 msgid "Open playlist"
 msgstr "打开播放列表"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Open Streamyfin and enter {address} as the server."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Open the app's downloads"
@@ -3499,6 +3536,10 @@ msgstr "人物"
 #: src/features/party/in-party.tsx
 msgid "People and invite"
 msgstr "成员与邀请"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Phone or tablet"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "Pick a colour"
@@ -3778,6 +3819,10 @@ msgstr "为所有加入者播放 <0>{title}</0>。"
 msgid "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 msgstr "通过稍微加快或减慢播放速度来与一起观看同步。关闭后则会直接跳转视频进度。"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Plays almost anything, on iPhone, iPad and Apple TV."
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
 msgstr "当屏幕支持时播放杜比视界。如果杜比视界画面偏暗或闪烁，可关闭此选项，改播多数此类视频同时包含的 HDR10 画面。没有 HDR10 画面的视频仍会以杜比视界播放。"
@@ -3821,6 +3866,10 @@ msgstr "预设"
 #: src/app/settings/_components/shortcut-settings.tsx
 msgid "Press a key"
 msgstr "按下一个按键"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Press Add to the app below, or enter {address} in it yourself."
+msgstr ""
 
 #: src/lib/hosts/shell/android.ts
 msgid "Press Back again to leave"
@@ -4618,6 +4667,14 @@ msgstr "登录"
 msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
 msgstr ""
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Sign in as {name} with your password, then save."
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Sign in as {name} with your password."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "Sign in failed"
 msgstr "登录失败"
@@ -5306,6 +5363,10 @@ msgstr ""
 msgid "The next episode starts after a countdown you can cancel."
 msgstr ""
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "The official Jellyfin app."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "mpv 的旧式渲染方式，适用于其他方式无法正常工作的 Mac。部分杜比视界视频可能会显示错误的颜色。"
@@ -5469,6 +5530,10 @@ msgstr "细"
 #: src/app/settings/audio.tsx
 msgid "This app decodes Dolby and DTS audio itself, which loses Atmos."
 msgstr "本应用会自行解码 Dolby 和 DTS 音频，因此会失去 Atmos 效果。"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
+msgstr ""
 
 #: src/app/settings/playback.tsx
 msgid "This browser"

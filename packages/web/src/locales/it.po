@@ -356,6 +356,10 @@ msgstr "Un badge viene mostrato su ogni versione il cui testo corrisponde al mod
 msgid "A button lets you skip the intro."
 msgstr ""
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "A cleaner Jellyfin app, with downloads."
+msgstr ""
+
 #: src/features/party/not-in-party.tsx
 msgid "A code is looked up on the relay picked above."
 msgstr "Il codice viene cercato sul relay selezionato sopra."
@@ -487,6 +491,10 @@ msgstr "Aggiungi da Continua a guardare"
 #: src/features/playlists/playlists.tsx
 msgid "Add to playlist"
 msgstr "Aggiungi a playlist"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Add to the app"
+msgstr ""
 
 #: src/features/playlists/playlists.tsx
 msgid "Add to this playlist"
@@ -1091,6 +1099,10 @@ msgstr "Compatibilità"
 msgid "Composer"
 msgstr "Compositore"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Computer"
+msgstr ""
+
 #: src/app/settings/account.tsx
 #: src/app/settings/profile.tsx
 msgid "Configuration"
@@ -1139,7 +1151,7 @@ msgstr "Continua a guardare"
 msgid "Controls"
 msgstr "Controlli"
 
-#: src/app/welcome/welcome-apps.prototype.tsx
+#: src/app/welcome/welcome-apps.tsx
 msgid "Copied"
 msgstr ""
 
@@ -1188,7 +1200,7 @@ msgid "Could not connect: {message}"
 msgstr "Impossibile connettere: {message}"
 
 #: src/app/settings/profile.tsx
-#: src/app/welcome/welcome-apps.prototype.tsx
+#: src/app/welcome/welcome-apps.tsx
 #: src/components/shell/crash-report.tsx
 msgid "Could not copy it"
 msgstr "Impossibile copiarlo"
@@ -1568,6 +1580,7 @@ msgstr "Giù"
 
 #: src/app/item/_components/actions.tsx
 #: src/app/settings/about.tsx
+#: src/app/welcome/welcome-apps.tsx
 #: src/components/media/item-menu.tsx
 #: src/features/downloads/download-button.tsx
 #: src/features/versions/version-list.tsx
@@ -1689,6 +1702,10 @@ msgstr "Motore"
 #: src/lib/input/keys.ts
 msgid "Enter"
 msgstr "Invio"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Enter {address} as the address."
+msgstr ""
 
 #: src/features/party/not-in-party.tsx
 msgid "Enter an invite link, or a code and its relay"
@@ -1963,6 +1980,10 @@ msgstr "A schermo intero"
 msgid "General"
 msgstr "Generale"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Get {name}."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "Give this code to whoever looks into it."
 msgstr "Dai questo codice a chi si occuperà del problema."
@@ -2189,6 +2210,10 @@ msgstr "In Scopri"
 msgid "In Favourites"
 msgstr "In Preferiti"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "In Infuse, tap Add Files and pick Jellyfin."
+msgstr ""
+
 #: src/lib/playback/sound.ts
 #: src/lib/subtitles/delay.ts
 msgid "In sync"
@@ -2221,6 +2246,10 @@ msgstr "Installa gli addon dei cataloghi da Addon → Marketplace. Per quelli no
 
 #: src/app/settings/profile.tsx
 msgid "Install in Stremio"
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Install it and open it once."
 msgstr ""
 
 #: src/app/settings/page.tsx
@@ -3231,6 +3260,10 @@ msgstr ""
 msgid "Open its page"
 msgstr "Apri la sua scheda"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Open Jellyfin and add {address} as a server."
+msgstr ""
+
 #: src/features/versions/version-list.tsx
 msgid "Open link"
 msgstr "Apri link"
@@ -3242,6 +3275,10 @@ msgstr "Apri menu principale"
 #: src/features/playlists/playlists.tsx
 msgid "Open playlist"
 msgstr "Apri playlist"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Open Streamyfin and enter {address} as the server."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Open the app's downloads"
@@ -3479,6 +3516,10 @@ msgstr "Persone"
 #: src/features/party/in-party.tsx
 msgid "People and invite"
 msgstr "Persone e inviti"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Phone or tablet"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "Pick a colour"
@@ -3755,6 +3796,10 @@ msgstr "Riproduce <0>{title}</0> per chiunque si unisce."
 msgid "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 msgstr "Riproduce il video ad una velocità leggermente maggiore o minore per rimettersi in pari con il watch party. Se disattivata, il video effettuerà un salto."
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Plays almost anything, on iPhone, iPad and Apple TV."
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
 msgstr "Riproduce in Dolby Vision se lo schermo lo supporta. Disattiva questa opzione per riprodurre il video in HDR10, incluso nella maggior parte di questi video, se il Dolby Vision appare cupo o sfarfalla. I video senza HDR10 verranno comunque riprodotti in Dolby Vision."
@@ -3798,6 +3843,10 @@ msgstr "Preset"
 #: src/app/settings/_components/shortcut-settings.tsx
 msgid "Press a key"
 msgstr "Premi un tasto"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Press Add to the app below, or enter {address} in it yourself."
+msgstr ""
 
 #: src/lib/hosts/shell/android.ts
 msgid "Press Back again to leave"
@@ -4586,6 +4635,14 @@ msgstr "Accedi"
 msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
 msgstr ""
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Sign in as {name} with your password, then save."
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Sign in as {name} with your password."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "Sign in failed"
 msgstr "Accesso non riuscito"
@@ -5269,6 +5326,10 @@ msgstr ""
 msgid "The next episode starts after a countdown you can cancel."
 msgstr ""
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "The official Jellyfin app."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "Il vecchio metodo di rendering di mpv, pensato per i Mac su cui le altre modalità falliscono. Alcuni video in Dolby Vision potrebbero mostrare colori sbagliati."
@@ -5432,6 +5493,10 @@ msgstr "Sottile"
 #: src/app/settings/audio.tsx
 msgid "This app decodes Dolby and DTS audio itself, which loses Atmos."
 msgstr "Questa app decodifica l'audio Dolby e DTS internamente, con conseguente perdita dell'Atmos."
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
+msgstr ""
 
 #: src/app/settings/playback.tsx
 msgid "This browser"
