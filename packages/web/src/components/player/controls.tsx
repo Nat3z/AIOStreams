@@ -91,6 +91,7 @@ export function PlayerControls({
   playlist,
   onParty,
   live = false,
+  sleepTimer = false,
 }: {
   item: BaseItemDto;
   player: PlayerController;
@@ -111,6 +112,8 @@ export function PlayerControls({
   onParty?: () => void;
   /** A channel: the programme in place of the seek bar, and zapping. */
   live?: boolean;
+  /** Offers a sleep timer, which a trailer or a watch party has none of. */
+  sleepTimer?: boolean;
 }) {
   const { state } = player;
   const latest = useLatest(player);
@@ -768,6 +771,7 @@ export function PlayerControls({
             onSyncByEar={() => setByEar(true)}
             onSyncToLine={pickLine}
             onParty={onParty}
+            sleepTimer={sleepTimer}
             notice={showNotice}
           />
         </div>
