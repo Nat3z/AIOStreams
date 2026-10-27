@@ -1,7 +1,7 @@
 /**
  * Just enough ISO BMFF to cut a fragmented MP4 stream into HLS segments: its
  * top-level boxes as they stream past, the times inside `moov` and `moof`,
- * and the video samples a damaged file leaves malformed.
+ * and the video frames a damaged file leaves malformed.
  */
 
 /** Gathers a byte stream into whole top-level boxes. */
@@ -159,82 +159,116 @@ export function fragmentVideoTime(
   return undefined;
 }
 
-/** NAL unit type 12, which a decoder skips. */
-const H264_FILLER = 0x0c;
-const HEVC_FILLER = 38 << 1;
+/** Bytes each `trun` field takes per sample, by its flag. */
+const SAMPLE_FIELDS = [0x100, 0x200, 0x400, 0x800];
+
+export interface TrimmedFragment {
+  moof: Buffer;
+  mdat: Buffer;
+  /** Video samples dropped. */
+  dropped: number;
+}
 
 /**
- * Mends, in place, video samples whose NAL units run past the sample, as a
- * damaged block in the source leaves them: from the first bad length on, the
- * sample is one filler unit, which a decoder skips. Safari otherwise fails
- * the segment and closes the MediaSource. Returns how many were mended.
+ * Drops a fragment's video from the first sample whose NAL units run past
+ * the sample, as a damaged block in the source leaves it, to the fragment's
+ * end, which is the next keyframe as each fragment starts at one. Safari
+ * fails a segment holding such a frame and closes the MediaSource, where it
+ * plays over the missing frames. Undefined when nothing is damaged, or when
+ * the keyframe is, as the fragment then has no video left to play.
  */
-export function repairVideoSamples(
+export function dropDamagedVideo(
   moof: Buffer,
   mdat: Buffer,
   video: VideoTrackInfo
-): number {
+): TrimmedFragment | undefined {
   const [root] = boxesIn(moof, 0, moof.length);
-  if (!video.nal || root?.type !== 'moof') return 0;
-  let mended = 0;
-  for (const traf of boxesIn(moof, root.start, root.end)) {
-    if (traf.type !== 'traf') continue;
-    const tfhd = child(moof, traf, 'tfhd');
-    if (!tfhd || moof.readUInt32BE(tfhd.start + 4) !== video.trackId) continue;
-    const tfhdFlags = moof.readUIntBE(tfhd.start + 1, 3);
-    // Offsets count from the moof, as `default_base_moof` writes them.
-    if (tfhdFlags & 0x1) return mended;
-    let at = tfhd.start + 8;
-    for (const field of [0x2, 0x8]) if (tfhdFlags & field) at += 4;
-    const defaultSize = tfhdFlags & 0x10 ? moof.readUInt32BE(at) : 0;
-    for (const trun of boxesIn(moof, traf.start, traf.end)) {
-      if (trun.type !== 'trun') continue;
-      const flags = moof.readUIntBE(trun.start + 1, 3);
-      const count = moof.readUInt32BE(trun.start + 4);
-      let field = trun.start + 8;
-      if (!(flags & 0x1)) return mended;
-      // Where the samples sit in the mdat, which follows the moof.
-      let sample = moof.readInt32BE(field) - moof.length;
-      field += flags & 0x4 ? 8 : 4;
-      for (let i = 0; i < count; i++) {
-        if (flags & 0x100) field += 4;
-        const size = flags & 0x200 ? moof.readUInt32BE(field) : defaultSize;
-        if (flags & 0x200) field += 4;
-        if (flags & 0x400) field += 4;
-        if (flags & 0x800) field += 4;
-        if (sample < 0 || sample + size > mdat.length) return mended;
-        if (mendSample(mdat, sample, sample + size, video.nal)) mended++;
-        sample += size;
-      }
-    }
+  if (!video.nal || root?.type !== 'moof' || mdat.readUInt32BE(0) === 1)
+    return undefined;
+  const trafs = boxesIn(moof, root.start, root.end).filter(
+    (b) => b.type === 'traf'
+  );
+  const traf = trafs.find((t) => {
+    const tfhd = child(moof, t, 'tfhd');
+    return tfhd && moof.readUInt32BE(tfhd.start + 4) === video.trackId;
+  });
+  const tfhd = traf && child(moof, traf, 'tfhd');
+  const truns = traf
+    ? boxesIn(moof, traf.start, traf.end).filter((b) => b.type === 'trun')
+    : [];
+  // Offsets count from the moof, as `default_base_moof` writes them, and the
+  // samples sit in one run.
+  if (!tfhd || truns.length !== 1 || moof.readUIntBE(tfhd.start + 1, 3) & 0x1)
+    return undefined;
+  const [trun] = truns;
+  const flags = moof.readUIntBE(trun.start + 1, 3);
+  if (!(flags & 0x1) || !(flags & 0x200)) return undefined;
+  const count = moof.readUInt32BE(trun.start + 4);
+  const entries = trun.start + 12 + (flags & 0x4 ? 4 : 0);
+  const entry = SAMPLE_FIELDS.filter((f) => flags & f).length * 4;
+  const sizeAt = entries + (flags & 0x100 ? 4 : 0);
+  // Where the samples sit in the mdat, which follows the moof.
+  const first = moof.readInt32BE(trun.start + 8) - moof.length;
+  let sample = first;
+  let bad = -1;
+  for (let i = 0; i < count && bad < 0; i++) {
+    const size = moof.readUInt32BE(sizeAt + i * entry);
+    if (sample < 8 || sample + size > mdat.length) return undefined;
+    if (!wellFormed(mdat, sample, sample + size, video.nal.length)) bad = i;
+    else sample += size;
   }
-  return mended;
+  if (bad < 1) return undefined;
+  let end = sample;
+  for (let i = bad; i < count; i++)
+    end += moof.readUInt32BE(sizeAt + i * entry);
+
+  const dropped = count - bad;
+  const cut = dropped * entry;
+  const removed = end - sample;
+  const out = Buffer.concat([
+    moof.subarray(0, entries + bad * entry),
+    moof.subarray(entries + count * entry),
+  ]);
+  for (const box of [root, traf, trun])
+    out.writeUInt32BE(out.readUInt32BE(box.start - 8) - cut, box.start - 8);
+  out.writeUInt32BE(bad, trun.start + 4);
+  // The last kept frame lasts until the next fragment, as the dropped did.
+  if (flags & 0x100) {
+    let span = 0;
+    for (let i = bad - 1; i < count; i++)
+      span += moof.readUInt32BE(entries + i * entry);
+    out.writeUInt32BE(span, entries + (bad - 1) * entry);
+  }
+  // Every run's data moves up with the moof, and the runs after the dropped
+  // bytes, the audio's, by those too.
+  for (const t of trafs)
+    for (const run of boxesIn(moof, t.start, t.end)) {
+      if (run.type !== 'trun' || !(moof.readUIntBE(run.start + 1, 3) & 0x1))
+        continue;
+      const offset = moof.readInt32BE(run.start + 8);
+      const at = run.start + 8 - (run.start > trun.start ? cut : 0);
+      out.writeInt32BE(
+        offset - cut - (offset - moof.length >= end ? removed : 0),
+        at
+      );
+    }
+  const data = Buffer.concat([mdat.subarray(0, sample), mdat.subarray(end)]);
+  data.writeUInt32BE(data.length, 0);
+  return { moof: out, mdat: data, dropped };
 }
 
-function mendSample(
+/** Whether a sample's NAL units each fit inside it. */
+function wellFormed(
   mdat: Buffer,
   start: number,
   end: number,
-  { length: width, hevc }: NalFormat
+  width: number
 ): boolean {
   let at = start;
   while (at + width <= end) {
     const length = mdat.readUIntBE(at, width);
-    if (length > 0 && at + width + length <= end) {
-      at += width + length;
-      continue;
-    }
-    // A filler unit needs its header and the closing stop bit.
-    const rest = end - at - width;
-    if (rest < (hevc ? 3 : 2)) return false;
-    mdat.writeUIntBE(rest, at, width);
-    mdat.fill(0xff, at + width, end - 1);
-    mdat[end - 1] = 0x80;
-    if (hevc) {
-      mdat[at + width] = HEVC_FILLER;
-      mdat[at + width + 1] = 1;
-    } else mdat[at + width] = H264_FILLER;
-    return true;
+    if (length === 0 || at + width + length > end) return false;
+    at += width + length;
   }
-  return false;
+  return at === end;
 }
