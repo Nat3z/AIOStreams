@@ -133,6 +133,10 @@ msgstr "{key} is taken by {taken}"
 msgid "{left} left"
 msgstr "{left} left"
 
+#: src/components/player/options.tsx
+msgid "{m, plural, one {# minute} other {# minutes}}"
+msgstr "{m, plural, one {# minute} other {# minutes}}"
+
 #: src/components/party/party-sheet.tsx
 msgid "{members, plural, one {# watching} other {# watching}}"
 msgstr "{members, plural, one {# watching} other {# watching}}"
@@ -1599,6 +1603,10 @@ msgstr "Edit"
 #: src/pages/settings/profile.tsx
 msgid "Edit name and picture"
 msgstr "Edit name and picture"
+
+#: src/components/player/options.tsx
+msgid "End of this title"
+msgstr "End of this title"
 
 #: src/components/player/controls.tsx
 msgid "Ends at {endsAt}"
@@ -4499,6 +4507,22 @@ msgstr "Skipped the intro"
 msgid "Skipping"
 msgstr "Skipping"
 
+#: src/components/player/options.tsx
+msgid "Sleep timer"
+msgstr "Sleep timer"
+
+#: src/components/player/options.tsx
+msgid "Sleep timer off"
+msgstr "Sleep timer off"
+
+#: src/components/player/options.tsx
+msgid "Sleep timer: stops after this"
+msgstr "Sleep timer: stops after this"
+
+#: src/components/player/options.tsx
+msgid "Sleep timer: stops at {sleepEnds}"
+msgstr "Sleep timer: stops at {sleepEnds}"
+
 #: src/components/party/reaction-setting.tsx
 msgid "Slot {n}: {emoji}"
 msgstr "Slot {n}: {emoji}"
@@ -4626,6 +4650,14 @@ msgstr "Stop and wait"
 #: src/pages/search.tsx
 msgid "Stop listening"
 msgstr "Stop listening"
+
+#: src/components/player/options.tsx
+msgid "Stops after this"
+msgstr "Stops after this"
+
+#: src/components/player/options.tsx
+msgid "Stops at {at}"
+msgstr "Stops at {at}"
 
 #: src/components/version-picker.tsx
 #: src/pages/player.tsx

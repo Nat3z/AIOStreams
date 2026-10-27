@@ -35,6 +35,7 @@ import type { BaseItemDto, MediaSegmentDto, SourceInfo } from '../../lib/types';
 import { CachedImage } from '../cached-image';
 import { PlayerAction } from './buttons';
 import { usePlayhead } from '../../lib/playback/playhead';
+import { useSleepTimer } from '../../lib/playback/sleep-timer';
 
 /** One notice, which a later press takes over. */
 const NOTICE = 'episode-versions';
@@ -179,7 +180,10 @@ export function useUpNextPrompt({
   const [fallbackFirst] = useSetting(settings.next.fallbackFirst);
   const [stillWatching] = useSetting(settings.next.stillWatching);
   const { prefs } = usePlaybackPrefs();
-  const autoplay = prefs.EnableNextEpisodeAutoPlay !== false;
+  const sleep = useSleepTimer();
+  // A sleep timer set for the end of this title stops it playing on.
+  const autoplay =
+    prefs.EnableNextEpisodeAutoPlay !== false && !(sleep && 'atEnd' in sleep);
   const { durationMs, paused } = player.state;
 
   const outro = segments?.find((s) => String(s.Type) === 'Outro');
