@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "POT-Creation-Date: 2026-10-16 20:39+0100\n"
-"PO-Revision-Date: 2026-10-23 15:26+0000\n"
-"Last-Translator: hamburgercowgoldfish <242998989+hamburgercowgoldfish@users.noreply.github.com>\n"
+"PO-Revision-Date: 2026-10-26 23:35+0000\n"
+"Last-Translator: Viren070 <viren070@protonmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/aiostreams/web-app/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -44,13 +44,12 @@ msgid "{count, plural, one {# second} other {# seconds}}"
 msgstr "{count, plural, one {# Sekunde} other {# Sekunden}}"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "{count, plural, one {# title} other {# titles}}"
-msgstr "{total, plural, one {# Titel} other {# Titel}}"
+msgstr "{count, plural, one {# Titel} other {# Titel}}"
 
 #: src/components/party/party-sheet.tsx
 msgid "{count, plural, one {# watching · on {on}} other {# watching · on {on}}}"
-msgstr "{count, plural, one {# schaut zu · auf {on}} other {# schauen zu · auf{on}}}"
+msgstr "{count, plural, one {# schaut zu · auf {on}} other {# schauen zu · auf {on}}}"
 
 #: src/components/version-settings.tsx
 msgid "{count, plural, one {Added # badge} other {Added # badges}}"
@@ -131,6 +130,7 @@ msgstr "{inProgress, plural, one {# wird ausgeführt} other {# werden ausgeführ
 msgid "{key} is taken by {taken}"
 msgstr "{key} ist bereits für \"{taken}\" belegt"
 
+#: src/components/card-preview.tsx
 #: src/pages/downloads.tsx
 msgid "{left} left"
 msgstr "{left} verbleibend"
@@ -329,6 +329,10 @@ msgstr "Ein Abzeichen erscheint bei jeder Version, deren Text dem Muster entspri
 msgid "A button lets you skip the intro."
 msgstr ""
 
+#: src/pages/settings/interface.tsx
+msgid "A card you rest on grows into a bigger preview with its details, while the hero rotates. Kept on this device."
+msgstr ""
+
 #: src/pages/welcome-apps.tsx
 msgid "A cleaner Jellyfin app, with downloads."
 msgstr ""
@@ -449,15 +453,14 @@ msgid "Add favourite"
 msgstr "Zu Favoriten hinzufügen"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Add from Continue watching"
-msgstr "Aus Weiterschauen entfernen"
+msgstr "Aus \"Weiterschauen\" hinzufügen"
 
 #: src/components/item-menu.tsx
 #: src/components/playlists.tsx
 #: src/pages/item.tsx
 msgid "Add to playlist"
-msgstr ""
+msgstr "Zur Playlist hinzfügen"
 
 #: src/pages/welcome-apps.tsx
 msgid "Add to the app"
@@ -465,7 +468,7 @@ msgstr ""
 
 #: src/components/playlists.tsx
 msgid "Add to this playlist"
-msgstr ""
+msgstr "Zu dieser Playlist hinzufügen"
 
 #: src/components/player/controls.tsx
 msgid "Added {name}"
@@ -473,9 +476,8 @@ msgstr "\"{name}\" hinzugefügt"
 
 #: src/components/playlists.tsx
 #: src/pages/player.tsx
-#, fuzzy
 msgid "Added to {name}"
-msgstr "\"{name}\" hinzugefügt"
+msgstr "Zu \"{name}\" hinzugefügt"
 
 #: src/pages/settings/profile.tsx
 msgid "Addons, catalogs and everyone's accounts."
@@ -529,18 +531,16 @@ msgid "All fields"
 msgstr "Alle Felder"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "All playlists"
-msgstr "Alle Folgen"
+msgstr "Alle Playlisten"
 
 #: src/lib/downloads/index.ts
 msgid "Already downloaded or on the way"
 msgstr "Bereits heruntergeladen oder in der Warteschlange"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Already in {name}"
-msgstr "Wiedergabe auf {name}"
+msgstr "Bereits in {name}"
 
 #: src/components/send-report.tsx
 msgid "Also send to the developer"
@@ -566,7 +566,6 @@ msgid "Always shows subtitles, in your language when the version has them."
 msgstr "Untertitel immer anzeigen (in deiner bevorzugten Sprache, sofern in der Version vorhanden)."
 
 #: src/pages/settings/audio.tsx
-#, fuzzy
 msgid "An audio track you pick while watching a show sets the language for its other episodes. Picking what the settings above would play forgets it."
 msgstr "Manuell gewählte Tonspuren gelten auch für nachfolgende Episoden. Wechselst du die Spur wieder zu deiner Standardeinstellung, wird die Zuordnung verworfen."
 
@@ -861,6 +860,10 @@ msgstr "Server nicht erreichbar"
 msgid "Cancel"
 msgstr "Abbrechen"
 
+#: src/pages/settings/interface.tsx
+msgid "Cards"
+msgstr ""
+
 #: src/components/people.tsx
 msgid "Cast"
 msgstr "Besetzung"
@@ -1104,9 +1107,8 @@ msgstr "Eck-Button"
 
 #: src/components/playlists.tsx
 #: src/pages/player.tsx
-#, fuzzy
 msgid "Could not add to {name}"
-msgstr "Datei konnte nicht gelesen werden"
+msgstr "Konnte nicht zu \"{name}\" hinzugefügt werden"
 
 #: src/lib/hosts/shell/index.ts
 msgid "Could not check: {error}"
@@ -1145,9 +1147,8 @@ msgid "Could not find versions of that episode"
 msgstr "Für diese Folge wurden keine Versionen gefunden"
 
 #: src/components/player/next-episode.tsx
-#, fuzzy
 msgid "Could not find versions of that title"
-msgstr "Für diese Folge wurden keine Versionen gefunden"
+msgstr "Für diesen Titel wurden keine Versionen gefunden"
 
 #: src/lib/downloads/index.ts
 msgid "Could not find versions: {message}"
@@ -1175,9 +1176,8 @@ msgid "Could not load the history"
 msgstr "Verlauf konnte nicht geladen werden"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Could not load the playlists."
-msgstr "Folgen konnten nicht geladen werden."
+msgstr "Playlisten konnten nicht geladen werden."
 
 #: src/components/version-picker.tsx
 msgid "Could not load the versions: {loadError}"
@@ -1196,9 +1196,8 @@ msgid "Could not load this person"
 msgstr "Person konnte nicht geladen werden"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Could not load this playlist."
-msgstr "Titel konnte nicht geladen werden"
+msgstr "Playlist konnte nicht geladen werden."
 
 #: src/pages/item.tsx
 msgid "Could not load this title"
@@ -1253,9 +1252,8 @@ msgid "Counts down, then plays the next episode. Off, the prompt waits for you."
 msgstr "Spielt nach einem Countdown die nächste Folge ab. Wenn deaktiviert, wartet die Abfrage auf deine Auswahl."
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Create"
-msgstr "Ersteller"
+msgstr "Erstellen"
 
 #: src/components/people.tsx
 msgid "Creator"
@@ -1266,10 +1264,9 @@ msgid "Credits"
 msgstr "Abspann"
 
 #: src/pages/settings/about.tsx
-#, fuzzy
 msgctxt "Projects the app is built on"
 msgid "Credits"
-msgstr "Abspann"
+msgstr "Danksagung"
 
 #: src/pages/settings/playback.tsx
 msgid "Credits that end an episode are left to the next episode prompt when it shows."
@@ -1361,18 +1358,16 @@ msgid "Delete"
 msgstr "Löschen"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Delete {name}"
-msgstr "Alles löschen"
+msgstr "\"{name}\" löschen"
 
 #: src/pages/downloads.tsx
 msgid "Delete all"
 msgstr "Alles löschen"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Delete playlist"
-msgstr "Alles löschen"
+msgstr "Playlist löschen"
 
 #: src/pages/settings/theme.tsx
 msgid "Desert"
@@ -1639,6 +1634,7 @@ msgid "Episode {n}"
 msgstr ""
 
 #: src/components/episodes.tsx
+#: src/components/player/pause-screen.tsx
 msgid "Episode {number}"
 msgstr "Folge {number}"
 
@@ -2609,7 +2605,7 @@ msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Needed to switch to this user."
-msgstr ""
+msgstr "Zum Wechseln zu diesem Benutzer erforderlich."
 
 #: src/pages/downloads.tsx
 msgid "Needs attention"
@@ -2633,9 +2629,8 @@ msgid "New PIN"
 msgstr ""
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "New playlist"
-msgstr "Aktuelle Wiedergabe"
+msgstr "Neue Playlist"
 
 #: src/pages/settings/profile.tsx
 msgid "New Stremio link"
@@ -2673,7 +2668,7 @@ msgstr ""
 
 #: src/components/player/next-episode.tsx
 msgid "Next in {playlistName}"
-msgstr ""
+msgstr "Als Nächstes in \"{playlistName}\""
 
 #: src/pages/calendar.tsx
 msgid "Next month"
@@ -2753,7 +2748,7 @@ msgstr "Keine abspielbare Version gefunden"
 
 #: src/components/playlists.tsx
 msgid "No playlists yet. Make one here, or add a title to one from its menu."
-msgstr ""
+msgstr "Noch keine Playlists vorhanden. Erstelle hier eine oder füge einen Titel über sein Menü hinzu."
 
 #: src/lib/servers.ts
 msgid "No server answered at that address."
@@ -2841,7 +2836,7 @@ msgstr "Keine Ergebnisse."
 
 #: src/components/playlists.tsx
 msgid "Nothing here yet. Add titles from their menu, or from the suggestions below."
-msgstr ""
+msgstr "Noch nichts vorhanden. Füge Titel über deren Menü oder aus den Vorschlägen unten hinzu."
 
 #: src/pages/discover.tsx
 #: src/pages/item.tsx
@@ -3030,9 +3025,8 @@ msgid "Open main menu"
 msgstr "Hauptmenü öffnen"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Open playlist"
-msgstr "Link öffnen"
+msgstr "Playlist öffnen"
 
 #: src/pages/welcome-apps.tsx
 msgid "Open Streamyfin and enter {address} as the server."
@@ -3486,15 +3480,13 @@ msgstr "Beim Weiterschauen sowie mit den Tasten für die nächste und vorherige 
 
 #: src/components/player/options.tsx
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Playlist"
-msgstr "Abspielen"
+msgstr "Playlist"
 
 #: src/components/layout.tsx
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Playlists"
-msgstr "Wird abgespielt"
+msgstr "Playlisten"
 
 #: src/components/party/party-sheet.tsx
 msgid "Plays <0>{title}</0> for everyone who joins."
@@ -3561,6 +3553,7 @@ msgstr "Erneut \"Zurück\" drücken zum Beenden"
 msgid "Preview"
 msgstr "Vorschau"
 
+#: src/pages/settings/interface.tsx
 #: src/pages/settings/playback.tsx
 msgid "Previews"
 msgstr "Vorschauen"
@@ -3662,6 +3655,10 @@ msgstr "Bewerten"
 msgid "Rate season"
 msgstr "Staffel bewerten"
 
+#: src/components/scores.tsx
+msgid "Rating"
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "React with {emoji}"
 msgstr "Mit {emoji} reagieren"
@@ -3759,9 +3756,8 @@ msgid "Remove from history"
 msgstr "Aus Verlauf entfernen"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Remove from playlist"
-msgstr "Aus Verlauf entfernen"
+msgstr "Aus Playlist entfernen"
 
 #: src/pages/downloads.tsx
 msgid "Remove from the list, keep the file"
@@ -3780,9 +3776,8 @@ msgid "Removed from history"
 msgstr "Aus Verlauf entfernt"
 
 #: src/components/playlists.tsx
-#, fuzzy
 msgid "Rename"
-msgstr "Benutzername"
+msgstr "Umbenennen"
 
 #: src/pages/settings/apps.tsx
 msgid "Report a problem"
@@ -3897,6 +3892,10 @@ msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "Rotates through the featured titles."
+msgstr ""
+
+#: src/components/scores.tsx
+msgid "Rotten Tomatoes audience"
 msgstr ""
 
 #: src/pages/settings/interface.tsx
@@ -4028,6 +4027,10 @@ msgstr "Suchergebnisse"
 #: src/lib/discord.ts
 msgid "Searching"
 msgstr "Suche läuft"
+
+#: src/components/player/pause-screen.tsx
+msgid "Season {season}"
+msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "Season 1"
@@ -4225,6 +4228,10 @@ msgstr "Zeigt Untertitel in deiner Sprache an, sofern der Ton nicht bereits in d
 #: src/pages/settings/interface.tsx
 msgid "Side rail"
 msgstr "Seitliche Navigationsleiste"
+
+#: src/pages/settings/interface.tsx
+msgid "Sidebar"
+msgstr ""
 
 #: src/pages/sign-in.tsx
 msgid "Sign in"
@@ -4453,6 +4460,10 @@ msgstr "Leertaste"
 #: src/pages/settings/cache.tsx
 msgid "Space to use"
 msgstr "Speicherplatz"
+
+#: src/components/player/pause-screen.tsx
+msgid "Specials"
+msgstr ""
 
 #: src/components/player/options.tsx
 msgid "Speed"
@@ -4713,6 +4724,10 @@ msgstr "Systemstandard"
 msgid "Tab"
 msgstr "Tab"
 
+#: src/pages/settings/interface.tsx
+msgid "Tab names"
+msgstr ""
+
 #: src/pages/history.tsx
 msgid "Table"
 msgstr "Tabelle"
@@ -4960,7 +4975,7 @@ msgstr "Das Untertitelmenü des Players zeigt Untertitel in deinen Sprachen, sol
 
 #: src/components/playlists.tsx
 msgid "The playlist goes; the titles in it stay."
-msgstr ""
+msgstr "Die Playlist wird gelöscht – die Titel darin bleiben erhalten."
 
 #: src/lib/party/party.ts
 msgid "The relay could not read that."
@@ -5335,7 +5350,7 @@ msgstr "Nach oben"
 
 #: src/components/player/next-episode.tsx
 msgid "Up next"
-msgstr ""
+msgstr "Als Nächstes"
 
 #: src/components/player/next-episode.tsx
 msgid "Up next: {upNext}"
@@ -5704,12 +5719,24 @@ msgid "Where the app is made, and where to report a problem."
 msgstr "Hier wird die App entwickelt und du kannst Probleme melden."
 
 #: src/pages/settings/interface.tsx
+msgid "Where the navigation goes when the window is wide enough for a sidebar."
+msgstr ""
+
+#: src/pages/settings/interface.tsx
 msgid "Where the navigation goes when there's room for a sidebar, such as a tablet held sideways."
 msgstr ""
 
 #: src/pages/settings/index.tsx
 msgid "Where they go and how many run at once"
 msgstr "Speicherort und Anzahl gleichzeitiger Downloads"
+
+#: src/pages/settings/interface.tsx
+msgid "Whether the bar at the bottom, and tabs along the top, name each page."
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Whether the tabs name each page beside its icon."
+msgstr ""
 
 #: src/components/shortcut-settings.tsx
 msgid "While syncing subtitles by ear."

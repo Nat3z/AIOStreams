@@ -9,8 +9,8 @@ import { useViews } from '../../lib/queries';
 import { libraryLabel } from '../../lib/format';
 import { currentHost } from '../../lib/hosts';
 import {
+  HIDDEN_LOCALES,
   LOCALES,
-  PSEUDO_LOCALES,
   localeName,
   systemLocale,
 } from '../../lib/i18n';
@@ -21,11 +21,13 @@ import {
   MAX_FEATURED,
   type EpisodeLayout,
   type BarBackground,
+  type DesktopNavigation,
   type RailNames,
   type RailShape,
+  type TabNames,
+  type TopBar,
   type TouchNavigation,
   type TvNavigation,
-  type TvTopBar,
   type HeroMode,
   type PosterLine,
   type PosterSize,
@@ -61,7 +63,7 @@ function Home() {
   );
 
   const listed = LOCALES.filter(
-    (l) => !PSEUDO_LOCALES.includes(l) || import.meta.env.DEV || l === language
+    (l) => !HIDDEN_LOCALES.includes(l) || import.meta.env.DEV || l === language
   )
     .map((l) => ({ value: l, label: localeName(l) }))
     .sort((a, b) => a.label.localeCompare(b.label));
@@ -215,6 +217,10 @@ function Grids() {
   const [combineSearch, setCombineSearch] = useSetting(
     settings.interface.combineSearch
   );
+  const [cardPreviews, setCardPreviews] = useSetting(
+    settings.interface.cardPreviews
+  );
+  const touch = !currentHost().tv && matchMedia('(pointer: coarse)').matches;
 
   return (
     <AnswerGroup
@@ -242,6 +248,17 @@ function Grids() {
           onPick={(v) => setPosterLines(toggled(posterLines, v as PosterLine))}
         />
       </Answer>
+      {!touch && (
+        <Answer label={t`Cards`}>
+          <Switch
+            side="right"
+            label={t`Previews`}
+            help={t`A card you rest on grows into a bigger preview with its details, while the hero rotates. Kept on this device.`}
+            value={cardPreviews}
+            onValueChange={setCardPreviews}
+          />
+        </Answer>
+      )}
       <Answer label={t`Search`}>
         <Switch
           side="right"
@@ -268,7 +285,11 @@ function ThisDevice() {
   const [tvNavigation, setTvNavigation] = useSetting(
     settings.interface.tvNavigation
   );
-  const [tvTopBar, setTvTopBar] = useSetting(settings.interface.tvTopBar);
+  const [desktopNavigation, setDesktopNavigation] = useSetting(
+    settings.interface.desktopNavigation
+  );
+  const [topBar, setTopBar] = useSetting(settings.interface.topBar);
+  const [tabNames, setTabNames] = useSetting(settings.interface.tabNames);
   const [railShape, setRailShape] = useSetting(settings.interface.railShape);
   const [railNames, setRailNames] = useSetting(settings.interface.railNames);
   const [background, setBackground] = useSetting(
@@ -277,8 +298,10 @@ function ThisDevice() {
   const rail = tv
     ? tvNavigation === 'rail'
     : touch && touchNavigation === 'rail';
+  const topTabs =
+    (tv ? tvNavigation : touch ? touchNavigation : desktopNavigation) === 'top';
   // A TV's docked rail and fade sit on nothing.
-  const onBar = !tv || (rail ? railShape !== 'docked' : tvTopBar !== 'fade');
+  const onBar = !tv || (rail ? railShape !== 'docked' : topBar !== 'fade');
   const shown = shownBackground(background);
 
   return (
@@ -325,9 +348,26 @@ function ThisDevice() {
             options={[
               { value: 'rail', label: t`Side rail` },
               { value: 'bar', label: t`Bottom bar` },
+              { value: 'top', label: t`Top tabs` },
             ]}
             isOn={(v) => v === touchNavigation}
             onPick={(v) => setTouchNavigation(v as TouchNavigation)}
+          />
+        </Answer>
+      )}
+      {!tv && !touch && (
+        <Answer
+          label={t`Wide screens`}
+          help={t`Where the navigation goes when the window is wide enough for a sidebar.`}
+        >
+          <Pills
+            label={t`Wide screens`}
+            options={[
+              { value: 'sidebar', label: t`Sidebar` },
+              { value: 'top', label: t`Top tabs` },
+            ]}
+            isOn={(v) => v === desktopNavigation}
+            onPick={(v) => setDesktopNavigation(v as DesktopNavigation)}
           />
         </Answer>
       )}
@@ -374,7 +414,7 @@ function ThisDevice() {
           />
         </Answer>
       )}
-      {tv && tvNavigation === 'top' && (
+      {topTabs && (
         <Answer label={t`Top bar`}>
           <Pills
             label={t`Top bar`}
@@ -383,8 +423,29 @@ function ThisDevice() {
               { value: 'bar', label: t`Bar` },
               { value: 'fade', label: t`Fade` },
             ]}
-            isOn={(v) => v === tvTopBar}
-            onPick={(v) => setTvTopBar(v as TvTopBar)}
+            isOn={(v) => v === topBar}
+            onPick={(v) => setTopBar(v as TopBar)}
+          />
+        </Answer>
+      )}
+      {/* Narrow screens other than a TV always have the bottom bar. */}
+      {(!tv || topTabs) && (
+        <Answer
+          label={t`Tab names`}
+          help={
+            tv
+              ? t`Whether the tabs name each page beside its icon.`
+              : t`Whether the bar at the bottom, and tabs along the top, name each page.`
+          }
+        >
+          <Pills
+            label={t`Tab names`}
+            options={[
+              { value: 'shown', label: t`Shown` },
+              { value: 'hidden', label: t`Hidden` },
+            ]}
+            isOn={(v) => v === tabNames}
+            onPick={(v) => setTabNames(v as TabNames)}
           />
         </Answer>
       )}

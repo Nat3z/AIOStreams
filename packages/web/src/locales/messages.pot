@@ -125,6 +125,7 @@ msgstr ""
 msgid "{key} is taken by {taken}"
 msgstr ""
 
+#: src/components/card-preview.tsx
 #: src/pages/downloads.tsx
 msgid "{left} left"
 msgstr ""
@@ -321,6 +322,10 @@ msgstr ""
 
 #: src/pages/settings/player-example.tsx
 msgid "A button lets you skip the intro."
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "A card you rest on grows into a bigger preview with its details, while the hero rotates. Kept on this device."
 msgstr ""
 
 #: src/pages/welcome-apps.tsx
@@ -848,6 +853,10 @@ msgstr ""
 #: src/pages/downloads.tsx
 #: src/pages/settings/profile.tsx
 msgid "Cancel"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Cards"
 msgstr ""
 
 #: src/components/people.tsx
@@ -1620,6 +1629,7 @@ msgid "Episode {n}"
 msgstr ""
 
 #: src/components/episodes.tsx
+#: src/components/player/pause-screen.tsx
 msgid "Episode {number}"
 msgstr ""
 
@@ -3538,6 +3548,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
+#: src/pages/settings/interface.tsx
 #: src/pages/settings/playback.tsx
 msgid "Previews"
 msgstr ""
@@ -3637,6 +3648,10 @@ msgstr ""
 
 #: src/pages/item.tsx
 msgid "Rate season"
+msgstr ""
+
+#: src/components/scores.tsx
+msgid "Rating"
 msgstr ""
 
 #: src/components/party/party-sheet.tsx
@@ -3874,6 +3889,10 @@ msgstr ""
 msgid "Rotates through the featured titles."
 msgstr ""
 
+#: src/components/scores.tsx
+msgid "Rotten Tomatoes audience"
+msgstr ""
+
 #: src/pages/settings/interface.tsx
 msgid "Row"
 msgstr ""
@@ -4002,6 +4021,10 @@ msgstr ""
 
 #: src/lib/discord.ts
 msgid "Searching"
+msgstr ""
+
+#: src/components/player/pause-screen.tsx
+msgid "Season {season}"
 msgstr ""
 
 #: src/pages/settings/interface.tsx
@@ -4199,6 +4222,10 @@ msgstr ""
 
 #: src/pages/settings/interface.tsx
 msgid "Side rail"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Sidebar"
 msgstr ""
 
 #: src/pages/sign-in.tsx
@@ -4427,6 +4454,10 @@ msgstr ""
 
 #: src/pages/settings/cache.tsx
 msgid "Space to use"
+msgstr ""
+
+#: src/components/player/pause-screen.tsx
+msgid "Specials"
 msgstr ""
 
 #: src/components/player/options.tsx
@@ -4686,6 +4717,10 @@ msgstr ""
 
 #: src/lib/input/keys.ts
 msgid "Tab"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Tab names"
 msgstr ""
 
 #: src/pages/history.tsx
@@ -5679,11 +5714,23 @@ msgid "Where the app is made, and where to report a problem."
 msgstr ""
 
 #: src/pages/settings/interface.tsx
+msgid "Where the navigation goes when the window is wide enough for a sidebar."
+msgstr ""
+
+#: src/pages/settings/interface.tsx
 msgid "Where the navigation goes when there's room for a sidebar, such as a tablet held sideways."
 msgstr ""
 
 #: src/pages/settings/index.tsx
 msgid "Where they go and how many run at once"
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Whether the bar at the bottom, and tabs along the top, name each page."
+msgstr ""
+
+#: src/pages/settings/interface.tsx
+msgid "Whether the tabs name each page beside its icon."
 msgstr ""
 
 #: src/components/shortcut-settings.tsx
