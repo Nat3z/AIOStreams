@@ -5,6 +5,13 @@ import type Hls from 'hls.js';
 const KEEP = 400;
 /** A jump back further than this, unasked, is the player recovering. */
 const JUMP_BACK_S = 2;
+/** hls.js errors worth a report though it recovers from them. */
+const FLUSH_ON = new Set([
+  'bufferAppendError',
+  'bufferAppendingError',
+  'bufferStalledError',
+  'mediaSourceRequiresReset',
+]);
 
 /**
  * Records what the video and hls.js report while a remux plays, and sends it
@@ -82,6 +89,12 @@ export function tracePlayback(
   };
   for (const e of events) el.addEventListener(e, onEvent);
   el.addEventListener('timeupdate', onTime);
+  // A phone often leaves the player open in the background rather than close it.
+  const onHide = () => {
+    if (document.visibilityState === 'hidden' && performance.now() - t0 > 5_000)
+      flush('hidden');
+  };
+  document.addEventListener('visibilitychange', onHide);
 
   const offs: (() => void)[] = [];
   if (hls) {
@@ -107,12 +120,7 @@ export function tracePlayback(
       log(
         `hls ${d.type} ${d.details} fatal=${d.fatal}${d.frag ? ` sn=${d.frag.sn}@${d.frag.start.toFixed(2)}` : ''} ${d.error?.message ?? d.reason ?? ''}`.trim()
       );
-      if (
-        d.fatal ||
-        d.details === 'bufferAppendError' ||
-        d.details === 'bufferStalledError'
-      )
-        flush(`hls ${d.details}`);
+      if (d.fatal || FLUSH_ON.has(d.details)) flush(`hls ${d.details}`);
     }) as never);
     on(Events.FRAG_BUFFERED, ((
       _: unknown,
@@ -135,6 +143,7 @@ export function tracePlayback(
     if (performance.now() - t0 > 5_000) flush('closed');
     for (const e of events) el.removeEventListener(e, onEvent);
     el.removeEventListener('timeupdate', onTime);
+    document.removeEventListener('visibilitychange', onHide);
     for (const off of offs) off();
   };
 }
