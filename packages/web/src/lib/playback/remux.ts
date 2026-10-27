@@ -213,8 +213,10 @@ function playHls(
       testBandwidth: false,
     });
     // A reset MediaSource starts over at the start position, the video
-    // having been emptied by then, so it is moved along with playback.
+    // having been emptied by then, so it is moved along with playback, and
+    // past a segment that failed twice, which would fail every time.
     let playedTo = start;
+    const failed = new Set<number | string>();
     el.addEventListener('timeupdate', () => {
       if (el.currentTime > 0) playedTo = el.currentTime;
     });
@@ -225,8 +227,13 @@ function playHls(
         hls &&
         (data.details === HlsPlayer.ErrorDetails.MEDIA_SOURCE_REQUIRES_RESET ||
           (data.fatal && data.type === HlsPlayer.ErrorTypes.MEDIA_ERROR))
-      )
-        hls.config.startPosition = playedTo;
+      ) {
+        const frag = data.frag;
+        const again = frag !== undefined && failed.has(frag.sn);
+        if (frag) failed.add(frag.sn);
+        hls.config.startPosition =
+          again && frag ? Math.max(playedTo, frag.end + 0.1) : playedTo;
+      }
       if (!data.fatal) return;
       if (data.type === HlsPlayer.ErrorTypes.MEDIA_ERROR && !recovered) {
         recovered = true;
