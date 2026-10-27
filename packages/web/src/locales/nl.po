@@ -135,6 +135,10 @@ msgstr "{key} is bezet door {taken}"
 msgid "{left} left"
 msgstr "{left} is weggegaan"
 
+#: src/features/player/options.tsx
+msgid "{m, plural, one {# minute} other {# minutes}}"
+msgstr ""
+
 #: src/features/party/not-in-party.tsx
 msgid "{members, plural, one {# watching} other {# watching}}"
 msgstr "{members, plural, one {# kijkt} other {# kijken}}"
@@ -1513,6 +1517,17 @@ msgstr ""
 msgid "Edit"
 msgstr ""
 
+<<<<<<< HEAD
+=======
+#: src/app/settings/profile.tsx
+msgid "Edit name and picture"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "End of this title"
+msgstr ""
+
+>>>>>>> b356da147 (feat(web): sleep timer in the player)
 #: src/features/player/controls.tsx
 msgid "Ends at {endsAt}"
 msgstr ""
@@ -4163,6 +4178,22 @@ msgstr ""
 msgid "Skipping"
 msgstr ""
 
+#: src/features/player/options.tsx
+msgid "Sleep timer"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer off"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops at {sleepEnds}"
+msgstr ""
+
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Slot {n}: {emoji}"
 msgstr ""
@@ -4283,6 +4314,14 @@ msgstr ""
 
 #: src/app/search/page.tsx
 msgid "Stop listening"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Stops at {at}"
 msgstr ""
 
 #: src/app/settings/playback.tsx

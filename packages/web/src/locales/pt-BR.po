@@ -135,6 +135,10 @@ msgstr "{key} já está sendo usada por {taken}"
 msgid "{left} left"
 msgstr "{left} restantes"
 
+#: src/features/player/options.tsx
+msgid "{m, plural, one {# minute} other {# minutes}}"
+msgstr ""
+
 #: src/features/party/not-in-party.tsx
 msgid "{members, plural, one {# watching} other {# watching}}"
 msgstr "{members, plural, one {# assistindo} other {# assistindo}}"
@@ -1512,6 +1516,17 @@ msgstr "Cada filtro aparece como uma etiqueta acima da lista de versões. A busc
 msgid "Edit"
 msgstr "Editar"
 
+<<<<<<< HEAD
+=======
+#: src/app/settings/profile.tsx
+msgid "Edit name and picture"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "End of this title"
+msgstr ""
+
+>>>>>>> b356da147 (feat(web): sleep timer in the player)
 #: src/features/player/controls.tsx
 msgid "Ends at {endsAt}"
 msgstr "Termina em {endsAt}"
@@ -4162,6 +4177,22 @@ msgstr "Trecho pulado"
 msgid "Skipping"
 msgstr "Pulos automáticos"
 
+#: src/features/player/options.tsx
+msgid "Sleep timer"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer off"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops at {sleepEnds}"
+msgstr ""
+
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Slot {n}: {emoji}"
 msgstr "Espaço {n}: {emoji}"
@@ -4283,6 +4314,14 @@ msgstr "Parar"
 #: src/app/search/page.tsx
 msgid "Stop listening"
 msgstr "Parar de ouvir"
+
+#: src/features/player/options.tsx
+msgid "Stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Stops at {at}"
+msgstr ""
 
 #: src/app/settings/playback.tsx
 msgid "Stops playing"

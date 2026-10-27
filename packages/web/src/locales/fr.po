@@ -135,6 +135,10 @@ msgstr "{key} est déjà utilisé par {taken}"
 msgid "{left} left"
 msgstr "{left} restants"
 
+#: src/features/player/options.tsx
+msgid "{m, plural, one {# minute} other {# minutes}}"
+msgstr ""
+
 #: src/features/party/not-in-party.tsx
 msgid "{members, plural, one {# watching} other {# watching}}"
 msgstr "{members, plural, one {# spectateur} other {# spectateurs}}"
@@ -1522,6 +1526,17 @@ msgstr "Chaque filtre s'affiche sous forme de pastille au-dessus de la liste des
 msgid "Edit"
 msgstr "Modifier"
 
+<<<<<<< HEAD
+=======
+#: src/app/settings/profile.tsx
+msgid "Edit name and picture"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "End of this title"
+msgstr ""
+
+>>>>>>> b356da147 (feat(web): sleep timer in the player)
 #: src/features/player/controls.tsx
 msgid "Ends at {endsAt}"
 msgstr "Se termine à {endsAt}"
@@ -4202,6 +4217,22 @@ msgstr "Segment passé"
 msgid "Skipping"
 msgstr "Passage automatique"
 
+#: src/features/player/options.tsx
+msgid "Sleep timer"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer off"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops at {sleepEnds}"
+msgstr ""
+
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Slot {n}: {emoji}"
 msgstr "Emplacement {n} : {emoji}"
@@ -4325,6 +4356,14 @@ msgstr "Arrêter"
 #: src/app/search/page.tsx
 msgid "Stop listening"
 msgstr "Arrêter l'écoute"
+
+#: src/features/player/options.tsx
+msgid "Stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Stops at {at}"
+msgstr ""
 
 #: src/app/settings/playback.tsx
 #, fuzzy
