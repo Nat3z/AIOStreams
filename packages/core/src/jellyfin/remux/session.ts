@@ -562,10 +562,7 @@ export class RemuxSession {
    * Matroska file with B-frames this far before the time it is given.
    */
   private seekTime(n: number): number {
-    if (n === 0) return 0;
-    const at = this.bounds[n];
-    const next = this.keyframes.find((k) => k > at) ?? Infinity;
-    return Math.min(at + SEEK_EARLY + 0.001, next - 0.001);
+    return n === 0 ? 0 : keyframeSeek(this.keyframes, this.bounds[n]);
   }
 
   private onBox(run: Run, type: string, box: Buffer): void {
@@ -640,6 +637,13 @@ export class RemuxSession {
     run.next = upTo;
     this.flow();
   }
+}
+
+/** Where to seek a Matroska file for ffmpeg to start at keyframe `at`. */
+export function keyframeSeek(keyframes: number[], at: number): number {
+  if (at <= 0) return 0;
+  const next = keyframes.find((k) => k > at) ?? Infinity;
+  return Math.min(at + SEEK_EARLY + 0.001, next - 0.001);
 }
 
 const FONT_FILE = /\.(ttf|otf|ttc|woff2?)$/i;
