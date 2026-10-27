@@ -142,6 +142,10 @@ msgstr "{key}, {taken} tarafından kullanılıyor"
 msgid "{left} left"
 msgstr "{left} kaldı"
 
+#: src/components/player/options.tsx
+msgid "{m, plural, one {# minute} other {# minutes}}"
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "{members, plural, one {# watching} other {# watching}}"
 msgstr "{members, plural, one {# izleyici} other {# izleyici}}"
@@ -349,6 +353,10 @@ msgstr ""
 msgid "A card you rest on grows into a bigger preview with its details, while the hero rotates. Kept on this device."
 msgstr ""
 
+#: src/pages/welcome-apps.tsx
+msgid "A cleaner Jellyfin app, with downloads."
+msgstr ""
+
 #: src/components/party/party-sheet.tsx
 msgid "A code is looked up on the relay picked above."
 msgstr "Yukarıda seçilen ara sunucudan bir kod aranır."
@@ -475,6 +483,10 @@ msgstr "İzlemeye devam et içinden ekle"
 #: src/pages/item.tsx
 msgid "Add to playlist"
 msgstr "Oynatma listesine ekle"
+
+#: src/pages/welcome-apps.tsx
+msgid "Add to the app"
+msgstr ""
 
 #: src/components/playlists.tsx
 msgid "Add to this playlist"
@@ -1062,6 +1074,10 @@ msgstr "Uyumluluk"
 msgid "Composer"
 msgstr "Besteci"
 
+#: src/pages/welcome-apps.tsx
+msgid "Computer"
+msgstr ""
+
 #: src/pages/settings/account.tsx
 #: src/pages/settings/profile.tsx
 msgid "Configuration"
@@ -1110,7 +1126,7 @@ msgstr "İzlemeye devam et"
 msgid "Controls"
 msgstr "Kontroller"
 
-#: src/pages/welcome-apps.prototype.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Copied"
 msgstr ""
 
@@ -1160,7 +1176,7 @@ msgstr "Bağlanılamadı: {message}"
 
 #: src/components/crash-report.tsx
 #: src/pages/settings/profile.tsx
-#: src/pages/welcome-apps.prototype.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Could not copy it"
 msgstr "Kopyalanamadı"
 
@@ -1542,6 +1558,7 @@ msgstr "Aşağı"
 #: src/components/version-picker.tsx
 #: src/pages/item.tsx
 #: src/pages/settings/about.tsx
+#: src/pages/welcome-apps.tsx
 msgid "Download"
 msgstr "İndir"
 
@@ -1650,6 +1667,10 @@ msgstr "Düzenle"
 msgid "Edit name and picture"
 msgstr ""
 
+#: src/components/player/options.tsx
+msgid "End of this title"
+msgstr ""
+
 #: src/components/player/controls.tsx
 msgid "Ends at {endsAt}"
 msgstr "Bitiş: {endsAt}"
@@ -1661,6 +1682,10 @@ msgstr "Motor"
 #: src/lib/input/keys.ts
 msgid "Enter"
 msgstr "Enter"
+
+#: src/pages/welcome-apps.tsx
+msgid "Enter {address} as the address."
+msgstr ""
 
 #: src/components/party/party-sheet.tsx
 msgid "Enter an invite link, or a code and its relay"
@@ -1928,6 +1953,10 @@ msgstr "Tam ekran"
 msgid "General"
 msgstr "Genel"
 
+#: src/pages/welcome-apps.tsx
+msgid "Get {name}."
+msgstr ""
+
 #: src/components/send-report.tsx
 msgid "Give this code to whoever looks into it."
 msgstr "Sorunu inceleyecek kişiye bu kodu ilet."
@@ -2146,6 +2175,10 @@ msgstr "Keşfette"
 msgid "In Favourites"
 msgstr "Favorilerde"
 
+#: src/pages/welcome-apps.tsx
+msgid "In Infuse, tap Add Files and pick Jellyfin."
+msgstr ""
+
 #: src/lib/playback/sound.ts
 #: src/lib/subtitles/delay.ts
 msgid "In sync"
@@ -2179,6 +2212,10 @@ msgstr "Eklentiler → Mağaza bölümünden katalog eklentileri yükle. Listede
 
 #: src/pages/settings/profile.tsx
 msgid "Install in Stremio"
+msgstr ""
+
+#: src/pages/welcome-apps.tsx
+msgid "Install it and open it once."
 msgstr ""
 
 #: src/pages/settings/index.tsx
@@ -3180,6 +3217,10 @@ msgstr ""
 msgid "Open its page"
 msgstr "Sayfasını aç"
 
+#: src/pages/welcome-apps.tsx
+msgid "Open Jellyfin and add {address} as a server."
+msgstr ""
+
 #: src/components/version-picker.tsx
 msgid "Open link"
 msgstr "Bağlantıyı aç"
@@ -3191,6 +3232,10 @@ msgstr "Ana menüyü aç"
 #: src/components/playlists.tsx
 msgid "Open playlist"
 msgstr "Oynatma listesini aç"
+
+#: src/pages/welcome-apps.tsx
+msgid "Open Streamyfin and enter {address} as the server."
+msgstr ""
 
 #: src/pages/downloads.tsx
 msgid "Open the app's downloads"
@@ -3424,6 +3469,10 @@ msgstr "Kişiler"
 #: src/components/party/party-sheet.tsx
 msgid "People and invite"
 msgstr "Kişiler ve davet"
+
+#: src/pages/welcome-apps.tsx
+msgid "Phone or tablet"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "Pick a colour"
@@ -3686,6 +3735,10 @@ msgstr "Katılan herkes için <0>{title}</0> oynatılır."
 msgid "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 msgstr "Birlikte izlemeyi eşitlemek için biraz daha hızlı veya yavaş oynatır. Kapalıysa video konumu doğrudan değiştirilir."
 
+#: src/pages/welcome-apps.tsx
+msgid "Plays almost anything, on iPhone, iPad and Apple TV."
+msgstr ""
+
 #: src/pages/settings/playback.tsx
 msgid "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
 msgstr "Ekran destekliyorsa Dolby Vision ile oynatır. Görüntü soluksa veya titriyorsa kapat; bu videoların çoğunda bulunan HDR10 görüntüsü oynatılır. HDR10 görüntüsü olmayan videolar Dolby Vision ile oynatılmaya devam eder."
@@ -3725,6 +3778,10 @@ msgstr "Hazır ayarlar"
 #: src/components/shortcut-settings.tsx
 msgid "Press a key"
 msgstr "Bir tuşa bas"
+
+#: src/pages/welcome-apps.tsx
+msgid "Press Add to the app below, or enter {address} in it yourself."
+msgstr ""
 
 #: src/lib/hosts/shell/android.ts
 msgid "Press Back again to leave"
@@ -4486,6 +4543,14 @@ msgstr "Oturum aç"
 msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
 msgstr ""
 
+#: src/pages/welcome-apps.tsx
+msgid "Sign in as {name} with your password, then save."
+msgstr ""
+
+#: src/pages/welcome-apps.tsx
+msgid "Sign in as {name} with your password."
+msgstr ""
+
 #: src/pages/sign-in.tsx
 msgid "Sign in failed"
 msgstr "Oturum açılamadı"
@@ -4623,6 +4688,22 @@ msgstr ""
 msgid "Skipping"
 msgstr "Atlanıyor"
 
+#: src/components/player/options.tsx
+msgid "Sleep timer"
+msgstr ""
+
+#: src/components/player/options.tsx
+msgid "Sleep timer off"
+msgstr ""
+
+#: src/components/player/options.tsx
+msgid "Sleep timer: stops after this"
+msgstr ""
+
+#: src/components/player/options.tsx
+msgid "Sleep timer: stops at {sleepEnds}"
+msgstr ""
+
 #: src/components/party/reaction-setting.tsx
 msgid "Slot {n}: {emoji}"
 msgstr "{n}. alan: {emoji}"
@@ -4758,6 +4839,14 @@ msgstr ""
 #: src/pages/search.tsx
 msgid "Stop listening"
 msgstr "Dinlemeyi durdur"
+
+#: src/components/player/options.tsx
+msgid "Stops after this"
+msgstr ""
+
+#: src/components/player/options.tsx
+msgid "Stops at {at}"
+msgstr ""
 
 #: src/pages/settings/playback.tsx
 #, fuzzy
@@ -5165,6 +5254,10 @@ msgstr ""
 msgid "The next episode starts after a countdown you can cancel."
 msgstr ""
 
+#: src/pages/welcome-apps.tsx
+msgid "The official Jellyfin app."
+msgstr ""
+
 #: src/pages/settings/apps.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
 msgstr "Diğer yöntemlerin çalışmadığı Mac'ler için mpv'nin eski çizim yöntemi. Bazı Dolby Vision videolarında renkler yanlış görünür."
@@ -5328,6 +5421,10 @@ msgstr "İnce"
 #: src/pages/settings/audio.tsx
 msgid "This app decodes Dolby and DTS audio itself, which loses Atmos."
 msgstr "Dolby ve DTS sesini uygulama çözer; Atmos kaybolur."
+
+#: src/pages/welcome-apps.tsx
+msgid "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
+msgstr ""
 
 #. Follows "Playback failed:"
 #: src/lib/playback/remux.ts
