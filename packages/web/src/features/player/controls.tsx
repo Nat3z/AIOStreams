@@ -105,6 +105,7 @@ export function PlayerControls({
   quality,
   live = false,
   showAtOpen = false,
+  sleepTimer = false,
 }: {
   item: BaseItemDto;
   player: PlayerController;
@@ -127,6 +128,8 @@ export function PlayerControls({
   /** A channel: the programme in place of the seek bar, and zapping. */
   live?: boolean;
   showAtOpen?: boolean;
+  /** Offers a sleep timer, which a trailer or a watch party has none of. */
+  sleepTimer?: boolean;
 }) {
   const { state } = player;
   const latest = useLatest(player);
@@ -755,6 +758,7 @@ export function PlayerControls({
             onSyncToLine={pickLine}
             onParty={onParty}
             quality={quality}
+            sleepTimer={sleepTimer}
             notice={showNotice}
           />
         </div>
