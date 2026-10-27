@@ -38,6 +38,9 @@ const MAX_RESTARTS = 2;
 const SEEK_EARLY = 3 / 23;
 /** Browsers decode AAC up to 5.1 reliably. */
 const MAX_CHANNELS = 6;
+/** AAC's sample rate here, and the samples in each of its frames. */
+const AAC_RATE = 48_000;
+const AAC_FRAME = 1024;
 /** The text formats ffmpeg here can turn into WebVTT. */
 const TEXT_SUBTITLE_CODECS = new Set([
   'subrip',
@@ -578,6 +581,11 @@ function ffmpegArgs(
   audio: RemuxTrack
 ): string[] {
   const channels = Math.min(audio.channels ?? 2, MAX_CHANNELS);
+  // Every run's AAC frames sit on one grid from the file's start, the frame
+  // before the seek first, so a segment from a run that began elsewhere
+  // meets its neighbour exactly. Safari drops the audio and jumps back on a
+  // frame that overlaps the one before it by even a few samples.
+  const firstFrame = Math.max(0, Math.floor((from * AAC_RATE) / AAC_FRAME) - 1);
   return [
     '-hide_banner',
     '-nostdin',
@@ -598,8 +606,12 @@ function ffmpegArgs(
     '-1',
     '-c:v',
     'copy',
+    '-af',
+    `aresample=${AAC_RATE}:async=1:first_pts=${firstFrame * AAC_FRAME}`,
     '-c:a',
     'aac',
+    '-ar',
+    String(AAC_RATE),
     '-ac',
     String(channels),
     '-b:a',
