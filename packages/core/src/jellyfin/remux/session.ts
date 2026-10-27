@@ -8,7 +8,13 @@ import {
   matroskaKeyframes,
   type Attachment,
 } from './keyframes.js';
-import { BoxReader, fragmentVideoTime, videoTrackOf } from './fmp4.js';
+import {
+  audioTrackOf,
+  BoxReader,
+  fragmentVideoTime,
+  splitLeadingAudio,
+  videoTrackOf,
+} from './fmp4.js';
 
 const logger = createLogger('remux');
 
@@ -26,8 +32,13 @@ const START_SEGMENT_SECONDS = [2, 2, 4];
 const TIME_OFFSET = 10;
 /** A segment further than this past the run's position starts a new run. */
 const MAX_LOOKAHEAD = 4;
-/** How far ffmpeg may get ahead of the last segment asked for. */
-const BUFFER_AHEAD = 3;
+/**
+ * How far ffmpeg reads ahead of the last segment asked for, in seconds of
+ * video. A phone on mobile data fetches a high-bitrate remux slower than it
+ * plays, so a read that pauses close behind it leaves the phone waiting on
+ * a restart over the store's CDN; ahead this far, it never catches up.
+ */
+const READ_AHEAD_S = 90;
 /** Segments kept behind the last one asked for, for a short seek back. */
 const KEEP_BEHIND = 1;
 const SEGMENT_WAIT_MS = 60_000;
@@ -133,6 +144,8 @@ interface Run {
   from: number;
   next: number;
   pending: Buffer[];
+  /** A fragment's moof, until its mdat arrives. */
+  moof?: Buffer;
   ended: boolean;
 }
 
@@ -152,6 +165,7 @@ export class RemuxSession {
   private init: Buffer | null = null;
   private ftyp: Buffer | null = null;
   private video: ReturnType<typeof videoTrackOf>;
+  private audioTrack: ReturnType<typeof audioTrackOf>;
   private readonly initWaiters: ((init: Buffer | null) => void)[] = [];
   private wanted = 0;
   private lastUsed = Date.now();
@@ -204,9 +218,9 @@ export class RemuxSession {
     this.touch();
     if (this.closed || n < 0 || n >= this.count) return Promise.resolve(null);
     this.wanted = n;
+    const ahead = this.segmentAt(this.bounds[n] + READ_AHEAD_S) + 1;
     for (const at of this.segments.keys())
-      if (at < n - KEEP_BEHIND || at > n + BUFFER_AHEAD + 1)
-        this.segments.delete(at);
+      if (at < n - KEEP_BEHIND || at > ahead) this.segments.delete(at);
     const have = this.segments.get(n);
     const run = this.run;
     if (!have && (!run || n < run.next || n > run.next + MAX_LOOKAHEAD))
@@ -356,7 +370,8 @@ export class RemuxSession {
   private flow(): void {
     const out = this.run?.proc.stdout;
     if (!out || !this.run) return;
-    if (this.run.next > this.wanted + BUFFER_AHEAD) out.pause();
+    const limit = this.bounds[this.wanted] + READ_AHEAD_S;
+    if ((this.bounds[this.run.next] ?? Infinity) > limit) out.pause();
     else out.resume();
   }
 
@@ -471,27 +486,50 @@ export class RemuxSession {
       // Every run writes the same tracks, so the first one's stands.
       if (!this.init) {
         this.video = videoTrackOf(box);
+        this.audioTrack = audioTrackOf(box);
         this.init = Buffer.concat([this.ftyp ?? Buffer.alloc(0), box]);
         for (const resolve of this.initWaiters.splice(0)) resolve(this.init);
       }
     } else if (type === 'moof') {
-      const time = this.video && fragmentVideoTime(box, this.video);
-      const boundary = this.bounds[run.next + 1];
-      // A little early counts, as the index keeps milliseconds.
-      if (
-        time !== undefined &&
-        boundary !== undefined &&
-        time - TIME_OFFSET >= boundary - 0.02
-      ) {
-        let upTo = run.next + 1;
-        while (time - TIME_OFFSET >= (this.bounds[upTo + 1] ?? Infinity) - 0.02)
-          upTo++;
-        this.finish(run, upTo);
-      }
-      run.pending.push(Buffer.from(box));
-    } else if (type === 'mdat' && run.pending.length) {
-      run.pending.push(Buffer.from(box));
+      // Held until its mdat, as a cut may move some of its audio back.
+      run.moof = Buffer.from(box);
+    } else if (type === 'mdat' && run.moof) {
+      const moof = run.moof;
+      run.moof = undefined;
+      this.onFragment(run, moof, Buffer.from(box));
     }
+  }
+
+  private onFragment(run: Run, moof: Buffer, mdat: Buffer): void {
+    const time = this.video && fragmentVideoTime(moof, this.video);
+    const boundary = this.bounds[run.next + 1];
+    // A little early counts, as the index keeps milliseconds.
+    if (
+      time === undefined ||
+      boundary === undefined ||
+      time - TIME_OFFSET < boundary - 0.02
+    ) {
+      run.pending.push(moof, mdat);
+      return;
+    }
+    let upTo = run.next + 1;
+    while (time - TIME_OFFSET >= (this.bounds[upTo + 1] ?? Infinity) - 0.02)
+      upTo++;
+    // Audio that plays before this fragment's first frame closes the segment
+    // before it, so the two meet without a gap.
+    const split =
+      this.audioTrack &&
+      splitLeadingAudio(
+        moof,
+        mdat,
+        this.audioTrack.trackId,
+        this.audioTrack.timescale,
+        time,
+        moof.readUInt32BE(20)
+      );
+    if (split && run.pending.length) run.pending.push(split.before);
+    this.finish(run, upTo);
+    run.pending.push(...(split ? [split.after] : [moof, mdat]));
   }
 
   /** Closes the segment being written and any it ran past, which index a keyframe ffmpeg didn't cut at. */
