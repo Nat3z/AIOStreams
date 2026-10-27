@@ -3,6 +3,7 @@ import type Hls from 'hls.js';
 import type { SourceInfo } from '../types';
 import { ofType, trackLabel } from './controller';
 import type { EngineTrack } from './engine';
+import { tracePlayback } from './playback-trace';
 import { chooseTracks } from './track-picks';
 import type { PlaybackPrefs } from '../user-config';
 
@@ -127,6 +128,24 @@ export function remuxUrl(source: SourceInfo, url: string) {
   };
 }
 
+/** Sends a playback trace to the server's client log, signed as the remux is. */
+function traceSender(url: string): (text: string) => void {
+  const address = new URL(url);
+  const log = new URL(
+    address.pathname.replace(/\/Videos\/.*$/, '/ClientLog/Document'),
+    address
+  );
+  const token = address.searchParams.get('ApiKey');
+  if (token) log.searchParams.set('ApiKey', token);
+  return (text) =>
+    void fetch(log, {
+      method: 'POST',
+      body: text,
+      headers: { 'Content-Type': 'text/plain' },
+      keepalive: true,
+    }).catch(() => {});
+}
+
 function playHls(
   el: HTMLVideoElement,
   url: string,
@@ -135,12 +154,16 @@ function playHls(
 ): { stop(): void } {
   let hls: Hls | null = null;
   let stopped = false;
+  let untrace = () => {};
+  const send = traceSender(url);
   // Only where hls.js can't run, as on an iPhone: Chrome now says it plays HLS
   // too, but reads from the start before it seeks.
   if (!hasMediaSource() && el.canPlayType('application/vnd.apple.mpegurl')) {
+    untrace = tracePlayback(el, null, send);
     el.src = url;
     return {
       stop: () => {
+        untrace();
         el.removeAttribute('src');
         el.load();
       },
@@ -218,12 +241,14 @@ function playHls(
             })
       );
     });
+    untrace = tracePlayback(el, hls, send);
     hls.loadSource(url);
     hls.attachMedia(el);
   });
   return {
     stop: () => {
       stopped = true;
+      untrace();
       hls?.destroy();
       hls = null;
       el.removeAttribute('src');
