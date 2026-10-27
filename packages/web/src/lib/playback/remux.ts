@@ -174,6 +174,12 @@ function playHls(
       // The server reads ahead of what is asked for, so asking far ahead costs it.
       maxBufferLength: 30,
       maxMaxBufferLength: 60,
+      // A remux keeps the file's bitrate, often 20-40 Mbit/s, and Safari on an
+      // iPhone evicts what is playing once a page's buffer passes ~300 MB,
+      // which drops the audio and throws playback back. So played video is let
+      // go after a short while, and what is buffered ahead stays small.
+      backBufferLength: 10,
+      maxBufferSize: 60 * 1000 * 1000,
       // Its first segment is the one with the start, not the first, which
       // a bandwidth test would fetch, though there is one variant to pick.
       startPosition: start || undefined,
