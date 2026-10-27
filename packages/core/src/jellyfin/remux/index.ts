@@ -10,18 +10,26 @@ import { engineReader, httpReader } from '../../media-info/readers.js';
 import type { OpenedFile } from '../../media-info/probe.js';
 import { fileStreamsOf } from '../media.js';
 import type { DeviceProfile, MediaSourceRecord } from '../types.js';
-import { remuxableSubtitle, type RemuxSource } from './session.js';
+import {
+  remuxableSubtitle,
+  type RemuxSource,
+  type RemuxViewer,
+} from './session.js';
 
 export {
   closeRemuxSessions,
   remuxSession,
+  remuxOverview,
   remuxSessionById,
   RemuxLimitError,
   remuxSubtitleFormat,
   type RemuxSubtitle,
   type RemuxSubtitleFormat,
+  type RemuxRunState,
   type RemuxSession,
+  type RemuxSessionInfo,
   type RemuxSource,
+  type RemuxViewer,
   type RemuxTrack,
 } from './session.js';
 
@@ -129,7 +137,8 @@ export async function openVersion(
 export function remuxSourceOf(
   record: MediaSourceRecord,
   /** The play session, which keeps one viewer's sessions from another's. */
-  playSessionId: string
+  playSessionId: string,
+  viewer?: RemuxViewer
 ): RemuxSource {
   const streams = fileStreamsOf(record) ?? [];
   const map = (fileIndex: number) => `0:${fileIndex}`;
@@ -157,5 +166,8 @@ export function remuxSourceOf(
       })),
     durationMs: record.durationMs,
     playSessionId,
+    title: record.filename || record.label,
+    videoCodec: video.codec,
+    viewer,
   };
 }
