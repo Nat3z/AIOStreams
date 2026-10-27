@@ -148,14 +148,14 @@ function traceSender(url: string): (text: string) => void {
 
 /** A hole closer than this ahead of the playhead is jumped before it stalls on it. */
 const HOLE_LEAD_S = 0.25;
-/** Holes longer than this are left to hls.js, as they are no dropped frames. */
-const MAX_HOLE_S = 1.5;
+/** Holes longer than this are left to hls.js, as no keyframe's frames span them. */
+const MAX_HOLE_S = 10;
 
 /**
  * Jumps the holes a remux leaves where it dropped damaged frames, just before
- * playback reaches them, rather than after it stalls there, as hls.js does.
- * Only a hole inside a segment already buffered counts, so a segment still
- * loading is waited for.
+ * playback reaches them, or when a seek lands in one, rather than after it
+ * stalls there, as hls.js does. Only a hole inside a segment already buffered
+ * counts, so a segment still loading is waited for.
  */
 function skipHoles(
   el: HTMLVideoElement,
@@ -172,15 +172,20 @@ function skipHoles(
   };
   hls.on(Events.FRAG_BUFFERED, onBuffered);
   const timer = setInterval(() => {
-    if (el.paused || el.seeking) return;
+    if (el.seeking) return;
     const now = el.currentTime;
     const ranges = el.buffered;
     for (let i = 0; i + 1 < ranges.length; i++) {
       const from = ranges.end(i);
       const to = ranges.start(i + 1);
-      if (ranges.start(i) > now || from < now) continue;
-      if (from - now > HOLE_LEAD_S || to - from > MAX_HOLE_S) return;
-      if (segments.some((s) => s.start <= from && to <= s.end + 0.1))
+      if (to <= now) continue;
+      if (ranges.start(i) > now) return;
+      const near = from <= now || (!el.paused && from - now <= HOLE_LEAD_S);
+      if (
+        near &&
+        to - from <= MAX_HOLE_S &&
+        segments.some((s) => s.start - 0.1 <= from && to <= s.end + 0.1)
+      )
         el.currentTime = to + 0.01;
       return;
     }
