@@ -166,6 +166,8 @@ export interface PlayerOptions {
   /** That player moved on to what it was given with `queueNext`. */
   onAdvance?: (next: QueuedItem) => void;
   startPaused?: boolean;
+  /** The server makes the seek bar's pictures where the player makes none. */
+  serverThumbnails?: boolean;
 }
 
 export const VOLUME_KEY = 'aiostreams-web-volume';
