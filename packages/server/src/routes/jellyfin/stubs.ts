@@ -1,4 +1,7 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
+import { createLogger } from '@aiostreams/core';
+
+const logger = createLogger('jellyfin');
 
 /*
  * Surfaces stock clients probe but that have no meaning here. Empty lists and
@@ -98,8 +101,19 @@ router.post(['/Items/:itemId/Refresh', '/Library/Refresh'], (_req, res) => {
 router.get('/ClientLog/Document', (_req, res) => {
   res.status(204).end();
 });
-router.post('/ClientLog/Document', (_req, res) => {
-  res.json({ FileName: 'client.log' });
-});
+// The web app's own player sends what it saw when playback broke, as text.
+router.post(
+  '/ClientLog/Document',
+  express.text({ type: '*/*', limit: '256kb' }),
+  (req, res) => {
+    const body = typeof req.body === 'string' ? req.body : '';
+    if (body.startsWith('aiostreams-playback'))
+      logger.info(
+        { client: req.get('user-agent'), log: body },
+        'client playback log'
+      );
+    res.json({ FileName: 'client.log' });
+  }
+);
 
 export default router;
