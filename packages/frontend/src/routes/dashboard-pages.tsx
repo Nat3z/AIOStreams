@@ -11,6 +11,7 @@ export { BlocklistEntriesPage } from '@/app/dashboard/blocklist/entries-page';
 export { BlocklistPublishingPage } from '@/app/dashboard/blocklist/publishing-page';
 export { StreamsLayout } from '@/app/dashboard/streams/streams-layout';
 export { StreamsActivePage } from '@/app/dashboard/streams/active-page';
+export { StreamsRemuxPage } from '@/app/dashboard/streams/remux-page';
 export { StreamsHistoryPage } from '@/app/dashboard/streams/history-page';
 export { StreamsBandwidthPage } from '@/app/dashboard/streams/bandwidth-page';
 export { StreamsBansPage } from '@/app/dashboard/streams/bans-page';

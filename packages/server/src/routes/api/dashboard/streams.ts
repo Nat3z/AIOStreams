@@ -1,5 +1,7 @@
 import { Router } from 'express';
 import {
+  closeRemuxSessions,
+  config as appConfig,
   createLogger,
   createStreamBan,
   deleteStreamHistory,
@@ -8,6 +10,8 @@ import {
   getStreamHistory,
   liftStreamBan,
   listStreamBans,
+  remuxOverview,
+  remuxSessionById,
   stopStream,
   stopUserStreams,
   type BandwidthWindow,
@@ -97,6 +101,42 @@ router.get('/live/stream', (req, res) => {
     clearInterval(hb);
     res.end();
   });
+});
+
+// GET /dashboard/streams/remux: the Jellyfin remuxes this instance runs. They
+// live in memory only, so another replica's are not listed.
+router.get('/remux', (_req, res, next) => {
+  try {
+    const { enabled, maxSessions } = appConfig.jellyfin.remux;
+    res.status(200).json(
+      createResponse({
+        success: true,
+        data: { ...remuxOverview(), enabled, maxSessions },
+      })
+    );
+  } catch (err) {
+    next(err);
+  }
+});
+
+// DELETE /dashboard/streams/remux/:id: stop one remux. The player gets errors
+// for its next segments, so most clients stop playing.
+router.delete('/remux/:id', (req, res, next) => {
+  try {
+    if (!remuxSessionById(req.params.id)) {
+      return notFound(res, 'remux not found');
+    }
+    closeRemuxSessions((s) => s.id === req.params.id);
+    logger.info(
+      { id: req.params.id, by: username(req) },
+      'remux stopped from the dashboard'
+    );
+    res
+      .status(200)
+      .json(createResponse({ success: true, data: { stopped: true } }));
+  } catch (err) {
+    next(err);
+  }
 });
 
 // GET /dashboard/streams/history: finished sessions, newest first.
