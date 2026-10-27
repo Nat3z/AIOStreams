@@ -4,11 +4,13 @@ import {
   BiBlock,
   BiHistory,
   BiPlayCircle,
+  BiTransfer,
 } from 'react-icons/bi';
 
 /** The streams dashboard's sub-sections, shared by the layout, the router's
  *  search validator and the sidebar flyout. */
-export type StreamsSectionId = 'active' | 'history' | 'bandwidth' | 'bans';
+export type StreamsSectionId =
+  'active' | 'remux' | 'history' | 'bandwidth' | 'bans';
 
 export const STREAMS_SECTIONS: {
   id: StreamsSectionId;
@@ -16,6 +18,7 @@ export const STREAMS_SECTIONS: {
   icon: ElementType;
 }[] = [
   { id: 'active', label: 'Active', icon: BiPlayCircle },
+  { id: 'remux', label: 'Remux', icon: BiTransfer },
   { id: 'history', label: 'History', icon: BiHistory },
   { id: 'bandwidth', label: 'Bandwidth', icon: BiBarChartAlt2 },
   { id: 'bans', label: 'Blocks', icon: BiBlock },
