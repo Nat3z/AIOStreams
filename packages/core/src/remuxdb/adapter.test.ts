@@ -221,17 +221,31 @@ describe('toWireMediaInfo', () => {
     });
     const wire = toWireMediaInfo(v);
     assert.equal(wire.audio?.length, 1);
-    assert.partialDeepStrictEqual(wire.audio?.[0], {
+    assert.deepEqual(wire.audio?.[0], {
+      index: 0,
       codec: 'eac3',
+      profile: undefined,
       lang: 'eng',
+      title: undefined,
       ch_layout: '5.1',
       ch: 6,
       br: 640_000,
       sample_rate: 48_000,
+      default: true,
+      commentary: undefined,
+      dub: undefined,
+      original: undefined,
+      hearing_impaired: false,
+      visual_impaired: undefined,
     });
-    assert.partialDeepStrictEqual(wire.subtitle?.[0], {
+    assert.deepEqual(wire.subtitle?.[0], {
+      index: 0,
+      codec: undefined,
       lang: 'fre',
       title: 'French',
+      default: true,
+      forced: false,
+      hearing_impaired: false,
     });
   });
 
