@@ -212,9 +212,21 @@ function playHls(
       startPosition: start || undefined,
       testBandwidth: false,
     });
+    // A reset MediaSource starts over at the start position, the video
+    // having been emptied by then, so it is moved along with playback.
+    let playedTo = start;
+    el.addEventListener('timeupdate', () => {
+      if (el.currentTime > 0) playedTo = el.currentTime;
+    });
     // One recovery, as a decoder that can't take the video fails every time.
     let recovered = false;
     hls.on(HlsPlayer.Events.ERROR, (_event, data) => {
+      if (
+        hls &&
+        (data.details === HlsPlayer.ErrorDetails.MEDIA_SOURCE_REQUIRES_RESET ||
+          (data.fatal && data.type === HlsPlayer.ErrorTypes.MEDIA_ERROR))
+      )
+        hls.config.startPosition = playedTo;
       if (!data.fatal) return;
       if (data.type === HlsPlayer.ErrorTypes.MEDIA_ERROR && !recovered) {
         recovered = true;
