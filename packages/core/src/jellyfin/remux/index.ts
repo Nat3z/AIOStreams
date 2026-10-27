@@ -32,6 +32,7 @@ export {
   type RemuxViewer,
   type RemuxTrack,
 } from './session.js';
+export { thumbnailAt, type ThumbnailResult } from './thumbnails.js';
 
 /** A remux reads the whole file, however long. */
 const REMUX_READ_CAP = Number.MAX_SAFE_INTEGER;
