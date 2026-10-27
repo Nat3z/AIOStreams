@@ -514,7 +514,8 @@ export function videoEngine(
           next,
           () => file === next,
           // One that never loaded, as from a site without CORS, is the link's fault.
-          (error) => emit({ type: 'failed', error, unsupported: !el.readyState })
+          (error) =>
+            emit({ type: 'failed', error, unsupported: !el.readyState })
         ).then((opened) => {
           if (file === next) hls = opened;
           else opened?.destroy();
