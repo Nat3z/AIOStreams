@@ -612,6 +612,7 @@ function Player({
     subtitleStyle,
     launched,
     startPaused,
+    serverThumbnails: !local?.local && !youTube,
   });
   const player = usePartyPlayer(own, playlistItemId);
   close.current = player.close;
