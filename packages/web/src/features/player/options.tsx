@@ -22,6 +22,7 @@ import {
   LuMinimize,
   LuMinus,
   LuPictureInPicture,
+  LuMoon,
   LuPlus,
   LuRatio,
   LuSignalHigh,
@@ -74,6 +75,11 @@ import { useParty } from '@/lib/party/party';
 import { RATES, rateLabel } from './keys';
 import { useLatest } from '@/hooks/use-latest';
 import { qualityOptions } from '@/lib/playback/quality';
+import {
+  SLEEP_MINUTES,
+  setSleepTimer,
+  useSleepTimer,
+} from '@/lib/playback/sleep-timer';
 
 /** Opens in the menu's place from a row under its list. */
 interface MenuPage {
@@ -574,11 +580,13 @@ export function OptionButtons({
   onSyncToLine,
   onParty,
   quality,
+  sleepTimer = false,
   notice,
 }: {
   player: PlayerController;
   onMenu(open: boolean): void;
   onParty?: () => void;
+  sleepTimer?: boolean;
   onVersions?: () => void;
   onEpisodes?: () => void;
   onChapters?: () => void;
@@ -604,6 +612,16 @@ export function OptionButtons({
   const tv = !!currentHost().tv;
   const unread = useParty()?.unread ?? 0;
   const hidden = subtitles.hidden.length;
+  const sleep = useSleepTimer();
+  const sleepValue = !sleep
+    ? null
+    : 'atEnd' in sleep
+      ? 'end'
+      : String(sleep.minutes);
+  const sleepEnds =
+    sleep && 'endsAt' in sleep
+      ? new Date(sleep.endsAt).toLocaleTimeString([], { timeStyle: 'short' })
+      : '';
   // One at a time: a menu opened over another leaves the first open.
   const [openMenu, setOpenMenu] = React.useState<string | null>(null);
   const menuState = (name: string) => ({
@@ -760,6 +778,46 @@ export function OptionButtons({
             id && Number(id) !== quality.value && quality.select(Number(id))
           }
           {...menuState('quality')}
+        />
+      )}
+      {sleepTimer && (
+        <Menu
+          name="sleep"
+          label={
+            !sleep
+              ? t`Sleep timer`
+              : 'atEnd' in sleep
+                ? t`Sleep timer: stops after this`
+                : t`Sleep timer: stops at ${sleepEnds}`
+          }
+          icon={<LuMoon />}
+          options={[
+            { id: '', label: t`Off` },
+            ...SLEEP_MINUTES.map((m) => ({
+              id: String(m),
+              label: plural(m, { one: '# minute', other: '# minutes' }),
+            })),
+            { id: 'end', label: t`End of this title` },
+          ]}
+          value={sleepValue}
+          onSelect={(id) => {
+            if (!id) {
+              setSleepTimer(null);
+              notice(t`Sleep timer off`);
+            } else if (id === 'end') {
+              setSleepTimer({ atEnd: true });
+              notice(t`Stops after this`);
+            } else {
+              const minutes = Number(id);
+              const endsAt = Date.now() + minutes * 60_000;
+              setSleepTimer({ endsAt, minutes });
+              const at = new Date(endsAt).toLocaleTimeString([], {
+                timeStyle: 'short',
+              });
+              notice(t`Stops at ${at}`);
+            }
+          }}
+          {...menuState('sleep')}
         />
       )}
       {player.fit && <FitButton notice={notice} />}
