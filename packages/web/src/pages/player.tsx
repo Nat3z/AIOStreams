@@ -84,6 +84,7 @@ import { indexForTrack } from '../lib/remote/tracks';
 import { useLatest } from '../lib/use-latest';
 import { openPartySheet } from '../components/party/party-sheet';
 import { usePlaylistEdits, usePlaylistName } from '../lib/playlists';
+import { takeSleepAtEnd, useSleepCountdown } from '../lib/playback/sleep-timer';
 
 interface PlayerProps {
   item: BaseItemDto;
@@ -257,7 +258,7 @@ function useEnded(item: BaseItemDto, close?: () => void) {
   const onEnded = React.useCallback(() => ended.current(), []);
   const connect = (next: ReturnType<typeof useUpNextPrompt>) => {
     ended.current = () => {
-      if (!next.autoplay || !next.next) return back();
+      if (takeSleepAtEnd() || !next.autoplay || !next.next) return back();
       void next.playOn().then((ok) => {
         if (!ok) back();
       });
@@ -677,6 +678,7 @@ function Player({
   });
   useRemotePlayer(controls, item, source, act, queue);
   useKeepAwake(player, !hostPlayer);
+  useSleepCountdown(player);
   const launchedName = launched?.name ?? '';
   const failure = player.state.error ?? '';
   const covered =
@@ -752,6 +754,7 @@ function Player({
                   : undefined
               }
               onParty={together}
+              sleepTimer={!player.shared}
             />
           )}
           {inParty && <PartyLayer />}
