@@ -12,6 +12,7 @@ import {
 } from '@aiostreams/core';
 import { jfOptional, param, qs } from './context.js';
 import { ensureMemo, locate, pickSource } from './playback.js';
+import { accountName } from './users.js';
 
 const logger = createLogger('jellyfin');
 const router: Router = Router({ mergeParams: true });
@@ -35,9 +36,15 @@ async function sessionFor(
     return null;
   }
   const audio = qs(req, 'AudioStreamIndex');
+  const { ctx } = loc!;
   try {
     return await remuxSession(
-      remuxSourceOf(source, memo!.psid),
+      remuxSourceOf(source, memo!.psid, {
+        name: ctx.persona?.name ?? accountName(ctx.userData),
+        client: ctx.client.name,
+        device: ctx.client.device,
+        ip: req.requestIp || req.ip,
+      }),
       audio !== undefined ? Number(audio) : undefined,
       startSecondsOf(req)
     );
@@ -136,6 +143,7 @@ async function initPart(req: Request, res: Response) {
   }
   res.type('video/mp4').setHeader('Cache-Control', 'no-store');
   res.send(init);
+  session.sent(init.length);
 }
 
 async function segmentPart(req: Request, res: Response) {
@@ -152,6 +160,7 @@ async function segmentPart(req: Request, res: Response) {
   }
   res.type('video/mp4').setHeader('Cache-Control', 'no-store');
   res.send(segment.bytes);
+  session.sent(segment.bytes.length);
 }
 
 const SUBTITLE_TYPES = {

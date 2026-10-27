@@ -1,7 +1,8 @@
 import { spawn, type ChildProcess } from 'node:child_process';
 import { randomBytes } from 'node:crypto';
 import { appConfig, createLogger } from '../../utils/index.js';
-import { openLoopback } from '../../media-info/loopback.js';
+import { openLoopback, type FileReader } from '../../media-info/loopback.js';
+import { recordedClientIp } from '../../stream-sessions/client-ip.js';
 import type { OpenedFile } from '../../media-info/probe.js';
 import {
   matroskaAttachments,
@@ -85,6 +86,51 @@ export interface RemuxSource {
   durationMs?: number;
   /** The play session it was opened for, which a stop closes. */
   playSessionId: string;
+  /** What the dashboard calls it: the file's name, else the version's label. */
+  title: string;
+  videoCodec?: string;
+  viewer?: RemuxViewer;
+}
+
+/** Who a remux plays for, as the dashboard shows them. */
+export interface RemuxViewer {
+  name: string;
+  client?: string;
+  device?: string;
+  ip?: string;
+}
+
+/**
+ * What a session's ffmpeg is doing: reading, held back as it is far enough
+ * ahead of the player, or not running at all.
+ */
+export type RemuxRunState = 'reading' | 'throttled' | 'stopped';
+
+/** A session as the dashboard shows it. */
+export interface RemuxSessionInfo {
+  id: string;
+  title: string;
+  viewer?: RemuxViewer;
+  playSessionId: string;
+  videoCodec?: string;
+  audio: { codec?: string; channels?: number; outputChannels: number };
+  subtitles: number;
+  durationSeconds: number;
+  segments: number;
+  /** Start of the last segment the player asked for, in seconds. */
+  playhead: number;
+  /** How far ffmpeg has cut segments, while it runs. */
+  readTo?: number;
+  state: RemuxRunState;
+  /** Bytes ffmpeg read from the file, and bytes sent to the player. */
+  bytesRead: number;
+  bytesServed: number;
+  /** ffmpeg runs that failed, each restarted or failing its segment. */
+  failedRuns: number;
+  droppedFrames: number;
+  startedAt: number;
+  /** Time since the player last asked for anything. */
+  idleMs: number;
 }
 
 /**
@@ -151,6 +197,12 @@ interface Run {
 /** One file remuxed with one audio track. */
 export class RemuxSession {
   readonly id = randomBytes(12).toString('hex');
+  readonly startedAt = Date.now();
+  /** Bytes ffmpeg has read from the file, through the loopback. */
+  bytesRead = 0;
+  private bytesServed = 0;
+  private failedRuns = 0;
+  private droppedFrames = 0;
   /** Segment start times in seconds, and the end of the last. */
   readonly bounds: number[];
   private readonly segments = new Map<number, Segment>();
@@ -199,6 +251,44 @@ export class RemuxSession {
 
   touch(): void {
     this.lastUsed = Date.now();
+  }
+
+  /** Notes bytes sent to the player. */
+  sent(bytes: number): void {
+    this.bytesServed += bytes;
+  }
+
+  info(now = Date.now()): RemuxSessionInfo {
+    const run = this.run;
+    const viewer = this.source.viewer;
+    return {
+      id: this.id,
+      title: this.source.title,
+      viewer: viewer && { ...viewer, ip: recordedClientIp(viewer.ip) },
+      playSessionId: this.source.playSessionId,
+      videoCodec: this.source.videoCodec,
+      audio: {
+        codec: this.audio.codec,
+        channels: this.audio.channels,
+        outputChannels: Math.min(this.audio.channels ?? 2, MAX_CHANNELS),
+      },
+      subtitles: this.source.subtitles.length,
+      durationSeconds: this.bounds[this.count],
+      segments: this.count,
+      playhead: this.bounds[this.wanted],
+      readTo: run ? this.bounds[run.next] : undefined,
+      state: !run
+        ? 'stopped'
+        : run.proc.stdout?.isPaused()
+          ? 'throttled'
+          : 'reading',
+      bytesRead: this.bytesRead,
+      bytesServed: this.bytesServed,
+      failedRuns: this.failedRuns,
+      droppedFrames: this.droppedFrames,
+      startedAt: this.startedAt,
+      idleMs: Math.max(0, now - this.lastUsed),
+    };
   }
 
   /**
@@ -448,6 +538,7 @@ export class RemuxSession {
         { session: this.id, code, err: stderr.trim().split('\n').pop() },
         'remux run failed'
       );
+      this.failedRuns++;
       // A debrid link that dropped mid-play is read again from where it was.
       const tries = (this.restarts.get(run.next) ?? 0) + 1;
       this.restarts.set(run.next, tries);
@@ -502,6 +593,7 @@ export class RemuxSession {
     const trimmed = this.video && dropDamagedVideo(moof, mdat, this.video);
     if (trimmed) {
       ({ moof, mdat } = trimmed);
+      this.droppedFrames += trimmed.dropped;
       logger.warn(
         {
           session: this.id,
@@ -741,7 +833,11 @@ async function openSession(
       index.durationSeconds ??
       (source.durationMs ? source.durationMs / 1000 : undefined);
     if (!duration) throw new Error('unknown duration');
-    const loopback = await openLoopback(file);
+    const reader: FileReader = {
+      size: file.size,
+      open: (start, end, signal) => file.open(start, end, signal),
+    };
+    const loopback = await openLoopback(reader);
     const session: RemuxSession = new RemuxSession(
       source,
       audio,
@@ -757,6 +853,10 @@ async function openSession(
         void loopback.close().catch(() => undefined);
       }
     );
+    // Set before ffmpeg, the loopback's only reader, first starts.
+    reader.onRead = (bytes) => {
+      session.bytesRead += bytes;
+    };
     sessions.set(session.id, session);
     logger.info(
       { session: session.id, segments: session.count },
@@ -767,6 +867,20 @@ async function openSession(
     abort.abort();
     throw err;
   }
+}
+
+/** Every remux on this instance, newest first, and the ones still opening. */
+export function remuxOverview(): {
+  sessions: RemuxSessionInfo[];
+  opening: number;
+} {
+  const now = Date.now();
+  return {
+    sessions: [...sessions.values()]
+      .map((s) => s.info(now))
+      .sort((a, b) => b.startedAt - a.startedAt),
+    opening: opening.size,
+  };
 }
 
 export function remuxSessionById(id: string): RemuxSession | undefined {
