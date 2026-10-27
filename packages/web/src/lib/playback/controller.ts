@@ -172,6 +172,8 @@ export interface PlayerOptions {
   /** Moves on from a live source that kept failing; false when there is nothing else to play. */
   onLiveFailed?: () => Promise<boolean>;
   startPaused?: boolean;
+  /** The server makes the seek bar's pictures where the player makes none. */
+  serverThumbnails?: boolean;
 }
 
 export const VOLUME_KEY = 'aiostreams-web-volume';
