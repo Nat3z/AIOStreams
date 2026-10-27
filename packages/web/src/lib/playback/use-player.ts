@@ -34,7 +34,7 @@ import type {
   StatsRow,
 } from './engine';
 import { usePlayheadWriter } from './playhead';
-import { thumbnailFeed } from './thumbnails';
+import { serverThumbnails, thumbnailFeed } from './thumbnails';
 import { chooseTracks, serverFacts, trackFacts } from './track-picks';
 import { createLive } from '@/lib/live-value';
 import { copyOf, shownSubtitle, useSubtitleTiming } from './subtitle-timing';
@@ -464,12 +464,13 @@ export function usePlayer(
 
   const [thumbnailsOn] = useSetting(settings.controls.thumbnails);
   const { pictures } = opts;
+  const fromServer = !engine.thumbnails && !!opts.serverThumbnails;
   React.useEffect(() => {
     const read = engine.thumbnails;
     // A live stream has no seek bar, and opening it again can take the
     // provider's only connection from the player.
     if (
-      (!pictures && !read) ||
+      (!pictures && !read && !fromServer) ||
       !thumbnailsOn ||
       liveSource ||
       opts.thumbnails === false
@@ -477,14 +478,18 @@ export function usePlayer(
       return;
     const feed = thumbnailFeed(
       pictures ??
-        ((onThumbnail) =>
-          read!({ url, headers: latest.current.headers }, onThumbnail))
+        (read
+          ? (onThumbnail) =>
+              read({ url, headers: latest.current.headers }, onThumbnail)
+          : serverThumbnails(client, opts.item.Id!, source.Id!))
     );
     setThumbnails(feed);
     return () => {
       feed.stop();
       setThumbnails(undefined);
     };
+    // A new version has a new url, so the source's ids need not be watched.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     engine,
     latest,
@@ -493,6 +498,8 @@ export function usePlayer(
     liveSource,
     opts.thumbnails,
     pictures,
+    fromServer,
+    client,
   ]);
 
   React.useEffect(() => {

@@ -318,6 +318,16 @@ export const jellyfinSchema = {
       requiresRestart: false,
       secret: false,
     },
+    thumbnails: {
+      schema: z.boolean(),
+      default: true,
+      label: 'Seek bar previews',
+      description:
+        "Shows pictures over the seek bar in players that make none themselves, such as the web app in a browser or on a TV. The server reads a keyframe from the file with ffmpeg for each, so debrid services see this server's IP for those reads. The desktop and Android apps make their own and are unaffected.",
+      env: 'JELLYFIN_THUMBNAILS_ENABLED',
+      requiresRestart: false,
+      secret: false,
+    },
     ffmpegPath: {
       schema: z.string().min(1),
       default: 'ffmpeg',
