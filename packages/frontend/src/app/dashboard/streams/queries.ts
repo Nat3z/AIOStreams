@@ -123,9 +123,56 @@ export interface StreamBan {
   expiresAt?: number;
 }
 
+/** Who a remux plays for. */
+export interface RemuxViewer {
+  name: string;
+  client?: string;
+  device?: string;
+  ip?: string;
+}
+
+/**
+ * What a remux's ffmpeg is doing: reading, held back as it is far enough
+ * ahead of the player, or not running at all.
+ */
+export type RemuxRunState = 'reading' | 'throttled' | 'stopped';
+
+/** One file remuxed to HLS for a Jellyfin player. */
+export interface RemuxSessionInfo {
+  id: string;
+  title: string;
+  viewer?: RemuxViewer;
+  playSessionId: string;
+  videoCodec?: string;
+  audio: { codec?: string; channels?: number; outputChannels: number };
+  subtitles: number;
+  durationSeconds: number;
+  segments: number;
+  /** Start of the last segment the player asked for, in seconds. */
+  playhead: number;
+  /** How far ffmpeg has cut segments, while it runs. */
+  readTo?: number;
+  state: RemuxRunState;
+  bytesRead: number;
+  bytesServed: number;
+  failedRuns: number;
+  droppedFrames: number;
+  startedAt: number;
+  idleMs: number;
+}
+
+export interface RemuxOverview {
+  sessions: RemuxSessionInfo[];
+  /** Remuxes still indexing their file. */
+  opening: number;
+  enabled: boolean;
+  maxSessions: number;
+}
+
 const ROOT = ['dashboard', 'streams'] as const;
 const LIVE_QUERY_KEY = [...ROOT, 'live'] as const;
 const BANS_QUERY_KEY = [...ROOT, 'bans'] as const;
+const REMUX_QUERY_KEY = [...ROOT, 'remux'] as const;
 
 /** Ease window when no live frame has arrived yet. */
 export const LIVE_FRAME_FALLBACK_MS = 500;
@@ -255,6 +302,23 @@ export function useStopUserStreams() {
         `POST /dashboard/streams/users/${encodeURIComponent(username)}/kill`
       ),
     onSuccess: () => qc.invalidateQueries({ queryKey: LIVE_QUERY_KEY }),
+  });
+}
+
+export function useRemuxSessions() {
+  return useQuery({
+    queryKey: REMUX_QUERY_KEY,
+    queryFn: () => api<RemuxOverview>('/dashboard/streams/remux'),
+    refetchInterval: 2_000,
+  });
+}
+
+export function useStopRemux() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      api(`DELETE /dashboard/streams/remux/${encodeURIComponent(id)}`),
+    onSuccess: () => qc.invalidateQueries({ queryKey: REMUX_QUERY_KEY }),
   });
 }
 
