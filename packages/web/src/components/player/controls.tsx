@@ -85,6 +85,7 @@ export function PlayerControls({
   steps,
   playlist,
   onParty,
+  sleepTimer = false,
 }: {
   item: BaseItemDto;
   player: PlayerController;
@@ -102,6 +103,8 @@ export function PlayerControls({
   steps?: 'episode' | 'trailer' | 'playlist';
   playlist?: { id: string; onPlay(entry: BaseItemDto, playlist: string): void };
   onParty?: () => void;
+  /** Offers a sleep timer, which a trailer or a watch party has none of. */
+  sleepTimer?: boolean;
 }) {
   const { state } = player;
   const latest = useLatest(player);
@@ -685,6 +688,7 @@ export function PlayerControls({
             onSyncByEar={() => setByEar(true)}
             onSyncToLine={pickLine}
             onParty={onParty}
+            sleepTimer={sleepTimer}
             notice={showNotice}
           />
         </div>
