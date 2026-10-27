@@ -34,7 +34,7 @@ export function tracePlayback(
   };
   const flush = (why: string) => {
     // A few reports a play, as one failure tends to repeat.
-    if (sent >= 3) return;
+    if (sent >= 4) return;
     sent++;
     log(`REPORT ${why}`);
     send(
@@ -60,11 +60,17 @@ export function tracePlayback(
     'error',
   ];
   const onEvent = (e: Event) => {
-    if (e.type === 'seeking') seekingTo = el.currentTime;
+    if (e.type === 'seeking') {
+      seekingTo = el.currentTime;
+      // Where from, as a recovery seeks just like the user does.
+      log(`seeking from ${lastTime.toFixed(2)}`);
+      return;
+    }
     if (e.type === 'seeked') seekingTo = null;
     const err = e.type === 'error' && el.error;
     log(err ? `error ${err.code} ${err.message}` : e.type);
     if (err) flush('video error');
+    if (e.type === 'ended') flush('ended');
   };
   const onTime = () => {
     const now = el.currentTime;
@@ -117,9 +123,16 @@ export function tracePlayback(
       )) as never);
     on(Events.BUFFER_FLUSHED, ((_: unknown, d: { type?: string }) =>
       log(`flushed ${d.type ?? ''}`)) as never);
+    on(Events.FRAG_LOADING, ((
+      _: unknown,
+      d: { frag: { sn: number | string; start: number } }
+    ) => log(`loading ${d.frag.sn} @${d.frag.start.toFixed(2)}`)) as never);
+    on(Events.MEDIA_ENDED, (() => log('hls media ended')) as never);
   }
   log('start');
   return () => {
+    // Whatever went wrong, the user closes the player after it.
+    if (performance.now() - t0 > 5_000) flush('closed');
     for (const e of events) el.removeEventListener(e, onEvent);
     el.removeEventListener('timeupdate', onTime);
     for (const off of offs) off();
