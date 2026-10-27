@@ -2,12 +2,15 @@ import { Router, type Request, type Response } from 'express';
 import {
   canRemux,
   closeRemuxSessions,
+  config as appConfig,
   createLogger,
   convertSubtitle,
+  openVersion,
   remuxSession,
   remuxSessionById,
   remuxSourceOf,
   RemuxLimitError,
+  thumbnailAt,
   type RemuxSession,
 } from '@aiostreams/core';
 import { jfOptional, param, qs } from './context.js';
@@ -231,6 +234,50 @@ async function remuxFont(req: Request, res: Response) {
   res.send(font.data);
 }
 
+/**
+ * A picture of the keyframe at or before `At` ms, for the seek bar of a
+ * player that makes none itself. `Showing` is the keyframe on screen, which
+ * gets a 204 rather than the same picture again; 404 means the file has none.
+ */
+async function thumbnail(req: Request, res: Response) {
+  if (!appConfig.jellyfin.remux.thumbnails) {
+    res.status(404).end();
+    return;
+  }
+  const loc = await locate(req, param(req, 'itemId'), {
+    hintMsid: param(req, 'mediaSourceId') || undefined,
+  });
+  const memo = loc ? await ensureMemo(loc) : null;
+  const source = memo ? pickSource(memo, loc!.requestedMsid) : undefined;
+  if (!source || source.live || source.notice || source.extension.ytId) {
+    res.status(404).end();
+    return;
+  }
+  const at = Number(qs(req, 'At') ?? 0);
+  const showing = qs(req, 'Showing');
+  const result = await thumbnailAt(
+    source.msid,
+    (signal) => openVersion(source, signal),
+    Number.isFinite(at) ? at : 0,
+    showing !== undefined ? Number(showing) : undefined
+  );
+  res.setHeader('Access-Control-Expose-Headers', 'X-Position-Ms');
+  if (result.kind === 'none') {
+    res.status(404).end();
+    return;
+  }
+  if (result.kind === 'same') {
+    res.status(204).end();
+    return;
+  }
+  res
+    .type('image/jpeg')
+    .setHeader('Cache-Control', 'private, max-age=3600')
+    .setHeader('X-Position-Ms', String(result.positionMs));
+  res.send(result.jpeg);
+}
+
+router.get('/Videos/:itemId/:mediaSourceId/Thumbnail', jfOptional(thumbnail));
 router.get(
   ['/Videos/:itemId/master.m3u8', '/Videos/:itemId/live.m3u8'],
   jfOptional(masterPlaylist)
