@@ -18,6 +18,7 @@ import {
   BlocklistPublishingPage,
   StreamsLayout,
   StreamsActivePage,
+  StreamsRemuxPage,
   StreamsHistoryPage,
   StreamsBandwidthPage,
   StreamsBansPage,
@@ -219,6 +220,12 @@ const dashboardStreamsActiveRoute = createRoute({
   component: StreamsActivePage,
 });
 
+const dashboardStreamsRemuxRoute = createRoute({
+  getParentRoute: () => dashboardStreamsRoute,
+  path: 'remux',
+  component: StreamsRemuxPage,
+});
+
 const dashboardStreamsHistoryRoute = createRoute({
   getParentRoute: () => dashboardStreamsRoute,
   path: 'history',
@@ -391,6 +398,7 @@ const routeTree = rootRoute.addChildren([
     dashboardStreamsRoute.addChildren([
       dashboardStreamsIndexRoute,
       dashboardStreamsActiveRoute,
+      dashboardStreamsRemuxRoute,
       dashboardStreamsHistoryRoute,
       dashboardStreamsBandwidthRoute,
       dashboardStreamsBansRoute,
