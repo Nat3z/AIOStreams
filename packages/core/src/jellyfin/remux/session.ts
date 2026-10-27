@@ -8,13 +8,7 @@ import {
   matroskaKeyframes,
   type Attachment,
 } from './keyframes.js';
-import {
-  audioTrackOf,
-  BoxReader,
-  fragmentVideoTime,
-  splitLeadingAudio,
-  videoTrackOf,
-} from './fmp4.js';
+import { BoxReader, fragmentVideoTime, videoTrackOf } from './fmp4.js';
 
 const logger = createLogger('remux');
 
@@ -165,7 +159,6 @@ export class RemuxSession {
   private init: Buffer | null = null;
   private ftyp: Buffer | null = null;
   private video: ReturnType<typeof videoTrackOf>;
-  private audioTrack: ReturnType<typeof audioTrackOf>;
   private readonly initWaiters: ((init: Buffer | null) => void)[] = [];
   private wanted = 0;
   private lastUsed = Date.now();
@@ -486,7 +479,6 @@ export class RemuxSession {
       // Every run writes the same tracks, so the first one's stands.
       if (!this.init) {
         this.video = videoTrackOf(box);
-        this.audioTrack = audioTrackOf(box);
         this.init = Buffer.concat([this.ftyp ?? Buffer.alloc(0), box]);
         for (const resolve of this.initWaiters.splice(0)) resolve(this.init);
       }
@@ -515,21 +507,8 @@ export class RemuxSession {
     let upTo = run.next + 1;
     while (time - TIME_OFFSET >= (this.bounds[upTo + 1] ?? Infinity) - 0.02)
       upTo++;
-    // Audio that plays before this fragment's first frame closes the segment
-    // before it, so the two meet without a gap.
-    const split =
-      this.audioTrack &&
-      splitLeadingAudio(
-        moof,
-        mdat,
-        this.audioTrack.trackId,
-        this.audioTrack.timescale,
-        time,
-        moof.readUInt32BE(20)
-      );
-    if (split && run.pending.length) run.pending.push(split.before);
     this.finish(run, upTo);
-    run.pending.push(...(split ? [split.after] : [moof, mdat]));
+    run.pending.push(moof, mdat);
   }
 
   /** Closes the segment being written and any it ran past, which index a keyframe ffmpeg didn't cut at. */
