@@ -82,6 +82,8 @@ interface NalFormat {
   /** Bytes giving each unit's length. */
   length: number;
   hevc: boolean;
+  /** Temporal sub-layers, as one may decode from a lower one's unused picture; 0 when unknown. */
+  layers: number;
 }
 
 /** The NAL length size an `avc1` or `hvc1` sample entry declares. */
@@ -96,9 +98,15 @@ function nalFormatOf(moov: Buffer, mdia: Box): NalFormat | undefined {
   if (!entry) return undefined;
   for (const config of boxesIn(moov, entry.start + 78, entry.end)) {
     if (config.type === 'avcC')
-      return { length: (moov[config.start + 4] & 3) + 1, hevc: false };
-    if (config.type === 'hvcC')
-      return { length: (moov[config.start + 21] & 3) + 1, hevc: true };
+      return {
+        length: (moov[config.start + 4] & 3) + 1,
+        hevc: false,
+        layers: 1,
+      };
+    if (config.type === 'hvcC') {
+      const at = moov[config.start + 21];
+      return { length: (at & 3) + 1, hevc: true, layers: (at >> 3) & 7 };
+    }
   }
   return undefined;
 }
@@ -170,12 +178,12 @@ export interface TrimmedFragment {
 }
 
 /**
- * Drops a fragment's video from the first sample whose NAL units run past
- * the sample, as a damaged block in the source leaves it, to the fragment's
- * end, which is the next keyframe as each fragment starts at one. Safari
- * fails a segment holding such a frame and closes the MediaSource, where it
- * plays over the missing frames. Undefined when nothing is damaged, or when
- * the keyframe is, as the fragment then has no video left to play.
+ * Drops the video frames whose NAL units run past their sample, as a damaged
+ * block in the source leaves them. Safari fails a segment holding one and
+ * closes the MediaSource, where it plays over missing frames. A frame nothing
+ * decodes from goes alone; any other takes the rest of the fragment, which
+ * runs to the next keyframe as each fragment starts at one, and a damaged
+ * keyframe takes the fragment's video. Undefined when nothing is damaged.
  */
 export function dropDamagedVideo(
   moof: Buffer,
@@ -207,54 +215,93 @@ export function dropDamagedVideo(
   const entries = trun.start + 12 + (flags & 0x4 ? 4 : 0);
   const entry = SAMPLE_FIELDS.filter((f) => flags & f).length * 4;
   const sizeAt = entries + (flags & 0x100 ? 4 : 0);
-  // Where the samples sit in the mdat, which follows the moof.
-  const first = moof.readInt32BE(trun.start + 8) - moof.length;
-  let sample = first;
-  let bad = -1;
-  for (let i = 0; i < count && bad < 0; i++) {
+  // Where each sample sits in the mdat, which follows the moof.
+  const starts: number[] = [];
+  const sizes: number[] = [];
+  let sample = moof.readInt32BE(trun.start + 8) - moof.length;
+  for (let i = 0; i < count; i++) {
     const size = moof.readUInt32BE(sizeAt + i * entry);
     if (sample < 8 || sample + size > mdat.length) return undefined;
-    if (!wellFormed(mdat, sample, sample + size, video.nal.length)) bad = i;
-    else sample += size;
+    starts.push(sample);
+    sizes.push(size);
+    sample += size;
   }
-  if (bad < 1) return undefined;
-  let end = sample;
-  for (let i = bad; i < count; i++)
-    end += moof.readUInt32BE(sizeAt + i * entry);
+  const drop = new Set<number>();
+  for (let i = 0; i < count; i++) {
+    const end = starts[i] + sizes[i];
+    if (wellFormed(mdat, starts[i], end, video.nal.length)) continue;
+    // Alone only when the frame before can take its time, so those after keep theirs.
+    if (
+      i > 0 &&
+      flags & 0x100 &&
+      !referenced(mdat, starts[i], end, video.nal)
+    ) {
+      drop.add(i);
+      continue;
+    }
+    for (let j = i; j < count; j++) drop.add(j);
+    break;
+  }
+  if (!drop.size) return undefined;
 
-  const dropped = count - bad;
-  const cut = dropped * entry;
-  const removed = end - sample;
-  const out = Buffer.concat([
-    moof.subarray(0, entries + bad * entry),
-    moof.subarray(entries + count * entry),
-  ]);
-  for (const box of [root, traf, trun])
-    out.writeUInt32BE(out.readUInt32BE(box.start - 8) - cut, box.start - 8);
-  out.writeUInt32BE(bad, trun.start + 4);
-  // The last kept frame lasts until the next fragment, as the dropped did.
-  if (flags & 0x100) {
-    let span = 0;
-    for (let i = bad - 1; i < count; i++)
-      span += moof.readUInt32BE(entries + i * entry);
-    out.writeUInt32BE(span, entries + (bad - 1) * entry);
+  // Fields are written where they sit, then the cut bytes spliced out.
+  const out = Buffer.from(moof);
+  const cuts: [number, number][] = [];
+  if (drop.size === count) {
+    cuts.push([traf.start - 8, traf.end]);
+  } else {
+    let kept = 0;
+    for (let i = 1; i < count; i++) {
+      if (!drop.has(i)) {
+        kept = i;
+        continue;
+      }
+      cuts.push([entries + i * entry, entries + (i + 1) * entry]);
+      if (flags & 0x100) {
+        const at = entries + kept * entry;
+        out.writeUInt32BE(
+          out.readUInt32BE(at) + moof.readUInt32BE(entries + i * entry),
+          at
+        );
+      }
+    }
+    out.writeUInt32BE(count - drop.size, trun.start + 4);
   }
-  // Every run's data moves up with the moof, and the runs after the dropped
-  // bytes, the audio's, by those too.
-  for (const t of trafs)
+  const cut = cuts.reduce((sum, [from, to]) => sum + to - from, 0);
+  const boxes = drop.size === count ? [root] : [root, traf, trun];
+  for (const box of boxes)
+    out.writeUInt32BE(moof.readUInt32BE(box.start - 8) - cut, box.start - 8);
+  // Every run's data moves up with the moof, and by the dropped bytes before it.
+  for (const t of trafs) {
+    if (t === traf && drop.size === count) continue;
     for (const run of boxesIn(moof, t.start, t.end)) {
       if (run.type !== 'trun' || !(moof.readUIntBE(run.start + 1, 3) & 0x1))
         continue;
       const offset = moof.readInt32BE(run.start + 8);
-      const at = run.start + 8 - (run.start > trun.start ? cut : 0);
-      out.writeInt32BE(
-        offset - cut - (offset - moof.length >= end ? removed : 0),
-        at
-      );
+      let removed = 0;
+      for (const i of drop)
+        if (starts[i] < offset - moof.length) removed += sizes[i];
+      out.writeInt32BE(offset - cut - removed, run.start + 8);
     }
-  const data = Buffer.concat([mdat.subarray(0, sample), mdat.subarray(end)]);
+  }
+  const data = splice(
+    mdat,
+    [...drop].map((i) => [starts[i], starts[i] + sizes[i]])
+  );
   data.writeUInt32BE(data.length, 0);
-  return { moof: out, mdat: data, dropped };
+  return { moof: splice(out, cuts), mdat: data, dropped: drop.size };
+}
+
+/** A buffer without the given ascending byte ranges. */
+function splice(buf: Buffer, cuts: [number, number][]): Buffer {
+  const parts: Buffer[] = [];
+  let at = 0;
+  for (const [from, to] of cuts) {
+    parts.push(buf.subarray(at, from));
+    at = to;
+  }
+  parts.push(buf.subarray(at));
+  return Buffer.concat(parts);
 }
 
 /** Whether a sample's NAL units each fit inside it. */
@@ -271,4 +318,35 @@ function wellFormed(
     at += width + length;
   }
   return at === end;
+}
+
+/**
+ * Whether other frames may decode from a sample's picture, by its first
+ * slice, which must be whole to be trusted.
+ */
+function referenced(
+  mdat: Buffer,
+  start: number,
+  end: number,
+  nal: NalFormat
+): boolean {
+  let at = start;
+  while (at + nal.length + 1 < end) {
+    const length = mdat.readUIntBE(at, nal.length);
+    const head = at + nal.length;
+    if (length === 0 || head + length > end) return true;
+    if (nal.hevc) {
+      // Sub-layer non-reference pictures take the even slice types to 14, and
+      // only the top sub-layer's are left unused.
+      const type = (mdat[head] >> 1) & 0x3f;
+      const layer = (mdat[head + 1] & 7) - 1;
+      if (type < 32)
+        return type > 14 || type % 2 === 1 || layer !== nal.layers - 1;
+    } else {
+      const type = mdat[head] & 0x1f;
+      if (type >= 1 && type <= 5) return ((mdat[head] >> 5) & 3) !== 0;
+    }
+    at = head + length;
+  }
+  return true;
 }
