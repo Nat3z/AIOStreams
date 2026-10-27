@@ -23,7 +23,11 @@ async function sessionFor(
   req: Request,
   res: Response
 ): Promise<RemuxSession | null> {
-  const loc = await locate(req, param(req, 'itemId'), { bySession: true });
+  // Subtitles and fonts name their version in the path, not the query.
+  const loc = await locate(req, param(req, 'itemId'), {
+    bySession: true,
+    hintMsid: param(req, 'mediaSourceId') || undefined,
+  });
   const memo = loc ? await ensureMemo(loc) : null;
   const source = memo ? pickSource(memo, loc!.requestedMsid) : undefined;
   if (!source || !canRemux(source)) {
