@@ -34,7 +34,7 @@ import type {
   StatsRow,
 } from './engine';
 import { usePlayheadWriter } from './playhead';
-import { thumbnailFeed } from './thumbnails';
+import { serverThumbnails, thumbnailFeed } from './thumbnails';
 import { chooseTracks, serverFacts, trackFacts } from './track-picks';
 import { createLive } from '@/lib/live-value';
 import { copyOf, shownSubtitle, useSubtitleTiming } from './subtitle-timing';
@@ -461,25 +461,43 @@ export function usePlayer(
   }, [engine, statsPage, statsRows]);
 
   const [thumbnailsOn] = useSetting(settings.controls.thumbnails);
+  const fromServer = !engine.thumbnails && !!opts.serverThumbnails;
   React.useEffect(() => {
     // A live stream has no seek bar, and opening it again can take the
     // provider's only connection from the player.
     if (
-      !engine.thumbnails ||
       !thumbnailsOn ||
       liveSource ||
-      opts.thumbnails === false
+      opts.thumbnails === false ||
+      (!engine.thumbnails && !fromServer)
     )
       return;
-    const feed = thumbnailFeed((onThumbnail) =>
-      engine.thumbnails!({ url, headers: latest.current.headers }, onThumbnail)
+    const feed = thumbnailFeed(
+      engine.thumbnails
+        ? (onThumbnail) =>
+            engine.thumbnails!(
+              { url, headers: latest.current.headers },
+              onThumbnail
+            )
+        : serverThumbnails(client, opts.item.Id!, source.Id!)
     );
     setThumbnails(feed);
     return () => {
       feed.stop();
       setThumbnails(undefined);
     };
-  }, [engine, latest, url, thumbnailsOn, liveSource, opts.thumbnails]);
+    // A new version has a new url, so the source's ids need not be watched.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    engine,
+    latest,
+    url,
+    thumbnailsOn,
+    liveSource,
+    opts.thumbnails,
+    fromServer,
+    client,
+  ]);
 
   React.useEffect(() => {
     if (!thumbnails || !state.started) return;

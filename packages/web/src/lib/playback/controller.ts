@@ -186,6 +186,8 @@ export interface PlayerOptions {
   /** Kept from the saved volume, which it leaves alone. */
   muted?: boolean;
   thumbnails?: boolean;
+  /** The server makes the seek bar's pictures where the player makes none. */
+  serverThumbnails?: boolean;
 }
 
 export const VOLUME_KEY = 'aiostreams-web-volume';
