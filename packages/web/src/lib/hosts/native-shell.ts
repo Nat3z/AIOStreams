@@ -11,6 +11,8 @@ export interface NativeShell {
   };
   selectServer?(): void;
   openClientSettings?(): void;
+  enableFullscreen?(): void;
+  disableFullscreen?(): void;
   updateMediaSession?(info: Record<string, unknown>): void;
   hideMediaSession?(): void;
 }
@@ -80,6 +82,25 @@ export function nativeShellParts(shell: NativeShell): Omit<Host, 'name'> {
 }
 
 const hosts = new WeakMap<NativeShell, Host>();
+let fullscreen = false;
+
+/**
+ * Full screen as the app gives it, since an iPhone's web view has no
+ * fullscreen API: the iOS app hides its status and tab bars and turns
+ * landscape itself, as it does for jellyfin-web's player.
+ */
+function fullscreenOf(shell: NativeShell): Host['fullscreen'] {
+  if (!shell.enableFullscreen || !shell.disableFullscreen) return undefined;
+  return {
+    active: () => fullscreen,
+    set(on) {
+      if (on) shell.enableFullscreen?.();
+      else shell.disableFullscreen?.();
+      fullscreen = on;
+      document.dispatchEvent(new Event('fullscreenchange'));
+    },
+  };
+}
 
 /** Any other app that hosts jellyfin-web, playing in the page. */
 export function nativeShellHost(): Host | null {
@@ -87,7 +108,11 @@ export function nativeShellHost(): Host | null {
   if (!shell) return null;
   let host = hosts.get(shell);
   if (!host) {
-    host = { name: 'jellyfin-app', ...nativeShellParts(shell) };
+    host = {
+      name: 'jellyfin-app',
+      ...nativeShellParts(shell),
+      fullscreen: fullscreenOf(shell),
+    };
     hosts.set(shell, host);
   }
   return host;
