@@ -11,7 +11,7 @@ import {
 import {
   BoxReader,
   fragmentVideoTime,
-  repairVideoSamples,
+  dropDamagedVideo,
   videoTrackOf,
 } from './fmp4.js';
 
@@ -499,12 +499,18 @@ export class RemuxSession {
 
   private onFragment(run: Run, moof: Buffer, mdat: Buffer): void {
     const time = this.video && fragmentVideoTime(moof, this.video);
-    const mended = this.video ? repairVideoSamples(moof, mdat, this.video) : 0;
-    if (mended)
+    const trimmed = this.video && dropDamagedVideo(moof, mdat, this.video);
+    if (trimmed) {
+      ({ moof, mdat } = trimmed);
       logger.warn(
-        { session: this.id, at: time && time - TIME_OFFSET, mended },
-        'damaged video samples blanked'
+        {
+          session: this.id,
+          at: time && time - TIME_OFFSET,
+          dropped: trimmed.dropped,
+        },
+        'damaged video frames dropped'
       );
+    }
     const boundary = this.bounds[run.next + 1];
     // A little early counts, as the index keeps milliseconds.
     if (
