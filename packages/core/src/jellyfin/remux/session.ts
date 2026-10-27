@@ -8,7 +8,12 @@ import {
   matroskaKeyframes,
   type Attachment,
 } from './keyframes.js';
-import { BoxReader, fragmentVideoTime, videoTrackOf } from './fmp4.js';
+import {
+  BoxReader,
+  fragmentVideoTime,
+  repairVideoSamples,
+  videoTrackOf,
+} from './fmp4.js';
 
 const logger = createLogger('remux');
 
@@ -483,7 +488,7 @@ export class RemuxSession {
         for (const resolve of this.initWaiters.splice(0)) resolve(this.init);
       }
     } else if (type === 'moof') {
-      // Held until its mdat, as a cut may move some of its audio back.
+      // Held until its mdat, as the two are mended and cut together.
       run.moof = Buffer.from(box);
     } else if (type === 'mdat' && run.moof) {
       const moof = run.moof;
@@ -494,6 +499,12 @@ export class RemuxSession {
 
   private onFragment(run: Run, moof: Buffer, mdat: Buffer): void {
     const time = this.video && fragmentVideoTime(moof, this.video);
+    const mended = this.video ? repairVideoSamples(moof, mdat, this.video) : 0;
+    if (mended)
+      logger.warn(
+        { session: this.id, at: time && time - TIME_OFFSET, mended },
+        'damaged video samples blanked'
+      );
     const boundary = this.bounds[run.next + 1];
     // A little early counts, as the index keeps milliseconds.
     if (
