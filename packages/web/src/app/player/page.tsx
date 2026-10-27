@@ -895,6 +895,7 @@ function Player({
     startPaused,
     chapters: fromServer.chapters,
     pictures: fromServer.pictures,
+    serverThumbnails: !local?.local && !youTube,
   });
   const player = usePartyPlayer(own, playlistItemId);
   close.current = player.close;

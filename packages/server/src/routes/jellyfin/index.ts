@@ -70,8 +70,8 @@ const LOGIN_LIKE =
 const IMAGE_LIKE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general)(\/|$)/i;
 const STREAM_LIKE = /^\/items\/[^/]+\/(playbackinfo|mediasources)$/i;
-/* A remux's parts, which a seeking player asks for in bursts. */
-const REMUX_PART = /^\/videos\/[^/]+\/(main\.m3u8$|hls1\/)/i;
+/* A remux's parts and seek bar pictures, which a player asks for in bursts. */
+const REMUX_PART = /^\/videos\/[^/]+\/(main\.m3u8$|hls1\/|[^/]+\/thumbnail$)/i;
 /* Routes whose bodies are worth revalidating rather than re-sending. */
 const CACHEABLE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general|videos\/)/i;

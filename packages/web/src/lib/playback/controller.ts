@@ -193,6 +193,8 @@ export interface PlayerOptions {
   chapters?: Chapter[];
   /** Seek bar pictures that need no read of the file, taken over the engine's own. */
   pictures?: Open | null;
+  /** The server makes the seek bar's pictures where the player makes none. */
+  serverThumbnails?: boolean;
 }
 
 export const VOLUME_KEY = 'aiostreams-web-volume';
