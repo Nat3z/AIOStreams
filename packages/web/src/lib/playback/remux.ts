@@ -146,6 +146,51 @@ function traceSender(url: string): (text: string) => void {
     }).catch(() => {});
 }
 
+/** A hole closer than this ahead of the playhead is jumped before it stalls on it. */
+const HOLE_LEAD_S = 0.25;
+/** Holes longer than this are left to hls.js, as they are no dropped frames. */
+const MAX_HOLE_S = 1.5;
+
+/**
+ * Jumps the holes a remux leaves where it dropped damaged frames, just before
+ * playback reaches them, rather than after it stalls there, as hls.js does.
+ * Only a hole inside a segment already buffered counts, so a segment still
+ * loading is waited for.
+ */
+function skipHoles(
+  el: HTMLVideoElement,
+  hls: Hls,
+  Events: typeof Hls.Events
+): () => void {
+  const segments: { start: number; end: number }[] = [];
+  const onBuffered = (
+    _: unknown,
+    { frag }: { frag: { start: number; end: number } }
+  ) => {
+    segments.push({ start: frag.start, end: frag.end });
+    if (segments.length > 50) segments.shift();
+  };
+  hls.on(Events.FRAG_BUFFERED, onBuffered);
+  const timer = setInterval(() => {
+    if (el.paused || el.seeking) return;
+    const now = el.currentTime;
+    const ranges = el.buffered;
+    for (let i = 0; i + 1 < ranges.length; i++) {
+      const from = ranges.end(i);
+      const to = ranges.start(i + 1);
+      if (ranges.start(i) > now || from < now) continue;
+      if (from - now > HOLE_LEAD_S || to - from > MAX_HOLE_S) return;
+      if (segments.some((s) => s.start <= from && to <= s.end + 0.1))
+        el.currentTime = to + 0.01;
+      return;
+    }
+  }, 100);
+  return () => {
+    clearInterval(timer);
+    hls.off(Events.FRAG_BUFFERED, onBuffered);
+  };
+}
+
 function playHls(
   el: HTMLVideoElement,
   url: string,
@@ -264,7 +309,12 @@ function playHls(
             })
       );
     });
-    untrace = tracePlayback(el, hls, send);
+    const untraceOnly = tracePlayback(el, hls, send);
+    const unskip = skipHoles(el, hls, HlsPlayer.Events);
+    untrace = () => {
+      untraceOnly();
+      unskip();
+    };
     hls.loadSource(url);
     hls.attachMedia(el);
   });
