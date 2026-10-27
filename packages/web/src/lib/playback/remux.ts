@@ -194,9 +194,13 @@ function playHls(
           },
         },
       },
-      // The server reads ahead of what is asked for, so asking far ahead costs it.
+      // The server reads a minute and a half ahead, so a segment is waiting
+      // for the player; 30 s ahead is enough to ride out a slow one.
       maxBufferLength: 30,
       maxMaxBufferLength: 60,
+      // A cut can leave a few hundredths of a second between audio and
+      // video, which is played over rather than treated as a stall.
+      maxBufferHole: 0.5,
       // A remux keeps the file's bitrate, often 20-40 Mbit/s, and Safari on an
       // iPhone evicts what is playing once a page's buffer passes ~300 MB,
       // which drops the audio and throws playback back. So played video is let
