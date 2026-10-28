@@ -24,7 +24,7 @@ export interface Track {
 }
 
 export interface PlayerState {
-  /** The first frame has played. */
+  /** The first frame has played, or shows paused where autoplay was refused. */
   started: boolean;
   /** The file is open and its tracks known, whether or not it plays yet. */
   loaded: boolean;
