@@ -31,6 +31,7 @@ import playstateRouter from './playstate.js';
 import playlistsRouter from './playlists.js';
 import webRouter from './web.js';
 import profileRouter from './profile.js';
+import streamyfinRouter from './streamyfin.js';
 import { trackersRouter } from './trackers.js';
 import { jellyfinWebRoot } from '../../app.js';
 
@@ -232,6 +233,7 @@ export function createJellyfinRouter(): Router {
   router.use(libraryRouter);
   router.use(segmentsRouter);
   router.use(liveTvRouter);
+  router.use(streamyfinRouter);
   router.use(stubsRouter);
   router.use((req, res) => {
     res.status(404).json({
