@@ -360,6 +360,9 @@ export function videoEngine(
           endMs: ranges.end(i) * 1000,
         }));
       };
+      // Asked once it can play, as a browser that refuses autoplay, as on a
+      // page it reloaded, would leave it paused behind the cover for good.
+      let asked = next.paused;
       const handlers: Record<string, () => void> = {
         loadedmetadata: () => {
           if (next.startMs) el.currentTime = next.startMs / 1000;
@@ -372,10 +375,21 @@ export function videoEngine(
           embedded?.setPlaying(true);
           set({ started: true, paused: false, waiting: false });
         },
-        pause: () => set({ paused: true }),
+        pause: () => {
+          asked = true;
+          set({ paused: true });
+        },
         play: () => set({ paused: false }),
         waiting: () => set({ waiting: true }),
-        canplay: () => set({ waiting: false }),
+        canplay: () => {
+          set({ waiting: false });
+          if (asked) return;
+          asked = true;
+          void el.play().catch((error: unknown) => {
+            if ((error as Error)?.name === 'NotAllowedError')
+              set({ started: true, paused: true, waiting: false });
+          });
+        },
         timeupdate: () => {
           embedded?.setPosition(el.currentTime * 1000, bufferedAhead(el));
           emit({
