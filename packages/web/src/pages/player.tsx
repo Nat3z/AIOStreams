@@ -344,7 +344,11 @@ function useReporting(
     );
     current.start();
     reporter.current = current;
-    const onHide = () => void current.stop();
+    // A page the browser keeps to come back to plays on, so its remux stays
+    // open; one it throws away has already reported where it was.
+    const onHide = (e: PageTransitionEvent) => {
+      if (!e.persisted) void current.stop();
+    };
     window.addEventListener('pagehide', onHide);
     return () => {
       window.removeEventListener('pagehide', onHide);
