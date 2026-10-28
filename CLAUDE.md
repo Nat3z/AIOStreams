@@ -58,6 +58,11 @@ The frontend uses rsbuild (not Vite/webpack directly) — `pnpm -F frontend dev`
 - **Presets** (`packages/core/src/presets/*.ts`, ~80 files, registered in `presetManager.ts`) describe how to configure and call an external Stremio addon (Torrentio, Comet, MediaFusion, Easynews, etc.). Each preset extends a common `Preset` base in `preset.ts` and exposes configuration metadata consumed by the SPA. When adding a new community addon, add a preset file and register it in `presetManager.ts`.
 - **Builtins** (`packages/core/src/builtins/*`) are addon implementations hosted in-process (gdrive, knaben, prowlarr, torznab/newznab, eztv, torrent-galaxy, seadex, easynews-search, library, …). They are exposed under `/builtins/<name>` via routes in `packages/server/src/routes/builtins`, and the `internalMiddleware` enforces that they are only called by the engine itself.
 
+### Jellyfin API
+
+- `packages/server/src/routes/jellyfin` serves the Jellyfin API at `/jellyfin` (and the `/p/:code`, `/u/:alias`, `/:uuid/:encryptedPassword` mounts). Clients pointed at the bare site address call it from the root, so `JELLYFIN_ROOT` in `packages/server/src/app.ts` allowlists which root paths get forwarded to `/jellyfin`. A new top-level Jellyfin route (e.g. `/Streamyfin/...`) must be added there too, or root requests fall through to the SPA's HTML and clients read it as "not supported".
+- `streamyfin.ts` answers Streamyfin's companion-plugin settings routes with a locked `home` value, so Streamyfin shows each catalog as its own home row instead of "Recently added in …".
+
 ### Configuration
 
 - `packages/core/src/config` owns all runtime configuration. `bootstrap.ts` reads env vars via `envalid`; `schema/` defines the user-data shape with zod; `describe.ts` produces metadata for the SPA and for `pnpm gen:env-docs`. After changing any env var or user-data schema, run `pnpm gen:env-docs` and rebuild.
