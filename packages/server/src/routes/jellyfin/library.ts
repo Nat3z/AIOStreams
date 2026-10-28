@@ -994,6 +994,10 @@ router.get(
   '/Shows/NextUp',
   jf(async (req, res, ctx) => {
     const limit = Math.min(Math.max(1, qi(req, 'Limit', 12)), 50);
+    // Paged by building the shelf up to the page's end, as a client that
+    // pages until a short answer would otherwise see the first page forever.
+    const startIndex = Math.max(0, qi(req, 'StartIndex', 0));
+    const end = startIndex + limit;
     /* A ParentId that is a library cannot resolve to a series, so it answers empty. */
     const seriesId = qs(req, 'SeriesId') ?? qs(req, 'ParentId');
     const includeResumable = qb(req, 'EnableResumable') ?? true;
@@ -1026,7 +1030,7 @@ router.get(
         if (next) items.push(withShowWatchedAt(next, last));
       }
     } else {
-      const recent = provider.recentSeries(ctx.watch, limit * 4);
+      const recent = provider.recentSeries(ctx.watch, end * 4);
       /* One show can sit under several series keys; see `itemsFromRows`. */
       const shown = new Set<string>();
       const check = async (row: WatchStateRow) => {
@@ -1054,7 +1058,7 @@ router.get(
         }
       };
       await fill();
-      while (running.length && items.length < limit) {
+      while (running.length && items.length < end) {
         const next = await running.shift()!;
         await fill();
         if (!next || (next.UserData as { Played: boolean }).Played) continue;
@@ -1064,7 +1068,7 @@ router.get(
         items.push(next);
       }
     }
-    send(req, res, items, items.length, 0);
+    send(req, res, items.slice(startIndex, end), items.length, startIndex);
   })
 );
 
