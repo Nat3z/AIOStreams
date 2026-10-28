@@ -131,7 +131,7 @@ app.use(express.urlencoded({ extended: true }));
  * root, so the routes only Jellyfin answers go to the /jellyfin mount.
  */
 const JELLYFIN_ROOT =
-  /^\/(aiostreams|artists|auth|branding|channels|clientlog|collections|devices|displaypreferences|environment|genres|getutctime|images|items|library|livetv|localization|mediasegments|movies|musicgenres|notifications|packages|persons|playback|playingitems|playlists|plugins|quickconnect|repositories|scheduledtasks|search|sessions|shows|startup|studios|syncplay|system|trailers|userfavoriteitems|userimage|useritems|userplayeditems|users|userviews|videos|years|web|emby|mediabrowser)(\/|\?|$)/i;
+  /^\/(aiostreams|artists|auth|branding|channels|clientlog|collections|devices|displaypreferences|environment|genres|getutctime|images|items|library|livetv|localization|mediasegments|movies|musicgenres|notifications|packages|persons|playback|playingitems|playlists|plugins|quickconnect|repositories|scheduledtasks|search|sessions|shows|startup|streamyfin|studios|syncplay|system|trailers|userfavoriteitems|userimage|useritems|userplayeditems|users|userviews|videos|years|web|emby|mediabrowser)(\/|\?|$)/i;
 app.use((req, _res, next) => {
   if (appConfig.jellyfin.enabled && JELLYFIN_ROOT.test(req.url)) {
     req.url = `/jellyfin${req.url}`;
