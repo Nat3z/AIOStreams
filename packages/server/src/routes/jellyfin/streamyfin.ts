@@ -21,6 +21,13 @@ type Section = {
   nextUp?: Record<string, never>;
 };
 
+/* A movie and a series catalog often share a name; mixed ones get no label. */
+const KIND_LABELS: Record<string, string> = {
+  movies: 'Movies',
+  tvshows: 'Series',
+  boxsets: 'Collections',
+};
+
 /** Continue Watching and Next Up, then every library the user hasn't hidden. */
 async function homeSections(ctx: JellyfinRequestContext): Promise<Section[]> {
   const libraries = (await viewItems(ctx))
@@ -31,7 +38,9 @@ async function homeSections(ctx: JellyfinRequestContext): Promise<Section[]> {
           ?.genreRequired
     )
     .map<Section>((v) => ({
-      title: v.Name ?? '',
+      title: [v.Name ?? '', KIND_LABELS[String(v.CollectionType)]]
+        .filter(Boolean)
+        .join(' · '),
       orientation: 'vertical',
       items: { parentId: v.Id },
     }));
