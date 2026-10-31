@@ -514,6 +514,14 @@ export class WatchStateRepository {
     };
   }
 
+  /** Drops a whole history, as when a guest pass ends. */
+  static async clearScope(scope: WatchScope): Promise<void> {
+    await getDb().exec(
+      sql`DELETE FROM watch_state
+           WHERE uuid = ${scope.uuid} AND persona = ${scope.persona}`
+    );
+  }
+
   static async delete(scope: WatchScope, itemKey: string): Promise<void> {
     await getDb().exec(
       sql`DELETE FROM watch_state

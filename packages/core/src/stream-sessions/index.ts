@@ -40,6 +40,7 @@ export {
   recoverStreamSessions,
   stopStream,
   stopUserStreams,
+  stopStreamsTo,
   type LiveStreamsSnapshot,
   type StreamBandwidthOverview,
 } from './service.js';

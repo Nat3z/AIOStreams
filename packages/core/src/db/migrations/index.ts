@@ -52,6 +52,7 @@ import { stremioTokens } from './1001_stremio_tokens.js';
 import { userInvites } from './1002_user_invites.js';
 import { avatars } from './1003_avatars.js';
 import { userInviteDevices } from './1004_user_invite_devices.js';
+import { guestPasses } from './1005_guest_passes.js';
 import type { Migration } from './types.js';
 
 export const MIGRATIONS: readonly Migration[] = [
@@ -110,6 +111,7 @@ export const MIGRATIONS: readonly Migration[] = [
   userInvites,
   avatars,
   userInviteDevices,
+  guestPasses,
 ];
 
 export type { Migration } from './types.js';

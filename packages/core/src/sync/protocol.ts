@@ -37,6 +37,8 @@ export type PartyRelayMode = 'off' | 'users' | 'public';
 export interface PartyRelayInfo {
   v: number;
   relay: PartyRelayMode;
+  /** Where this server's web app is, for an invite to open in a browser. */
+  web?: string;
 }
 
 /** A party its server's users see without an invite, from `/party/v1/parties`. */
@@ -112,6 +114,8 @@ export interface PartyMemberInfo {
   name: string;
   avatar?: string;
   host: boolean;
+  /** In on a guest pass, with no account anywhere. */
+  guest?: boolean;
   /** Connection lost; the seat is kept for a while. */
   away: boolean;
   buffering: boolean;

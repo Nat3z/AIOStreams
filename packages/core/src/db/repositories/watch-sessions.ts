@@ -273,6 +273,13 @@ export class WatchSessionRepository {
     return rows.map(toRow);
   }
 
+  static async clearScope(scope: WatchScope): Promise<void> {
+    await getDb().exec(
+      sql`DELETE FROM watch_sessions
+           WHERE uuid = ${scope.uuid} AND persona = ${scope.persona}`
+    );
+  }
+
   static async listForUuid(
     uuid: string,
     limit: number
