@@ -9,6 +9,7 @@ import { TextInput } from '@aiostreams/ui/text-input';
 import { NumberInput } from '@aiostreams/ui/number-input';
 import { Select } from '@aiostreams/ui/select';
 import { Checkbox } from '@aiostreams/ui/checkbox';
+import { Switch } from '@aiostreams/ui/switch';
 import { Modal } from '@aiostreams/ui/modal';
 import {
   ConfirmationDialog,
@@ -38,7 +39,98 @@ interface UserDetail extends UserItem {
   recentErrorStages: { stage: string; count: number }[];
 }
 
+interface GuestPassLeave {
+  enabled: boolean;
+  allowed: boolean;
+  /** Null is the server's default. */
+  maxActive: number | null;
+  maxPerMonth: number | null;
+  defaults: { maxActive: number; maxPerMonth: number };
+  active: number;
+  thisMonth: number;
+}
+
 const PAGE_SIZES = ['10', '25', '50', '100'];
+
+/** Whether a user may make guest links, and how many; taking it away ends theirs. */
+function GuestLinks({ uuid }: { uuid: string }) {
+  const qc = useQueryClient();
+  const key = ['dashboard', 'users', uuid, 'guest-passes'];
+  const leave = useQuery({
+    queryKey: key,
+    queryFn: () => api<GuestPassLeave>(`/dashboard/users/${uuid}/guest-passes`),
+  });
+  const save = useMutation({
+    mutationFn: (
+      body: Pick<GuestPassLeave, 'allowed' | 'maxActive' | 'maxPerMonth'>
+    ) => api(`PUT /dashboard/users/${uuid}/guest-passes`, { body }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: key }),
+    onError: (e: any) => toast.error(e?.message ?? 'Save failed'),
+  });
+  const l = leave.data;
+  if (!l) return null;
+  const change = (
+    patch: Partial<
+      Pick<GuestPassLeave, 'allowed' | 'maxActive' | 'maxPerMonth'>
+    >
+  ) =>
+    save.mutate({
+      allowed: l.allowed,
+      maxActive: l.maxActive,
+      maxPerMonth: l.maxPerMonth,
+      ...patch,
+    });
+  // An emptied field goes back to the server's default.
+  const limit = (v: number) => (Number.isFinite(v) && v >= 1 ? v : null);
+  return (
+    <div className="space-y-3 border-t border-[--border] pt-3">
+      <Switch
+        side="right"
+        label="Guest links"
+        help={
+          l.enabled
+            ? 'Lets this user share a title with someone without an account. Turning it off ends their links.'
+            : 'GUEST_PASSES is off on this server, so nobody can make them.'
+        }
+        value={l.allowed}
+        disabled={save.isPending}
+        onValueChange={(allowed) => change({ allowed })}
+      />
+      {l.allowed && (
+        <>
+          <div className="grid grid-cols-2 gap-3">
+            <NumberInput
+              label="Live at once"
+              placeholder={String(l.defaults.maxActive)}
+              value={l.maxActive ?? undefined}
+              min={1}
+              allowEmpty
+              onBlur={(e) => {
+                const v = limit(Number(e.currentTarget.value));
+                if (v !== l.maxActive) change({ maxActive: v });
+              }}
+            />
+            <NumberInput
+              label="Made per 30 days"
+              placeholder={String(l.defaults.maxPerMonth)}
+              value={l.maxPerMonth ?? undefined}
+              min={1}
+              allowEmpty
+              onBlur={(e) => {
+                const v = limit(Number(e.currentTarget.value));
+                if (v !== l.maxPerMonth) change({ maxPerMonth: v });
+              }}
+            />
+          </div>
+          <p className="text-xs text-[--muted]">
+            {l.active} live, {l.thisMonth} made in the last 30 days. Leave a
+            limit empty for the server's.
+          </p>
+        </>
+      )}
+    </div>
+  );
+}
 
 export function UsersPage() {
   const qc = useQueryClient();
@@ -442,6 +534,7 @@ export function UsersPage() {
                 <span className="text-[--muted]">None</span>
               )}
             </div>
+            <GuestLinks uuid={detail.uuid} />
           </div>
         )}
       </Modal>

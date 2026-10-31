@@ -56,6 +56,15 @@ interface PassRow {
   [k: string]: unknown;
 }
 
+/** A configuration's leave to make passes; a null limit is the server's. */
+export interface GuestPassGrant {
+  maxActive: number | null;
+  maxPerMonth: number | null;
+  grantedAt: number;
+}
+
+const MONTH_MS = 30 * 24 * 3600 * 1000;
+
 const hashCode = (code: string) =>
   createHash('sha256').update(code).digest('hex');
 
@@ -90,6 +99,10 @@ export class GuestPassRepository {
     const id = randomBytes(9).toString('base64url');
     const code = randomBytes(18).toString('base64url');
     const now = Date.now();
+    await getDb().exec(
+      sql`INSERT INTO guest_pass_made (uuid, created_at)
+          VALUES (${pass.uuid}, ${now})`
+    );
     const row = await getDb().maybeOne<PassRow>(
       sql`INSERT INTO guest_passes
             (id, secret, uuid, persona, encrypted_password, item_id,
@@ -144,6 +157,61 @@ export class GuestPassRepository {
     return Number(row?.n ?? 0);
   }
 
+  /** Passes made in the last 30 days, ended ones included. */
+  static async countThisMonth(uuid: string): Promise<number> {
+    const row = await getDb().maybeOne<{ n: number | string }>(
+      sql`SELECT COUNT(*) AS n FROM guest_pass_made
+           WHERE uuid = ${uuid} AND created_at > ${Date.now() - MONTH_MS}`
+    );
+    return Number(row?.n ?? 0);
+  }
+
+  static async grantOf(uuid: string): Promise<GuestPassGrant | null> {
+    const row = await getDb().maybeOne<{
+      max_active: number | string | null;
+      max_per_month: number | string | null;
+      granted_at: number | string;
+    }>(sql`SELECT * FROM guest_pass_grants WHERE uuid = ${uuid}`);
+    return row
+      ? {
+          maxActive: row.max_active == null ? null : Number(row.max_active),
+          maxPerMonth:
+            row.max_per_month == null ? null : Number(row.max_per_month),
+          grantedAt: Number(row.granted_at),
+        }
+      : null;
+  }
+
+  /** Lets a configuration make passes within its limits, or, with null, no longer. */
+  static async setGrant(
+    uuid: string,
+    grant: Pick<GuestPassGrant, 'maxActive' | 'maxPerMonth'> | null
+  ): Promise<void> {
+    if (!grant) {
+      await getDb().exec(
+        sql`DELETE FROM guest_pass_grants WHERE uuid = ${uuid}`
+      );
+      return;
+    }
+    await getDb().exec(
+      sql`INSERT INTO guest_pass_grants
+            (uuid, max_active, max_per_month, granted_at)
+          VALUES (${uuid}, ${grant.maxActive}, ${grant.maxPerMonth},
+                  ${Date.now()})
+          ON CONFLICT (uuid) DO UPDATE SET
+            max_active = ${grant.maxActive},
+            max_per_month = ${grant.maxPerMonth}`
+    );
+  }
+
+  /** Every pass a configuration has out, by id, to end them all. */
+  static async idsOf(uuid: string): Promise<string[]> {
+    const rows = await getDb().query<{ id: string }>(
+      sql`SELECT id FROM guest_passes WHERE uuid = ${uuid}`
+    );
+    return rows.map((r) => r.id);
+  }
+
   static async revoke(uuid: string, id: string): Promise<boolean> {
     const res = await getDb().exec(
       sql`DELETE FROM guest_passes WHERE uuid = ${uuid} AND id = ${id}`
@@ -170,6 +238,9 @@ export class GuestPassRepository {
   static async pruneExpired(
     before: number
   ): Promise<{ id: string; uuid: string }[]> {
+    await getDb().exec(
+      sql`DELETE FROM guest_pass_made WHERE created_at < ${Date.now() - MONTH_MS}`
+    );
     return getDb().query<{ id: string; uuid: string }>(
       sql`DELETE FROM guest_passes WHERE expires_at < ${before}
           RETURNING id, uuid`

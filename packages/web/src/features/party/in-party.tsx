@@ -36,11 +36,10 @@ import { GUTTER, Section } from './common';
 import { Chat } from './chat';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from '@/lib/jellyfin/session';
-import { useFeature } from '@/lib/jellyfin/server-info';
 import { requestItem } from '@/lib/jellyfin/queries';
 import type { BaseItemDto } from '@/lib/jellyfin/types';
 import { relayBase } from '@/lib/party/invite';
-import { useGuestPass } from '@/lib/guest';
+import { useCanShare } from '@/lib/guest';
 import { openGuestShare } from '@/components/guest-share';
 
 type PartyTab = 'chat' | 'party';
@@ -306,8 +305,7 @@ function Invite({ state }: { state: PartyState }) {
  */
 function useGuestShareItem(state: PartyState): BaseItemDto | null {
   const { client, user } = useSession();
-  const guest = !!useGuestPass();
-  const sharing = useFeature('guestPasses') && !guest;
+  const sharing = useCanShare();
   const itemId =
     sharing && state.invite.relay === relayBase(client.base)
       ? (playingEntry(state)?.item?.id ?? null)
