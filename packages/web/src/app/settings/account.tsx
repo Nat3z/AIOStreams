@@ -20,8 +20,8 @@ import { settings, useSetting } from '@/lib/settings';
 import { useServerInfo, useFeature } from '@/lib/jellyfin/server-info';
 import { UserAvatar } from '@/components/user-avatar';
 import { SettingsCard, SettingsRow } from './_components/settings-card';
-import { formatLocale } from '../../lib/i18n';
-import { useOwnedPasses, useRevokePass, type OwnedPass } from '../../lib/guest';
+import { formatLocale } from '@/lib/i18n';
+import { useOwnedPasses, useRevokePass, type OwnedPass } from '@/lib/guest';
 
 export function AccountSection() {
   const { client, user, switchUser, signOut, changeServer } = useSession();

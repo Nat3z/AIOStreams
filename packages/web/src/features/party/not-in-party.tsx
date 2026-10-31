@@ -258,7 +258,8 @@ export function JoinPreview({
   const actions = usePartyActions();
   const [joining, setJoining] = React.useState(false);
   // A guest says what to be called before their first party.
-  const [named, setNamed] = React.useState(!useGuestPass() || hasGuestName());
+  const guest = !!useGuestPass();
+  const [named, setNamed] = React.useState(!guest || hasGuestName());
   const preview = useQuery({
     queryKey: ['party-preview', invite.relay, invite.code],
     queryFn: () => actions.peek(invite),

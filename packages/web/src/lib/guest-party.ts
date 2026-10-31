@@ -15,7 +15,8 @@ import { playingEntry, useParty } from '@/lib/party/party';
 /** Once, in the layout of whoever may have shared a pass. */
 export function useGuestPartyPlaying(): void {
   const { client } = useSession();
-  const sharing = useFeature('guestPasses') && !useGuestPass();
+  const guest = !!useGuestPass();
+  const sharing = useFeature('guestPasses') && !guest;
   const state = useParty();
   const here = !!state && state.invite.relay === relayBase(client.base);
   const entry = sharing && here ? playingEntry(state) : null;
