@@ -38,6 +38,7 @@ import {
   remuxdbSchema,
   mediaInfoSchema,
   partySchema,
+  guestPassesSchema,
   appReportsSchema,
 } from './schema/index.js';
 
@@ -72,6 +73,7 @@ export const runtimeSchemas = {
   remuxdb: remuxdbSchema,
   mediaInfo: mediaInfoSchema,
   party: partySchema,
+  guestPasses: guestPassesSchema,
   appReports: appReportsSchema,
 } as const;
 

@@ -90,6 +90,11 @@ export {
   type AvatarType,
 } from './repositories/avatars.js';
 export {
+  GuestPassRepository,
+  type GuestPass,
+  type NewGuestPass,
+} from './repositories/guest-passes.js';
+export {
   JellyfinAddressRepository,
   type JellyfinAddressTarget,
 } from './repositories/jellyfin-addresses.js';

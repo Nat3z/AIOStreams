@@ -92,6 +92,13 @@ export class JellyfinRepository {
     }
   }
 
+  static async clearDisplayPrefs(scope: WatchScope): Promise<void> {
+    await getDb().exec(
+      sql`DELETE FROM jellyfin_display_prefs
+           WHERE uuid = ${scope.uuid} AND persona = ${scope.persona}`
+    );
+  }
+
   /** Kept beside the display preferences, under an id no client asks for. */
   static getUserConfiguration(
     scope: WatchScope

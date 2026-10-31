@@ -44,6 +44,31 @@ export function readToken(token: string): TokenPayload | null {
   return null;
 }
 
+/** A guest pass's session: it names the pass, never the configuration's credential. */
+export interface GuestTokenPayload {
+  g: string;
+  d?: string;
+  iat: number;
+}
+
+export function mintGuestToken(
+  payload: Omit<GuestTokenPayload, 'iat'>
+): string {
+  const res = encryptString(JSON.stringify({ ...payload, iat: Date.now() }));
+  if (!res.success || !res.data) throw new Error('Failed to create token');
+  return res.data;
+}
+
+export function readGuestToken(token: string): GuestTokenPayload | null {
+  const res = decryptString(token);
+  if (!res.success || !res.data) return null;
+  try {
+    const parsed = JSON.parse(res.data);
+    if (parsed && typeof parsed.g === 'string') return parsed;
+  } catch {}
+  return null;
+}
+
 /** One id for the whole instance, identical on every replica. */
 export function serverId(): string {
   return getSimpleTextHash(

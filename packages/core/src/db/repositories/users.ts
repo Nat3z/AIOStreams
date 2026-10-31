@@ -22,6 +22,7 @@ import {
 import { ConfigProfileRepository } from './config-profiles.js';
 import { ConfigSessionRepository } from './config-sessions.js';
 import { JellyfinAddressRepository } from './jellyfin-addresses.js';
+import { GuestPassRepository } from './guest-passes.js';
 import { LinkedAccountRepository } from './linked-accounts.js';
 
 const APIError = constants.APIError;
@@ -639,6 +640,11 @@ export class UserRepository {
           newEncryptedPasswordToken
         );
         await JellyfinAddressRepository.reencryptForUuid(
+          tx,
+          uuid,
+          newEncryptedPasswordToken
+        );
+        await GuestPassRepository.reencryptForUuid(
           tx,
           uuid,
           newEncryptedPasswordToken

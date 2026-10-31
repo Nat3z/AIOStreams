@@ -168,6 +168,16 @@ export async function stopUserStreams(
   return local + remote;
 }
 
+/** Stop every session reading one target, whoever opened it, here and on other replicas. */
+export async function stopStreamsTo(targetKey: string): Promise<number> {
+  let stopped = 0;
+  for (const row of await StreamSessionRepository.listActive()) {
+    if (row.targetKey !== targetKey) continue;
+    if (await stopStream(row.id)) stopped++;
+  }
+  return stopped;
+}
+
 export interface StreamBandwidthOverview {
   window: BandwidthWindow;
   generatedAt: number;
