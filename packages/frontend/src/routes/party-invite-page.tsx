@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { BiCopy, BiLinkExternal } from 'react-icons/bi';
+import { BiCopy, BiGlobe, BiLinkExternal } from 'react-icons/bi';
 import { Button } from '@aiostreams/ui/button';
 import { Card } from '@aiostreams/ui/card';
 import { LoadingOverlay } from '@aiostreams/ui/loading-spinner';
@@ -48,6 +48,10 @@ export function PartyInvitePage() {
     );
 
   const appLink = `aiostreams://party?relay=${encodeURIComponent(base)}&code=${code}`;
+  // In the fragment, as here, so the code still never reaches a server.
+  const webLink = info.data?.web
+    ? `${base}${info.data.web}#/party?${new URLSearchParams({ relay: base, code })}`
+    : null;
   const usersOnly = info.data?.relay === 'off';
   return (
     <main className="flex min-h-screen items-center justify-center p-4">
@@ -57,8 +61,8 @@ export function PartyInvitePage() {
             You're invited to watch together
           </h1>
           <p className="text-sm text-[--muted]">
-            Open the invite in the app, or join from its Watch together menu
-            with this code.
+            Watch in this browser, open the invite in the app, or join from its
+            Watch together menu with this code.
           </p>
         </div>
         <div className="rounded-xl bg-[--subtle] p-4">
@@ -79,8 +83,21 @@ export function PartyInvitePage() {
           </p>
         )}
         <div className="space-y-2">
+          {webLink && (
+            <Button
+              intent="white"
+              rounded
+              className="w-full"
+              leftIcon={<BiGlobe />}
+              onClick={() => {
+                window.location.href = webLink;
+              }}
+            >
+              Watch in browser
+            </Button>
+          )}
           <Button
-            intent="white"
+            intent={webLink ? 'gray-outline' : 'white'}
             rounded
             className="w-full"
             leftIcon={<BiLinkExternal />}

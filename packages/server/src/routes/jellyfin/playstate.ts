@@ -160,7 +160,8 @@ function sessionOf(
   return {
     scope: ctx.watch,
     sessionKey: sessionKeyFor(ctx.client),
-    user: ctx.profile.id,
+    // A guest's playback is its pass's, not the owner's.
+    user: ctx.guest ? ctx.watch.profile : ctx.profile.id,
     client: ctx.client,
     playSessionId,
   };

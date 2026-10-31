@@ -30,6 +30,7 @@ import {
   bodyOf,
   contextFromCredentials,
   jfOptional,
+  pointerPersona,
   param,
   qs,
   type JellyfinRequestContext,
@@ -312,7 +313,7 @@ async function playbackInfo(req: Request, res: Response) {
       req.jf.token,
       memo,
       loc.ctx.scope(),
-      loc.ctx.profile.id || undefined
+      pointerPersona(loc.ctx)
     );
   const target = loc.requestedMsid ?? offered[0].msid;
   if (bodyOf(req).SkipSubtitles !== true)

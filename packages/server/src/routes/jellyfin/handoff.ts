@@ -178,6 +178,8 @@ async function resolveSinks(
 async function sinksFor(
   ctx: JellyfinRequestContext
 ): Promise<ResolvedPlaybackSink[]> {
+  // A guest's viewing is theirs, and reaches none of the owner's trackers.
+  if (ctx.guest) return [];
   const mode = modeOf(ctx);
   // Profiles without variants share a scope but not their trackers.
   const key = `${ctx.scope()}|${mode}|${ctx.profile.id}`;

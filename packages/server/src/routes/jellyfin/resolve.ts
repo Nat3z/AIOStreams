@@ -38,7 +38,11 @@ import {
   type PlaybackMemo,
   type SubtitleTrack,
 } from '@aiostreams/core';
-import type { JellyfinRequestContext } from './context.js';
+import {
+  guestPersona,
+  pointerPersona,
+  type JellyfinRequestContext,
+} from './context.js';
 
 const logger = createLogger('jellyfin');
 
@@ -317,7 +321,10 @@ async function resolveUncached(
     .filter((s) => !kept.has(s));
   // After `top`, so its ids are the same whether or not the rest is listed.
   const listed = everyVersion ? [...top, ...rest] : top;
-  const identities = sourceIdentities(itemId, listed);
+  // A guest's versions get ids of their own, so none leads to the owner's unproxied one.
+  const identities = sourceIdentities(itemId, listed).map((id) =>
+    ctx.guest ? `${guestPersona(ctx.guest.id)}|${id}` : id
+  );
 
   const errors = showErrors(ctx) ? (streamsRes?.errors ?? []) : [];
   const statistics = (streamsRes?.data?.statistics ?? []).filter(
@@ -415,7 +422,7 @@ async function resolveUncached(
   };
   keepEnrichedSubtitles(memo, await resolveByItem(ctx.uuid, scope, itemId));
   if (moreSources.length) await writeMoreSources(memo.psid, moreSources);
-  await writePlaybackMemo(memo, scope, ctx.profile.id || undefined);
+  await writePlaybackMemo(memo, scope, pointerPersona(ctx));
   if (!playableSources(sources).length) {
     const reason = (streamsRes?.errors ?? [])
       .map((e) => [e.title, e.description].filter(Boolean).join(': '))
@@ -483,7 +490,7 @@ export async function enrichSourceSubtitles(
     { itemId: memo.itemId, msid: record.msid, added },
     'file-matched subtitles merged'
   );
-  await writePlaybackMemo(memo, ctx.scope(), ctx.profile.id || undefined);
+  await writePlaybackMemo(memo, ctx.scope(), pointerPersona(ctx));
 }
 
 /** How long a play that may be remuxed waits for its file's tracks. */
@@ -517,7 +524,7 @@ export async function applyProbedMediaInfo(
     { itemId: memo.itemId, msid: record.msid },
     'stored media info applied on play'
   );
-  await writePlaybackMemo(memo, ctx.scope(), ctx.profile.id || undefined);
+  await writePlaybackMemo(memo, ctx.scope(), pointerPersona(ctx));
 }
 
 export function resolveMarkerId(

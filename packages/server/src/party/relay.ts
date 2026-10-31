@@ -9,6 +9,8 @@ import {
   config as appConfig,
   createLogger,
   isSeparate,
+  GuestPassRepository,
+  readGuestToken,
   PARTY_LIMITS,
   PARTY_PROTOCOL,
   sharedBackend,
@@ -95,6 +97,8 @@ interface Seat {
   awayUntil?: number;
   /** How far behind the group it plays, as its app last said. */
   offsetMs?: number;
+  /** In on a guest pass rather than as a user of any server. */
+  guest?: true;
 }
 
 interface Party {
@@ -137,7 +141,7 @@ interface Conn {
   queue?: Promise<void>;
 }
 
-type MemberStatus = Omit<PartyMemberInfo, 'name' | 'avatar'>;
+type MemberStatus = Omit<PartyMemberInfo, 'name' | 'avatar' | 'guest'>;
 
 const key = () => randomBytes(16).toString('base64url');
 const randomId = () => randomBytes(9).toString('base64url');
@@ -320,6 +324,7 @@ function members(party: Party): PartyMemberInfo[] {
     ...statusOf(party, seat),
     name: seat.name,
     avatar: seat.avatar,
+    guest: seat.guest,
   }));
 }
 
@@ -506,13 +511,14 @@ const groupMember = (id: string) => ({
 function newSeat(
   conn: Conn,
   id: string,
-  { name, avatar }: { name: string; avatar?: string }
+  { name, avatar, token }: { name: string; avatar?: string; token?: string }
 ): Seat {
   return {
     id,
     key: key(),
     name,
     avatar,
+    guest: token && readGuestToken(token) ? true : undefined,
     address: keyedAddress(conn.address),
     at: store.replica,
     conn: conn.id,
@@ -624,6 +630,26 @@ function refuse(conn: Conn, code: PartyErrorCode, end = true): void {
 /** The user a message's token signs in on this server, if any. */
 const userOf = (token: string | undefined) =>
   token ? userForToken(token).catch(() => null) : Promise.resolve(null);
+
+/** Whether the token is a guest pass that may join this party, its own and no other. */
+async function guestOf(
+  token: string | undefined,
+  party: string
+): Promise<boolean> {
+  if (!token || !appConfig.guestPasses.enabled) return false;
+  const claim = readGuestToken(token);
+  if (!claim) return false;
+  const pass = await GuestPassRepository.get(claim.g).catch(() => null);
+  return !!pass && pass.party === party && pass.expiresAt > Date.now();
+}
+
+/** Whether a token lets its member in where the relay admits only this server's users. */
+async function admitted(
+  token: string | undefined,
+  party: string
+): Promise<boolean> {
+  return !!(await userOf(token)) || (await guestOf(token, party));
+}
 
 const chatOf = (entries: string[]): PartyChat[] =>
   entries.map((entry) => JSON.parse(entry) as PartyChat);
@@ -766,7 +792,8 @@ async function barredFrom(
   token: string | undefined,
   member = false
 ): Promise<PartyErrorCode | null> {
-  if (relayMode() === 'off' && !(await userOf(token))) return 'denied';
+  if (relayMode() === 'off' && !(await admitted(token, party.id)))
+    return 'denied';
   return barredIn(party, conn, member);
 }
 
@@ -802,7 +829,7 @@ async function resume(
 ): Promise<void> {
   const expiresAt = ticketExpiry(m.party, m.ticket);
   if (!expiresAt) return refuse(conn, 'not-found');
-  if (relayMode() === 'off' && !(await userOf(m.token)))
+  if (relayMode() === 'off' && !(await admitted(m.token, m.party)))
     return refuse(conn, 'denied');
   const seat = newSeat(conn, randomId(), m);
   seatHere(conn, m.party, seat.id);
