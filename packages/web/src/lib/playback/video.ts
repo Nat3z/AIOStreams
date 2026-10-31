@@ -36,7 +36,14 @@ import {
   ownTrackLost,
 } from './page-subtitles';
 import { remuxAudio, remuxTracks, remuxUrl } from './remux';
-import { overlayKind, startOverlay, type Overlay } from './overlay-subtitles';
+import {
+  followText,
+  overlayKind,
+  readByRemux,
+  startOverlay,
+  type Overlay,
+} from './overlay-subtitles';
+import { parseCues } from '../subtitles/cues';
 
 /** A cue would show `{\an8}`-style tags as text. */
 const cueText = (text: string) => text.replace(/\{\\[^}]*\}/g, '');
@@ -136,8 +143,9 @@ function trackElement(
 ): HTMLTrackElement {
   const track = document.createElement('track');
   track.kind = 'subtitles';
-  // A drawn subtitle keeps an empty track, so the lists still line up.
-  if (!overlayKind(subtitle)) track.src = subtitle.url;
+  // A drawn subtitle keeps an empty track, so the lists still line up;
+  // a remux's text one fills its own as the remux reads it.
+  if (!readByRemux(subtitle)) track.src = subtitle.url;
   track.label = subtitle.label;
   if (subtitle.lang) track.srclang = subtitle.lang;
   video.append(track);
@@ -181,6 +189,8 @@ export function videoEngine(
     // The subtitle drawn over the video, and what stops it starting late.
     let overlay: Overlay | null = null;
     let overlayStart: AbortController | null = null;
+    // A remux's text subtitle grows as it reads, so its cues are fetched again.
+    let following: (() => void) | null = null;
     // The subtitle picked, which a reload for another audio track shows again.
     let subtitle: string | null = null;
     // The one text track meant to show. Any other the browser shows on its
@@ -318,6 +328,19 @@ export function videoEngine(
       overlayStart = null;
       overlay?.destroy();
       overlay = null;
+      following?.();
+      following = null;
+    };
+    /** Puts what the remux has read of a text subtitle into its track. */
+    const fillTrack = (track: TextTrack, vtt: string) => {
+      for (const cue of Array.from(track.cues ?? [])) track.removeCue(cue);
+      for (const cue of parseCues(vtt))
+        track.addCue(
+          new VTTCue(cue.startMs / 1000, cue.endMs / 1000, cue.text)
+        );
+      shifted.delete(track);
+      placeCues();
+      shiftCues();
     };
     const setSubtitle = (id: string | null) => {
       subtitle = id;
@@ -382,6 +405,22 @@ export function videoEngine(
         elements[at]?.track ?? files.find((f) => f.id === id)?.track ?? null;
       onlyChosen();
       shiftCues();
+      if (at >= 0 && el && readByRemux(subtitles[at])) {
+        const track = elements[at].track;
+        const start = new AbortController();
+        overlayStart = start;
+        void followText(
+          el,
+          subtitles[at],
+          (vtt) => fillTrack(track, vtt),
+          start.signal
+        )
+          .then((stop) => {
+            if (start.signal.aborted) stop?.();
+            else following = stop;
+          })
+          .catch(() => {});
+      }
       set({ subtitle: id });
     };
     const set = (state: EngineState) => emit({ type: 'state', state });
