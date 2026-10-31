@@ -17,6 +17,8 @@ export interface TokenPayload {
   a?: string;
   /** Set on a user session that began with the configuration password. */
   o?: 1;
+  /** Set on a user session that began with a password, theirs or the configuration's. */
+  w?: 1;
   /** Tags the PIN the user had when signed in, so changing it signs them out. */
   l?: string;
   iat: number;

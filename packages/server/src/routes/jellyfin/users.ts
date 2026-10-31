@@ -238,7 +238,7 @@ export async function authenticationResult(
   encryptedPassword: string,
   userData: UserData,
   profile: Profile,
-  opts: { provedPassword?: boolean } = {}
+  opts: { provedPassword?: boolean; typedPassword?: boolean } = {}
 ) {
   const client = clientOf(req);
   return {
@@ -254,6 +254,9 @@ export async function authenticationResult(
       k: profile.id || undefined,
       l: lockTag(profile) || undefined,
       ...(!isOwner(profile) && opts.provedPassword ? { o: 1 as const } : {}),
+      ...(!isOwner(profile) && (opts.provedPassword || opts.typedPassword)
+        ? { w: 1 as const }
+        : {}),
     }),
     ServerId: instanceServerId(),
   };
@@ -490,7 +493,8 @@ router.post(
           mount.uuid,
           mount.encryptedPassword,
           byOwn.userData,
-          byOwn.profile
+          byOwn.profile,
+          { typedPassword: true }
         )
       );
       return;

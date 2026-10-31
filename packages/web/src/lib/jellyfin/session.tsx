@@ -216,10 +216,13 @@ export function useSessionPhase(base: string, askAll?: () => void) {
       saveUser(base, user);
       const client = proof.withToken(auth.AccessToken!);
       setPhase({ kind: 'ready', client, user });
-      // The instance's owner signs in to configure it; everyone else stays.
+      // The instance's owner signs in to configure it; everyone else stays,
+      // those it lets configure too, who open it from their profile.
       if (!__STANDALONE__) {
         void client
-          .post<{ url: string }>('/AIOStreams/Profile/Configure')
+          .post<{ url: string }>('/AIOStreams/Profile/Configure', {
+            Owner: true,
+          })
           .then(({ url }) => window.location.assign(new URL(url, base).href))
           .catch(() => {});
       }
