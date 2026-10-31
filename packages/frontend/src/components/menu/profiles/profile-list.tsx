@@ -33,6 +33,7 @@ import { Button, IconButton } from '@aiostreams/ui/button';
 import { TextInput } from '@aiostreams/ui/text-input';
 import { Select } from '@aiostreams/ui/select';
 import { Switch } from '@aiostreams/ui/switch';
+import { NumberInput } from '@aiostreams/ui/number-input';
 import { Modal } from '@aiostreams/ui/modal';
 import { copyToClipboard } from '@aiostreams/ui/utils/clipboard';
 import { avatarImage } from '@aiostreams/ui/utils/avatar-image';
@@ -501,6 +502,55 @@ function PasswordField({
   );
 }
 
+type GuestPassLeave = Profile['guestPasses'];
+
+/** Whether a user may share titles by guest link, and how many. */
+function GuestLinksField({
+  value,
+  onChange,
+  defaults,
+}: {
+  value: GuestPassLeave;
+  onChange(value: GuestPassLeave): void;
+  defaults: { maxActive: number; maxPerMonth: number };
+}) {
+  // An emptied limit is the server's.
+  const limit = (v: number) => (Number.isFinite(v) && v >= 1 ? v : undefined);
+  return (
+    <div className="space-y-3">
+      <Switch
+        label="Guest links"
+        help="Lets them share a title with someone without an account, by a link that expires. Turning it off ends their links."
+        side="right"
+        value={!!value}
+        onValueChange={(on) => onChange(on ? {} : undefined)}
+      />
+      {value && (
+        <div className="grid grid-cols-2 gap-3">
+          <NumberInput
+            label="Live at once"
+            placeholder={String(defaults.maxActive)}
+            value={value.maxActive}
+            min={1}
+            max={100}
+            allowEmpty
+            onValueChange={(v) => onChange({ ...value, maxActive: limit(v) })}
+          />
+          <NumberInput
+            label="Made per 30 days"
+            placeholder={String(defaults.maxPerMonth)}
+            value={value.maxPerMonth}
+            min={1}
+            max={1000}
+            allowEmpty
+            onValueChange={(v) => onChange({ ...value, maxPerMonth: limit(v) })}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
 /** A typed password too short to save, as saved ones are hashes. */
 const shortPassword = (password: string | undefined) =>
   !!password && !password.startsWith('$2') && password.length < PASSWORD_MIN;
@@ -706,6 +756,8 @@ export function ProfileList({
   const pinSignIn = status?.settings?.jellyfin?.pinSignIn ?? false;
   // Only an instance's users reach the configure page from their profile.
   const instance = status?.settings?.jellyfin?.instance === true;
+  // Absent while the server has guest passes off.
+  const guestDefaults = status?.settings?.jellyfin?.guestPasses;
   const baseUrl = status?.settings?.baseUrl || window.location.origin;
   const [owner, ...others] = profilesOf(userData);
   const variants: VariantOptionList = (userData.variants ?? [])
@@ -875,6 +927,7 @@ export function ProfileList({
       lock: value.lock || undefined,
       password: value.password || undefined,
       configure: (!editingOwner && value.configure) || undefined,
+      guestPasses: value.guestPasses,
       ...(editingOwner
         ? {}
         : {
@@ -926,6 +979,7 @@ export function ProfileList({
             : 'all trackers',
           profile.hidden ? 'hidden from the picker' : null,
           profile.lock ? 'PIN' : null,
+          profile.guestPasses ? 'guest links' : null,
         ]
       : [
           variantsLabel(profile.variants),
@@ -942,6 +996,7 @@ export function ProfileList({
           profile.hidden ? 'kept separate' : null,
           profile.lock ? 'PIN' : null,
           profile.configure ? 'configures' : null,
+          profile.guestPasses ? 'guest links' : null,
         ]
     )
       .filter(Boolean)
@@ -1118,6 +1173,14 @@ export function ProfileList({
                   />
                 )}
               </>
+            )}
+
+            {guestDefaults && (
+              <GuestLinksField
+                value={value.guestPasses}
+                defaults={guestDefaults}
+                onChange={(guestPasses) => set({ guestPasses })}
+              />
             )}
 
             {instance && !editingOwner && (

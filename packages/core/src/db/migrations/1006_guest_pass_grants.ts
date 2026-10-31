@@ -1,9 +1,9 @@
 import type { Migration } from './types.js';
 
 /**
- * Which configurations may make guest passes, with the limits the dashboard
- * gave each; a null limit is the server's. `guest_pass_made` keeps when each
- * pass was made, outliving the pass, for the monthly limit.
+ * `guest_pass_made` keeps when each pass was made, outliving the pass, for
+ * the monthly limit. `guest_pass_grants` was the dashboard's per-configuration
+ * leave, which 1007 drops for each user's own.
  */
 const ddl = (int: string) => `
       CREATE TABLE IF NOT EXISTS guest_pass_grants (

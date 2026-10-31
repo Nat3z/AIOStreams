@@ -56,13 +56,6 @@ interface PassRow {
   [k: string]: unknown;
 }
 
-/** A configuration's leave to make passes; a null limit is the server's. */
-export interface GuestPassGrant {
-  maxActive: number | null;
-  maxPerMonth: number | null;
-  grantedAt: number;
-}
-
 const MONTH_MS = 30 * 24 * 3600 * 1000;
 
 const hashCode = (code: string) =>
@@ -100,8 +93,8 @@ export class GuestPassRepository {
     const code = randomBytes(18).toString('base64url');
     const now = Date.now();
     await getDb().exec(
-      sql`INSERT INTO guest_pass_made (uuid, created_at)
-          VALUES (${pass.uuid}, ${now})`
+      sql`INSERT INTO guest_pass_made (uuid, persona, created_at)
+          VALUES (${pass.uuid}, ${pass.persona}, ${now})`
     );
     const row = await getDb().maybeOne<PassRow>(
       sql`INSERT INTO guest_passes
@@ -140,81 +133,44 @@ export class GuestPassRepository {
     return value;
   }
 
-  static async list(uuid: string): Promise<GuestPass[]> {
+  /** A user's unexpired passes; `persona` is empty for the primary user. */
+  static async list(uuid: string, persona: string): Promise<GuestPass[]> {
     const rows = await getDb().query<PassRow>(
       sql`SELECT * FROM guest_passes
-           WHERE uuid = ${uuid} AND expires_at > ${Date.now()}
+           WHERE uuid = ${uuid} AND persona = ${persona}
+             AND expires_at > ${Date.now()}
            ORDER BY created_at DESC`
     );
     return rows.map(passOf);
   }
 
-  static async countActive(uuid: string): Promise<number> {
+  static async countActive(uuid: string, persona: string): Promise<number> {
     const row = await getDb().maybeOne<{ n: number | string }>(
       sql`SELECT COUNT(*) AS n FROM guest_passes
-           WHERE uuid = ${uuid} AND expires_at > ${Date.now()}`
+           WHERE uuid = ${uuid} AND persona = ${persona}
+             AND expires_at > ${Date.now()}`
     );
     return Number(row?.n ?? 0);
   }
 
   /** Passes made in the last 30 days, ended ones included. */
-  static async countThisMonth(uuid: string): Promise<number> {
+  static async countThisMonth(uuid: string, persona: string): Promise<number> {
     const row = await getDb().maybeOne<{ n: number | string }>(
       sql`SELECT COUNT(*) AS n FROM guest_pass_made
-           WHERE uuid = ${uuid} AND created_at > ${Date.now() - MONTH_MS}`
+           WHERE uuid = ${uuid} AND persona = ${persona}
+             AND created_at > ${Date.now() - MONTH_MS}`
     );
     return Number(row?.n ?? 0);
   }
 
-  static async grantOf(uuid: string): Promise<GuestPassGrant | null> {
-    const row = await getDb().maybeOne<{
-      max_active: number | string | null;
-      max_per_month: number | string | null;
-      granted_at: number | string;
-    }>(sql`SELECT * FROM guest_pass_grants WHERE uuid = ${uuid}`);
-    return row
-      ? {
-          maxActive: row.max_active == null ? null : Number(row.max_active),
-          maxPerMonth:
-            row.max_per_month == null ? null : Number(row.max_per_month),
-          grantedAt: Number(row.granted_at),
-        }
-      : null;
-  }
-
-  /** Lets a configuration make passes within its limits, or, with null, no longer. */
-  static async setGrant(
+  static async revoke(
     uuid: string,
-    grant: Pick<GuestPassGrant, 'maxActive' | 'maxPerMonth'> | null
-  ): Promise<void> {
-    if (!grant) {
-      await getDb().exec(
-        sql`DELETE FROM guest_pass_grants WHERE uuid = ${uuid}`
-      );
-      return;
-    }
-    await getDb().exec(
-      sql`INSERT INTO guest_pass_grants
-            (uuid, max_active, max_per_month, granted_at)
-          VALUES (${uuid}, ${grant.maxActive}, ${grant.maxPerMonth},
-                  ${Date.now()})
-          ON CONFLICT (uuid) DO UPDATE SET
-            max_active = ${grant.maxActive},
-            max_per_month = ${grant.maxPerMonth}`
-    );
-  }
-
-  /** Every pass a configuration has out, by id, to end them all. */
-  static async idsOf(uuid: string): Promise<string[]> {
-    const rows = await getDb().query<{ id: string }>(
-      sql`SELECT id FROM guest_passes WHERE uuid = ${uuid}`
-    );
-    return rows.map((r) => r.id);
-  }
-
-  static async revoke(uuid: string, id: string): Promise<boolean> {
+    persona: string,
+    id: string
+  ): Promise<boolean> {
     const res = await getDb().exec(
-      sql`DELETE FROM guest_passes WHERE uuid = ${uuid} AND id = ${id}`
+      sql`DELETE FROM guest_passes
+           WHERE uuid = ${uuid} AND persona = ${persona} AND id = ${id}`
     );
     this.cache.delete(id);
     return res.rowCount > 0;

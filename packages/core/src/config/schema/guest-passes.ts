@@ -9,7 +9,7 @@ export const guestPassesSchema = {
     default: false,
     label: 'Guest passes',
     description:
-      "Lets the users the dashboard allows share one movie or show with someone who has no account, by a link that expires. A guest's streams always go through the configuration's proxy, so this server carries their bandwidth and the debrid service only ever sees the proxy's address. A configuration without a proxy can't make one.",
+      "Lets the Jellyfin users whose settings allow it share one movie or show with someone who has no account, by a link that expires. A guest's streams always go through the configuration's proxy, so this server carries their bandwidth and the debrid service only ever sees the proxy's address. A configuration without a proxy can't make one.",
     env: 'GUEST_PASSES',
     requiresRestart: false,
     secret: false,
@@ -17,9 +17,9 @@ export const guestPassesSchema = {
   maxActive: {
     schema: z.number().int().min(1),
     default: 5,
-    label: 'Passes per configuration',
+    label: 'Passes per user',
     description:
-      'Unexpired passes a configuration holds at once, unless the dashboard sets its own.',
+      'Unexpired passes a user holds at once, unless their settings give their own.',
     env: 'GUEST_PASS_MAX_ACTIVE',
     requiresRestart: false,
     secret: false,
@@ -30,7 +30,7 @@ export const guestPassesSchema = {
     default: 20,
     label: 'Passes per month',
     description:
-      'Passes a configuration makes in any 30 days, ended ones included, unless the dashboard sets its own.',
+      'Passes a user makes in any 30 days, ended ones included, unless their settings give their own.',
     env: 'GUEST_PASS_MAX_PER_MONTH',
     requiresRestart: false,
     secret: false,
