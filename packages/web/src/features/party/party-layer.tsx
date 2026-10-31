@@ -73,6 +73,9 @@ export function PartyLayer() {
   const [showMessages] = useSetting(settings.party.messages);
   const [showReactions] = useSetting(settings.party.reactions);
   const sheetOpen = usePartySheetOpen();
+  const playing = !!state?.timeline?.playing;
+  const [played, setPlayed] = React.useState(playing);
+  if (playing && !played) setPlayed(true);
   usePartyEvent((event) => {
     if (event.type === 'chat' && !event.message.you && showMessages)
       addBubble(event.message.name, event.message.text);
@@ -85,12 +88,17 @@ export function PartyLayer() {
   const names = new Intl.ListFormat(formatLocale(), {
     type: 'conjunction',
   }).format(waitingFor.map((m) => m.name));
+  // Someone who joins while the party is paused sees why nothing plays.
+  const host = state.members.find((m) => m.host && !m.you);
+  const hostName = host?.name ?? '';
   const status =
     state.status === 'reconnecting'
       ? t`Reconnecting to the party…`
       : state.group === 'Waiting' && waitingFor.length
         ? t`Waiting for ${names}`
-        : null;
+        : state.status === 'live' && host && !played
+          ? t`Waiting for ${hostName} to play`
+          : null;
 
   return (
     <>
