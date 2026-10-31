@@ -27,6 +27,7 @@ import { Collection } from './_components/collection';
 import { Details } from './_components/details';
 import { Similar } from './_components/similar';
 import { ItemTrailerContext, useItemTrailer } from './_components/trailer';
+import { useGuestPass } from '@/lib/guest';
 
 export function ItemPage({
   itemId,
@@ -46,6 +47,7 @@ export function ItemPage({
   const { client } = useSession();
   const item = useItem(itemId, { page: true });
   const data = item.data;
+  const guest = !!useGuestPass();
   useShowAhead(itemId, data?.Type === 'Series', seasonId);
   useArtBackground(data);
   const [season, setSeason] = React.useState<BaseItemDto>();
@@ -139,9 +141,10 @@ export function ItemPage({
               />
             )}
             {data.Type === 'BoxSet' && <Collection parent={data} />}
-            <CastAndCrew people={data.People} />
+            {/* A guest's link opens this title alone, so nothing leads elsewhere. */}
+            {!guest && <CastAndCrew people={data.People} />}
             <Details item={data} />
-            {(data.Type === 'Movie' || data.Type === 'Series') && (
+            {!guest && (data.Type === 'Movie' || data.Type === 'Series') && (
               <Similar itemId={data.Id!} />
             )}
           </ItemTrailerContext.Provider>

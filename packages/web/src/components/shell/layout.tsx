@@ -63,6 +63,8 @@ import { UpdatePrompt } from './update-prompt';
 import { UsageStats } from './usage-stats';
 import { usageStatsOffered } from '@/lib/usage-stats';
 import { PartyHost } from '@/features/party/party-host';
+import { useGuestPartyPlaying } from '@/lib/guest-party';
+import { GuestShareSheet } from '@/components/guest-share';
 import { openPartySheet } from '@/features/party/sheet-state';
 import { openPlaylists, PlaylistsHost } from '@/features/playlists/playlists';
 import { useParty } from '@/lib/party/party';
@@ -141,6 +143,7 @@ export function WebLayout() {
   const { switchUser, user } = useSession();
   const several = useCanSwitch();
   const profile = useFeature('profile');
+  useGuestPartyPlaying();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   // From the match the outlet shows, which can trail the location for a render.
   const playing = useChildMatches({
@@ -457,6 +460,7 @@ export function WebLayout() {
       )}
       <PartyHost />
       <RemoteSheet />
+      <GuestShareSheet />
     </>
   );
 }

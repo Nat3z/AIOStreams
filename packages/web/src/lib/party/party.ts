@@ -32,6 +32,8 @@ export interface PartyMember {
   name: string;
   avatar: string | null;
   host: boolean;
+  /** In on a guest pass, with no account anywhere. */
+  guest: boolean;
   away: boolean;
   buffering: boolean;
   you: boolean;
@@ -319,6 +321,7 @@ class Session {
       name: this.nameOf(m.name),
       avatar: avatarOf(this.keys.key, m.avatar),
       host: m.host,
+      guest: !!m.guest,
       away: m.away,
       buffering: m.buffering,
       you: m.id === this.state.you,

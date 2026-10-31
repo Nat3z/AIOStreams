@@ -8,6 +8,7 @@ import {
   LuLogOut,
   LuQrCode,
   LuShare2,
+  LuTicket,
   LuUserMinus,
 } from 'react-icons/lu';
 import { Button, IconButton } from '@aiostreams/ui/button';
@@ -33,6 +34,14 @@ import { QrCode } from './qr-code';
 import { closePartySheet, usePartySheetOpen } from './sheet-state';
 import { GUTTER, Section } from './common';
 import { Chat } from './chat';
+import { useQuery } from '@tanstack/react-query';
+import { useSession } from '@/lib/jellyfin/session';
+import { useFeature } from '@/lib/jellyfin/server-info';
+import { requestItem } from '@/lib/jellyfin/queries';
+import type { BaseItemDto } from '@/lib/jellyfin/types';
+import { relayBase } from '@/lib/party/invite';
+import { useGuestPass } from '@/lib/guest';
+import { openGuestShare } from '@/components/guest-share';
 
 type PartyTab = 'chat' | 'party';
 
@@ -196,6 +205,7 @@ function PartyDetails({ state }: { state: PartyState }) {
 
 function Invite({ state }: { state: PartyState }) {
   const [showQr, setShowQr] = React.useState(!!currentHost().tv);
+  const guestItem = useGuestShareItem(state);
   const link = inviteLink(state.invite);
   const copy = (text: string, done: string, failed: string) =>
     copyToClipboard(text, {
@@ -257,6 +267,20 @@ function Invite({ state }: { state: PartyState }) {
         >
           {showQr ? t`Hide QR code` : t`QR code`}
         </Button>
+        {guestItem && (
+          <Button
+            intent="gray-outline"
+            size="sm"
+            className="rounded-full"
+            leftIcon={<LuTicket />}
+            onClick={() => {
+              closePartySheet();
+              openGuestShare({ item: guestItem });
+            }}
+          >
+            <Trans>Invite someone without an account</Trans>
+          </Button>
+        )}
         {typeof navigator.share === 'function' && (
           <IconButton
             intent="gray-outline"
@@ -274,6 +298,26 @@ function Invite({ state }: { state: PartyState }) {
       </div>
     </Section>
   );
+}
+
+/**
+ * What a guest link from the party would share: what it plays now, on this
+ * server's relay, which is the only one that knows guest passes.
+ */
+function useGuestShareItem(state: PartyState): BaseItemDto | null {
+  const { client, user } = useSession();
+  const sharing = useFeature('guestPasses') && !useGuestPass();
+  const itemId =
+    sharing && state.invite.relay === relayBase(client.base)
+      ? (playingEntry(state)?.item?.id ?? null)
+      : null;
+  const item = useQuery({
+    queryKey: ['jf', client.base, user.Id, 'guest-share-item', itemId],
+    queryFn: () => requestItem(client, user.Id!, itemId!),
+    enabled: !!itemId,
+    staleTime: Infinity,
+  });
+  return item.data ?? null;
 }
 
 const playingTitle = (state: PartyState) => {
@@ -367,8 +411,9 @@ function Member({ member, host }: { member: PartyMember; host: boolean }) {
           )}
         </p>
         <p className="truncate text-xs text-[--muted]">
-          {[member.host && t`Host`, status].filter(Boolean).join(' · ') ||
-            t`Watching`}
+          {[member.host && t`Host`, member.guest && t`Guest`, status]
+            .filter(Boolean)
+            .join(' · ') || t`Watching`}
         </p>
       </div>
       {host && !member.you && (

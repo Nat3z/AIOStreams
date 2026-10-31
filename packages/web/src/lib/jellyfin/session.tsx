@@ -16,6 +16,9 @@ import { forgetSavedUser, forgetUser, savedUser, saveUser } from '@/lib/cache';
 import { watchServer } from './connection';
 import { startOver, to } from '@/lib/paths';
 import { startPath } from '@/lib/start-page';
+import { forgetPass, guestLink, savedPass, signInAsGuest } from './guest';
+import { party } from './party/party';
+import { parseInvite } from './party/invite';
 import type {
   AiostreamsUser,
   AuthenticationResult,
@@ -50,6 +53,8 @@ export type SessionPhase =
   | { kind: 'signed-out' }
   /** Signed in, but the server did not answer; nothing is forgotten. */
   | { kind: 'unreachable' }
+  /** A guest link that expired or was ended. */
+  | { kind: 'guest-ended' }
   /** Each user says what picking it asks for. */
   | {
       kind: 'picking';
@@ -60,6 +65,14 @@ export type SessionPhase =
       choose(userId: string, secret?: string): Promise<void>;
     }
   | { kind: 'ready'; client: JellyfinClient; user: UserDto };
+
+/** A party invite opened in the browser, `#/party?relay=<relay>&code=<code>`. */
+function partyLink() {
+  const [path, query = ''] = window.location.hash.slice(1).split('?');
+  if (path !== '/party') return null;
+  const params = new URLSearchParams(query);
+  return parseInvite(params.get('code') ?? '', params.get('relay'));
+}
 
 /** A setup link the owner sent, `#/welcome?invite=<token>`. */
 export function inviteToken(): string | null {
@@ -149,6 +162,7 @@ export function endSession(base: string, token: string | null): void {
   forgetUser(base, userId);
   if (userId) tokens.set(base, userId, null);
   clearCredentials(base);
+  forgetPass(base);
   storage.remove(lastUserKey(base));
   storage.remove(leftKey(base));
   currentHost().watchNext?.([]);
@@ -209,6 +223,25 @@ export function useSessionPhase(base: string, askAll?: () => void) {
           .then(({ url }) => window.location.assign(new URL(url, base).href))
           .catch(() => {});
       }
+    },
+    [base]
+  );
+
+  /** A guest goes straight in: there are no users to pick, nor anything to configure. */
+  const adoptGuest = React.useCallback(
+    (proof: JellyfinClient, auth: AuthenticationResult) => {
+      const user = auth.User!;
+      saveCredentials(base, {
+        serverId: auth.ServerId ?? '',
+        token: auth.AccessToken!,
+        userId: user.Id!,
+      });
+      saveUser(base, user);
+      setPhase({
+        kind: 'ready',
+        client: proof.withToken(auth.AccessToken!),
+        user,
+      });
     },
     [base]
   );
@@ -329,6 +362,28 @@ export function useSessionPhase(base: string, askAll?: () => void) {
     let cancelled = false;
     const anonymous = new JellyfinClient(base);
     const run = async () => {
+      // An invite opened in the browser waits for whoever signs in.
+      const held = partyLink();
+      if (held) {
+        party.hold(held);
+        await startOver(to.home);
+      }
+      // A guest link signs in as its pass, whoever was before.
+      const guest = guestLink();
+      if (guest) {
+        const auth = await signInAsGuest(anonymous, guest.code).catch(
+          () => null
+        );
+        if (guest.invite) party.hold(guest.invite);
+        if (auth?.AccessToken) {
+          await startOver(to.item(auth.Pass.ItemId));
+          if (!cancelled) adoptGuest(anonymous, auth);
+          return;
+        }
+        await startOver(to.home);
+        if (!cancelled) setPhase({ kind: 'guest-ended' });
+        return;
+      }
       // A setup link signs its user in here, whoever was before.
       const invite = inviteToken();
       if (invite) {
@@ -351,8 +406,9 @@ export function useSessionPhase(base: string, askAll?: () => void) {
         const client = anonymous.withToken(stored.token);
         // Opens with the saved user at once; the server's answer replaces it.
         const saved = savedUser(base, stored.userId);
+        const guest = !!savedPass(base);
         const left = storage.get<string>(leftKey(base)) === stored.userId;
-        const mayAsk = asksWho(base);
+        const mayAsk = !guest && asksWho(base);
         storage.remove(pickedKey(base));
         if (saved && !mayAsk && !cancelled)
           setPhase({ kind: 'ready', client, user: saved });
@@ -391,6 +447,12 @@ export function useSessionPhase(base: string, askAll?: () => void) {
         }
         forgetSavedUser(base);
         await startOver(startPath());
+        if (guest) {
+          clearCredentials(base);
+          forgetPass(base);
+          if (!cancelled) setPhase({ kind: 'guest-ended' });
+          return;
+        }
       }
       if (!__STANDALONE__ && hasConfigSessionCookie() && !signedOut(base)) {
         const auth = await configSessionToken<WebTokenResult>().catch(
@@ -435,7 +497,7 @@ export function useSessionPhase(base: string, askAll?: () => void) {
     return () => {
       cancelled = true;
     };
-  }, [base, adopt, enter, pick, askWho, attempt]);
+  }, [base, adopt, adoptGuest, enter, pick, askWho, attempt]);
 
   const signIn = React.useCallback(
     async (username: string, password: string) => {

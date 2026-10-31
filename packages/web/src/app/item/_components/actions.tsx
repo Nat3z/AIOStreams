@@ -35,6 +35,9 @@ import { openPartySheet } from '@/features/party/sheet-state';
 import { openRemote } from '@/features/remote/remote-sheet';
 import { openRandom } from '@/components/media/random-pick';
 import { useParty } from '@/lib/party/party';
+import { useGuestPass } from '@/lib/guest';
+import { openGuestShare } from '@/components/guest-share';
+import { LuTicket } from 'react-icons/lu';
 import {
   DownloadButton,
   ShowDownloadMenu,
@@ -57,7 +60,9 @@ const QUICK = [
 ] as const;
 
 function useOffered(item: BaseItemDto, target?: BaseItemDto) {
-  const devices = useRemoteDevices();
+  // Guests get no devices, playlists, ratings or downloads.
+  const guest = !!useGuestPass();
+  const devices = useRemoteDevices({ enabled: !guest });
   const canDrop = useFeature('dropped');
   const mayDownload = useMayDownload();
   const type = item.Type;
@@ -66,14 +71,15 @@ function useOffered(item: BaseItemDto, target?: BaseItemDto) {
     watched: type !== 'BoxSet',
     favourite: offersFavourite(type, !!item.UserData?.IsFavorite),
     download:
+      !guest &&
       mayDownload &&
       ((type === 'Movie' && item.LocationType !== 'Virtual') ||
         type === 'Series'),
-    rating: type === 'Movie' || type === 'Series',
-    'add-to-playlist': type === 'Movie' && playable(item),
+    rating: !guest && (type === 'Movie' || type === 'Series'),
+    'add-to-playlist': !guest && type === 'Movie' && playable(item),
     random: type === 'Series',
     party: type !== 'BoxSet',
-    'play-on': !!target && !!devices.data?.length,
+    'play-on': !guest && !!target && !!devices.data?.length,
     drop: canDrop && type === 'Series',
   } satisfies Record<(typeof QUICK)[number], boolean>;
 }
@@ -132,6 +138,8 @@ export function SecondaryActions({
   const picker = useVersionPicker();
   const inParty = !!useParty();
   const offered = useOffered(item, target);
+  const guest = !!useGuestPass();
+  const sharing = useFeature('guestPasses') && !guest;
   return (
     <>
       {offered.trailer && (
@@ -190,6 +198,25 @@ export function SecondaryActions({
             }
           >
             {inParty ? t`Watch party` : t`Watch together`}
+          </Tooltip>
+        </Captioned>
+      )}
+      {sharing && item.Type !== 'BoxSet' && (
+        <Captioned ui={caption} name="share-guest" label={t`Share`}>
+          <Tooltip
+            trigger={
+              <IconButton
+                data-ui="item-action"
+                data-name="share-guest"
+                intent="gray-subtle"
+                className="rounded-full"
+                icon={<LuTicket />}
+                aria-label={t`Share with a guest`}
+                onClick={() => openGuestShare({ item, season })}
+              />
+            }
+          >
+            <Trans>Share with a guest</Trans>
           </Tooltip>
         </Captioned>
       )}

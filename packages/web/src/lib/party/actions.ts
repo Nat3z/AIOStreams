@@ -6,6 +6,7 @@ import { useLatest } from '@/hooks/use-latest';
 import { useServerInfo } from '@/lib/jellyfin/server-info';
 import { useSession } from '@/lib/jellyfin/session';
 import type { BaseItemDto, SourceInfo } from '@/lib/jellyfin/types';
+import { guestName, useGuestPass } from '../guest';
 import { relayBase, type Invite } from './invite';
 import { partyItem } from './items';
 import { party, type PartyIdentity } from './party';
@@ -18,15 +19,17 @@ const DEFAULT_RELAY = 'https://aiostreams.viren070.me';
 export function usePartyIdentity(): PartyIdentity {
   const { client, user } = useSession();
   const avatar = useOwnAvatar();
+  const guest = !!useGuestPass();
   return React.useMemo(
     () => ({
-      name: user.Name || t`Someone`,
-      avatar,
+      // A guest goes by the name they gave, asked as they join.
+      name: (guest ? guestName() : user.Name) || t`Someone`,
+      avatar: guest ? null : avatar,
       server: relayBase(client.base) ?? client.base,
       userId: user.Id!,
       token: client.token ?? undefined,
     }),
-    [client, user, avatar]
+    [client, user, avatar, guest]
   );
 }
 
