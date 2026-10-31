@@ -11,12 +11,20 @@ const REFRESH_MS = 5_000;
 /** It is asked for again once playback is this close to what was read. */
 const LOOKAHEAD_S = 20;
 
+const deliveryPath = (subtitle: ServerSubtitle) =>
+  subtitle.stream.DeliveryUrl?.split('?')[0] ?? '';
+
 /** The overlay a server subtitle takes, from the address the server gave it. */
 export function overlayKind(subtitle: ServerSubtitle): OverlayKind | null {
-  const path = subtitle.stream.DeliveryUrl?.split('?')[0] ?? '';
+  const path = deliveryPath(subtitle);
   if (/\/remux\/Stream\.ass$/i.test(path)) return 'ass';
   if (/\/remux\/Stream\.sup$/i.test(path)) return 'pgs';
   return null;
+}
+
+/** Whether the remux reads it as it reads the video, so it is never whole up front. */
+export function readByRemux(subtitle: ServerSubtitle): boolean {
+  return /\/remux\/Stream\.\w+$/i.test(deliveryPath(subtitle));
 }
 
 /** The subtitle's own address, which the page's `<track>` rewrite turns to WebVTT. */
@@ -136,10 +144,44 @@ async function createRenderer(
 }
 
 /**
- * Draws a styled or picture subtitle over `video`, on a canvas beside it.
- * The remux reads a subtitle as it reads the video, so this asks for it
- * again as playback moves past what was read, until it is all there.
+ * Hands `load` each newer copy of a subtitle the remux is still reading, as
+ * playback moves past what was read, until it is all there. Returns its stop.
  */
+function follow(
+  video: HTMLVideoElement,
+  url: URL,
+  first: Fetched,
+  load: (body: ArrayBuffer) => Promise<void> | void,
+  signal: AbortSignal
+): () => void {
+  let { readTo, complete } = first;
+  let size = first.body.byteLength;
+  let busy = false;
+  const refresh = async () => {
+    // Asks again once playback nears what was read, the remux having read
+    // further by then, or once it seeks before or past it.
+    const ahead = readTo - video.currentTime;
+    if (complete || busy || ahead > LOOKAHEAD_S) return;
+    busy = true;
+    const next = await fetchSubtitle(url, video.currentTime, signal).catch(
+      () => null
+    );
+    busy = false;
+    if (!next || signal.aborted) return;
+    ({ readTo, complete } = next);
+    if (next.body.byteLength === size) return;
+    size = next.body.byteLength;
+    await load(next.body);
+  };
+  const timer = setInterval(() => void refresh(), REFRESH_MS);
+  video.addEventListener('seeked', refresh);
+  return () => {
+    clearInterval(timer);
+    video.removeEventListener('seeked', refresh);
+  };
+}
+
+/** Draws a styled or picture subtitle over `video`, on a canvas beside it. */
 export async function startOverlay(
   video: HTMLVideoElement,
   subtitle: ServerSubtitle,
@@ -159,33 +201,30 @@ export async function startOverlay(
     signal
   );
   if (!renderer) return null;
-  let { readTo, complete } = first;
-  let size = first.body.byteLength;
-  let busy = false;
-  const refresh = async () => {
-    // Asks again once playback nears what was read, the remux having read
-    // further by then, or once it seeks before or past it.
-    const ahead = readTo - video.currentTime;
-    if (complete || busy || ahead > LOOKAHEAD_S) return;
-    busy = true;
-    const next = await fetchSubtitle(url, video.currentTime, signal).catch(
-      () => null
-    );
-    busy = false;
-    if (!next || signal.aborted) return;
-    ({ readTo, complete } = next);
-    if (next.body.byteLength === size) return;
-    size = next.body.byteLength;
-    await renderer.load(next.body);
-  };
-  const timer = setInterval(() => void refresh(), REFRESH_MS);
-  video.addEventListener('seeked', refresh);
+  const stop = follow(video, url, first, renderer.load, signal);
   return {
     setDelay: renderer.setDelay,
     destroy: () => {
-      clearInterval(timer);
-      video.removeEventListener('seeked', refresh);
+      stop();
       renderer.destroy();
     },
   };
+}
+
+/**
+ * Hands `add` a remux's plain text subtitle as WebVTT, again each time the
+ * remux has read more of it. Returns its stop, or null once aborted.
+ */
+export async function followText(
+  video: HTMLVideoElement,
+  subtitle: ServerSubtitle,
+  add: (vtt: string) => void,
+  signal: AbortSignal
+): Promise<(() => void) | null> {
+  const url = new URL(subtitle.url);
+  const first = await fetchSubtitle(url, video.currentTime, signal);
+  if (!first || signal.aborted) return null;
+  const text = (body: ArrayBuffer) => add(new TextDecoder().decode(body));
+  text(first.body);
+  return follow(video, url, first, text, signal);
 }
