@@ -93,7 +93,6 @@ export {
   GuestPassRepository,
   type GuestPass,
   type NewGuestPass,
-  type GuestPassGrant,
 } from './repositories/guest-passes.js';
 export {
   JellyfinAddressRepository,

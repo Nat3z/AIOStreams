@@ -54,6 +54,7 @@ import { avatars } from './1003_avatars.js';
 import { userInviteDevices } from './1004_user_invite_devices.js';
 import { guestPasses } from './1005_guest_passes.js';
 import { guestPassGrants } from './1006_guest_pass_grants.js';
+import { guestPassUsers } from './1007_guest_pass_users.js';
 import type { Migration } from './types.js';
 
 export const MIGRATIONS: readonly Migration[] = [
@@ -114,6 +115,7 @@ export const MIGRATIONS: readonly Migration[] = [
   userInviteDevices,
   guestPasses,
   guestPassGrants,
+  guestPassUsers,
 ];
 
 export type { Migration } from './types.js';

@@ -28,6 +28,7 @@ import {
   bodyField,
   canProxyGuests,
   guestPersona,
+  guestLeaveOf,
   jf,
   jfOptional,
   param,
@@ -233,7 +234,7 @@ async function playingOn(
 ): Promise<string[]> {
   const since = Date.now() - appConfig.watchState.sessionIdleTimeout * 1000;
   const rows = await WatchSessionRepository.listForScope(
-    { uuid: pass.uuid, persona: guestPersona(pass.id) },
+    { uuid: pass.uuid, profile: guestPersona(pass.id) },
     50
   );
   return rows
@@ -282,7 +283,7 @@ function passInfo(pass: GuestPass) {
 async function ownerView(pass: GuestPass) {
   const since = Date.now() - appConfig.watchState.sessionIdleTimeout * 1000;
   const rows = await WatchSessionRepository.listForScope(
-    { uuid: pass.uuid, persona: guestPersona(pass.id) },
+    { uuid: pass.uuid, profile: guestPersona(pass.id) },
     50
   ).catch(() => []);
   return {
@@ -357,17 +358,20 @@ router.get(
   })
 );
 
-/** What the dashboard lets a configuration make, and how much of it is used. */
-export async function allowanceOf(uuid: string) {
-  const grant = await GuestPassRepository.grantOf(uuid);
-  if (!grant) return null;
+/** The signed-in profile, by the id their passes are kept under. */
+const userKey = (ctx: JellyfinRequestContext) => ctx.profile.id;
+
+/** What the user's settings let them make, and how much of it is used. */
+async function allowanceOf(ctx: JellyfinRequestContext) {
+  const leave = guestLeaveOf(ctx.profile);
+  if (!leave) return null;
   const [active, thisMonth] = await Promise.all([
-    GuestPassRepository.countActive(uuid),
-    GuestPassRepository.countThisMonth(uuid),
+    GuestPassRepository.countActive(ctx.uuid, userKey(ctx)),
+    GuestPassRepository.countThisMonth(ctx.uuid, userKey(ctx)),
   ]);
   return {
-    maxActive: grant.maxActive ?? appConfig.guestPasses.maxActive,
-    maxPerMonth: grant.maxPerMonth ?? appConfig.guestPasses.maxPerMonth,
+    maxActive: leave.maxActive ?? appConfig.guestPasses.maxActive,
+    maxPerMonth: leave.maxPerMonth ?? appConfig.guestPasses.maxPerMonth,
     active,
     thisMonth,
   };
@@ -378,8 +382,8 @@ router.get(
   jf(async (_req, res, ctx) => {
     if (!owner(res, ctx)) return;
     const [passes, allowance] = await Promise.all([
-      GuestPassRepository.list(ctx.uuid),
-      allowanceOf(ctx.uuid),
+      GuestPassRepository.list(ctx.uuid, userKey(ctx)),
+      allowanceOf(ctx),
     ]);
     res.json({
       Passes: await Promise.all(passes.map(ownerView)),
@@ -414,10 +418,10 @@ router.post(
       });
       return;
     }
-    const allowance = await allowanceOf(ctx.uuid);
+    const allowance = await allowanceOf(ctx);
     if (!allowance) {
       res.status(403).json({
-        Message: "This server's admin hasn't let you make guest links.",
+        Message: "Your account isn't allowed to make guest links.",
       });
       return;
     }
@@ -458,7 +462,7 @@ router.post(
     const party = String(bodyField(req, 'Party') ?? '');
     const { pass, code } = await GuestPassRepository.create({
       uuid: ctx.uuid,
-      persona: ctx.persona?.id ?? '',
+      persona: userKey(ctx),
       encryptedPassword: ctx.encryptedPassword,
       itemId: itemId.replace(/-/g, '').toLowerCase(),
       itemName: itemTitle(item) ?? 'Shared title',
@@ -488,7 +492,7 @@ router.delete(
   jf(async (req, res, ctx) => {
     if (!owner(res, ctx)) return;
     const id = param(req, 'id');
-    if (!(await GuestPassRepository.revoke(ctx.uuid, id))) {
+    if (!(await GuestPassRepository.revoke(ctx.uuid, userKey(ctx), id))) {
       res.status(404).json({ Message: 'No such link' });
       return;
     }
@@ -523,8 +527,8 @@ router.post(
 );
 
 /** Stops what a pass plays now and forgets its history. */
-export async function endPass(uuid: string, id: string): Promise<void> {
-  const scope = { uuid, persona: guestPersona(id) };
+async function endPass(uuid: string, id: string): Promise<void> {
+  const scope = { uuid, profile: guestPersona(id) };
   const rows = await WatchSessionRepository.listForScope(scope, 50).catch(
     () => []
   );
@@ -548,7 +552,7 @@ export async function endPass(uuid: string, id: string): Promise<void> {
 }
 
 async function forgetHistory(uuid: string, id: string): Promise<void> {
-  const scope = { uuid, persona: guestPersona(id) };
+  const scope = { uuid, profile: guestPersona(id) };
   await Promise.all([
     WatchStateRepository.clearScope(scope),
     WatchSessionRepository.clearScope(scope),

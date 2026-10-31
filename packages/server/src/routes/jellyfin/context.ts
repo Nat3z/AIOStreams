@@ -684,6 +684,11 @@ function guestProxy(userData: UserData): UserData['proxy'] {
   };
 }
 
+/** What a profile's settings let it make of guest passes; null for none. */
+export function guestLeaveOf(profile: Profile) {
+  return profile.guestPasses ?? null;
+}
+
 /** Whether a guest's streams can go through the configuration's proxy. */
 export function canProxyGuests(userData: UserData): boolean {
   return !!(userData.proxy?.id && userData.proxy.url);
@@ -757,7 +762,12 @@ export const jellyfinContext: RequestHandler = async (req, res, next) => {
             pass
           )
         : null;
-      if (!ctx || ctx === UNKNOWN_USER) {
+      // A link ends with its maker's leave to make one.
+      if (
+        !ctx ||
+        ctx === UNKNOWN_USER ||
+        !guestLeaveOf(ctx.profile)
+      ) {
         res.status(401).json({ Message: 'This link has ended' });
         return;
       }
@@ -918,7 +928,11 @@ export async function contextFromCredentials(
       undefined,
       pass
     );
-    return ctx === UNKNOWN_USER ? null : ctx;
+    return ctx &&
+      ctx !== UNKNOWN_USER &&
+      guestLeaveOf(ctx.profile)
+      ? ctx
+      : null;
   }
   const ctx = await buildContext(
     req,

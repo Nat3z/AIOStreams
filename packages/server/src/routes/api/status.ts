@@ -72,6 +72,12 @@ const statusInfo = async (): Promise<StatusResponse> => {
         maxProfiles: appConfig.jellyfin.maxProfiles,
         pinSignIn: appConfig.jellyfin.pinSignIn,
         instance: !!appConfig.jellyfin.instanceAlias,
+        guestPasses: appConfig.guestPasses.enabled
+          ? {
+              maxActive: appConfig.guestPasses.maxActive,
+              maxPerMonth: appConfig.guestPasses.maxPerMonth,
+            }
+          : undefined,
         maxTrackers: appConfig.watchState.maxSinks,
         playWait: probesOn('jellyfin')
           ? appConfig.mediaInfo.playWait

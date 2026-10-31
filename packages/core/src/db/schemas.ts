@@ -136,6 +136,19 @@ const UserPasswordSchema = z
   )
   .optional();
 
+/**
+ * Lets a user make guest passes; absent, they make none. A missing limit is
+ * the server's.
+ */
+const GuestPassLeaveSchema = z
+  .object({
+    /** Unexpired passes at once. */
+    maxActive: z.number().int().min(1).max(100).optional(),
+    /** Passes made in any 30 days, ended ones included. */
+    maxPerMonth: z.number().int().min(1).max(1000).optional(),
+  })
+  .optional();
+
 /** The first, with id `''`, is the owner. */
 const ProfileSchema = z.object({
   // Names the DB partition, so a rename must not touch it.
@@ -169,6 +182,7 @@ const ProfileSchema = z.object({
   password: UserPasswordSchema,
   /** Opens the configure page as an admin, as the instance's owner does. */
   configure: z.boolean().optional(),
+  guestPasses: GuestPassLeaveSchema,
 });
 
 export type Profile = z.infer<typeof ProfileSchema>;
@@ -1946,6 +1960,10 @@ const StatusResponseSchema = z.object({
         pinSignIn: z.boolean().optional(),
         /** The site is one configuration's server, whose root is its web app. */
         instance: z.boolean().optional(),
+        /** Guest passes, when on: the limits a user without their own gets. */
+        guestPasses: z
+          .object({ maxActive: z.number(), maxPerMonth: z.number() })
+          .optional(),
         /** Trackers one user syncs with at most. */
         maxTrackers: z.number(),
         /** The default wait for tracks on play; absent when nothing is probed. */
