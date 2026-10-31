@@ -23,6 +23,8 @@ import {
   verifyHash,
   mintToken,
   readToken,
+  readGuestToken,
+  GuestPassRepository,
   resolveConfigAlias,
   memoScope,
   profileUserId,
@@ -33,6 +35,7 @@ import {
   validateConfig,
   decryptString,
   type ClientInfo,
+  type GuestPass,
   type ItemBuildContext,
   type JellyfinApiKey,
   type Profile,
@@ -67,6 +70,8 @@ export interface JellyfinRequestContext {
   profile: Profile;
   /** Set for API-key requests, which act for any user the URL names. */
   apiKey: JellyfinApiKey | null;
+  /** Set for a guest pass's session, which reaches one title and plays through the proxy. */
+  guest: GuestPass | null;
   /** The history in use: the owner's when the profile shares it. */
   watch: WatchScope;
   serverId: string;
@@ -448,6 +453,7 @@ const ANONYMOUS_OK = [
   /^\/users\/authenticatebyname$/i,
   /^\/users\/authenticatewithquickconnect$/i,
   /^\/aiostreams\/invite$/i,
+  /^\/aiostreams\/guest$/i,
   /^\/users\/public$/i,
   /^\/branding\//i,
   /^\/quickconnect\/(enabled|initiate|connect)$/i,
@@ -519,7 +525,8 @@ async function buildContext(
   profileId: string,
   keyClaim?: ApiKeyClaim,
   /** The token's PIN tag; absent when the context is not built from a token. */
-  lockClaim?: string
+  lockClaim?: string,
+  guest: GuestPass | null = null
 ): Promise<JellyfinRequestContext | typeof UNKNOWN_USER | null> {
   const entry = await resolveConfigEntry(uuid, encryptedPassword);
   if (!entry) return null;
@@ -588,10 +595,12 @@ async function buildContext(
   let scope: string | null = null;
   let views: Promise<ViewEntry[]> | null = null;
   let leafEvidence: Promise<LeafEvidence> | null = null;
-  const finalUserData: UserData = {
-    ...userData,
-    watchPersona: isOwner(profile) ? undefined : profile.id,
-  };
+  const finalUserData: UserData = guest
+    ? { ...userData, proxy: guestProxy(userData) }
+    : {
+        ...userData,
+        watchPersona: isOwner(profile) ? undefined : profile.id,
+      };
   const engineOf = (data: UserData) =>
     new AIOStreams(data, {
       skipFailedAddons: true,
@@ -610,8 +619,11 @@ async function buildContext(
     if (isOwner(profile)) return getEngine();
     return (ownerEngine ??= configFor(ownerVariants).then(engineOf));
   };
-  const userId = profileUserId(uuid, profile.id);
-  const watch = watchScopeOf(uuid, profile);
+  // A guest keeps a history of its own, under its pass.
+  const watch = guest
+    ? { uuid, profile: guestPersona(guest.id) }
+    : watchScopeOf(uuid, profile);
+  const userId = profileUserId(uuid, guest ? watch.profile : profile.id);
   return {
     uuid,
     encryptedPassword,
@@ -619,6 +631,7 @@ async function buildContext(
     userId,
     profile,
     apiKey,
+    guest,
     watch,
     serverId: serverIdValue,
     baseUrl,
@@ -644,8 +657,36 @@ async function buildContext(
     metas: new Map(),
     views: getViews,
     leafEvidence: getLeafEvidence,
-    scope: () => (scope ??= memoScope(finalUserData, entry.updatedAt)),
+    // Apart from the owner's: a guest's versions are proxied and theirs may not be.
+    scope: () =>
+      (scope ??= guest
+        ? getSimpleTextHash(
+            `${memoScope(finalUserData, entry.updatedAt)}|guest`
+          )
+        : memoScope(finalUserData, entry.updatedAt)),
   };
+}
+
+/** The history partition a guest pass writes to. */
+export const guestPersona = (passId: string) => `pass:${passId}`;
+
+/** Who a playback pointer reopens as: the profile (none for the owner), or the guest pass. */
+export const pointerPersona = (ctx: JellyfinRequestContext) =>
+  ctx.guest ? guestPersona(ctx.guest.id) : ctx.profile.id || undefined;
+
+/** The configuration's proxy with nothing left out, so the debrid service only sees it. */
+function guestProxy(userData: UserData): UserData['proxy'] {
+  return {
+    ...userData.proxy,
+    enabled: true,
+    proxiedAddons: undefined,
+    proxiedServices: undefined,
+  };
+}
+
+/** Whether a guest's streams can go through the configuration's proxy. */
+export function canProxyGuests(userData: UserData): boolean {
+  return !!(userData.proxy?.id && userData.proxy.url);
 }
 
 export const jellyfinContext: RequestHandler = async (req, res, next) => {
@@ -659,6 +700,7 @@ export const jellyfinContext: RequestHandler = async (req, res, next) => {
     let uuid: string | undefined;
     let encryptedPassword: string | undefined;
     const payload = token ? readToken(token) : null;
+    const guestClaim = token && !payload ? readGuestToken(token) : null;
 
     // A picker address only names the configuration; a token still signs in.
     if (params.uuid && params.encryptedPassword) {
@@ -696,6 +738,35 @@ export const jellyfinContext: RequestHandler = async (req, res, next) => {
         return;
       }
       req.jfMount = target;
+    }
+    if (guestClaim) {
+      // A pass names its configuration, whichever address the app opened.
+      const pass = appConfig.guestPasses.enabled
+        ? await GuestPassRepository.get(guestClaim.g)
+        : null;
+      const ctx = pass
+        ? await buildContext(
+            req,
+            pass.uuid,
+            pass.encryptedPassword,
+            token,
+            client,
+            pass.persona,
+            undefined,
+            undefined,
+            pass
+          )
+        : null;
+      if (!ctx || ctx === UNKNOWN_USER) {
+        res.status(401).json({ Message: 'This link has ended' });
+        return;
+      }
+      req.jf = ctx;
+      req.jfClient = client;
+      req.uuid = ctx.uuid;
+      req.userData = ctx.userData;
+      next();
+      return;
     }
     if (
       payload &&
@@ -825,6 +896,30 @@ export async function contextFromCredentials(
   encryptedPassword: string,
   profileId = ''
 ): Promise<JellyfinRequestContext | null> {
+  // A guest's pointer reopens as its pass, and only while the pass is there.
+  if (profileId.startsWith('pass:')) {
+    const pass = appConfig.guestPasses.enabled
+      ? await GuestPassRepository.get(profileId.slice('pass:'.length))
+      : null;
+    if (!pass || pass.uuid !== uuid) return null;
+    const ctx = await buildContext(
+      req,
+      pass.uuid,
+      pass.encryptedPassword,
+      undefined,
+      req.jfClient ?? {
+        name: 'Unknown',
+        device: 'Unknown',
+        deviceId: 'unknown',
+        version: '0',
+      },
+      pass.persona,
+      undefined,
+      undefined,
+      pass
+    );
+    return ctx === UNKNOWN_USER ? null : ctx;
+  }
   const ctx = await buildContext(
     req,
     uuid,

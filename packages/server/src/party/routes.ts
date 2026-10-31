@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import {
+  config as appConfig,
   extractAuth,
   PARTY_PROTOCOL,
   type PartyRelayInfo,
@@ -15,7 +16,11 @@ const router: Router = Router();
 router.use('/v1', jellyfinCors, jellyfinApiRateLimiter);
 
 router.get('/v1', (_req, res) => {
-  const info: PartyRelayInfo = { v: PARTY_PROTOCOL, relay: relayMode() };
+  const info: PartyRelayInfo = {
+    v: PARTY_PROTOCOL,
+    relay: relayMode(),
+    web: appConfig.jellyfin.enabled ? '/jellyfin/web/' : undefined,
+  };
   res.json(info);
 });
 

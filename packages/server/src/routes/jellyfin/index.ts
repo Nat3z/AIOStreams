@@ -14,6 +14,7 @@ import {
   stremioStreamRateLimiter,
 } from '../../middlewares/ratelimit.js';
 import { jellyfinContext } from './context.js';
+import guestRouter, { guestGuard } from './guest.js';
 import systemRouter, { serverName } from './system.js';
 import usersRouter from './users.js';
 import quickConnectRouter from './quickconnect.js';
@@ -67,7 +68,7 @@ export const jellyfinCors: express.RequestHandler = (req, res, next) => {
 
 const UNLIMITED = /^\/system\/info\/public$/i;
 const LOGIN_LIKE =
-  /^\/(users\/authenticatebyname|users\/authenticatewithquickconnect|quickconnect\/(authorize|initiate)|users\/([^/]+\/)?password|aiostreams\/invite|aiostreams\/profile\/(password|stremio|welcome))$/i;
+  /^\/(users\/authenticatebyname|users\/authenticatewithquickconnect|aiostreams\/guest|quickconnect\/(authorize|initiate)|users\/([^/]+\/)?password|aiostreams\/invite|aiostreams\/profile\/(password|stremio|welcome))$/i;
 const IMAGE_LIKE =
   /^\/(items\/[^/]+\/images|persons\/[^/]+\/images|userimage|users\/[^/]+\/images|images\/general)(\/|$)/i;
 const STREAM_LIKE = /^\/items\/[^/]+\/(playbackinfo|mediasources)$/i;
@@ -216,6 +217,8 @@ export function createJellyfinRouter(): Router {
   );
 
   router.use(jellyfinContext);
+  router.use(guestGuard);
+  router.use(guestRouter);
   router.use(webRouter);
   router.use(profileRouter);
   router.use(trackersRouter);

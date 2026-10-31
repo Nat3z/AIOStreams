@@ -82,7 +82,10 @@ export async function publicInfo(req: Request) {
       pinSignIn: appConfig.jellyfin.pinSignIn && !!mountOf(req),
       /** A user's own sign-in address, which signs in that user alone. */
       personal: !!req.jfMount?.profile,
-      features: FEATURES,
+      // Guest links are the operator's to allow, so the feature comes and goes with it.
+      features: appConfig.guestPasses.enabled
+        ? { ...FEATURES, guestPasses: 1 }
+        : FEATURES,
       // Not Branding's CustomCss, which stock clients apply too.
       css: appConfig.branding.appCustomCss || null,
       reports:

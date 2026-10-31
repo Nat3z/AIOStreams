@@ -8,6 +8,7 @@ import {
   TaskManager,
   WatchStateRepository,
 } from '@aiostreams/core';
+import { pruneGuestPasses } from './guest.js';
 
 const ID_MAP_MAX_AGE_MS = 180 * 24 * 3600 * 1000;
 const DAY_MS = 24 * 3600 * 1000;
@@ -41,6 +42,23 @@ export function registerJellyfinTasks(): void {
           `and ${deliveries.deleted} playback deliveries` +
           (more ? ' (more remain, continuing next run)' : ''),
       };
+    },
+  });
+
+  TaskManager.register({
+    id: 'guest-pass-prune',
+    label: 'End expired guest links',
+    description:
+      'Deletes guest links past their expiry, with the watch history and preferences each one kept.',
+    category: 'jellyfin',
+    kind: 'scheduled',
+    intervalMs: 3600 * 1000,
+    enabled: true,
+    destructive: true,
+    multiReplica: 'single',
+    run: async () => {
+      const ended = await pruneGuestPasses();
+      return { ok: true, message: `ended ${ended} guest links` };
     },
   });
 
