@@ -105,26 +105,41 @@ router.get(
       passwordMin: USER_PASSWORD_MIN,
       preferences: state.preferences,
       linked: state.addons.map((a) => ({ source: a.source, name: a.name })),
-      configure: await ownsInstance(ctx),
+      configure: await configures(ctx),
     });
   })
 );
 
-/** The instance's own owner profile. */
-async function ownsInstance(ctx: JellyfinRequestContext): Promise<boolean> {
-  return isOwner(ctx.profile) && (await isInstanceConfig(ctx.uuid));
+/**
+ * The instance's own owner profile, and the profiles it lets configure it.
+ * Those must have signed in with a password, not a PIN alone.
+ */
+async function configures(ctx: JellyfinRequestContext): Promise<boolean> {
+  if (
+    !isOwner(ctx.profile) &&
+    !(ctx.profile.configure && readToken(ctx.token)?.w === 1)
+  )
+    return false;
+  return isInstanceConfig(ctx.uuid);
 }
 
-// The owner is already signed in, so the configure page asks nothing more.
+// They are already signed in, so the configure page asks nothing more.
+// `Owner` asks on the owner's behalf alone, as signing in does.
 router.post(
   '/AIOStreams/Profile/Configure',
-  self(async (_req, res, ctx) => {
-    if (!(await ownsInstance(ctx))) {
+  self(async (req, res, ctx) => {
+    const ownerOnly = bodyOf(req).Owner === true;
+    if ((ownerOnly && !isOwner(ctx.profile)) || !(await configures(ctx))) {
       res
         .status(403)
         .json({ Message: 'Only the owner configures this server' });
       return;
     }
+    if (ctx.persona)
+      logger.info(
+        { uuid: ctx.uuid, persona: ctx.persona.id },
+        'user opened the configure page as admin'
+      );
     const code = await issueAdminHandoff();
     res.json({ url: `/api/v1/auth/handoff?code=${code}` });
   })

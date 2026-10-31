@@ -167,6 +167,8 @@ const ProfileSchema = z.object({
     .regex(PROFILE_LOCK_PATTERN, 'A PIN must be 4 to 12 digits.')
     .optional(),
   password: UserPasswordSchema,
+  /** Opens the configure page as an admin, as the instance's owner does. */
+  configure: z.boolean().optional(),
 });
 
 export type Profile = z.infer<typeof ProfileSchema>;

@@ -704,6 +704,8 @@ export function ProfileList({
     status?.settings?.jellyfin?.maxProfiles ?? DEFAULT_MAX_PROFILES;
   const maxTrackers = status?.settings?.jellyfin?.maxTrackers;
   const pinSignIn = status?.settings?.jellyfin?.pinSignIn ?? false;
+  // Only an instance's users reach the configure page from their profile.
+  const instance = status?.settings?.jellyfin?.instance === true;
   const baseUrl = status?.settings?.baseUrl || window.location.origin;
   const [owner, ...others] = profilesOf(userData);
   const variants: VariantOptionList = (userData.variants ?? [])
@@ -872,6 +874,7 @@ export function ProfileList({
       hidden: value.hidden || undefined,
       lock: value.lock || undefined,
       password: value.password || undefined,
+      configure: (!editingOwner && value.configure) || undefined,
       ...(editingOwner
         ? {}
         : {
@@ -938,6 +941,7 @@ export function ProfileList({
             : null,
           profile.hidden ? 'kept separate' : null,
           profile.lock ? 'PIN' : null,
+          profile.configure ? 'configures' : null,
         ]
     )
       .filter(Boolean)
@@ -1114,6 +1118,18 @@ export function ProfileList({
                   />
                 )}
               </>
+            )}
+
+            {instance && !editingOwner && (
+              <Switch
+                label="Can configure this server"
+                help="Their profile gets a Configuration button that opens this page signed in as admin, the dashboard included. Only after signing in with their password, not a PIN alone."
+                side="right"
+                value={value.configure ?? false}
+                onValueChange={(configure) =>
+                  set({ configure: configure || undefined })
+                }
+              />
             )}
 
             <PasswordField

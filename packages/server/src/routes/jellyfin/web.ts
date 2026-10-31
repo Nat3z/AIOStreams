@@ -508,7 +508,14 @@ router.post(
         ctx.encryptedPassword,
         ctx.userData,
         user.profile,
-        { provedPassword: provedPassword(ctx) }
+        {
+          provedPassword: provedPassword(ctx),
+          typedPassword:
+            needs === 'password' ||
+            needs === 'password-pin' ||
+            (user.profile.id === ctx.profile.id &&
+              readToken(ctx.token)?.w === 1),
+        }
       )
     );
   })
