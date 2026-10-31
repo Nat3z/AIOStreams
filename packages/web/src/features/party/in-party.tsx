@@ -306,7 +306,8 @@ function Invite({ state }: { state: PartyState }) {
  */
 function useGuestShareItem(state: PartyState): BaseItemDto | null {
   const { client, user } = useSession();
-  const sharing = useFeature('guestPasses') && !useGuestPass();
+  const guest = !!useGuestPass();
+  const sharing = useFeature('guestPasses') && !guest;
   const itemId =
     sharing && state.invite.relay === relayBase(client.base)
       ? (playingEntry(state)?.item?.id ?? null)
