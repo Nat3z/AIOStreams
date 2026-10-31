@@ -7,6 +7,7 @@ import {
   SettingsRepository,
   AnalyticsRepository,
   AdminUsersRepository,
+  GuestPassRepository,
   TaskManager,
   Cache,
   describeDiskCaches,
@@ -34,6 +35,7 @@ import communityDashboard from './community.js';
 import sharesDashboard from './shares.js';
 import mediaInfoDashboard from './media-info.js';
 import reportsDashboard from './reports.js';
+import { allowanceOf, endPass } from '../../jellyfin/guest.js';
 
 const router: Router = Router();
 const logger = createLogger('dashboard');
@@ -774,6 +776,68 @@ router.delete('/users/:uuid', async (req, res) => {
           error: { code: 'NOT_FOUND', message: 'User not found' },
         })
   );
+});
+
+/** Whether a user may make guest links, within which limits. */
+router.get('/users/:uuid/guest-passes', async (req, res) => {
+  const uuid = req.params.uuid;
+  const [grant, allowance] = await Promise.all([
+    GuestPassRepository.grantOf(uuid),
+    allowanceOf(uuid),
+  ]);
+  res.status(200).json(
+    createResponse({
+      success: true,
+      data: {
+        enabled: appConfig.guestPasses.enabled,
+        allowed: !!grant,
+        maxActive: grant?.maxActive ?? null,
+        maxPerMonth: grant?.maxPerMonth ?? null,
+        defaults: {
+          maxActive: appConfig.guestPasses.maxActive,
+          maxPerMonth: appConfig.guestPasses.maxPerMonth,
+        },
+        active: allowance?.active ?? 0,
+        thisMonth: allowance?.thisMonth ?? 0,
+      },
+    })
+  );
+});
+
+/** Taking the leave away ends the user's links too. */
+router.put('/users/:uuid/guest-passes', async (req, res) => {
+  const uuid = req.params.uuid;
+  const body = (req.body ?? {}) as Record<string, unknown>;
+  const limit = (v: unknown): number | null =>
+    typeof v === 'number' && Number.isInteger(v) && v >= 1 ? v : null;
+  if (!(await AdminUsersRepository.get(uuid))) {
+    return res.status(404).json(
+      createResponse({
+        success: false,
+        error: { code: 'NOT_FOUND', message: 'User not found' },
+      })
+    );
+  }
+  const allowed = body.allowed === true;
+  await GuestPassRepository.setGrant(
+    uuid,
+    allowed
+      ? {
+          maxActive: limit(body.maxActive),
+          maxPerMonth: limit(body.maxPerMonth),
+        }
+      : null
+  );
+  if (!allowed) {
+    for (const id of await GuestPassRepository.idsOf(uuid)) {
+      await GuestPassRepository.revoke(uuid, id);
+      await endPass(uuid, id);
+    }
+  }
+  const username =
+    (req as { user?: { username?: string } }).user?.username ?? 'admin';
+  logger.info({ uuid, username, allowed }, 'guest pass leave changed');
+  res.status(200).json(createResponse({ success: true, data: { allowed } }));
 });
 
 /**

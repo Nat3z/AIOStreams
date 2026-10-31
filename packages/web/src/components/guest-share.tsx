@@ -157,6 +157,7 @@ function ShareForm({ opening }: { opening: Opening }) {
   const title = fullTitle(target);
   const lifetime = hours ?? limits?.LifetimesHours[0] ?? 24;
   const maxPeople = limits?.MaxStreams ?? 5;
+  const left = limits ? limits.MaxPerMonth - limits.MadeThisMonth : 1;
 
   const make = async () => {
     try {
@@ -278,11 +279,21 @@ function ShareForm({ opening }: { opening: Opening }) {
           intent="white"
           className="w-full rounded-full"
           loading={create.isPending}
-          disabled={!passes.data}
+          disabled={!passes.data || left <= 0}
           onClick={() => void make()}
         >
           <Trans>Make the link</Trans>
         </Button>
+        {limits && (
+          <p className="text-center text-xs text-[--muted]">
+            {left > 0
+              ? plural(left, {
+                  one: '# more link you can make this month',
+                  other: '# more links you can make this month',
+                })
+              : t`You've made all the links you can this month.`}
+          </p>
+        )}
       </Section>
     </>
   );

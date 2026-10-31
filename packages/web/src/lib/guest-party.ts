@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSession } from '@/lib/jellyfin/session';
 import { useFeature } from '@/lib/jellyfin/server-info';
-import { useGuestPass } from './guest';
+import { useGuestPass, useCanShare } from './guest';
 import { partyKeys } from '@/lib/party/crypto';
 import { relayBase } from '@/lib/party/invite';
 import { playingEntry, useParty } from '@/lib/party/party';
@@ -15,8 +15,7 @@ import { playingEntry, useParty } from '@/lib/party/party';
 /** Once, in the layout of whoever may have shared a pass. */
 export function useGuestPartyPlaying(): void {
   const { client } = useSession();
-  const guest = !!useGuestPass();
-  const sharing = useFeature('guestPasses') && !guest;
+  const sharing = useCanShare();
   const state = useParty();
   const here = !!state && state.invite.relay === relayBase(client.base);
   const entry = sharing && here ? playingEntry(state) : null;

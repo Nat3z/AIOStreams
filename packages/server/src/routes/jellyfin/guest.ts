@@ -357,16 +357,38 @@ router.get(
   })
 );
 
+/** What the dashboard lets a configuration make, and how much of it is used. */
+export async function allowanceOf(uuid: string) {
+  const grant = await GuestPassRepository.grantOf(uuid);
+  if (!grant) return null;
+  const [active, thisMonth] = await Promise.all([
+    GuestPassRepository.countActive(uuid),
+    GuestPassRepository.countThisMonth(uuid),
+  ]);
+  return {
+    maxActive: grant.maxActive ?? appConfig.guestPasses.maxActive,
+    maxPerMonth: grant.maxPerMonth ?? appConfig.guestPasses.maxPerMonth,
+    active,
+    thisMonth,
+  };
+}
+
 router.get(
   '/AIOStreams/GuestPasses',
   jf(async (_req, res, ctx) => {
     if (!owner(res, ctx)) return;
-    const passes = await GuestPassRepository.list(ctx.uuid);
+    const [passes, allowance] = await Promise.all([
+      GuestPassRepository.list(ctx.uuid),
+      allowanceOf(ctx.uuid),
+    ]);
     res.json({
       Passes: await Promise.all(passes.map(ownerView)),
+      Allowed: !!allowance,
       CanCreate: canProxyGuests(ctx.userData),
       Limits: {
-        MaxActive: appConfig.guestPasses.maxActive,
+        MaxActive: allowance?.maxActive ?? 0,
+        MaxPerMonth: allowance?.maxPerMonth ?? 0,
+        MadeThisMonth: allowance?.thisMonth ?? 0,
         MaxStreams: appConfig.guestPasses.maxStreams,
         LifetimesHours: lifetimes(),
       },
@@ -392,12 +414,22 @@ router.post(
       });
       return;
     }
-    if (
-      (await GuestPassRepository.countActive(ctx.uuid)) >=
-      appConfig.guestPasses.maxActive
-    ) {
+    const allowance = await allowanceOf(ctx.uuid);
+    if (!allowance) {
+      res.status(403).json({
+        Message: "This server's admin hasn't let you make guest links.",
+      });
+      return;
+    }
+    if (allowance.active >= allowance.maxActive) {
       res.status(400).json({
-        Message: `You have ${appConfig.guestPasses.maxActive} links already. End one first.`,
+        Message: `You have ${allowance.maxActive} links already. End one first.`,
+      });
+      return;
+    }
+    if (allowance.thisMonth >= allowance.maxPerMonth) {
+      res.status(400).json({
+        Message: `You've made ${allowance.maxPerMonth} links in the last 30 days, the most you can.`,
       });
       return;
     }
@@ -491,7 +523,7 @@ router.post(
 );
 
 /** Stops what a pass plays now and forgets its history. */
-async function endPass(uuid: string, id: string): Promise<void> {
+export async function endPass(uuid: string, id: string): Promise<void> {
   const scope = { uuid, persona: guestPersona(id) };
   const rows = await WatchSessionRepository.listForScope(scope, 50).catch(
     () => []

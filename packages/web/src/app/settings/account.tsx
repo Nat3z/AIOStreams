@@ -21,7 +21,7 @@ import { useServerInfo, useFeature } from '@/lib/jellyfin/server-info';
 import { UserAvatar } from '@/components/user-avatar';
 import { SettingsCard, SettingsRow } from './_components/settings-card';
 import { formatLocale } from '@/lib/i18n';
-import { useOwnedPasses, useRevokePass, type OwnedPass } from '@/lib/guest';
+import { useOwnedPasses, useRevokePass, type OwnedPass, useCanShare } from '@/lib/guest';
 
 export function AccountSection() {
   const { client, user, switchUser, signOut, changeServer } = useSession();
@@ -30,7 +30,7 @@ export function AccountSection() {
   const several = useCanSwitch();
   const [askWho, setAskWho] = useSetting(settings.account.askWho);
   const configure = configureUrl(client.base, info);
-  const sharing = useFeature('guestPasses');
+  const sharing = useCanShare();
   const confirmSignOut = useConfirmationDialog({
     title: t`Sign out`,
     description: __STANDALONE__
@@ -240,11 +240,14 @@ function GuestLinks() {
     },
   });
   const list = passes.data?.Passes ?? [];
+  const limits = passes.data?.Limits;
+  const made = limits?.MadeThisMonth ?? 0;
+  const most = limits?.MaxPerMonth ?? 0;
   return (
     <SettingsCard
       name="guest-links"
       title={t`Guest links`}
-      description={t`Links that let someone without an account watch one title, made from a title's page.`}
+      description={t`Links that let someone without an account watch one title, made from a title's page. ${made} of ${most} made this month.`}
     >
       {!list.length ? (
         <p className="text-sm text-[--muted]">

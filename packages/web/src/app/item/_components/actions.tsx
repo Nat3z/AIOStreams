@@ -35,7 +35,7 @@ import { openPartySheet } from '@/features/party/sheet-state';
 import { openRemote } from '@/features/remote/remote-sheet';
 import { openRandom } from '@/components/media/random-pick';
 import { useParty } from '@/lib/party/party';
-import { useGuestPass } from '@/lib/guest';
+import { useCanShare, useGuestPass } from '@/lib/guest';
 import { openGuestShare } from '@/components/guest-share';
 import { LuTicket } from 'react-icons/lu';
 import {
@@ -138,8 +138,7 @@ export function SecondaryActions({
   const picker = useVersionPicker();
   const inParty = !!useParty();
   const offered = useOffered(item, target);
-  const guest = !!useGuestPass();
-  const sharing = useFeature('guestPasses') && !guest;
+  const sharing = useCanShare();
   return (
     <>
       {offered.trailer && (

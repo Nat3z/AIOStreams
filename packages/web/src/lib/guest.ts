@@ -2,6 +2,7 @@ import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { JellyfinClient } from '@/lib/jellyfin/client';
 import { useSession } from '@/lib/jellyfin/session';
+import { useFeature } from './server-info';
 import { storage } from './storage';
 import { parseInvite, type Invite } from '@/lib/party/invite';
 import type { AuthenticationResult } from '@/lib/jellyfin/types';
@@ -31,9 +32,17 @@ export interface OwnedPass extends GuestPassInfo {
 
 export interface OwnedPasses {
   Passes: OwnedPass[];
+  /** Whether the server's admin lets this configuration make passes. */
+  Allowed: boolean;
   /** False until the configuration has a proxy to send guests through. */
   CanCreate: boolean;
-  Limits: { MaxActive: number; MaxStreams: number; LifetimesHours: number[] };
+  Limits: {
+    MaxActive: number;
+    MaxPerMonth: number;
+    MadeThisMonth: number;
+    MaxStreams: number;
+    LifetimesHours: number[];
+  };
 }
 
 export interface GuestLink {
@@ -110,6 +119,14 @@ export function useOwnedPasses(enabled = true) {
     enabled,
     staleTime: 30_000,
   });
+}
+
+/** Whether this user may share with guests: the server allows it, and its admin allows them. */
+export function useCanShare(): boolean {
+  const guest = !!useGuestPass();
+  const on = useFeature('guestPasses') && !guest;
+  const passes = useOwnedPasses(on);
+  return on && !!passes.data?.Allowed;
 }
 
 export interface NewPass {
