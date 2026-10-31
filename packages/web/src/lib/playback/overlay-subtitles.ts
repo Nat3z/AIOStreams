@@ -123,7 +123,11 @@ async function createRenderer(
     video,
   });
   renderer.timeOffset = -delayMs / 1000;
-  await renderer.loadFromBuffer(first);
+  // Its canvas is already over the video, so one that fails must go.
+  await renderer.loadFromBuffer(first).catch((error: unknown) => {
+    renderer.dispose();
+    throw error;
+  });
   return {
     load: (body) => renderer.loadFromBuffer(body),
     setDelay: (ms) => (renderer.timeOffset = -ms / 1000),

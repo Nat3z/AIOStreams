@@ -183,6 +183,10 @@ export function videoEngine(
     let overlayStart: AbortController | null = null;
     // The subtitle picked, which a reload for another audio track shows again.
     let subtitle: string | null = null;
+    // The one text track meant to show. Any other the browser shows on its
+    // own, as Safari does by language or hls.js does for captions, would draw
+    // over it, so it is turned back off.
+    let chosen: TextTrack | null = null;
     // A text track's cues load late, so each one remembers the shift it has.
     const shifted = new WeakMap<TextTrack, number>();
     // Browsers disagree on where a cue the file leaves unplaced goes.
@@ -298,6 +302,13 @@ export function videoEngine(
       const on = audioTracks.findIndex((t) => t.enabled);
       set({ audio: on < 0 ? null : String(on) });
     };
+    const onlyChosen = () => {
+      const el = video.current;
+      if (!el) return;
+      for (const track of Array.from(el.textTracks))
+        if (track !== chosen && track.mode === 'showing')
+          track.mode = 'disabled';
+    };
     const onTrackLoad = () => {
       placeCues();
       shiftCues();
@@ -319,8 +330,10 @@ export function videoEngine(
       const drawn = at >= 0 ? overlayKind(subtitles[at]) : null;
       if (drawn && el) {
         // Its <track> stays off; the overlay draws it in its place.
+        chosen = null;
         for (const e of elements) e.track.mode = 'disabled';
         for (const f of files) f.track.mode = 'disabled';
+        onlyChosen();
         const start = new AbortController();
         overlayStart = start;
         void startOverlay(el, subtitles[at], drawn, delayMs, start.signal)
@@ -365,6 +378,9 @@ export function videoEngine(
       });
       for (const f of files)
         f.track.mode = f.id === id ? 'showing' : 'disabled';
+      chosen =
+        elements[at]?.track ?? files.find((f) => f.id === id)?.track ?? null;
+      onlyChosen();
       shiftCues();
       set({ subtitle: id });
     };
@@ -397,6 +413,7 @@ export function videoEngine(
       stopRemux();
       dropHls();
       removeElements();
+      chosen = null;
       file = next;
       subtitles = next.subtitles;
       delayMs = next.subtitleDelayMs;
@@ -510,6 +527,9 @@ export function videoEngine(
       for (const event of audioEvents)
         audio?.addEventListener(event, listTracks);
       for (const e of elements) e.addEventListener('load', onTrackLoad);
+      const textEvents = ['addtrack', 'change'];
+      for (const event of textEvents)
+        el.textTracks.addEventListener(event, onlyChosen);
       const onFullscreen = () => set({ fullscreen: isFullscreen() });
       const stopFullscreen = onFullscreenChange(onFullscreen);
       detach = () => {
@@ -518,6 +538,8 @@ export function videoEngine(
         for (const event of audioEvents)
           audio?.removeEventListener(event, listTracks);
         for (const e of elements) e.removeEventListener('load', onTrackLoad);
+        for (const event of textEvents)
+          el.textTracks.removeEventListener(event, onlyChosen);
         stopFullscreen();
       };
       onFullscreen();
