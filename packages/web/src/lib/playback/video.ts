@@ -181,6 +181,8 @@ export function videoEngine(
     // The subtitle drawn over the video, and what stops it starting late.
     let overlay: Overlay | null = null;
     let overlayStart: AbortController | null = null;
+    // The subtitle picked, which a reload for another audio track shows again.
+    let subtitle: string | null = null;
     // A text track's cues load late, so each one remembers the shift it has.
     const shifted = new WeakMap<TextTrack, number>();
     // Browsers disagree on where a cue the file leaves unplaced goes.
@@ -307,6 +309,7 @@ export function videoEngine(
       overlay = null;
     };
     const setSubtitle = (id: string | null) => {
+      subtitle = id;
       stopOverlay();
       const at = subtitles.findIndex((s) => s.id === id);
       layer?.destroy();
@@ -351,6 +354,8 @@ export function videoEngine(
         const fresh = shown.cloneNode() as HTMLTrackElement;
         fresh.addEventListener('load', onTrackLoad);
         shown.removeEventListener('load', onTrackLoad);
+        // Chrome keeps drawing a track removed while showing, over its fresh copy.
+        shown.track.mode = 'disabled';
         shown.replaceWith(fresh);
         elements[at] = fresh;
       }
@@ -365,7 +370,10 @@ export function videoEngine(
     };
     const set = (state: EngineState) => emit({ type: 'state', state });
     const removeElements = () => {
-      for (const e of elements) e.remove();
+      for (const e of elements) {
+        e.track.mode = 'disabled';
+        e.remove();
+      }
       elements = [];
       layer?.destroy();
       layer = null;
@@ -428,12 +436,20 @@ export function videoEngine(
       // Asked once it can play, as a browser that refuses autoplay, as on a
       // page it reloaded, would leave it paused behind the cover for good.
       let asked = next.paused;
+      // Once, as a remux that recovers reattaches and loads its metadata again.
+      let first = true;
       const handlers: Record<string, () => void> = {
         loadedmetadata: () => {
-          if (next.startMs) el.currentTime = next.startMs / 1000;
+          if (first && next.startMs) el.currentTime = next.startMs / 1000;
           set({ durationMs: el.duration * 1000 || 0 });
           listTracks();
-          if (!switching) loaded();
+          if (first && !switching) loaded();
+          first = false;
+        },
+        // One opened paused, as a party member's is until the party plays,
+        // shows its first frame rather than staying behind the cover.
+        loadeddata: () => {
+          if (next.paused) set({ started: true, waiting: false });
         },
         durationchange: () => set({ durationMs: el.duration * 1000 || 0 }),
         playing: () => {
@@ -468,15 +484,8 @@ export function videoEngine(
         ratechange: () => set({ rate: el.playbackRate }),
         ended: () => emit({ type: 'ended' }),
         error: () => {
-          if (remux)
-            return emit({
-              type: 'failed',
-              error: t({
-                comment: 'Follows "Playback failed:"',
-                message:
-                  "this browser cannot play this version's video, which the server only repackages. Try another version, an external player or the desktop app.",
-              }),
-            });
+          // A remux recovers from its own errors, failing only when it can't.
+          if (remux) return;
           // A file the browser can't read may still play as the server converts it.
           if (
             !next.source.IsInfiniteStream &&
@@ -535,6 +544,8 @@ export function videoEngine(
           else opened?.destroy();
         });
       else el.src = next.url;
+      // The picks aren't made again, so the subtitle shown carries over.
+      if (switching) setSubtitle(subtitle);
     };
 
     return {

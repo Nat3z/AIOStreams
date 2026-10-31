@@ -196,6 +196,73 @@ function skipHoles(
   };
 }
 
+const cannotDecode = () =>
+  t({
+    comment: 'Follows "Playback failed:"',
+    message:
+      "this browser cannot play this version's video, which the server only repackages. Try another version, an external player or the desktop app.",
+  });
+
+/** Decode failures in a row, without playback getting past them, before giving up. */
+const MAX_DECODE_RECOVERIES = 4;
+/** Seconds played past a recovery that count as getting past it. */
+const RECOVERED_AFTER_S = 3;
+
+/**
+ * Restarts the video where its decoder failed, as a hardware one does on a
+ * frame a damaged file leaves corrupt though well formed, which the server
+ * can't tell from a good one. A segment that fails twice is skipped. hls.js
+ * only notices on its next append, which a full buffer puts off.
+ */
+function recoverDecodes(
+  el: HTMLVideoElement,
+  hls: Hls,
+  onFailed: () => void
+): () => void {
+  let strikes = 0;
+  let resumedAt = 0;
+  let lastFailed: number | null = null;
+  const onTime = () => {
+    if (strikes && el.currentTime > resumedAt + RECOVERED_AFTER_S) strikes = 0;
+  };
+  const onError = () => {
+    if (strikes > MAX_DECODE_RECOVERIES) return;
+    if (
+      el.error?.code !== MediaError.MEDIA_ERR_DECODE ||
+      ++strikes > MAX_DECODE_RECOVERIES
+    ) {
+      strikes = MAX_DECODE_RECOVERIES + 1;
+      return onFailed();
+    }
+    const at = el.currentTime;
+    const frag = hls.latestLevelDetails?.fragments.find(
+      (f) => f.start <= at && at < f.end
+    );
+    const again = frag !== undefined && frag.start === lastFailed;
+    lastFailed = frag?.start ?? null;
+    resumedAt = again && frag ? frag.end + 0.1 : at;
+    const paused = el.paused;
+    hls.detachMedia();
+    hls.attachMedia(el);
+    hls.startLoad(resumedAt);
+    // Seeked to here, as hls.js starts a little early, at the frame that failed.
+    el.addEventListener(
+      'loadedmetadata',
+      () => {
+        el.currentTime = resumedAt;
+        if (!paused) void el.play().catch(() => {});
+      },
+      { once: true }
+    );
+  };
+  el.addEventListener('error', onError);
+  el.addEventListener('timeupdate', onTime);
+  return () => {
+    el.removeEventListener('error', onError);
+    el.removeEventListener('timeupdate', onTime);
+  };
+}
+
 function playHls(
   el: HTMLVideoElement,
   url: string,
@@ -210,10 +277,13 @@ function playHls(
   // too, but reads from the start before it seeks.
   if (!hasMediaSource() && el.canPlayType('application/vnd.apple.mpegurl')) {
     untrace = tracePlayback(el, null, send);
+    const onVideoError = () => onError(cannotDecode());
+    el.addEventListener('error', onVideoError);
     el.src = url;
     return {
       stop: () => {
         untrace();
+        el.removeEventListener('error', onVideoError);
         el.removeAttribute('src');
         el.load();
       },
@@ -293,13 +363,7 @@ function playHls(
       if (data.type === HlsPlayer.ErrorTypes.MEDIA_ERROR) {
         hls?.destroy();
         hls = null;
-        onError(
-          t({
-            comment: 'Follows "Playback failed:"',
-            message:
-              "this browser cannot play this version's video, which the server only repackages. Try another version, an external player or the desktop app.",
-          })
-        );
+        onError(cannotDecode());
         return;
       }
       onError(
@@ -316,9 +380,15 @@ function playHls(
     });
     const untraceOnly = tracePlayback(el, hls, send);
     const unskip = skipHoles(el, hls, HlsPlayer.Events);
+    const unrecover = recoverDecodes(el, hls, () => {
+      hls?.destroy();
+      hls = null;
+      onError(cannotDecode());
+    });
     untrace = () => {
       untraceOnly();
       unskip();
+      unrecover();
     };
     hls.loadSource(url);
     hls.attachMedia(el);
