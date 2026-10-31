@@ -11,6 +11,8 @@ import {
 import { PageMessage } from './components/shell/page';
 import { WebLayout } from './components/shell/layout';
 import type { PageView } from './components/shell/page-stack';
+import { GuestLayout } from './components/guest-layout';
+import { useGuestPass } from './lib/guest';
 import { navigate, setNavigator, to } from './lib/paths';
 import { lastCatalog } from './lib/settings';
 import { openStartPage } from './lib/start-page';
@@ -43,8 +45,14 @@ const rootRoute = createRootRoute({ component: Outlet });
 const shellRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: 'shell',
-  component: WebLayout,
+  component: Shell,
 });
+
+/** A guest gets the shared title alone; everyone else the whole app. */
+function Shell(): React.ReactElement {
+  const pass = useGuestPass();
+  return pass ? <GuestLayout pass={pass} /> : <WebLayout />;
+}
 
 const homeRoute = createRoute({
   getParentRoute: () => shellRoute,

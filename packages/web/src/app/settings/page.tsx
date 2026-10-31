@@ -56,6 +56,7 @@ import {
   SettingsSearch,
   type Holds,
 } from './_components/settings-card';
+import { useGuestPass } from '../../lib/guest';
 import { PlaybackSection } from './playback';
 import { PlayerSection } from './player';
 import { AudioSection } from './audio';
@@ -684,12 +685,29 @@ function WhoseField({
   );
 }
 
+// A guest sets only how things play and look on their device.
+const GUEST_SECTIONS = [
+  'playback',
+  'player',
+  'audio',
+  'subtitles',
+  'interface',
+  'browsing',
+];
+
 export function SettingsPage({ tab, who }: { tab: string; who: string }) {
   const { client } = useSession();
   const whose = useWhose(who);
   const layer = useLayer(client, whose.target);
   const profile = useFeature('profile');
-  const all = React.useMemo(() => sections(profile), [profile]);
+  const guest = !!useGuestPass();
+  const all = React.useMemo(
+    () =>
+      guest
+        ? sections(false).filter((s) => GUEST_SECTIONS.includes(s.id))
+        : sections(profile),
+    [profile, guest]
+  );
   const shown = React.useMemo(
     () =>
       whose.target

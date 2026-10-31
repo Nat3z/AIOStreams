@@ -27,6 +27,8 @@ import { relayHost, type PartyPreview } from '@/lib/party/party';
 import { UserAvatar } from '@/components/user-avatar';
 import { type Opening, closePartySheet, showInvite } from './sheet-state';
 import { Section } from './common';
+import { GuestNamePrompt, hasGuestName } from '@/app/guest/page';
+import { useGuestPass } from '@/lib/guest';
 
 function relayLabel(relay: RelayChoice): string {
   return relay.own ? t`This server` : relayHost(relay.base);
@@ -255,6 +257,8 @@ export function JoinPreview({
 }) {
   const actions = usePartyActions();
   const [joining, setJoining] = React.useState(false);
+  // A guest says what to be called before their first party.
+  const [named, setNamed] = React.useState(!useGuestPass() || hasGuestName());
   const preview = useQuery({
     queryKey: ['party-preview', invite.relay, invite.code],
     queryFn: () => actions.peek(invite),
@@ -279,6 +283,12 @@ export function JoinPreview({
     const join = joinButton.current;
     if (join && found && !found.full && currentHost().tv) focusOn(join);
   }, [found]);
+  if (!named)
+    return (
+      <Section name="guest-name">
+        <GuestNamePrompt onDone={() => setNamed(true)} />
+      </Section>
+    );
   return (
     <Section name="preview">
       <div

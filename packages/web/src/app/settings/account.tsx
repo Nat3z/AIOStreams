@@ -1,7 +1,7 @@
-import { t } from '@lingui/core/macro';
-import { Trans } from '@lingui/react/macro';
 import React from 'react';
 import { toast } from 'sonner';
+import { plural, t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
 import { useQuery } from '@tanstack/react-query';
 import { Switch } from '@aiostreams/ui/switch';
 import { Button } from '@aiostreams/ui/button';
@@ -17,9 +17,11 @@ import { useCanSwitch } from '@/lib/profiles';
 import { configureUrl } from '@/lib/paths';
 import { serverAddress } from '@/lib/jellyfin/servers';
 import { settings, useSetting } from '@/lib/settings';
-import { useServerInfo } from '@/lib/jellyfin/server-info';
+import { useServerInfo, useFeature } from '@/lib/jellyfin/server-info';
 import { UserAvatar } from '@/components/user-avatar';
 import { SettingsCard, SettingsRow } from './_components/settings-card';
+import { formatLocale } from '../../lib/i18n';
+import { useOwnedPasses, useRevokePass, type OwnedPass } from '../../lib/guest';
 
 export function AccountSection() {
   const { client, user, switchUser, signOut, changeServer } = useSession();
@@ -28,6 +30,7 @@ export function AccountSection() {
   const several = useCanSwitch();
   const [askWho, setAskWho] = useSetting(settings.account.askWho);
   const configure = configureUrl(client.base, info);
+  const sharing = useFeature('guestPasses');
   const confirmSignOut = useConfirmationDialog({
     title: t`Sign out`,
     description: __STANDALONE__
@@ -138,6 +141,7 @@ export function AccountSection() {
           />
         </SettingsCard>
       )}
+      {sharing && <GuestLinks />}
       <ConfirmationDialog {...confirmSignOut} />
       <QuickConnectDialog
         open={approving}
@@ -206,5 +210,82 @@ function QuickConnectDialog({
         </Button>
       </form>
     </Modal>
+  );
+}
+
+function timeLeft(expiresAt: number): string {
+  const until = new Date(expiresAt).toLocaleString(formatLocale(), {
+    weekday: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+  });
+  return t`Until ${until}`;
+}
+
+/** The guest links this configuration has out, which end at once when revoked. */
+function GuestLinks() {
+  const passes = useOwnedPasses();
+  const revoke = useRevokePass();
+  const [ending, setEnding] = React.useState<OwnedPass | null>(null);
+  const confirmEnd = useConfirmationDialog({
+    title: t`End this link`,
+    description: t`Anyone watching with it stops now, and the link no longer opens.`,
+    actionText: t`End it`,
+    actionIntent: 'alert',
+    onConfirm: () => {
+      if (ending)
+        revoke.mutate(ending.Id, {
+          onError: () => toast.error(t`Could not end the link`),
+        });
+    },
+  });
+  const list = passes.data?.Passes ?? [];
+  return (
+    <SettingsCard
+      name="guest-links"
+      title={t`Guest links`}
+      description={t`Links that let someone without an account watch one title, made from a title's page.`}
+    >
+      {!list.length ? (
+        <p className="text-sm text-[--muted]">
+          {passes.isPending ? t`Loading…` : t`No links out.`}
+        </p>
+      ) : (
+        list.map((pass) => {
+          const watching = pass.Watching;
+          return (
+            <SettingsRow
+              key={pass.Id}
+              label={
+                pass.Label ? `${pass.Label} · ${pass.ItemName}` : pass.ItemName
+              }
+              help={[
+                timeLeft(pass.ExpiresAt),
+                pass.Party && t`With a party`,
+                watching > 0 &&
+                  plural(watching, {
+                    one: '# watching now',
+                    other: '# watching now',
+                  }),
+              ]
+                .filter(Boolean)
+                .join(' · ')}
+            >
+              <Button
+                intent="alert-subtle"
+                className="w-full rounded-full sm:w-auto"
+                onClick={() => {
+                  setEnding(pass);
+                  confirmEnd.open();
+                }}
+              >
+                <Trans>End</Trans>
+              </Button>
+            </SettingsRow>
+          );
+        })
+      )}
+      <ConfirmationDialog {...confirmEnd} />
+    </SettingsCard>
   );
 }

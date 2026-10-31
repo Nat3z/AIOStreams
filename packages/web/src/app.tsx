@@ -23,6 +23,7 @@ import { PageBackground } from './components/shell/layout';
 import { apiBase, JellyfinClient } from './lib/jellyfin/client';
 import { navigate, startOver, to } from './lib/paths';
 import { WelcomePage } from './app/welcome/page';
+import { GuestEnded } from './app/guest/page';
 import {
   NO_SERVER_INFO,
   ServerInfoProvider,
@@ -347,6 +348,9 @@ function Session({
           onChangeServer={changeServer}
         />
       );
+      break;
+    case 'guest-ended':
+      screen = <GuestEnded />;
       break;
     case 'signed-out':
       // The form asks for what this server takes, so it waits to know.
