@@ -5,7 +5,7 @@ import { ofType, trackLabel } from './controller';
 import type { EngineTrack } from './engine';
 import { tracePlayback } from './playback-trace';
 import { chooseTracks } from './track-picks';
-import type { PlaybackPrefs } from '../user-config';
+import type { PlaybackPrefs } from '@/lib/jellyfin/user-config';
 
 /**
  * The tracks of a remuxed version, which the server lists as the browser
