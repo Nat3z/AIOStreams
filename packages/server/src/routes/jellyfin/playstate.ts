@@ -358,15 +358,15 @@ async function progressed(
     });
 
   // Trackers hear it was watched as the threshold is crossed, not at the stop.
-  const durationMs = existing.durationMs || undefined;
+  const runtimeMs = durationMs || existing.durationMs || undefined;
   if (
     positionMs != null &&
-    !playedThrough(existing.positionMs, durationMs) &&
-    playedThrough(positionMs, durationMs)
+    !playedThrough(existing.positionMs, runtimeMs) &&
+    playedThrough(positionMs, runtimeMs)
   )
     await reportPlayback(ctx, 'played', ref, {
       positionMs,
-      durationMs,
+      durationMs: runtimeMs,
       played: true,
       sessionStartedAt: existing.startedAt,
     });
