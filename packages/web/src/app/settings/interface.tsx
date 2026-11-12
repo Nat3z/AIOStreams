@@ -8,12 +8,7 @@ import { cn } from '@aiostreams/ui/core/styling';
 import { useLiveTvView, useViews } from '@/lib/jellyfin/queries';
 import { dateFormat, libraryLabel } from '@/lib/format';
 import { currentHost } from '@/lib/hosts';
-import {
-  HIDDEN_LOCALES,
-  LOCALES,
-  localeName,
-  systemLocale,
-} from '@/lib/i18n';
+import { HIDDEN_LOCALES, LOCALES, localeName, systemLocale } from '@/lib/i18n';
 import { canRefract } from '@/components/shell/glass-surface';
 import {
   settings,
@@ -100,6 +95,8 @@ function Home() {
   const views = useViews();
   const [language, setLanguage] = useSetting(settings.interface.language);
   const [timeFormat, setTimeFormat] = useSetting(settings.interface.timeFormat);
+  const twelve = sampleTime('h12');
+  const twentyFour = sampleTime('h23');
   const [featured, setFeatured] = useSetting(settings.interface.featured);
   const [heroMode, setHeroMode] = useSetting(settings.interface.heroMode);
   const [heroSeconds, setHeroSeconds] = useSetting(
@@ -184,8 +181,8 @@ function Home() {
           label={t`Time format`}
           options={[
             { value: 'auto', label: t`Automatic` },
-            { value: '12', label: t`12-hour (${sampleTime('h12')})` },
-            { value: '24', label: t`24-hour (${sampleTime('h23')})` },
+            { value: '12', label: t`12-hour (${twelve})` },
+            { value: '24', label: t`24-hour (${twentyFour})` },
           ]}
           isOn={(v) => v === timeFormat}
           onPick={(v) => setTimeFormat(v as TimeFormat)}
