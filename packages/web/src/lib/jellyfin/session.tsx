@@ -1,31 +1,34 @@
 import React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { configSessionToken, hasConfigSessionCookie } from './config-session';
-import { JellyfinClient, JellyfinError } from './client';
+import {
+  configSessionToken,
+  hasConfigSessionCookie,
+} from '@/lib/jellyfin/config-session';
+import { JellyfinClient, JellyfinError } from '@/lib/jellyfin/client';
 import { currentHost } from '@/lib/hosts';
 import {
   clearCredentials,
   readCredentials,
   saveCredentials,
   signedOut,
-} from './credentials';
+} from '@/lib/jellyfin/credentials';
 import { storage } from '@/lib/storage';
 import { settings, syncPreferences } from '@/lib/settings';
 import { useLatest } from '@/hooks/use-latest';
 import { forgetSavedUser, forgetUser, savedUser, saveUser } from '@/lib/cache';
-import { watchServer } from './connection';
+import { watchServer } from '@/lib/jellyfin/connection';
 import { startOver, to } from '@/lib/paths';
 import { startPath } from '@/lib/start-page';
-import { forgetPass, guestLink, savedPass, signInAsGuest } from './guest';
-import { party } from './party/party';
-import { parseInvite } from './party/invite';
+import { forgetPass, guestLink, savedPass, signInAsGuest } from '@/lib/guest';
+import { party } from '@/lib/party/party';
+import { parseInvite } from '@/lib/party/invite';
 import type {
   AiostreamsUser,
   AuthenticationResult,
   Branding,
   PickableUser,
   UserDto,
-} from './types';
+} from '@/lib/jellyfin/types';
 
 interface SessionValue {
   client: JellyfinClient;
