@@ -1,5 +1,5 @@
 import { blobAddress, type BlobAddress } from '@/lib/artwork/shrink';
-import type { JellyfinClient } from '../client';
+import type { JellyfinClient } from '@/lib/jellyfin/client';
 import type { PlayerEngine, Thumbnail } from './engine';
 
 /** The seek bar's picture: the newest answer to the positions it asks for, cleared when it stops asking. */
