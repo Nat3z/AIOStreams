@@ -72,6 +72,8 @@ function sampleTime(cycle: 'h12' | 'h23'): string {
 function Language() {
   const [language, setLanguage] = useSetting(settings.interface.language);
   const [timeFormat, setTimeFormat] = useSetting(settings.interface.timeFormat);
+  const twelve = sampleTime('h12');
+  const twentyFour = sampleTime('h23');
   const listed = LOCALES.filter(
     (l) => !HIDDEN_LOCALES.includes(l) || import.meta.env.DEV || l === language
   )
@@ -105,8 +107,8 @@ function Language() {
           label={t`Time format`}
           options={[
             { value: 'auto', label: t`Automatic` },
-            { value: '12', label: t`12-hour (${sampleTime('h12')})` },
-            { value: '24', label: t`24-hour (${sampleTime('h23')})` },
+            { value: '12', label: t`12-hour (${twelve})` },
+            { value: '24', label: t`24-hour (${twentyFour})` },
           ]}
           isOn={(v) => v === timeFormat}
           onPick={(v) => setTimeFormat(v as TimeFormat)}
