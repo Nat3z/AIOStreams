@@ -23,7 +23,12 @@ import type {
 } from './engine';
 import { ownTrackLabel } from './controller';
 import { isFullscreen, toggleDocumentFullscreen } from './fullscreen';
-import { drawSubtitle, ownLines, ownSubtitleTrack, ownTrackLost } from './page-subtitles';
+import {
+  drawSubtitle,
+  ownLines,
+  ownSubtitleTrack,
+  ownTrackLost,
+} from './page-subtitles';
 import { remuxAudio, remuxTracks, remuxUrl } from './remux';
 import { overlayKind, startOverlay, type Overlay } from './overlay-subtitles';
 

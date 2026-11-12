@@ -73,7 +73,11 @@ import { ControlButton } from './buttons';
 import { useParty } from '@/lib/party/party';
 import { RATES, rateLabel } from './keys';
 import { useLatest } from '@/hooks/use-latest';
-import { SLEEP_MINUTES, setSleepTimer, useSleepTimer } from '@/lib/playback/sleep-timer';
+import {
+  SLEEP_MINUTES,
+  setSleepTimer,
+  useSleepTimer,
+} from '@/lib/playback/sleep-timer';
 
 /** Opens in the menu's place from a row under its list. */
 interface MenuPage {

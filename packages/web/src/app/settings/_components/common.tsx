@@ -1,6 +1,12 @@
 import React from 'react';
 import { plural, t } from '@lingui/core/macro';
-import { LuArrowDown, LuArrowUp, LuX, LuGripVertical, LuCheck } from 'react-icons/lu';
+import {
+  LuArrowDown,
+  LuArrowUp,
+  LuX,
+  LuGripVertical,
+  LuCheck,
+} from 'react-icons/lu';
 import { Trans } from '@lingui/react/macro';
 import { toast } from 'sonner';
 import { Select } from '@aiostreams/ui/select';
