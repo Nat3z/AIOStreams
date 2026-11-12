@@ -21,7 +21,12 @@ import { useServerInfo, useFeature } from '@/lib/jellyfin/server-info';
 import { UserAvatar } from '@/components/user-avatar';
 import { SettingsCard, SettingsRow } from './_components/settings-card';
 import { formatLocale } from '@/lib/i18n';
-import { useOwnedPasses, useRevokePass, type OwnedPass, useCanShare } from '@/lib/guest';
+import {
+  useOwnedPasses,
+  useRevokePass,
+  type OwnedPass,
+  useCanShare,
+} from '@/lib/guest';
 
 export function AccountSection() {
   const { client, user, switchUser, signOut, changeServer } = useSession();
