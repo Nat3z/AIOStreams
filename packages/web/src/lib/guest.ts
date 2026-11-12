@@ -2,8 +2,8 @@ import React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { JellyfinClient } from '@/lib/jellyfin/client';
 import { useSession } from '@/lib/jellyfin/session';
-import { useFeature } from './server-info';
-import { storage } from './storage';
+import { useFeature } from '@/lib/jellyfin/server-info';
+import { storage } from '@/lib/storage';
 import { parseInvite, type Invite } from '@/lib/party/invite';
 import type { AuthenticationResult } from '@/lib/jellyfin/types';
 
