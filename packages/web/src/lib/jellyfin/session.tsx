@@ -14,7 +14,7 @@ import { settings, syncPreferences } from '@/lib/settings';
 import { useLatest } from '@/hooks/use-latest';
 import { forgetSavedUser, forgetUser, savedUser, saveUser } from '@/lib/cache';
 import { watchServer } from './connection';
-import { startOver } from '@/lib/paths';
+import { startOver, to } from '@/lib/paths';
 import { startPath } from '@/lib/start-page';
 import type {
   AuthenticationResult,
