@@ -500,8 +500,8 @@ export async function applyProbedMediaInfo(
   ctx: JellyfinRequestContext,
   memo: PlaybackMemo,
   msid?: string,
-  /* A play, rather than a listing, may wait for its version's probe. */
-  opts: { playing?: boolean; remux?: RemuxSupport } = {}
+  /* A play, rather than a listing, may wait for its version's probe; an export always needs one. */
+  opts: { playing?: boolean; remux?: RemuxSupport; exporting?: boolean } = {}
 ): Promise<void> {
   const record = msid
     ? memo.sources.find((s) => s.msid === msid)
@@ -509,7 +509,9 @@ export async function applyProbedMediaInfo(
   if (!record) return;
   // A remux needs the file's tracks, and reads it here anyway, so a play
   // that may get one waits for a probe however short the wait is set.
-  const remux = opts.playing && opts.remux && mayRemux(record, opts.remux);
+  const remux =
+    opts.playing &&
+    (opts.exporting || (opts.remux && mayRemux(record, opts.remux)));
   const waitMs = opts.playing
     ? (ctx.userData.jellyfin?.playWait ?? appConfig.mediaInfo.playWait) * 1000
     : 0;

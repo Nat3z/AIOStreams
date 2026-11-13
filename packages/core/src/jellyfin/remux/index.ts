@@ -33,6 +33,7 @@ export {
   type RemuxTrack,
 } from './session.js';
 export { thumbnailAt, type ThumbnailResult } from './thumbnails.js';
+export { exportMp4 } from './export.js';
 
 /** A remux reads the whole file, however long. */
 const REMUX_READ_CAP = Number.MAX_SAFE_INTEGER;
@@ -94,6 +95,27 @@ export function canRemux(record: MediaSourceRecord): boolean {
   return (
     !!streams?.some((s) => s.type === 'Video') &&
     streams.some((s) => s.type === 'Audio')
+  );
+}
+
+/**
+ * Whether a version can be saved as one MP4: any probed file with a video a
+ * browser decodes and a sound, as the export needs no keyframe index.
+ */
+export function canExport(record: MediaSourceRecord): boolean {
+  if (
+    !appConfig.jellyfin.remux.enabled ||
+    record.notice ||
+    record.live ||
+    record.needs
+  )
+    return false;
+  const streams = fileStreamsOf(record);
+  const codec = streams?.find((s) => s.type === 'Video')?.codec;
+  return (
+    !!codec &&
+    BROWSER_VIDEO.has(codec) &&
+    streams!.some((s) => s.type === 'Audio')
   );
 }
 
