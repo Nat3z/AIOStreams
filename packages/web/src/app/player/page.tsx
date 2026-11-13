@@ -51,7 +51,7 @@ import {
 import { usePlayer } from '@/lib/playback/use-player';
 import type { EngineFactory, StatsRow } from '@/lib/playback/engine';
 import { videoEngine } from '@/lib/playback/video';
-import { playsWithWebGpu } from '@/lib/playback/player-choice';
+import { playsWithWebGpu, videoFirst } from '@/lib/playback/player-choice';
 import { webGpuEngine } from '@/lib/playback/webgpu';
 import {
   transcodes,
@@ -194,7 +194,8 @@ function pageEngines(
   video: React.RefObject<HTMLVideoElement | null>
 ): EngineFactory[] {
   const own = videoEngine(video);
-  return playsWithWebGpu() ? [webGpuEngine(video), own] : [own];
+  if (!playsWithWebGpu()) return [own];
+  return videoFirst() ? [own, webGpuEngine(video)] : [webGpuEngine(video), own];
 }
 
 export function PlayerPage({
