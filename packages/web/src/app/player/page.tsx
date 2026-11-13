@@ -129,7 +129,11 @@ import type {
   MediaStream,
   SourceInfo,
 } from '@/lib/jellyfin/types';
-import { useDownloadOf, type Download } from '@/lib/downloads';
+import {
+  useDownloadOf,
+  useOpenedDownload,
+  type Download,
+} from '@/lib/downloads';
 import { Cover } from '@/features/player/cover';
 import { party, useParty } from '@/lib/party/party';
 import {
@@ -213,13 +217,17 @@ export function PlayerPage({
 }) {
   const download = useDownloadOf(itemId);
   // A finished download plays its own file, with or without the server.
-  const local =
+  const saved =
     download?.state === 'done' &&
     download.local &&
     download.source &&
     (!sourceId || sourceId === download.source.Id)
       ? download
       : undefined;
+  const opened = useOpenedDownload(saved);
+  // One the browser can no longer open plays from the server.
+  const local = opened ?? undefined;
+  const opening = !!saved && opened === undefined;
   const fetched = useItem(itemId);
   const item = { ...fetched, data: fetched.data ?? local?.item };
   const listed = usePlaybackInfo(itemId, { enabled: !local && !sourceId });
@@ -289,6 +297,7 @@ export function PlayerPage({
   }, [playing]);
   if (
     !playing &&
+    !opening &&
     item.data &&
     source &&
     (!youTubeId || youTube.data) &&
@@ -308,6 +317,7 @@ export function PlayerPage({
   }
 
   const loading =
+    opening ||
     (!item.data && item.isLoading) ||
     listed.isLoading ||
     info.isLoading ||

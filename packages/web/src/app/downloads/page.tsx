@@ -3,6 +3,7 @@ import { Trans } from '@lingui/react/macro';
 import React from 'react';
 import {
   BiDotsVerticalRounded,
+  BiExport,
   BiFolderOpen,
   BiPause,
   BiPlay,
@@ -16,6 +17,7 @@ import { DropdownMenu, DropdownMenuItem } from '@aiostreams/ui/dropdown-menu';
 import { Tooltip } from '@aiostreams/ui/tooltip';
 import { cn } from '@aiostreams/ui/core/styling';
 import { formatBytes, formatSpeed } from '@aiostreams/ui/core/format';
+import { toast } from 'sonner';
 import { useSession } from '@/lib/jellyfin/session';
 import { duration, fullTitle, itemSubtitle, itemTitle } from '@/lib/format';
 import { landscapeUrl, posterUrl } from '@/lib/artwork/urls';
@@ -126,6 +128,19 @@ function DownloadRow({
       label: t`Pick a version`,
       icon: <BiListUl />,
       run: pick,
+    });
+  const share = host?.playable?.share;
+  if (state === 'done' && share)
+    actions.push({
+      name: 'share',
+      label: t`Save to device`,
+      icon: <BiExport />,
+      run: () =>
+        void share({ id: download.id, title: fullTitle(item) }).catch(
+          (e: Error) => {
+            if (e.name !== 'AbortError') toast.error(t`Could not save it`);
+          }
+        ),
     });
   if (state === 'done' && host?.folder?.open)
     actions.push({
@@ -404,6 +419,14 @@ export function DownloadsPage() {
               {folder && (
                 <p className="truncate" title={folder}>
                   <Trans>Saved to {folder}</Trans>
+                </p>
+              )}
+              {host?.playable && running.length > 0 && (
+                <p>
+                  <Trans>
+                    Downloads run while the app is open, and carry on where they
+                    stopped when it opens again.
+                  </Trans>
                 </p>
               )}
             </div>

@@ -84,16 +84,20 @@ export function placeOf(
   };
 }
 
+/** `vtt` gets them as WebVTT, which a browser's player reads. */
 function subtitleFiles(
   client: JellyfinClient,
   source: SourceInfo,
-  at: string
+  at: string,
+  vtt: boolean
 ): { files: HostFile[]; streams: number[] } {
   const used = new Set<string>();
   const files: HostFile[] = [];
   const streams: number[] = [];
   for (const stream of textSubtitles(source)) {
-    const url = subtitleUrl(client, stream, { original: true });
+    // A remux's own is only as long as it has read the file.
+    if (/\/remux\//i.test(stream.DeliveryUrl ?? '')) continue;
+    const url = subtitleUrl(client, stream, { original: !vtt });
     const type = url?.match(/Stream\.(\w+)(?=\?|$)/)?.[1]?.toLowerCase();
     if (!url || !type || !SUBTITLE_TYPES.has(type)) continue;
     const tags = [stream.Language || 'und', stream.IsForced && 'forced']
@@ -149,37 +153,47 @@ export function versionDetails(source: SourceInfo): SourceInfo {
   };
 }
 
-/** Everything a download saves: the video, its subtitles, art and details. */
+/**
+ * Everything a download saves: the video, its subtitles, art and details.
+ * For a browser, which keeps them only to play, the server's MP4 of the
+ * video and WebVTT subtitles, as no browser plays Matroska or AC3 throughout.
+ */
 export function hostJob(
   client: JellyfinClient,
   id: string,
   item: BaseItemDto,
   series: BaseItemDto | undefined,
   source: SourceInfo,
-  opts: { subtitles: boolean }
+  opts: { subtitles: boolean; browser: boolean }
 ): { job: HostJob; subtitleStreams: number[] } {
   const place = placeOf(item, series);
   const at = `${place.folder}/${place.base}`;
-  const video = client.url(`/Items/${item.Id}/Download`, {
-    MediaSourceId: source.Id,
-    ApiKey: client.token,
-  });
+  const video = opts.browser
+    ? client.url(`/Videos/${item.Id}/${source.Id}/Export.mp4`, {
+        AudioStreamIndex: source.DefaultAudioStreamIndex,
+        ApiKey: client.token,
+      })
+    : client.url(`/Items/${item.Id}/Download`, {
+        MediaSourceId: source.Id,
+        ApiKey: client.token,
+      });
   const subtitles = opts.subtitles
-    ? subtitleFiles(client, source, at)
+    ? subtitleFiles(client, source, at, opts.browser)
     : { files: [], streams: [] };
   const job: HostJob = {
     id,
     title: place.base,
     versionId: source.Id!,
+    size: source.Size ?? source.aiostreams?.size,
     files: [
       {
         url: video,
-        path: `${at}.${videoType(source)}`,
+        path: `${at}.${opts.browser ? 'mp4' : videoType(source)}`,
         kind: 'video',
         headers: requiredHeaders(source),
       },
       ...subtitles.files,
-      ...imageFiles(client, item, series, place),
+      ...(opts.browser ? [] : imageFiles(client, item, series, place)),
     ],
     texts: [
       {
