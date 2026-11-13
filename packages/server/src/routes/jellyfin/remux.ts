@@ -1,10 +1,12 @@
 import { Router, type Request, type Response } from 'express';
 import {
+  canExport,
   canRemux,
   closeRemuxSessions,
   config as appConfig,
   createLogger,
   convertSubtitle,
+  exportMp4,
   openVersion,
   remuxSession,
   remuxSessionById,
@@ -12,21 +14,27 @@ import {
   RemuxLimitError,
   thumbnailAt,
   type RemuxSession,
+  type RemuxSource,
 } from '@aiostreams/core';
 import { jfOptional, param, qs } from './context.js';
 import { ensureMemo, locate, pickSource } from './playback.js';
 import { profileName } from './users.js';
+import { applyProbedMediaInfo } from './resolve.js';
 
 const logger = createLogger('jellyfin');
 const router: Router = Router({ mergeParams: true });
 
 const PLAYLIST_TYPE = 'application/vnd.apple.mpegurl';
 
-/** Opens, or finds, the session of the version and audio track asked for. */
-async function sessionFor(
+/**
+ * The remux source of the version asked for, or null once it has answered.
+ * An export waits for the version's probe, which a download's list skips.
+ */
+async function remuxSourceFor(
   req: Request,
-  res: Response
-): Promise<RemuxSession | null> {
+  res: Response,
+  exporting = false
+): Promise<RemuxSource | null> {
   // Subtitles and fonts name their version in the path, not the query.
   const loc = await locate(req, param(req, 'itemId'), {
     bySession: true,
@@ -34,26 +42,41 @@ async function sessionFor(
   });
   const memo = loc ? await ensureMemo(loc) : null;
   const source = memo ? pickSource(memo, loc!.requestedMsid) : undefined;
-  if (!source || !canRemux(source)) {
+  if (source && exporting)
+    await applyProbedMediaInfo(loc!.ctx, memo!, source.msid, {
+      playing: true,
+      exporting: true,
+    });
+  if (!source || !(exporting ? canExport(source) : canRemux(source))) {
     res.status(404).json({ Message: 'This version cannot be remuxed' });
     return null;
   }
-  const audio = qs(req, 'AudioStreamIndex');
   const { ctx } = loc!;
+  return remuxSourceOf(source, memo!.psid, {
+    name: profileName(ctx.userData, ctx.profile),
+    client: ctx.client.name,
+    device: ctx.client.device,
+    ip: req.requestIp || req.ip,
+  });
+}
+
+function audioIndexOf(req: Request): number | undefined {
+  const audio = qs(req, 'AudioStreamIndex');
+  return audio !== undefined ? Number(audio) : undefined;
+}
+
+/** Opens, or finds, the session of the version and audio track asked for. */
+async function sessionFor(
+  req: Request,
+  res: Response
+): Promise<RemuxSession | null> {
+  const source = await remuxSourceFor(req, res);
+  if (!source) return null;
   try {
-    return await remuxSession(
-      remuxSourceOf(source, memo!.psid, {
-        name: profileName(ctx.userData, ctx.profile),
-        client: ctx.client.name,
-        device: ctx.client.device,
-        ip: req.requestIp || req.ip,
-      }),
-      audio !== undefined ? Number(audio) : undefined,
-      startSecondsOf(req)
-    );
+    return await remuxSession(source, audioIndexOf(req), startSecondsOf(req));
   } catch (err) {
     const message = (err as Error).message;
-    logger.warn({ msid: source.msid, err: message }, 'remux failed to open');
+    logger.warn({ key: source.key, err: message }, 'remux failed to open');
     res
       .status(err instanceof RemuxLimitError ? 503 : 502)
       .json({ Message: `Remux unavailable: ${message}` });
@@ -235,6 +258,32 @@ async function remuxFont(req: Request, res: Response) {
 }
 
 /**
+ * The version as one MP4 to save, for a browser that keeps downloads itself
+ * and can't play Matroska. `Skip` drops the bytes a save cut short already has.
+ */
+async function exportFile(req: Request, res: Response) {
+  const source = await remuxSourceFor(req, res, true);
+  if (!source) return;
+  const skip = Math.max(0, Math.floor(Number(qs(req, 'Skip') ?? 0)) || 0);
+  const abort = new AbortController();
+  res.on('close', () => abort.abort());
+  let body;
+  try {
+    body = await exportMp4(source, audioIndexOf(req), skip, abort.signal);
+  } catch (err) {
+    const message = (err as Error).message;
+    logger.warn({ title: source.title, err: message }, 'mp4 export failed');
+    res
+      .status(err instanceof RemuxLimitError ? 503 : 502)
+      .json({ Message: `Export unavailable: ${message}` });
+    return;
+  }
+  res.type('video/mp4').setHeader('Cache-Control', 'no-store');
+  body.on('error', () => res.destroy());
+  body.pipe(res);
+}
+
+/**
  * A picture of the keyframe at or before `At` ms, for the seek bar of a
  * player that makes none itself. `Showing` is the keyframe on screen, which
  * gets a 204 rather than the same picture again; 404 means the file has none.
@@ -278,6 +327,7 @@ async function thumbnail(req: Request, res: Response) {
 }
 
 router.get('/Videos/:itemId/:mediaSourceId/Thumbnail', jfOptional(thumbnail));
+router.get('/Videos/:itemId/:mediaSourceId/Export.mp4', jfOptional(exportFile));
 router.get(
   ['/Videos/:itemId/master.m3u8', '/Videos/:itemId/live.m3u8'],
   jfOptional(masterPlaylist)

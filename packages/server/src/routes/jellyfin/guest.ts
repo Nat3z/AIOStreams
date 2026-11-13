@@ -11,7 +11,7 @@ import {
   GuestPassRepository,
   JellyfinRepository,
   mintGuestToken,
-  personaUserId,
+  profileUserId,
   proxyTargetKey,
   resolveByItem,
   resolveByPlaySession,
@@ -330,7 +330,7 @@ router.post(
       return;
     }
     const deviceId = req.jfClient?.deviceId;
-    const userId = personaUserId(pass.uuid, guestPersona(pass.id));
+    const userId = profileUserId(pass.uuid, guestPersona(pass.id));
     logger.info({ uuid: pass.uuid, pass: pass.id }, 'guest pass opened');
     res.json({
       AccessToken: mintGuestToken({ g: pass.id, d: deviceId }),
