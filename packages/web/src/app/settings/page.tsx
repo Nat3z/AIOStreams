@@ -66,6 +66,7 @@ import { BrowsingExample, BrowsingSection } from './browsing';
 import { ThemeSection } from './theme';
 import { CacheSection } from './cache';
 import { DownloadsSection } from './downloads';
+import { downloadsHost } from '@/lib/downloads';
 import { AccountSection } from './account';
 import { ProfileSection } from './profile';
 import { AppSection, DesktopSection, AndroidSection } from './apps';
@@ -203,7 +204,7 @@ function sections(profile: boolean): Section[] {
       group: 'app' as const,
       Content: AccountSection,
     },
-    ...(host.downloads
+    ...(downloadsHost()
       ? [
           {
             id: 'downloads',

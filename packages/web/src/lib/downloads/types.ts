@@ -28,6 +28,8 @@ export interface HostJob {
   files: HostFile[];
   /** Files the page writes itself, such as the item's details. */
   texts: { path: string; text: string }[];
+  /** The version's size, before the video is fetched. */
+  size?: number;
 }
 
 export interface Download {
@@ -95,4 +97,15 @@ export interface DownloadsHost {
   handsOff?: { open(): void };
   /** Sends a file's `headers`. */
   headers?: boolean;
+  /**
+   * Keeps files the browser plays: the server's MP4 of the video and WebVTT
+   * subtitles, without the art and details a media server reads.
+   */
+  playable?: {
+    /** A saved path as an address the player opens, revoked by `release`. */
+    open(path: string): Promise<string>;
+    release(url: string): void;
+    /** Hands a saved video to the device, as Save to Files does. */
+    share?(download: { id: string; title: string }): Promise<void>;
+  };
 }

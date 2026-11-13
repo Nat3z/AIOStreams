@@ -5,7 +5,7 @@ import { JellyfinError, type JellyfinClient } from '@/lib/jellyfin/client';
 import { currentHost } from '@/lib/hosts';
 import { playableSources } from '@/lib/playback/sources';
 import { closePlayback, playbackNow } from '@/lib/playback/session';
-import { requiredHeaders } from '@/lib/playback/stream';
+import { requiredHeaders, streamsItself } from '@/lib/playback/stream';
 import { requestItem } from '@/lib/jellyfin/queries';
 import { requestPlaybackInfo } from '@/lib/jellyfin/playback-info';
 import { textSubtitles } from '@/lib/subtitles/tracks';
@@ -18,6 +18,7 @@ import type {
   SourceInfo,
 } from '@/lib/jellyfin/types';
 import { useLatest } from '@/hooks/use-latest';
+import { browserDownloads, canSaveInBrowser } from './browser';
 import { hostJob, versionDetails } from './files';
 import {
   addDownloads,
@@ -37,18 +38,33 @@ export { useDownloadFolder, useDownloadList, useDownloadSpeeds } from './store';
 /** States the host owns once it has the files. */
 const HOSTED = new Set(['queued', 'downloading', 'paused', 'failed', 'done']);
 
+/** The app's, else the browser's own where it can keep files, as an installed web app does. */
 export function downloadsHost(): DownloadsHost | null {
-  return currentHost().downloads ?? null;
+  return (
+    currentHost().downloads ??
+    (currentHost().name === 'browser' && canSaveInBrowser()
+      ? browserDownloads
+      : null)
+  );
 }
 
-/** Whether this device can start downloads that the server allows the user. */
+/**
+ * Whether this device can start downloads that the server allows the user;
+ * the browser's need this server's MP4 of a version, which a stock one lacks.
+ */
 export function useMayDownload(): boolean {
-  const { user } = useSession();
-  return !!downloadsHost() && user.Policy?.EnableContentDownloading !== false;
+  const { client, user } = useSession();
+  const host = downloadsHost();
+  return (
+    !!host &&
+    !(host.playable && streamsItself(client.base)) &&
+    user.Policy?.EnableContentDownloading !== false
+  );
 }
 
 const downloadSupport = () => ({
-  headers: !!downloadsHost()?.headers,
+  // The browser's file comes through the server, which sends them itself.
+  headers: !!downloadsHost()?.headers || !!downloadsHost()?.playable,
   youtube: false,
 });
 
@@ -135,7 +151,10 @@ async function place(
   download: Download,
   picked: SourceInfo
 ): Promise<void> {
-  const source = await forDownload(client, download, picked);
+  const host = downloadsHost();
+  const browser = !!host?.playable;
+  // The browser saves the WebVTT the player already reads.
+  const source = browser ? picked : await forDownload(client, download, picked);
   const series = await seriesOf(client, download.userId, download.item);
   const { job, subtitleStreams } = hostJob(
     client,
@@ -143,9 +162,8 @@ async function place(
     download.item,
     series,
     source,
-    { subtitles: settings.downloads.subtitles.read() }
+    { subtitles: settings.downloads.subtitles.read(), browser }
   );
-  const host = downloadsHost();
   updateDownloads([
     {
       id: download.id,
@@ -153,13 +171,26 @@ async function place(
         state: host?.handsOff ? 'sent' : 'queued',
         version: versionOf(source),
         job,
-        source: versionDetails(source),
+        source: browser ? exported(source) : versionDetails(source),
         subtitleStreams,
         error: undefined,
       },
     },
   ]);
   host?.add([job]);
+}
+
+/** A version as the browser saved it: an MP4 with the one sound it was exported with. */
+function exported(source: SourceInfo): SourceInfo {
+  const details = versionDetails(source);
+  const sound = source.DefaultAudioStreamIndex;
+  return {
+    ...details,
+    Container: 'mp4',
+    MediaStreams: details.MediaStreams?.filter(
+      (s) => s.Type !== 'Audio' || sound == null || s.Index === sound
+    ),
+  };
 }
 
 /** The rest of a batch follows its leader's binge group, or none if it has none. */
@@ -324,6 +355,38 @@ export function useFindDownloaded() {
         : undefined,
     [client.base, user.Id]
   );
+}
+
+/**
+ * A finished download with its files as addresses a player opens: as saved,
+ * or, kept by the browser, as blob addresses while the player has it.
+ * Undefined until they're open; null where they couldn't be.
+ */
+export function useOpenedDownload(
+  download: Download | undefined
+): Download | null | undefined {
+  const playable = downloadsHost()?.playable;
+  const [opened, setOpened] = React.useState<Download | null>();
+  React.useEffect(() => {
+    if (!download?.local || !playable) return;
+    const { video, subtitles } = download.local;
+    let live = true;
+    const urls: string[] = [];
+    void Promise.all([video, ...subtitles].map((p) => playable.open(p))).then(
+      ([v, ...s]) => {
+        urls.push(v, ...s);
+        if (live) setOpened({ ...download, local: { video: v, subtitles: s } });
+        else urls.forEach(playable.release);
+      },
+      () => live && setOpened(null)
+    );
+    return () => {
+      live = false;
+      urls.forEach(playable.release);
+    };
+    // The files, not the record, which progress and state rewrite.
+  }, [download?.id, download?.local?.video, playable]);
+  return playable && download?.local ? opened : download;
 }
 
 /** The download of an item, if there is one for this server and user. */
