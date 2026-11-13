@@ -27,6 +27,49 @@ export const canFullscreen = () =>
   !!currentHost().fullscreen ||
   !!(document.fullscreenEnabled || webkitDocument().webkitFullscreenEnabled);
 
+type WebKitVideo = HTMLVideoElement & {
+  webkitEnterFullscreen?(): void;
+  webkitExitFullscreen?(): void;
+  webkitDisplayingFullscreen?: boolean;
+};
+
+/**
+ * iPhone's own video player, which is the only full screen it gives a page,
+ * installed or not: it hides the status bar and home indicator and turns
+ * with the phone.
+ */
+export const canVideoFullscreen = () =>
+  !canFullscreen() &&
+  typeof (HTMLVideoElement.prototype as WebKitVideo).webkitEnterFullscreen ===
+    'function';
+
+export const inVideoFullscreen = (el: HTMLVideoElement) =>
+  !!(el as WebKitVideo).webkitDisplayingFullscreen;
+
+/** Only from a tap, and once the video has its size. */
+export function toggleVideoFullscreen(el: HTMLVideoElement): void {
+  const video = el as WebKitVideo;
+  try {
+    if (video.webkitDisplayingFullscreen) video.webkitExitFullscreen?.();
+    else video.webkitEnterFullscreen?.();
+  } catch {}
+}
+
+/** Hears the video enter and leave its own full screen player. */
+export function onVideoFullscreenChange(
+  el: HTMLVideoElement,
+  listener: (on: boolean) => void
+): () => void {
+  const begin = () => listener(true);
+  const end = () => listener(false);
+  el.addEventListener('webkitbeginfullscreen', begin);
+  el.addEventListener('webkitendfullscreen', end);
+  return () => {
+    el.removeEventListener('webkitbeginfullscreen', begin);
+    el.removeEventListener('webkitendfullscreen', end);
+  };
+}
+
 export function onFullscreenChange(listener: () => void): () => void {
   for (const event of CHANGE_EVENTS) document.addEventListener(event, listener);
   return () => {

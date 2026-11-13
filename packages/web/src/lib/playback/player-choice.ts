@@ -183,6 +183,16 @@ export const playsWithWebGpu = () =>
   ['auto', 'webgpu'].includes(settings.player.engine.read()) &&
   canPlayWithWebGpu();
 
+/**
+ * An iPhone's only full screen is a `<video>`'s own player, which a canvas
+ * can't use, so by default the video plays there first and WebGPU takes what
+ * it can't. iPads ask for the desktop site and have the fullscreen API.
+ */
+export const videoFirst = () =>
+  settings.player.engine.read() === 'auto' &&
+  platform() === 'ios' &&
+  !/macintosh|ipad/i.test(navigator.userAgent);
+
 export const canUpscale = () =>
   !!currentHost().playerFeatures?.includes('upscaling') || playsWithWebGpu();
 

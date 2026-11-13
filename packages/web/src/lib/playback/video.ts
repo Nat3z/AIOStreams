@@ -25,9 +25,13 @@ import type {
 import { ownTrackLabel } from './controller';
 import {
   canFullscreen,
+  canVideoFullscreen,
+  inVideoFullscreen,
   isFullscreen,
   onFullscreenChange,
+  onVideoFullscreenChange,
   toggleDocumentFullscreen,
+  toggleVideoFullscreen,
 } from './fullscreen';
 import {
   drawSubtitle,
@@ -569,8 +573,10 @@ export function videoEngine(
       const textEvents = ['addtrack', 'change'];
       for (const event of textEvents)
         el.textTracks.addEventListener(event, onlyChosen);
-      const onFullscreen = () => set({ fullscreen: isFullscreen() });
+      const onFullscreen = () =>
+        set({ fullscreen: isFullscreen() || inVideoFullscreen(el) });
       const stopFullscreen = onFullscreenChange(onFullscreen);
+      const stopVideoFullscreen = onVideoFullscreenChange(el, onFullscreen);
       detach = () => {
         for (const [event, handler] of Object.entries(handlers))
           el.removeEventListener(event, handler);
@@ -580,6 +586,7 @@ export function videoEngine(
         for (const event of textEvents)
           el.textTracks.removeEventListener(event, onlyChosen);
         stopFullscreen();
+        stopVideoFullscreen();
       };
       onFullscreen();
       el.autoplay = !next.paused;
@@ -686,7 +693,13 @@ export function videoEngine(
         if (nextFit !== fit) layer?.place();
         fit = nextFit;
       },
-      toggleFullscreen: canFullscreen() ? toggleDocumentFullscreen : undefined,
+      toggleFullscreen: canFullscreen()
+        ? toggleDocumentFullscreen
+        : canVideoFullscreen()
+          ? () => {
+              if (video.current) toggleVideoFullscreen(video.current);
+            }
+          : undefined,
       ...(document.pictureInPictureEnabled && {
         togglePictureInPicture() {
           const el = video.current;
