@@ -167,14 +167,17 @@ async function fileAt(path: string): Promise<File> {
   return (await dir.getFileHandle(parts[parts.length - 1])).getFile();
 }
 
-/** Where the browser can keep files of its own, which Firefox before 111 and private windows can't. */
+/**
+ * Where the browser can keep files of its own. The sync handles the worker
+ * writes through exist only in workers, so the page checks for the private
+ * file system itself.
+ */
 export function canSaveInBrowser(): boolean {
   return (
     typeof navigator.storage?.getDirectory === 'function' &&
     typeof Worker === 'function' &&
-    'createSyncAccessHandle' in
-      ((globalThis as { FileSystemFileHandle?: { prototype: object } })
-        .FileSystemFileHandle?.prototype ?? {})
+    typeof (globalThis as { FileSystemFileHandle?: unknown })
+      .FileSystemFileHandle === 'function'
   );
 }
 
