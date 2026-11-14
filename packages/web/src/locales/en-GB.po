@@ -1273,6 +1273,10 @@ msgstr "Could not pick one."
 msgid "Could not read that file"
 msgstr "Could not read that file"
 
+#: src/app/downloads/page.tsx
+msgid "Could not save it"
+msgstr "Could not save it"
+
 #: src/lib/jellyfin/user-config.ts
 msgid "Could not save that setting"
 msgstr "Could not save that setting"
@@ -1608,6 +1612,10 @@ msgstr "Downloads"
 #: src/app/settings/downloads.tsx
 msgid "Downloads at once"
 msgstr "Downloads at once"
+
+#: src/app/downloads/page.tsx
+msgid "Downloads run while the app is open, and carry on where they stopped when it opens again."
+msgstr "Downloads run while the app is open, and carry on where they stopped when it opens again."
 
 #: src/app/settings/downloads.tsx
 msgid "Downloads wait for Wi-Fi or another unmetered network rather than use mobile data."
@@ -4107,6 +4115,10 @@ msgstr "Save subtitles"
 #: src/app/settings/cache.tsx
 msgid "Save title pages"
 msgstr "Save title pages"
+
+#: src/app/downloads/page.tsx
+msgid "Save to device"
+msgstr "Save to device"
 
 #: src/app/settings/cache.tsx
 msgid "Save what you browse"
