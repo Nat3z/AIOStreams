@@ -36,7 +36,8 @@ export const usePlayback = () =>
 
 export const playbackNow = () => current;
 
-const onPlayerPage = () => /^#\/play\/(?!trailer\/)/.test(window.location.hash);
+const onPlayerPage = () =>
+  /^#\/play\/(?!trailer\/|preshow\/)/.test(window.location.hash);
 
 /** Apps that can draw their video small over the page, and the page's own video. */
 function framed(): boolean {

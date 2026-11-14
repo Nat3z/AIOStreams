@@ -29,6 +29,7 @@ import { DownloadsPage } from './app/downloads/page';
 import { openPlayback } from './lib/playback/session';
 import { endNowPlaying } from './lib/playback/now-playing';
 import { TrailerPage } from './app/trailer/page';
+import { PreshowPage } from './app/preshow/page';
 import { Button } from '@aiostreams/ui/button';
 import { LuffyError } from '@aiostreams/ui/shared/luffy-error';
 import { SettingsPage } from './app/settings/page';
@@ -235,6 +236,37 @@ function TrailerRouteView(): React.ReactElement {
   );
 }
 
+const preshowRoute = createRoute({
+  getParentRoute: () => shellRoute,
+  path: '/play/preshow/$itemId',
+  validateSearch: (search: Record<string, unknown>) => ({
+    source: search.source == null ? '' : String(search.source),
+    length: Number(search.length) || undefined,
+    showtime: Number(search.showtime) || undefined,
+    playlist: search.playlist == null ? undefined : String(search.playlist),
+  }),
+  component: PreshowRouteView,
+});
+
+function PreshowRouteView(): React.ReactElement {
+  const { itemId } = preshowRoute.useParams();
+  const { source, length, showtime, playlist } = preshowRoute.useSearch();
+  React.useEffect(() => endNowPlaying, []);
+  return (
+    <PreshowPage
+      key={itemId}
+      itemId={itemId}
+      sourceId={source}
+      showing={
+        showtime
+          ? { kind: 'showtime', minutes: showtime }
+          : { kind: 'length', minutes: length ?? 15 }
+      }
+      playlist={playlist}
+    />
+  );
+}
+
 /** The layout draws the player, which plays on in the mini player after its page closes. */
 function PlayRouteView(): null {
   const { itemId } = playRoute.useParams();
@@ -262,6 +294,7 @@ const routeTree = rootRoute.addChildren([
     personRoute,
     playRoute,
     trailerRoute,
+    preshowRoute,
   ]),
 ]);
 

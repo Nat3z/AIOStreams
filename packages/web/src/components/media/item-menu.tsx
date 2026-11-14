@@ -11,6 +11,7 @@ import {
   BiInfoCircle,
   BiListPlus,
   BiListUl,
+  BiMoviePlay,
   BiPlay,
   BiReset,
   BiShuffle,
@@ -55,6 +56,7 @@ import { useArtTarget } from '@/lib/artwork/background';
 import { openAddToPlaylist } from '@/features/playlists/playlists';
 import { playable as canPlay } from '@/lib/playlists';
 import { usingKeys } from '@/lib/input';
+import { offersPreshow, openPreshow } from '@/features/player/preshow-dialog';
 import type { BaseItemDto } from '@/lib/jellyfin/types';
 
 function PlayEntries({ item }: { item: BaseItemDto }) {
@@ -77,6 +79,11 @@ function PlayEntries({ item }: { item: BaseItemDto }) {
         {straight ? <BiListUl /> : <BiSkipNext />}
         {straight ? t`Choose a version` : t`Play straight away`}
       </ContextMenuItem>
+      {offersPreshow(item) && (
+        <ContextMenuItem data-name="preshow" onSelect={() => openPreshow(item)}>
+          <BiMoviePlay /> <Trans>Play with a pre-show…</Trans>
+        </ContextMenuItem>
+      )}
       {!!devices.data?.length && (
         <ContextMenuItem
           data-name="play-on"

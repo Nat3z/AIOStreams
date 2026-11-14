@@ -58,6 +58,7 @@ import { ReminderHost } from '@/features/live-tv/live-reminders';
 import { RandomPick } from '@/components/media/random-pick';
 import { ItemMenuHost } from '@/components/media/item-menu';
 import { PlayerPage } from '@/app/player/page';
+import { PreshowDialog } from '@/features/player/preshow-dialog';
 import { GlideLayers } from './glide-layers';
 import { UpdatePrompt } from './update-prompt';
 import { UsageStats } from './usage-stats';
@@ -416,6 +417,7 @@ export function WebLayout() {
                   <RemoteTarget />
                   <ReminderHost />
                   <RandomPick />
+                  <PreshowDialog />
                   <PlaylistsHost />
                   {currentHost().watchNext && <WatchNextSync />}
                   <ItemMenuHost>

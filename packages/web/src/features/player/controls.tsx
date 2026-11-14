@@ -121,7 +121,7 @@ export function PlayerControls({
   /** Under the title, in place of an episode's own line. */
   caption?: string;
   /** What previous and next move between, where it isn't the show's episodes. */
-  steps?: 'episode' | 'trailer' | 'playlist';
+  steps?: 'episode' | 'trailer' | 'playlist' | 'preshow';
   playlist?: { id: string; onPlay(entry: BaseItemDto, playlist: string): void };
   onParty?: () => void;
   quality?: Quality;
@@ -184,7 +184,8 @@ export function PlayerControls({
     !busy &&
     !state.error &&
     !offeringNext &&
-    steps !== 'trailer';
+    steps !== 'trailer' &&
+    steps !== 'preshow';
   const view = (shownNow: boolean, idle: boolean) => {
     const pauseScreen = pauseScreenFits && idle;
     const visible =
@@ -394,6 +395,7 @@ export function PlayerControls({
     episode: [t`Previous episode`, t`Next episode`],
     channel: [t`Previous channel`, t`Next channel`],
     trailer: [t`Previous trailer`, t`Next trailer`],
+    preshow: [t`Previous`, t`Skip`],
     playlist: [t`Previous`, t`Next`],
   };
   const stepSeconds = seekStep;

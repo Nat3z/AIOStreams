@@ -15,6 +15,7 @@ import type { GuestPassInfo } from '@/lib/guest';
 import { usePendingStops } from '@/lib/playback/reporter';
 import { GuestChip } from '@/app/guest/page';
 import { VersionPickerProvider } from '@/features/versions/version-picker';
+import { PreshowDialog } from '@/features/player/preshow-dialog';
 import { ItemMenuHost } from '@/components/media/item-menu';
 import { GlideLayers } from '@/components/shell/glide-layers';
 import { PageStack } from '@/components/shell/page-stack';
@@ -90,6 +91,7 @@ export function GuestLayout({ pass }: { pass: GuestPassInfo }) {
           </div>
         </div>
         <VersionPickerProvider>
+          <PreshowDialog />
           <ItemMenuHost>
             <GlideLayers name="page">
               {allowed && (

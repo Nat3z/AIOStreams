@@ -43,6 +43,22 @@ export function youTubeId(url: string): string | null {
   return id && /^[\w-]{11}$/.test(id) ? id : null;
 }
 
+/**
+ * Whether a trailer was uploaded in HD, which YouTube shows by keeping a
+ * full-size thumbnail; a missing one comes back as its 120px stand-in. Links
+ * elsewhere can't be told, so they pass.
+ */
+export function isHd(url: string): Promise<boolean> {
+  const id = youTubeId(url);
+  if (!id) return Promise.resolve(true);
+  return new Promise((resolve) => {
+    const image = new Image();
+    image.onload = () => resolve(image.naturalWidth >= 1280);
+    image.onerror = () => resolve(false);
+    image.src = `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
+  });
+}
+
 export type TrailerPlayback =
   | { kind: 'video'; url: string; originalLanguage?: string }
   | { kind: 'embed'; id: string }
@@ -72,6 +88,11 @@ const trailerQuery = (url: string) => ({
 
 export const useTrailerPlayback = (url: string | undefined) =>
   useQuery({ ...trailerQuery(url ?? ''), enabled: !!url });
+
+export function useFetchTrailer() {
+  const queryClient = useQueryClient();
+  return (url: string) => queryClient.fetchQuery(trailerQuery(url));
+}
 
 export function usePrefetchTrailer() {
   const queryClient = useQueryClient();

@@ -3,7 +3,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { currentHost } from '@/lib/hosts';
 import { usePlaybackInfoOptions } from '@/lib/jellyfin/playback-info';
 import { fullTitle, ticksToMs } from '@/lib/format';
-import { navigate, to } from '@/lib/paths';
+import { navigate } from '@/lib/paths';
+import { playPath } from '@/lib/playback/preshow';
 import { externalReturnUrl } from '@/lib/playback/external-return';
 import { chosenPlayer, playerLink } from '@/lib/playback/player-choice';
 import { directUrl } from '@/lib/playback/stream';
@@ -112,7 +113,7 @@ export function usePlay() {
         opts.onExternal?.();
       return;
     }
-    navigate(to.play(item.Id!, source.Id, startMs, playlist), {
+    navigate(playPath(item, source.Id, startMs, playlist), {
       replace: opts.replace,
     });
   };

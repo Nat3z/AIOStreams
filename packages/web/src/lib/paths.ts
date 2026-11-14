@@ -52,6 +52,14 @@ export const to = {
     `/play/${itemId}?source=${sourceId}${startMs ? `&start=${Math.round(startMs)}` : ''}${playlist ? `&playlist=${playlist}` : ''}`,
   trailer: (itemId: string, index = 0) =>
     `/play/trailer/${itemId}${index ? `?trailer=${index}` : ''}`,
+  /** Bumpers and trailers before the movie, which then plays as `play` would. */
+  preshow: (
+    itemId: string,
+    sourceId: string,
+    showing: { kind: 'length' | 'showtime'; minutes: number },
+    playlist?: string
+  ) =>
+    `/play/preshow/${itemId}?source=${sourceId}&${showing.kind}=${showing.minutes}${playlist ? `&playlist=${playlist}` : ''}`,
 };
 
 /** An episode has no page of its own; it opens its show at its season. */
