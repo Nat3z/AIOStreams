@@ -1210,6 +1210,10 @@ msgstr ""
 msgid "Could not read that file"
 msgstr ""
 
+#: src/app/downloads/page.tsx
+msgid "Could not save it"
+msgstr ""
+
 #: src/lib/jellyfin/user-config.ts
 msgid "Could not save that setting"
 msgstr ""
@@ -1530,6 +1534,10 @@ msgstr ""
 
 #: src/app/settings/downloads.tsx
 msgid "Downloads at once"
+msgstr ""
+
+#: src/app/downloads/page.tsx
+msgid "Downloads run while the app is open, and carry on where they stopped when it opens again."
 msgstr ""
 
 #: src/app/settings/downloads.tsx
@@ -3916,6 +3924,10 @@ msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Save title pages"
+msgstr ""
+
+#: src/app/downloads/page.tsx
+msgid "Save to device"
 msgstr ""
 
 #: src/app/settings/cache.tsx

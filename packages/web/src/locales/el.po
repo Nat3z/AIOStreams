@@ -1211,6 +1211,10 @@ msgstr "Δεν ήταν δυνατή η επιλογή έκδοσης."
 msgid "Could not read that file"
 msgstr "Δεν ήταν δυνατή η ανάγνωση αυτού του αρχείου"
 
+#: src/app/downloads/page.tsx
+msgid "Could not save it"
+msgstr ""
+
 #: src/lib/jellyfin/user-config.ts
 msgid "Could not save that setting"
 msgstr "Δεν ήταν δυνατή η αποθήκευση αυτής της ρύθμισης"
@@ -1532,6 +1536,10 @@ msgstr "Λήψεις"
 #: src/app/settings/downloads.tsx
 msgid "Downloads at once"
 msgstr "Ταυτόχρονες λήψεις"
+
+#: src/app/downloads/page.tsx
+msgid "Downloads run while the app is open, and carry on where they stopped when it opens again."
+msgstr ""
 
 #: src/app/settings/downloads.tsx
 msgid "Downloads wait for Wi-Fi or another unmetered network rather than use mobile data."
@@ -3921,6 +3929,10 @@ msgstr "Αποθήκευση υποτίτλων"
 #: src/app/settings/cache.tsx
 msgid "Save title pages"
 msgstr "Αποθήκευση σελίδων τίτλων"
+
+#: src/app/downloads/page.tsx
+msgid "Save to device"
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Save what you browse"

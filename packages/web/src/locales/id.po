@@ -1216,6 +1216,10 @@ msgstr "Tidak dapat memilih salah satu."
 msgid "Could not read that file"
 msgstr "Tidak dapat membaca berkas tersebut"
 
+#: src/app/downloads/page.tsx
+msgid "Could not save it"
+msgstr ""
+
 #: src/lib/jellyfin/user-config.ts
 msgid "Could not save that setting"
 msgstr "Tidak dapat menyimpan pengaturan tersebut"
@@ -1539,6 +1543,10 @@ msgstr "Unduhan"
 #: src/app/settings/downloads.tsx
 msgid "Downloads at once"
 msgstr "Unduhan bersamaan"
+
+#: src/app/downloads/page.tsx
+msgid "Downloads run while the app is open, and carry on where they stopped when it opens again."
+msgstr ""
 
 #: src/app/settings/downloads.tsx
 msgid "Downloads wait for Wi-Fi or another unmetered network rather than use mobile data."
@@ -3945,6 +3953,10 @@ msgstr "Simpan subtitel"
 #: src/app/settings/cache.tsx
 msgid "Save title pages"
 msgstr "Simpan halaman judul"
+
+#: src/app/downloads/page.tsx
+msgid "Save to device"
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Save what you browse"
