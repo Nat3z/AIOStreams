@@ -3,6 +3,7 @@ import { CACHE_CATEGORIES } from '@/lib/cache/store';
 import { appBridge } from '@/lib/hosts/shell/bridge';
 import { readQuickFilters, type QuickFilter } from '@/lib/versions';
 import { readBadgeSettings, type BadgeSettings } from '@/lib/badges';
+import { BUMPER_SLOTS, defaultBumpers } from '@/lib/playback/bumpers';
 import {
   type Setting,
   device,
@@ -278,6 +279,13 @@ export const NEXT_COUNTDOWNS = [5, 10, 15, 30] as const;
 /** Episodes in a row with no input before asking; 0 never asks. */
 export const STILL_WATCHING_AFTER = [0, 2, 3, 4, 5, 8] as const;
 
+/** A set length of pre-show, or what a showtime leaves after the movie. */
+export const PRESHOW_MODES = ['length', 'showtime'] as const;
+export type PreshowMode = (typeof PRESHOW_MODES)[number];
+export const PRESHOW_MINUTES = [5, 10, 15, 20, 30] as const;
+/** Minutes from the pre-show's start to the movie's end. */
+export const SHOWTIME_MINUTES = [120, 135, 150, 165, 180, 210, 240] as const;
+
 export const DOWNLOADS_AT_ONCE = [1, 2, 3, 4] as const;
 export const DOWNLOAD_SEARCHES = [1, 2, 3, 4, 6, 8] as const;
 
@@ -332,6 +340,14 @@ const segment = record(SEGMENT_TYPES, (type) =>
   syncedChoice<SegmentAction>(`segment${type}`, SEGMENT_ACTIONS, 'ask', [
     `aiostreams-web-segment-${type.toLowerCase()}`,
   ])
+);
+
+// Links one a line, a showing drawing one; empty leaves the slot out. Keyed
+// anew from the single link each once was.
+const bumper = record(BUMPER_SLOTS, (slot) =>
+  device<string>(`aiostreams-web-preshow-${slot}-list`, () =>
+    defaultBumpers(slot)
+  )
 );
 
 const onTv = () => document.documentElement.hasAttribute('data-tv');
@@ -583,6 +599,25 @@ export const settings = {
     ]),
     skipRecaps: syncedFlag('skipRecaps', true, ['aiostreams-web-skip-recaps']),
     markUnaired: syncedFlag('markUnaired', true),
+  },
+  preshow: {
+    mode: device<PreshowMode>(
+      'aiostreams-web-preshow-mode',
+      'length',
+      PRESHOW_MODES
+    ),
+    minutes: device<number>(
+      'aiostreams-web-preshow-minutes',
+      15,
+      PRESHOW_MINUTES
+    ),
+    showtime: device<number>(
+      'aiostreams-web-preshow-showtime',
+      150,
+      SHOWTIME_MINUTES
+    ),
+    sameGenre: device<boolean>('aiostreams-web-preshow-same-genre', true),
+    bumper,
   },
   party: {
     /** What other members send shows over the video. */

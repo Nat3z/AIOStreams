@@ -1,6 +1,9 @@
 import { plural, t } from '@lingui/core/macro';
+import { Trans } from '@lingui/react/macro';
 import { Select } from '@aiostreams/ui/select';
 import { Switch } from '@aiostreams/ui/switch';
+import { Textarea } from '@aiostreams/ui/textarea';
+import { Button } from '@aiostreams/ui/button';
 import { shellHost } from '@/lib/hosts/shell';
 import { usePlaybackPrefs } from '@/lib/jellyfin/user-config';
 import {
@@ -16,6 +19,11 @@ import {
   type SegmentType,
 } from '@/lib/settings';
 import { useFeature } from '@/lib/jellyfin/server-info';
+import {
+  BUMPER_SLOTS,
+  bumperLabel,
+  defaultBumpers,
+} from '@/lib/playback/bumpers';
 import { SettingsCard } from './_components/settings-card';
 import { BadgesRow, QuickFiltersRow } from './_components/version-settings';
 import { seconds } from './_components/common';
@@ -67,6 +75,71 @@ function SegmentActionSelect({ type }: { type: SegmentType }) {
       value={action}
       onValueChange={(v) => setAction(v as SegmentAction)}
     />
+  );
+}
+
+function BumperInput({ slot }: { slot: (typeof BUMPER_SLOTS)[number] }) {
+  const [urls, setUrls] = useSetting(settings.preshow.bumper[slot]);
+  const preset = defaultBumpers(slot);
+  return (
+    <div className="space-y-1.5">
+      <Textarea
+        label={bumperLabel(slot)}
+        placeholder={t`Left out`}
+        rows={Math.max(2, preset.split('\n').length)}
+        value={urls}
+        onValueChange={setUrls}
+        className="font-mono text-xs"
+      />
+      {urls !== preset && (
+        <Button
+          size="sm"
+          intent="gray-subtle"
+          className="rounded-full"
+          onClick={() => setUrls(preset)}
+        >
+          <Trans>Reset</Trans>
+        </Button>
+      )}
+    </div>
+  );
+}
+
+function PreshowCard() {
+  const [sameGenre, setSameGenre] = useSetting(settings.preshow.sameGenre);
+  return (
+    <SettingsCard
+      name="preshow"
+      title={t`Pre-show`}
+      description={t`Hold Play on a movie, or open its menu, to play bumpers and trailers before it as at the theater.`}
+      holds="device"
+    >
+      <Switch
+        side="right"
+        label={t`Trailers in the same genre`}
+        help={t`Trailers for movies like this one come first, then the newest.`}
+        value={sameGenre}
+        onValueChange={setSameGenre}
+      />
+      <div className="space-y-3">
+        <div>
+          <p className="text-sm font-semibold">
+            <Trans>Bumpers</Trans>
+          </p>
+          <p className="text-sm text-[--muted]">
+            <Trans>
+              One link a line; each showing plays one from each at random, the
+              welcome before the trailers and the rest after. Any video or
+              YouTube link works, and an empty one is left out. When time is
+              short, the feature presentation is kept longest.
+            </Trans>
+          </p>
+        </div>
+        {BUMPER_SLOTS.map((slot) => (
+          <BumperInput key={slot} slot={slot} />
+        ))}
+      </div>
+    </SettingsCard>
   );
 }
 
@@ -226,6 +299,7 @@ export function PlaybackSection() {
           />
         )}
       </SettingsCard>
+      <PreshowCard />
       <SettingsCard name="skipping" title={t`Skipping`} holds="profile">
         {SEGMENT_TYPES.map((type) => (
           <SegmentActionSelect key={type} type={type} />

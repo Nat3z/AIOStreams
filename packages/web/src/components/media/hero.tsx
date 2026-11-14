@@ -24,6 +24,7 @@ import type { JellyfinClient } from '@/lib/jellyfin/client';
 import type { BaseItemDto } from '@/lib/jellyfin/types';
 import { pageRtl } from '@/lib/direction';
 import { useHold } from '@/hooks/use-hold';
+import { offersPreshow, openPreshow } from '@/features/player/preshow-dialog';
 import { useLatest } from '@/hooks/use-latest';
 import { CachedImage } from '@/components/cached-image';
 import {
@@ -269,7 +270,9 @@ function HeroDetails({
           startMs: ticksToMs(item.UserData?.PlaybackPositionTicks),
           held,
         });
-  const holdPlay = useHold(() => play(true));
+  const holdPlay = useHold(() =>
+    offersPreshow(item) ? openPreshow(item) : play(true)
+  );
   const phone = useMediaQuery('(max-width: 639px)');
   const open = () => navigate(itemPath(item), { fromHero: phone });
   const parts: [string, React.ReactNode][] = [

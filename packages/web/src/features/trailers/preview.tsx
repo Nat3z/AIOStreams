@@ -21,6 +21,7 @@ import {
   useTrailerPlayback,
   type Trailer,
 } from '@/lib/playback/trailers';
+import { embedUrl, useEmbedEvents } from '@/lib/playback/youtube-embed';
 import type { EngineFactory, VideoFrame } from '@/lib/playback/engine';
 import type { BaseItemDto } from '@/lib/jellyfin/types';
 import { useLatest } from '@/hooks/use-latest';
@@ -569,12 +570,6 @@ function clipTo(frame: Box, hole: Box, radius: number): string {
   return `inset(${top}px ${right}px ${bottom}px ${left}px round ${radius}px)`;
 }
 
-const EMBED_ORIGIN = 'https://www.youtube-nocookie.com';
-
-/** YouTube's states, as its embed posts them. */
-const PLAYING = 1;
-const ENDED = 0;
-
 /** A YouTube embed without its controls, cropped to fill the box. */
 function EmbeddedPreview({
   id,
@@ -591,43 +586,10 @@ function EmbeddedPreview({
   const frame = React.useRef<HTMLIFrameElement>(null);
   const [playing, setPlaying] = React.useState(false);
   useShown(playing, onShown);
-  const latest = useLatest({ onFailed, onEnded });
-  React.useEffect(() => {
-    const listen = (e: MessageEvent) => {
-      if (
-        e.origin !== EMBED_ORIGIN ||
-        e.source !== frame.current?.contentWindow
-      )
-        return;
-      let data: { event?: string; info?: unknown };
-      try {
-        data = JSON.parse(String(e.data));
-      } catch {
-        return;
-      }
-      const state =
-        data.event === 'onStateChange'
-          ? data.info
-          : data.event === 'infoDelivery'
-            ? (data.info as { playerState?: number } | undefined)?.playerState
-            : undefined;
-      if (state === PLAYING) setPlaying(true);
-      else if (state === ENDED) latest.current.onEnded();
-      if (data.event === 'onError') latest.current.onFailed();
-    };
-    addEventListener('message', listen);
-    return () => removeEventListener('message', listen);
-  }, [latest]);
-  const query = new URLSearchParams({
-    autoplay: '1',
-    mute: muted ? '1' : '0',
-    controls: '0',
-    disablekb: '1',
-    playsinline: '1',
-    rel: '0',
-    iv_load_policy: '3',
-    enablejsapi: '1',
-    origin: location.origin,
+  const onLoad = useEmbedEvents(frame, id, {
+    onPlaying: () => setPlaying(true),
+    onEnded,
+    onFailed,
   });
   return createPortal(
     <div
@@ -649,16 +611,15 @@ function EmbeddedPreview({
       <iframe
         ref={frame}
         title={t`Trailer`}
-        src={`${EMBED_ORIGIN}/embed/${id}?${query}`}
+        src={embedUrl(id, {
+          mute: muted ? '1' : '0',
+          controls: '0',
+          disablekb: '1',
+        })}
         allow="autoplay; encrypted-media"
         referrerPolicy="strict-origin-when-cross-origin"
         tabIndex={-1}
-        onLoad={() =>
-          frame.current?.contentWindow?.postMessage(
-            JSON.stringify({ event: 'listening', id, channel: 'widget' }),
-            EMBED_ORIGIN
-          )
-        }
+        onLoad={onLoad}
         style={{
           width: video.width,
           height: video.height,

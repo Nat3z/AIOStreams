@@ -29,7 +29,8 @@ import { usePlay } from '@/features/player/use-play';
 import { currentHost } from '@/lib/hosts';
 import { useRestoreFocus } from '@/lib/input';
 import { airsLater, itemSubtitle, itemTitle, ticksToMs } from '@/lib/format';
-import { itemPath, navigate, to } from '@/lib/paths';
+import { itemPath, navigate } from '@/lib/paths';
+import { playPath } from '@/lib/playback/preshow';
 import { settings, useSetting } from '@/lib/settings';
 import type { BaseItemDto, PlaybackInfoResponse } from '@/lib/jellyfin/types';
 import { type Request, Versions, focusSelf } from './version-list';
@@ -203,7 +204,7 @@ export function VersionPickerProvider({
         chosenPlayer().kind !== 'link' &&
         party.state()?.status !== 'live'
       ) {
-        navigate(to.play(item.Id!, last?.id ?? '', startMs, playlist), {
+        navigate(playPath(item, last?.id ?? '', startMs, playlist), {
           replace,
         });
         return;
@@ -295,7 +296,7 @@ export function VersionPickerProvider({
           chosenPlayer().kind !== 'link' &&
           (!version || version === local.source!.Id)
         ) {
-          navigate(to.play(item.Id!, local.source!.Id!, startMs, playlist), {
+          navigate(playPath(item, local.source!.Id!, startMs, playlist), {
             replace,
           });
           return;

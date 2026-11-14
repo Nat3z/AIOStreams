@@ -43,6 +43,7 @@ import {
 } from '@/features/versions/version-picker';
 import type { BaseItemDto } from '@/lib/jellyfin/types';
 import { useHold } from '@/hooks/use-hold';
+import { offersPreshow, openPreshow } from '@/features/player/preshow-dialog';
 import { focusDialog, useDialogStart } from '@/lib/input';
 import { CachedImage } from '@/components/cached-image';
 import { trailersOf } from '@/lib/playback/trailers';
@@ -195,9 +196,13 @@ export function Header({
     : code
       ? t`Play ${code}`
       : t`Play`;
+  // Holding Play on a movie asks for a pre-show; elsewhere it does what the
+  // version list setting doesn't.
   const holdPlay = useHold(
     target
-      ? () => picker.play(target, { startMs: resumeMs, held: true })
+      ? offersPreshow(target)
+        ? () => openPreshow(target)
+        : () => picker.play(target, { startMs: resumeMs, held: true })
       : undefined
   );
   const quick =
