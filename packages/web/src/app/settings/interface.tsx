@@ -432,9 +432,7 @@ function ThisDevice() {
   const [tabNames, setTabNames] = useSetting(settings.interface.tabNames);
   const [railShape, setRailShape] = useSetting(settings.interface.railShape);
   const [railNames, setRailNames] = useSetting(settings.interface.railNames);
-  const [background, setBackground] = useSetting(
-    settings.theme.glassSurface
-  );
+  const [background, setBackground] = useSetting(settings.theme.glassSurface);
   const [startPage, setStartPage] = useSetting(settings.interface.startPage);
   const rail = tv
     ? tvNavigation === 'rail'
@@ -703,9 +701,7 @@ export function InterfaceExample() {
   const [episodeLayout, setEpisodeLayout] = useSetting(
     settings.interface.episodeLayout
   );
-  const [background, setBackground] = useSetting(
-    settings.theme.glassSurface
-  );
+  const [background, setBackground] = useSetting(settings.theme.glassSurface);
   const art = useArt();
   const look: Look = {
     hero: heroMode,
