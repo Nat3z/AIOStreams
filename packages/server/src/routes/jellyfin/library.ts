@@ -1544,8 +1544,7 @@ router.get(
     // Recommendations are empty with nothing watched.
     const views = withoutRequiredGenre(await ctx.views())
       .filter(
-        (v) =>
-          v.collectionType === 'movies' && !isPersonalCatalog(v.catalog.id)
+        (v) => v.collectionType === 'movies' && !isPersonalCatalog(v.catalog.id)
       )
       .slice(0, 3);
     const out = [];
