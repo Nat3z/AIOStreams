@@ -38,11 +38,7 @@ export function holdsIn(layer: Layer | null, holds: Holds | undefined) {
   );
 }
 
-export function holdsText(
-  layer: Layer | null,
-  holds: Holds,
-  locked?: boolean
-) {
+export function holdsText(layer: Layer | null, holds: Holds, locked?: boolean) {
   if (holds === 'device' || holds === 'local') {
     return layer?.everyone
       ? t`The default for every device. A device that changes it keeps its own.`
