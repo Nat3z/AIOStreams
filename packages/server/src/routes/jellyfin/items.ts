@@ -371,13 +371,13 @@ export async function viewItems(
 ): Promise<JellyfinItem[]> {
   const [views, config] = await Promise.all([
     ctx.views(),
-    JellyfinRepository.getUserConfiguration(ctx.watch),
+    storedPreferences(ctx.watch),
   ]);
   const items = views.map((v) =>
     buildView(ctx.build, v.catalog, v.collectionType)
   );
   const ids = (key: string): string[] =>
-    Array.isArray(config?.[key]) ? (config[key] as string[]) : [];
+    Array.isArray(config[key]) ? (config[key] as string[]) : [];
   const ordered = ids('OrderedViews');
   const hidden = new Set(opts.hidden ? [] : ids('MyMediaExcludes'));
   const rank = (item: JellyfinItem): number => {

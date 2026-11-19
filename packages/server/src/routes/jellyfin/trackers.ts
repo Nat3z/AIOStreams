@@ -8,6 +8,8 @@ import {
   constants,
   createLogger,
   decryptString,
+  isOwner,
+  OWNER_ID,
   selfStateOf,
   serialQueue,
   TRACKER_PROVIDERS,
@@ -47,6 +49,10 @@ const userKey = (uuid: string, persona: string | null) =>
 const isProvider = (value: string): value is TrackerProvider =>
   (TRACKER_PROVIDERS as readonly string[]).includes(value);
 
+/** Links and their passwords key the owner as no profile, as they did before profiles. */
+const personaKey = (ctx: JellyfinRequestContext): string | null =>
+  isOwner(ctx.profile) ? null : ctx.profile.id;
+
 /** The user's AIOMetadata password, derived so nothing more is stored. */
 function passwordFor(uuid: string, persona: string | null): string {
   return createHmac('sha256', appConfig.bootstrap.secretKey)
@@ -58,10 +64,7 @@ function linkedOf(
   userData: UserData,
   persona: string | null
 ): SelfAddon | undefined {
-  const found = persona
-    ? userData.jellyfin?.personas?.find((p) => p.id === persona)
-    : null;
-  return selfStateOf(userData, found ?? null).addons.find(
+  return selfStateOf(userData, { id: persona ?? OWNER_ID }).addons.find(
     (a) => a.source === SOURCE
   );
 }
@@ -105,7 +108,7 @@ async function link(
   await updateSelf(
     who.uuid,
     configPassword(who.encryptedPassword),
-    who.persona,
+    who.persona ?? OWNER_ID,
     { addons: { source: SOURCE, addons } }
   );
   await forgetConfig(who.uuid, who.encryptedPassword);
@@ -145,8 +148,8 @@ trackersRouter.get(
   '/AIOStreams/Profile/Trackers',
   self(async (_req, res, ctx) => {
     const aiom = AIOMetadata.fromConfig();
-    const shared = ctx.persona?.history === 'shared';
-    const persona = ctx.persona?.id ?? null;
+    const shared = ctx.profile.history === 'shared';
+    const persona = personaKey(ctx);
     const linked = linkedOf(ctx.userData, persona);
     const userUUID = linked && aiom?.userOf(linked.manifestUrl);
     const accounts =
@@ -167,7 +170,7 @@ trackersRouter.post(
       return;
     }
     // A shared history syncs with the primary user's trackers, never its own.
-    if (ctx.persona?.history === 'shared') {
+    if (ctx.profile.history === 'shared') {
       res.status(400).json({
         Message: 'You share the main history, so its trackers are yours',
       });
@@ -180,7 +183,7 @@ trackersRouter.post(
       {
         uuid: ctx.uuid,
         encryptedPassword: ctx.encryptedPassword,
-        persona: ctx.persona?.id ?? null,
+        persona: personaKey(ctx),
         provider,
       },
       PENDING_TTL,
@@ -195,7 +198,7 @@ trackersRouter.delete(
   self(async (req, res, ctx) => {
     const provider = String(req.params.provider);
     const aiom = service();
-    const persona = ctx.persona?.id ?? null;
+    const persona = personaKey(ctx);
     if (!isProvider(provider)) {
       res.status(404).json({ Message: 'Not signed in' });
       return;

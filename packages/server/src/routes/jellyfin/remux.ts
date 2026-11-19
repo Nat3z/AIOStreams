@@ -15,7 +15,7 @@ import {
 } from '@aiostreams/core';
 import { jfOptional, param, qs } from './context.js';
 import { ensureMemo, locate, pickSource } from './playback.js';
-import { accountName } from './users.js';
+import { profileName } from './users.js';
 
 const logger = createLogger('jellyfin');
 const router: Router = Router({ mergeParams: true });
@@ -43,7 +43,7 @@ async function sessionFor(
   try {
     return await remuxSession(
       remuxSourceOf(source, memo!.psid, {
-        name: ctx.persona?.name ?? accountName(ctx.userData),
+        name: profileName(ctx.userData, ctx.profile),
         client: ctx.client.name,
         device: ctx.client.device,
         ip: req.requestIp || req.ip,
