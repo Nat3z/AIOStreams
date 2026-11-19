@@ -763,11 +763,7 @@ export const jellyfinContext: RequestHandler = async (req, res, next) => {
           )
         : null;
       // A link ends with its maker's leave to make one.
-      if (
-        !ctx ||
-        ctx === UNKNOWN_USER ||
-        !guestLeaveOf(ctx.profile)
-      ) {
+      if (!ctx || ctx === UNKNOWN_USER || !guestLeaveOf(ctx.profile)) {
         res.status(401).json({ Message: 'This link has ended' });
         return;
       }
@@ -928,9 +924,7 @@ export async function contextFromCredentials(
       undefined,
       pass
     );
-    return ctx &&
-      ctx !== UNKNOWN_USER &&
-      guestLeaveOf(ctx.profile)
+    return ctx && ctx !== UNKNOWN_USER && guestLeaveOf(ctx.profile)
       ? ctx
       : null;
   }
