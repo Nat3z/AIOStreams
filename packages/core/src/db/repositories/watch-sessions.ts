@@ -276,7 +276,7 @@ export class WatchSessionRepository {
   static async clearScope(scope: WatchScope): Promise<void> {
     await getDb().exec(
       sql`DELETE FROM watch_sessions
-           WHERE uuid = ${scope.uuid} AND persona = ${scope.persona}`
+           WHERE uuid = ${scope.uuid} AND persona = ${scope.profile}`
     );
   }
 

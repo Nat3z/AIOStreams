@@ -135,9 +135,9 @@ router.post(
         .json({ Message: 'Only the owner configures this server' });
       return;
     }
-    if (ctx.persona)
+    if (!isOwner(ctx.profile))
       logger.info(
-        { uuid: ctx.uuid, persona: ctx.persona.id },
+        { uuid: ctx.uuid, profile: ctx.profile.id },
         'user opened the configure page as admin'
       );
     const code = await issueAdminHandoff();
