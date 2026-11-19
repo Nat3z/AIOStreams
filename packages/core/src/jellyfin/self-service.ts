@@ -10,12 +10,19 @@
 import { z } from 'zod';
 import {
   UserRepository,
-  isPersonaLockHash,
+  isProfileLockHash,
   USER_PASSWORD_MIN,
-  type JellyfinPersona,
+  type Profile,
   type UserData,
 } from '../db/index.js';
-import { constants, createLogger, getSimpleTextHash } from '../utils/index.js';
+import {
+  constants,
+  createLogger,
+  getSimpleTextHash,
+  isOwner,
+  OWNER_ID,
+  profilesOf,
+} from '../utils/index.js';
 import {
   isSelfVariant,
   SELF_VARIANT_MARKER as STATE_MARKER,
@@ -24,15 +31,15 @@ import {
 const logger = createLogger('jellyfin');
 
 /**
- * `self` for the primary user and `self-<id>` for a persona, hashed when the id
- * would not fit, so no two users can land on the same variant.
+ * `self` for the owner and `self-<id>` for another profile, hashed when the id
+ * would not fit, so no two profiles can land on the same variant.
  */
-export function selfVariantId(persona: JellyfinPersona | null): string {
-  if (!persona) return 'self';
+export function selfVariantId(profile: Pick<Profile, 'id'>): string {
+  if (isOwner(profile)) return 'self';
   const id =
-    persona.id.length <= 27
-      ? persona.id
-      : getSimpleTextHash(persona.id).slice(0, 27);
+    profile.id.length <= 27
+      ? profile.id
+      : getSimpleTextHash(profile.id).slice(0, 27);
   return `self-${id}`;
 }
 
@@ -72,7 +79,7 @@ export interface SelfState {
 }
 
 /** The script that applies a user's own state, with the state itself kept as its first line. */
-function scriptFor(persona: JellyfinPersona | null, state: SelfState): string {
+function scriptFor(profile: Profile, state: SelfState): string {
   const lines = [STATE_MARKER + JSON.stringify(state)];
   const p = state.preferences;
   if (p.maxResolution) {
@@ -100,7 +107,7 @@ function scriptFor(persona: JellyfinPersona | null, state: SelfState): string {
   }
   // Instance ids are pinned so the user's tracker pick can name them.
   for (const addon of state.addons) {
-    const preset = presetFor(addon, selfAddonInstanceId(persona, addon.source));
+    const preset = presetFor(addon, selfAddonInstanceId(profile, addon.source));
     lines.push(`add presets ${JSON.stringify(preset)}`);
   }
   return lines.join('\n');
@@ -108,10 +115,10 @@ function scriptFor(persona: JellyfinPersona | null, state: SelfState): string {
 
 /** Stable per source, so the tracker pick survives a relink. */
 export function selfAddonInstanceId(
-  persona: JellyfinPersona | null,
+  profile: Pick<Profile, 'id'>,
   source: string
 ): string {
-  return `${selfVariantId(persona)}~${source}`;
+  return `${selfVariantId(profile)}~${source}`;
 }
 
 function presetFor(addon: SelfAddon, instanceId: string) {
@@ -144,27 +151,21 @@ function readState(userData: UserData, id: string): SelfState {
   return { preferences: {}, addons: [] };
 }
 
-/** The user as stored, primary included, or null when they no longer exist. */
-type StoredUser = NonNullable<NonNullable<UserData['jellyfin']>['primary']> &
-  Partial<Pick<JellyfinPersona, 'id' | 'trackers'>>;
-
-function storedUser(
-  userData: UserData,
-  personaId: string | null
-): StoredUser | null {
-  if (personaId === null) {
-    userData.jellyfin ??= {};
-    return (userData.jellyfin.primary ??= {});
-  }
-  return userData.jellyfin?.personas?.find((p) => p.id === personaId) ?? null;
+/** The profile as stored, the owner included, or null when it no longer exists. */
+function storedProfile(userData: UserData, profileId: string): Profile | null {
+  userData.profiles ??= [];
+  const found = userData.profiles.find((p) => p.id === profileId);
+  if (found) return found;
+  if (profileId !== OWNER_ID) return null;
+  // The owner is first, even before it has anything stored.
+  const owner: Profile = { id: OWNER_ID };
+  userData.profiles.unshift(owner);
+  return owner;
 }
 
-/** Drops the own variants of users removed from the configuration. */
+/** Drops the own variants of profiles removed from the configuration. */
 export function pruneSelfVariants(userData: UserData): void {
-  const live = new Set([
-    selfVariantId(null),
-    ...(userData.jellyfin?.personas ?? []).map((p) => selfVariantId(p)),
-  ]);
+  const live = new Set(profilesOf(userData).map((p) => selfVariantId(p)));
   userData.variants = userData.variants?.filter(
     (v) => !isSelfVariant(v) || live.has(v.id)
   );
@@ -172,9 +173,9 @@ export function pruneSelfVariants(userData: UserData): void {
 
 export function selfStateOf(
   userData: UserData,
-  persona: JellyfinPersona | null
+  profile: Pick<Profile, 'id'>
 ): SelfState {
-  return readState(userData, selfVariantId(persona));
+  return readState(userData, selfVariantId(profile));
 }
 
 export interface SelfProfilePatch {
@@ -216,7 +217,7 @@ const serialised = serialQueue();
 export function updateSelf(
   uuid: string,
   configPassword: string,
-  personaId: string | null,
+  profileId: string,
   patch: SelfProfilePatch
 ): Promise<void> {
   return serialised(uuid, async () => {
@@ -224,7 +225,7 @@ export function updateSelf(
       uuid,
       configPassword
     );
-    const user = storedUser(userData, personaId);
+    const user = storedProfile(userData, profileId);
     if (!user)
       throw new constants.APIError(constants.ErrorCode.USER_INVALID_DETAILS);
 
@@ -234,7 +235,7 @@ export function updateSelf(
     if (patch.password !== undefined) {
       if (
         patch.password.length < USER_PASSWORD_MIN ||
-        isPersonaLockHash(patch.password)
+        isProfileLockHash(patch.password)
       ) {
         throw new constants.APIError(
           constants.ErrorCode.BAD_REQUEST,
@@ -246,8 +247,7 @@ export function updateSelf(
     }
 
     if (patch.preferences || patch.addons) {
-      const persona = personaId === null ? null : (user as JellyfinPersona);
-      const id = selfVariantId(persona);
+      const id = selfVariantId(user);
       const state = readState(userData, id);
       if (patch.preferences) state.preferences = patch.preferences;
       if (patch.addons) {
@@ -256,7 +256,7 @@ export function updateSelf(
           ...patch.addons.addons,
         ];
       }
-      writeSelfVariant(userData, user, persona, id, state);
+      writeSelfVariant(userData, user, id, state);
     }
 
     await UserRepository.updateUser(uuid, configPassword, userData, revision);
@@ -265,8 +265,7 @@ export function updateSelf(
 
 function writeSelfVariant(
   userData: UserData,
-  user: StoredUser,
-  persona: JellyfinPersona | null,
+  user: Profile,
   id: string,
   state: SelfState
 ): void {
@@ -279,7 +278,7 @@ function writeSelfVariant(
     userData.variants = others;
     user.variants = chosen;
   } else {
-    const script = scriptFor(persona, state);
+    const script = scriptFor(user, state);
     userData.variants = [
       ...others,
       { id, name: `${user.name ?? 'Owner'} (own)`, script },
@@ -291,7 +290,7 @@ function writeSelfVariant(
   // A linked tracker is the user's own history, so it is theirs alone.
   const trackerIds = state.addons
     .filter((a) => a.tracker)
-    .map((a) => selfAddonInstanceId(persona, a.source));
+    .map((a) => selfAddonInstanceId(user, a.source));
   const ownPrefix = `${id}~`;
   const kept = (user.trackers ?? []).filter((t) => !t.startsWith(ownPrefix));
   const trackers = [...kept, ...trackerIds];
