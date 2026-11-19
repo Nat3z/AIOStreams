@@ -265,34 +265,34 @@ function Grids() {
         </DeviceOnly>
       )}
       <DeviceOnly>
-      <Answer
-        label={t`Trailers`}
-        help={t`Play by themselves once you rest on a title for a moment. In the hero, only one you went to. Kept on this device.`}
-      >
-        <Pills
-          multiple
-          label={t`Play by themselves`}
-          options={[
-            ...(touch ? [] : [{ value: 'cards', label: t`Cards` }]),
-            { value: 'hero', label: t`Hero` },
-            { value: 'item', label: t`Title pages` },
-          ]}
-          isOn={(v) => trailers[v as TrailerSpot]}
-          onPick={(v) =>
-            setTrailers({
-              ...trailers,
-              [v]: !trailers[v as TrailerSpot],
-            })
-          }
-        />
-        <Switch
-          side="right"
-          label={t`Sound`}
-          help={t`Off, a trailer still plays with sound once you open it whole.`}
-          value={trailerSound}
-          onValueChange={setTrailerSound}
-        />
-      </Answer>
+        <Answer
+          label={t`Trailers`}
+          help={t`Play by themselves once you rest on a title for a moment. In the hero, only one you went to. Kept on this device.`}
+        >
+          <Pills
+            multiple
+            label={t`Play by themselves`}
+            options={[
+              ...(touch ? [] : [{ value: 'cards', label: t`Cards` }]),
+              { value: 'hero', label: t`Hero` },
+              { value: 'item', label: t`Title pages` },
+            ]}
+            isOn={(v) => trailers[v as TrailerSpot]}
+            onPick={(v) =>
+              setTrailers({
+                ...trailers,
+                [v]: !trailers[v as TrailerSpot],
+              })
+            }
+          />
+          <Switch
+            side="right"
+            label={t`Sound`}
+            help={t`Off, a trailer still plays with sound once you open it whole.`}
+            value={trailerSound}
+            onValueChange={setTrailerSound}
+          />
+        </Answer>
       </DeviceOnly>
       <Answer label={t`Search`}>
         <Switch

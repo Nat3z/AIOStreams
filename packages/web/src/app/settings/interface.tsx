@@ -18,11 +18,7 @@ import {
   type TouchNavigation,
   type TvNavigation,
 } from '@/lib/settings';
-import {
-  Answer,
-  AnswerGroup,
-  Pills,
-} from './_components/common';
+import { Answer, AnswerGroup, Pills } from './_components/common';
 import { startPages } from '@/lib/start-page';
 
 /* What follows the user comes first, then what's kept on this device. */
@@ -155,11 +151,7 @@ function Navigation() {
   const shown = shownBackground(background);
 
   return (
-    <AnswerGroup
-      name="navigation"
-      title={t`Navigation`}
-      holds="device"
-    >
+    <AnswerGroup name="navigation" title={t`Navigation`} holds="device">
       <Answer
         label={t`Start on`}
         help={t`The page the app opens on. A link still opens what it points to.`}

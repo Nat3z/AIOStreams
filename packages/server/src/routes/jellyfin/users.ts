@@ -470,9 +470,7 @@ router.post(
     const byOwn =
       !proven && mount ? await ownPasswordSignIn(mount, wanted, pw) : null;
     if (mount && byOwn) {
-      if (
-        !(await userUnlocks(mount.uuid, byOwn.profile, byOwn.pin))
-      ) {
+      if (!(await userUnlocks(mount.uuid, byOwn.profile, byOwn.pin))) {
         res.status(401).json({ Message: PIN_REQUIRED });
         return;
       }
