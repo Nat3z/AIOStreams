@@ -95,7 +95,7 @@ export class JellyfinRepository {
   static async clearDisplayPrefs(scope: WatchScope): Promise<void> {
     await getDb().exec(
       sql`DELETE FROM jellyfin_display_prefs
-           WHERE uuid = ${scope.uuid} AND persona = ${scope.persona}`
+           WHERE uuid = ${scope.uuid} AND persona = ${scope.profile}`
     );
   }
 

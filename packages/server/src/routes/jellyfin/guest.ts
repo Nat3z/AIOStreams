@@ -37,7 +37,8 @@ import {
   type JellyfinRequestContext,
 } from './context.js';
 import { decodeItemForRequest, itemFromDescriptor } from './items.js';
-import { userConfiguration, userPolicy } from './users.js';
+import { userPolicy } from './users.js';
+import { userConfiguration } from './preferences.js';
 import { serverName } from './system.js';
 
 /*
