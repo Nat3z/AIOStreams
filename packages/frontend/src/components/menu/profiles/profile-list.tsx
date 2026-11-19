@@ -571,9 +571,9 @@ function SetupLinkModal({
     <Modal open onOpenChange={onClose} title={`Set up ${name}`}>
       <div className="space-y-4">
         <p className="text-sm text-[--muted]">
-          Send this to {name}. It signs them in once, without a
-          password, and walks them through their name, picture, preferences and
-          a password of their own. It works for 7 days, until they finish.
+          Send this to {name}. It signs them in once, without a password, and
+          walks them through their name, picture, preferences and a password of
+          their own. It works for 7 days, until they finish.
         </p>
         <p className="text-sm">{inviteState(invite)}</p>
         {url && (
