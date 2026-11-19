@@ -242,7 +242,7 @@ export function validateVariants(
     );
   }
   const selfCount = variants.length - own.length;
-  if (selfCount > appConfig.jellyfin.maxPersonas + 1) {
+  if (selfCount > appConfig.jellyfin.maxProfiles + 1) {
     throw new Error(`Too many users' own variants (${selfCount}).`);
   }
 

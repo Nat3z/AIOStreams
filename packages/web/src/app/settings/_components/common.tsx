@@ -281,12 +281,15 @@ export function AnswerGroup({
   name,
   title,
   holds,
+  description,
   children,
 }: {
   /** `data-name`, which custom CSS matches, so it stays in English. */
   name: string;
   title: string;
-  holds: Holds;
+  /** Where its settings are kept, said under the title unless `description` says more. */
+  holds?: Holds;
+  description?: string;
   children: React.ReactNode;
 }) {
   const layer = useSettingsLayer();
@@ -308,7 +311,7 @@ export function AnswerGroup({
           data-ui="settings-card-description"
           className="text-sm text-[--muted]"
         >
-          {holdsText(layer, holds)}
+          {description ?? (holds && holdsText(layer, holds))}
         </p>
       </div>
       {children}
