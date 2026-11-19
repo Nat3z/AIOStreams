@@ -123,7 +123,10 @@ function secretFor(
   // a signed-in device would hand over the owner.
   if (user.profile.id === ctx.profile.id) return locked ? 'pin' : null;
   // A profile's session may have begun with its PIN alone.
-  if (instance || (!provedPassword(ctx) && (isOwner(user.profile) || !locked))) {
+  if (
+    instance ||
+    (!provedPassword(ctx) && (isOwner(user.profile) || !locked))
+  ) {
     return locked ? 'password-pin' : 'password';
   }
   return locked ? 'pin' : null;
@@ -139,10 +142,7 @@ async function passwordOpens(
     () => true,
     () => false
   );
-  return (
-    opensConfig ||
-    userPasswordOpens(ctx.uuid, user.profile, password)
-  );
+  return opensConfig || userPasswordOpens(ctx.uuid, user.profile, password);
 }
 
 async function secretOpens(

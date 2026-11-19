@@ -291,9 +291,7 @@ router.post(
 router.get(
   '/AIOStreams/Profile/Stremio',
   self(async (_req, res, ctx) => {
-    res.json(
-      await StremioTokenRepository.list(ctx.uuid, ownTokenId(ctx))
-    );
+    res.json(await StremioTokenRepository.list(ctx.uuid, ownTokenId(ctx)));
   })
 );
 
