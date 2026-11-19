@@ -13,6 +13,8 @@ import {
   config as appConfig,
   updateSelf,
   USER_PASSWORD_MIN,
+  isOwner,
+  profileById,
   type SelfProfilePatch,
 } from '@aiostreams/core';
 import {
@@ -20,9 +22,7 @@ import {
   forgetConfig,
   jf,
   lockTag,
-  personaById,
   resolveConfig,
-  userPasswordOf,
   userPasswordOpens,
   type JellyfinRequestContext,
 } from './context.js';
@@ -64,7 +64,7 @@ export async function saveSelf(
 ): Promise<void> {
   const dec = decryptString(ctx.encryptedPassword);
   if (!dec.success || !dec.data) throw new Error('Unreadable session');
-  await updateSelf(ctx.uuid, dec.data, ctx.persona?.id ?? null, patch);
+  await updateSelf(ctx.uuid, dec.data, ctx.profile.id, patch);
   await forgetConfig(ctx.uuid, ctx.encryptedPassword);
 }
 
@@ -75,14 +75,9 @@ export async function confirmsPassword(
   password: unknown
 ): Promise<boolean> {
   // A user without a password of their own signed in with the configuration's.
-  if (!userPasswordOf(ctx.userData, ctx.persona)) return true;
+  if (!ctx.profile.password) return true;
   if (!(await jellyfinLoginRateLimiter.tryConsume(req))) return false;
-  return userPasswordOpens(
-    ctx.uuid,
-    ctx.userData,
-    ctx.persona,
-    String(password ?? '')
-  );
+  return userPasswordOpens(ctx.uuid, ctx.profile, String(password ?? ''));
 }
 
 function sendError(res: Response, error: unknown): void {
@@ -100,13 +95,13 @@ function sendError(res: Response, error: unknown): void {
 router.get(
   '/AIOStreams/Profile',
   self(async (_req, res, ctx) => {
-    const user = ctx.persona ?? ctx.userData.jellyfin?.primary;
-    const state = selfStateOf(ctx.userData, ctx.persona);
+    const user = ctx.profile;
+    const state = selfStateOf(ctx.userData, user);
     res.json({
-      name: user?.name ?? null,
-      avatar: user?.avatar ?? null,
-      hasPin: !!user?.lock,
-      hasPassword: !!user?.password,
+      name: user.name ?? null,
+      avatar: user.avatar ?? null,
+      hasPin: !!user.lock,
+      hasPassword: !!user.password,
       passwordMin: USER_PASSWORD_MIN,
       preferences: state.preferences,
       linked: state.addons.map((a) => ({ source: a.source, name: a.name })),
@@ -115,9 +110,9 @@ router.get(
   })
 );
 
-/** The instance's own primary user, who is its owner. */
+/** The instance's own owner profile. */
 async function ownsInstance(ctx: JellyfinRequestContext): Promise<boolean> {
-  return !ctx.persona && (await isInstanceConfig(ctx.uuid));
+  return isOwner(ctx.profile) && (await isInstanceConfig(ctx.uuid));
 }
 
 // The owner is already signed in, so the configure page asks nothing more.
@@ -158,7 +153,7 @@ router.post(
       logger.info(
         {
           uuid: ctx.uuid,
-          persona: ctx.persona?.id,
+          profile: ctx.profile.id,
           fields: Object.keys(patch),
         },
         'user updated their profile'
@@ -169,13 +164,12 @@ router.post(
       }
       // A new PIN ends the user's other sessions, but not this one.
       const userData = await resolveConfig(ctx.uuid, ctx.encryptedPassword);
-      const persona =
-        userData && ctx.persona ? personaById(userData, ctx.persona.id) : null;
+      const profile = userData ? profileById(userData, ctx.profile.id) : null;
       const { iat: _, ...payload } = readToken(ctx.token)!;
       res.json({
         AccessToken: mintToken({
           ...payload,
-          l: (userData && lockTag(userData, persona)) || undefined,
+          l: (profile && lockTag(profile)) || undefined,
         }),
       });
     } catch (error) {
@@ -234,7 +228,7 @@ router.post(
       if (
         !invite ||
         invite.uuid !== ctx.uuid ||
-        invite.persona !== ctx.persona?.id ||
+        invite.persona !== ctx.profile.id ||
         !(await UserInviteRepository.consume(token))
       ) {
         res
@@ -248,7 +242,7 @@ router.post(
         throw error;
       });
       logger.info(
-        { uuid: ctx.uuid, persona: ctx.persona?.id },
+        { uuid: ctx.uuid, profile: ctx.profile.id },
         'user finished setting up'
       );
       res.status(204).end();
@@ -257,6 +251,10 @@ router.post(
     }
   })
 );
+
+/** Install links store the owner as no profile. */
+const ownTokenId = (ctx: JellyfinRequestContext): string | null =>
+  isOwner(ctx.profile) ? null : ctx.profile.id;
 
 const installBody = z.object({
   password: z.string().max(128).optional(),
@@ -277,7 +275,7 @@ router.post(
         {
           uuid: ctx.uuid,
           encryptedPassword: ctx.encryptedPassword,
-          persona: ctx.persona?.id ?? null,
+          persona: ownTokenId(ctx),
         },
         label
       );
@@ -294,7 +292,7 @@ router.get(
   '/AIOStreams/Profile/Stremio',
   self(async (_req, res, ctx) => {
     res.json(
-      await StremioTokenRepository.list(ctx.uuid, ctx.persona?.id ?? null)
+      await StremioTokenRepository.list(ctx.uuid, ownTokenId(ctx))
     );
   })
 );
@@ -304,7 +302,7 @@ router.delete(
   self(async (req, res, ctx) => {
     const revoked = await StremioTokenRepository.revoke(
       ctx.uuid,
-      ctx.persona?.id ?? null,
+      ownTokenId(ctx),
       String(req.params.id)
     );
     res.status(revoked ? 204 : 404).end();

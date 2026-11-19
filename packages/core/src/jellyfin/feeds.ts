@@ -164,7 +164,7 @@ async function picksFor(
   tmdb: TMDBMetadata,
   scope: WatchScope
 ): Promise<Picks | null> {
-  const key = `${scope.uuid}|${scope.persona}`;
+  const key = `${scope.uuid}|${scope.profile}`;
   const cached = await picksCache.get(key);
   if (cached) return cached;
   const { seeds, watched } = await historyOf(scope);

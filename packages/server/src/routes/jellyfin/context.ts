@@ -588,7 +588,10 @@ async function buildContext(
   let scope: string | null = null;
   let views: Promise<ViewEntry[]> | null = null;
   let leafEvidence: Promise<LeafEvidence> | null = null;
-  const finalUserData: UserData = { ...userData, watchPersona: persona?.id };
+  const finalUserData: UserData = {
+    ...userData,
+    watchPersona: isOwner(profile) ? undefined : profile.id,
+  };
   const engineOf = (data: UserData) =>
     new AIOStreams(data, {
       skipFailedAddons: true,

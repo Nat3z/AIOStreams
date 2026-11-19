@@ -636,22 +636,22 @@ router.post(
       found &&
       (!mount ||
         (mount.uuid.toLowerCase() === found.uuid.toLowerCase() &&
-          (!mount.persona || mount.persona === found.persona)))
+          (!mount.profile || mount.profile === found.persona)))
         ? found
         : null;
     const userData = invite
       ? await resolveConfig(invite.uuid, invite.encryptedPassword)
       : null;
-    const persona =
-      invite && userData ? personaById(userData, invite.persona) : null;
-    if (!opened || !invite || !userData || !persona) {
+    const profile =
+      invite && userData ? profileById(userData, invite.persona) : null;
+    if (!opened || !invite || !userData || !profile || isOwner(profile)) {
       res
         .status(401)
         .json({ Message: 'This link has expired or was opened elsewhere' });
       return;
     }
     logger.info(
-      { uuid: invite.uuid, persona: persona.id, done: opened.done },
+      { uuid: invite.uuid, profile: profile.id, done: opened.done },
       'setup link opened'
     );
     res.json({
@@ -660,7 +660,7 @@ router.post(
         invite.uuid,
         invite.encryptedPassword,
         userData,
-        persona
+        profile
       )),
       // Already set up, so the app opens rather than the welcome steps.
       SetUp: opened.done,
