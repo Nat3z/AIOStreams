@@ -38,11 +38,7 @@ export const AVATAR_REFUSED = 'A PNG, JPEG or WebP image under 512 KB';
 
 /** The uploads the configuration's users show, which cleanup keeps. */
 function avatarsInUse(userData: UserData | null): string[] {
-  const users = [
-    userData?.jellyfin?.primary,
-    ...(userData?.jellyfin?.personas ?? []),
-  ];
-  return users.flatMap((u) => {
+  return (userData?.profiles ?? []).flatMap((u) => {
     const id = /\/avatars\/([\w-]+)$/.exec(u?.avatar ?? '')?.[1];
     return id ? [id] : [];
   });
