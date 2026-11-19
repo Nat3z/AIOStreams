@@ -18,6 +18,8 @@ import {
   VARIANT_QUERY_PARAM,
   VARIANT_PATH_PARAM,
   StremioTokenRepository,
+  isOwner,
+  profileById,
   config as appConfig,
 } from '@aiostreams/core';
 import { syncUserDataUrls } from '../utils/syncUserData.js';
@@ -149,18 +151,14 @@ export const userDataMiddleware = async (
     userData.uuid = uuid;
     userData.ip = req.userIp;
     if (tokenPersona !== undefined) {
-      const persona = tokenPersona
-        ? userData.jellyfin?.personas?.find((p) => p.id === tokenPersona)
-        : null;
-      if (tokenPersona && !persona) {
+      const profile = profileById(userData, tokenPersona ?? '');
+      if (!profile) {
         next(new APIError(constants.ErrorCode.USER_INVALID_DETAILS));
         return;
       }
-      tokenVariants = persona
-        ? (persona.variants ?? [])
-        : (userData.jellyfin?.primary?.variants ?? []);
+      tokenVariants = profile.variants ?? [];
       userData.installUrl = `${appConfig.bootstrap.baseUrl}/s/${req.params.stremioToken}`;
-      userData.watchPersona = persona?.id;
+      userData.watchPersona = isOwner(profile) ? undefined : profile.id;
     }
 
     if (resource !== 'configure') {
