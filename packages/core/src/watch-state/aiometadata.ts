@@ -1,6 +1,6 @@
 import { config as appConfig } from '../config/index.js';
 import { APIError, ErrorCode } from '../utils/constants.js';
-import { makeRequest } from '../utils/http.js';
+import { makeRequest } from '../utils/http/index.js';
 
 /*
  * The instance's own AIOMetadata, which tracks for its users: each one gets a
@@ -219,7 +219,7 @@ export class AIOMetadata {
         ...(body !== undefined && { 'Content-Type': 'application/json' }),
       },
       body: body === undefined ? undefined : JSON.stringify(body),
-      rawOptions: { redirect: 'manual' },
+      redirect: 'manual',
     });
   }
 
