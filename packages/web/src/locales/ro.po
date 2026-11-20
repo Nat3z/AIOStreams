@@ -15,6 +15,15 @@ msgstr ""
 msgid "(you)"
 msgstr "(tu)"
 
+#. placeholder {0}: hours / 24
+#: src/components/guest-share.tsx
+msgid "{0, plural, one {# day} other {# days}}"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "{across} posters fit across a row in a wide window."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "{address} did not answer. Check that it is running, then try again."
 msgstr "{address} nu a răspuns. Verifică dacă funcționează, apoi încearcă iar."
@@ -67,6 +76,10 @@ msgstr "{count, plural, one {Descărcare adăugată} other {# descărcări adău
 msgid "{count, plural, one {Trailer} other {Trailers}}"
 msgstr "{count, plural, one {Trailer} other {Trailere}}"
 
+#: src/app/guest/page.tsx
+msgid "{days} days left"
+msgstr ""
+
 #: src/app/downloads/page.tsx
 msgid "{downloaded} downloaded"
 msgstr "{downloaded} descărcat"
@@ -75,7 +88,8 @@ msgstr "{downloaded} descărcat"
 msgid "{episodeCount, plural, one {# episode watched} other {# episodes watched}}"
 msgstr "{episodeCount, plural, one {# episod văzut} other {# episoade văzute}}"
 
-#: src/app/downloads/page.tsx src/app/history/page.tsx
+#: src/app/downloads/page.tsx
+#: src/app/history/page.tsx
 #: src/app/item/_components/seasons.tsx
 msgid "{episodeCount, plural, one {# episode} other {# episodes}}"
 msgstr "{episodeCount, plural, one {# episod} other {# episoade}}"
@@ -116,6 +130,10 @@ msgstr "{help} {bytes}."
 msgid "{host}'s party"
 msgstr "grupul organizat de {host}"
 
+#: src/components/guest-share.tsx
+msgid "{hours, plural, one {# hour} other {# hours}}"
+msgstr ""
+
 #. Hours, as in 2h
 #: src/lib/format.ts
 msgid "{hours}h"
@@ -134,10 +152,24 @@ msgstr "{inProgress, plural, one {# în curs} other {# în curs}}"
 msgid "{key} is taken by {taken}"
 msgstr "{key} e luat de {taken}"
 
-#: src/app/downloads/page.tsx src/app/live-tv/_components/channel-details.tsx
-#: src/components/media/card-preview.tsx src/components/media/episodes.tsx
+#: src/components/guest-share.tsx
+msgid "{left, plural, one {# more link you can make this month} other {# more links you can make this month}}"
+msgstr ""
+
+#: src/app/downloads/page.tsx
+#: src/app/live-tv/_components/channel-details.tsx
+#: src/components/media/card-preview.tsx
+#: src/components/media/episodes.tsx
 msgid "{left} left"
 msgstr "{left} rămas"
+
+#: src/features/player/preshow-dialog.tsx
+msgid "{m, plural, one {# min} other {# min}}"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "{m, plural, one {# minute} other {# minutes}}"
+msgstr ""
 
 #: src/features/party/not-in-party.tsx
 msgid "{members, plural, one {# watching} other {# watching}}"
@@ -171,6 +203,10 @@ msgstr "{name} este programat pentru {day} ({until}). Doriți să descărcați o
 #: src/features/versions/unaired-question.tsx
 msgid "{name} airs {day} ({until}). Play it anyway?"
 msgstr "{name} este programat pentru {day} ({until}). Doriți să redați oricum?"
+
+#: src/app/preshow/page.tsx
+msgid "{name} in {left}"
+msgstr ""
 
 #: src/features/party/party-host.tsx
 msgid "{name} joined the party"
@@ -232,11 +268,13 @@ msgstr "{selected, plural, one {# selectat} other {# selectate}}"
 msgid "{shown}×"
 msgstr "{shown}×"
 
-#: src/features/player/controls.tsx src/features/player/picture-in-picture.tsx
+#: src/features/player/controls.tsx
+#: src/features/player/picture-in-picture.tsx
 msgid "{stepSeconds, plural, one {Back # second} other {Back # seconds}}"
 msgstr "{stepSeconds, plural, one {Înapoi # secundă} other {Înapoi # secunde}}"
 
-#: src/features/player/controls.tsx src/features/player/picture-in-picture.tsx
+#: src/features/player/controls.tsx
+#: src/features/player/picture-in-picture.tsx
 msgid "{stepSeconds, plural, one {Forward # second} other {Forward # seconds}}"
 msgstr "{stepSeconds, plural, one {Înainte # secundă} other {Înainte # secunde}}"
 
@@ -269,6 +307,10 @@ msgstr "{url} este adresa fluxului, {encodedUrl} este aceeași adresă codificat
 msgid "{used} used. Past this, what was used longest ago goes first."
 msgstr "{used} utilizate. Dacă se depășește această limită, cele folosite cel mai demult vor fi eliminate primele."
 
+#: src/app/settings/account.tsx
+msgid "{watching, plural, one {# watching now} other {# watching now}}"
+msgstr ""
+
 #: src/features/party/party-layer.tsx
 msgid "{who} jumped to {to}"
 msgstr "{who} a sărit la {to}"
@@ -284,6 +326,10 @@ msgstr "{who} a reluat redarea"
 #: src/features/party/party-layer.tsx
 msgid "{who} started {title}"
 msgstr "{who} a pornit {title}"
+
+#: src/app/guest/page.tsx
+msgid "{whole} h left"
+msgstr ""
 
 #: src/lib/playback/sound.ts
 msgid "+{amount} ms"
@@ -329,6 +375,10 @@ msgstr "Format de 12 ore ({twelve})"
 msgid "24-hour ({twentyFour})"
 msgstr "Format de 12 ore ({twentyFour})"
 
+#: src/app/settings/profile.tsx
+msgid "4 to 12 digits."
+msgstr ""
+
 #: src/app/settings/audio.tsx
 msgid "5.1 surround"
 msgstr "5.1 surround"
@@ -337,9 +387,21 @@ msgstr "5.1 surround"
 msgid "7.1 surround"
 msgstr "7.1 surround"
 
+#: src/app/settings/player-example.tsx
+msgid "8s"
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "A badge shows on each version whose text matches its pattern: the name and description your formatter writes, the file name, and the tags read from it."
 msgstr "Un ecuson este afișat pe fiecare versiune al cărei text corespunde modelului definit: numele și descrierea generate de formatorul tău, numele fișierului și etichetele preluate din acesta."
+
+#: src/app/settings/player-example.tsx
+msgid "A button lets you skip the intro."
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "A cleaner Jellyfin app, with downloads."
+msgstr ""
 
 #: src/features/party/not-in-party.tsx
 msgid "A code is looked up on the relay picked above."
@@ -348,6 +410,10 @@ msgstr "Un cod este căutat pe serverul de retransmisie selectat mai sus."
 #: src/app/settings/cache.tsx
 msgid "A day"
 msgstr "O zi"
+
+#: src/components/guest-share.tsx
+msgid "A guest watches through this configuration's proxy, so the debrid service only ever sees one address. Set up a proxy on the configuration page first."
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "A month"
@@ -393,7 +459,12 @@ msgstr "Despre"
 msgid "Accent"
 msgstr "Accent"
 
-#: src/app/settings/page.tsx src/components/shell/layout.tsx
+#: src/app/preshow/page.tsx
+msgid "Accompany this feature"
+msgstr ""
+
+#: src/app/settings/page.tsx
+#: src/components/shell/layout.tsx
 #: src/components/shell/nav/mobile-nav.tsx
 msgid "Account"
 msgstr "Cont"
@@ -402,12 +473,19 @@ msgstr "Cont"
 msgid "Account and server"
 msgstr "Cont și server"
 
+#: src/app/settings/profile.tsx
+msgid "Accounts"
+msgstr ""
+
 #: src/app/history/page.tsx
 msgid "Actions"
 msgstr "Acțiuni"
 
-#: src/app/history/page.tsx src/app/home/page.tsx src/app/settings/apps.tsx
-#: src/app/settings/cache.tsx src/app/settings/interface.tsx
+#: src/app/history/page.tsx
+#: src/app/home/page.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/cache.tsx
+#: src/app/settings/interface.tsx
 #: src/components/shell/layout.tsx
 msgid "Activity"
 msgstr "Activitate"
@@ -436,7 +514,8 @@ msgstr "Adaugă o tastă pentru {label}"
 msgid "Add a language"
 msgstr "Adaugă o limbă"
 
-#: src/app.tsx src/app/servers/page.tsx
+#: src/app.tsx
+#: src/app/servers/page.tsx
 msgid "Add a server"
 msgstr "Adaugă un server"
 
@@ -462,10 +541,15 @@ msgstr "Adaugă la favorite"
 msgid "Add from Continue watching"
 msgstr "Adaugă din Continuă vizionarea"
 
-#: src/app/item/_components/actions.tsx src/components/media/item-menu.tsx
+#: src/app/item/_components/actions.tsx
+#: src/components/media/item-menu.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Add to playlist"
 msgstr "Adaugă în lista de redare"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Add to the app"
+msgstr ""
 
 #: src/features/playlists/playlists.tsx
 msgid "Add to this playlist"
@@ -475,9 +559,14 @@ msgstr "Adaugă în această listă de redare"
 msgid "Added {name}"
 msgstr "Adăugat {name}"
 
-#: src/app/player/page.tsx src/features/playlists/playlists.tsx
+#: src/app/player/page.tsx
+#: src/features/playlists/playlists.tsx
 msgid "Added to {name}"
 msgstr "Adăugat în {name}"
+
+#: src/app/settings/profile.tsx
+msgid "Addons, catalogs and everyone's accounts."
+msgstr ""
 
 #: src/app/settings/account.tsx
 #, fuzzy
@@ -492,6 +581,10 @@ msgstr "Adresă"
 msgid "Ads"
 msgstr "Reclame"
 
+#: src/app/welcome/page.tsx
+msgid "Again"
+msgstr ""
+
 #: src/lib/i18n.ts
 msgid "AIOStreams is a solo project built and maintained by me in my free time. If you find it useful, please consider supporting my work. Your donation helps me keep the project alive and improve it for everyone!"
 msgstr "AIOStreams este un proiect realizat și întreținut de o singură persoană, în timpul liber. Dacă îți este util, ia în calcul să îmi sprijini munca. Donația ta mă ajută să țin proiectul în viață și să îl îmbunătățesc pentru toată lumea!"
@@ -504,12 +597,15 @@ msgstr "Difuzare"
 msgid "Airs {day} · {until}"
 msgstr "Difuzare {day} · {until}"
 
-#: src/app/discover/page.tsx src/app/favourites/page.tsx
-#: src/components/media/kind-tabs.tsx src/features/versions/version-list.tsx
+#: src/app/discover/page.tsx
+#: src/app/favourites/page.tsx
+#: src/components/media/kind-tabs.tsx
+#: src/features/versions/version-list.tsx
 msgid "All"
 msgstr "Toate"
 
-#: src/app/home/page.tsx src/features/live-tv/live-tv.ts
+#: src/app/home/page.tsx
+#: src/features/live-tv/live-tv.ts
 msgid "All channels"
 msgstr "Toate canalele"
 
@@ -549,7 +645,9 @@ msgstr "La fel și când revii la el după o jumătate de oră. Cine se uita con
 msgid "Alt"
 msgstr "Alt"
 
-#: src/app/settings/audio.tsx src/app/settings/interface.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/interface.tsx
+#: src/app/settings/player-example.tsx
 #: src/app/settings/subtitles.tsx
 msgid "Always"
 msgstr "Întotdeauna"
@@ -562,7 +660,8 @@ msgstr "Afișează întotdeauna subtitrări, în limba ta când versiunea le are
 msgid "An audio track you pick while watching a show sets the language for its other episodes. Picking what the settings above would play forgets it."
 msgstr "O pistă audio aleasă în timp ce urmărești un serial stabilește limba pentru celelalte episoade ale acestuia. Dacă schimbi setările de mai sus, această alegere se pierde."
 
-#: src/app/settings/about.tsx src/app/settings/page.tsx
+#: src/app/settings/about.tsx
+#: src/app/settings/page.tsx
 #: src/lib/hosts/jellyfin-android.ts
 msgid "Android app"
 msgstr "Aplicația Android"
@@ -571,7 +670,8 @@ msgstr "Aplicația Android"
 msgid "Android's own player, which uses less battery: the screen shows the video as the device decodes it, at the video's frame rate. Plays video the device can decode. Styled subtitles look as they do in mpv."
 msgstr "Playerul propriu de la Android, care consumă mai puțină baterie: ecranul afișează videoclipul așa cum îl decodează dispozitivul, la rata de cadre a videoclipului. Redă videoclipuri pe care dispozitivul le poate decoda. Subtitrările formatate arată ca în fișierul mpv."
 
-#: src/app/settings/player.tsx src/lib/input/actions.ts
+#: src/app/settings/player.tsx
+#: src/lib/input/actions.ts
 msgid "Anime upscaling"
 msgstr "Mărește rezoluția anime"
 
@@ -587,11 +687,32 @@ msgstr "Mărește rezoluția anime: pornit"
 msgid "Another relay"
 msgstr "Alt server de retransmisie"
 
+#: src/app/settings/profile.tsx
+msgid "Any"
+msgstr ""
+
+#: src/components/guest-share.tsx
+msgid "Anyone can open the link, so this caps how many play at once."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Anyone using this device can switch to you without it."
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "Anyone watching with it stops now, and the link no longer opens."
+msgstr ""
+
 #: src/features/party/not-in-party.tsx
 msgid "Anyone with the invite can join, from any server."
 msgstr "Oricine are invitația se poate alătura, de pe orice server."
 
-#: src/app/settings/page.tsx src/lib/hosts/native-shell.ts
+#: src/components/guest-share.tsx
+msgid "Anyone with the link can watch <0>{title}</0> without an account, through your configuration."
+msgstr ""
+
+#: src/app/settings/page.tsx
+#: src/lib/hosts/native-shell.ts
 msgid "App"
 msgstr "Aplicație"
 
@@ -639,6 +760,10 @@ msgstr "Grafică"
 msgid "As the host"
 msgstr "În calitate de gazdă"
 
+#: src/app/settings/player-example.tsx
+msgid "As the version marks them"
+msgstr ""
+
 #: src/components/media/sort-picker.tsx
 msgid "Ascending"
 msgstr "Crescător"
@@ -646,6 +771,10 @@ msgstr "Crescător"
 #: src/app/settings/playback.tsx
 msgid "Ask if you are still watching"
 msgstr "Întreabă dacă mai urmărești"
+
+#: src/app/settings/player-example.tsx
+msgid "Ask me"
+msgstr ""
 
 #: src/app/settings/account.tsx
 msgid "Ask when the app opens"
@@ -655,7 +784,13 @@ msgstr "Întreabă la deschiderea aplicației"
 msgid "At 0% there is no background."
 msgstr "La 0% nu există fundal."
 
-#: src/app/settings/page.tsx src/features/player/options.tsx
+#: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
+msgid "At least {min} characters"
+msgstr ""
+
+#: src/app/settings/page.tsx
+#: src/features/player/options.tsx
 #: src/features/remote/remote-sheet.tsx
 msgid "Audio"
 msgstr "Audio"
@@ -680,20 +815,24 @@ msgstr "Audio: {label}"
 msgid "Auto-play the first version"
 msgstr "Redă automat prima versiune"
 
-#: src/app/settings/audio.tsx src/app/settings/browsing.tsx
-#: src/app/settings/interface.tsx src/app/settings/player.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/browsing.tsx
+#: src/app/settings/interface.tsx
+#: src/app/settings/player.tsx
 msgid "Automatic"
 msgstr "Automat"
 
-#: src/app/settings/browsing.tsx
-msgid "Automatic lists episodes on narrow screens and puts them in a row on wide ones."
-msgstr "Afișează automat episoadele în listă pe ecranele înguste și într-un rând pe cele late."
-
-#: src/app/player/page.tsx src/app/servers/page.tsx
-#: src/app/settings/_components/licenses.tsx src/app/sign-in/page.tsx
-#: src/app/trailer/page.tsx src/components/back-button.tsx
-#: src/components/shell/history-buttons.tsx src/features/party/not-in-party.tsx
-#: src/features/player/controls.tsx src/features/player/next-episode.tsx
+#: src/app/player/page.tsx
+#: src/app/servers/page.tsx
+#: src/app/settings/_components/licenses.tsx
+#: src/app/sign-in/page.tsx
+#: src/app/trailer/page.tsx
+#: src/app/welcome/page.tsx
+#: src/components/back-button.tsx
+#: src/components/shell/history-buttons.tsx
+#: src/features/party/not-in-party.tsx
+#: src/features/player/controls.tsx
+#: src/features/player/next-episode.tsx
 #: src/lib/input/actions.ts
 msgid "Back"
 msgstr "Înapoi"
@@ -707,7 +846,8 @@ msgid "Back in the player"
 msgstr "Înapoi în player"
 
 #: src/app/settings/_components/version-settings.tsx
-#: src/app/settings/subtitles.tsx src/app/settings/theme.tsx
+#: src/app/settings/subtitles.tsx
+#: src/app/settings/theme.tsx
 msgid "Background"
 msgstr "Fundal"
 
@@ -727,6 +867,10 @@ msgstr "Insigne"
 msgid "Bar"
 msgstr "Bară"
 
+#: src/app/settings/profile.tsx
+msgid "Because you watched"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Before the end"
 msgstr "Înainte de final"
@@ -735,7 +879,8 @@ msgstr "Înainte de final"
 msgid "Below zero plays the sound earlier, as for wireless headphones that lag behind the picture."
 msgstr "La valori negative, sunetul este redat mai devreme pentru a compensa întârzierea căștilor wireless față de imagine."
 
-#: src/features/player/options.tsx src/lib/input/actions.ts
+#: src/features/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Bigger subtitles"
 msgstr "Subtitrări mai mari"
 
@@ -807,7 +952,8 @@ msgstr "Pagina de start a browserului"
 msgid "Browser Search"
 msgstr "Căutare în browser"
 
-#: src/app/settings/page.tsx src/lib/discord.ts
+#: src/app/settings/page.tsx
+#: src/lib/discord.ts
 msgid "Browsing"
 msgstr "Navigare"
 
@@ -819,11 +965,24 @@ msgstr "mpv integrat"
 msgid "Built-in player"
 msgstr "Player integrat"
 
+#: src/app/settings/playback.tsx
+msgid "Bumpers"
+msgstr ""
+
+#: src/features/player/preshow-dialog.tsx
+msgid "Bumpers and trailers for other movies, then the movie."
+msgstr ""
+
 #: src/app/settings/theme.tsx
 msgid "Buttons, progress bars and highlights."
 msgstr "Butoane, bare de progres și evidențieri."
 
-#: src/app/settings/page.tsx src/lib/hosts/shell/player.ts
+#: src/app/preshow/page.tsx
+msgid "By the Motion Picture Association of America, Inc."
+msgstr ""
+
+#: src/app/settings/page.tsx
+#: src/lib/hosts/shell/player.ts
 msgid "Cache"
 msgstr "Cache"
 
@@ -831,16 +990,21 @@ msgstr "Cache"
 msgid "Cache size"
 msgstr "Dimensiunea cache-ului"
 
-#: src/app/calendar/page.tsx src/app/home/page.tsx src/app/settings/apps.tsx
-#: src/app/settings/interface.tsx src/components/shell/layout.tsx
+#: src/app/calendar/page.tsx
+#: src/app/home/page.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/interface.tsx
+#: src/components/shell/layout.tsx
 msgid "Calendar"
 msgstr "Calendar"
 
-#: src/app/servers/page.tsx src/app/sign-in/page.tsx
+#: src/app/servers/page.tsx
+#: src/app/sign-in/page.tsx
 msgid "Can’t reach"
 msgstr "Nu se poate conecta"
 
-#: src/app/sign-in/page.tsx src/components/shell/unreachable.tsx
+#: src/app/sign-in/page.tsx
+#: src/components/shell/unreachable.tsx
 #: src/lib/jellyfin/client.ts
 msgid "Can't reach the server"
 msgstr "Nu se poate conecta la server"
@@ -849,11 +1013,19 @@ msgstr "Nu se poate conecta la server"
 msgid "Can’t reach the server"
 msgstr "Nu se poate conecta la server"
 
-#: src/app/downloads/page.tsx src/app/settings/_components/version-settings.tsx
-#: src/components/send-report.tsx src/features/playlists/playlists.tsx
+#: src/app/downloads/page.tsx
+#: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
+#: src/components/send-report.tsx
+#: src/features/player/preshow-dialog.tsx
+#: src/features/playlists/playlists.tsx
 #: src/lib/i18n.ts
 msgid "Cancel"
 msgstr "Anulează"
+
+#: src/app/settings/browsing.tsx
+msgid "Card you rest on"
+msgstr ""
 
 #: src/app/settings/browsing.tsx
 msgid "Cards"
@@ -879,11 +1051,20 @@ msgstr "Schimbă"
 msgid "Change folder"
 msgstr "Schimbă folderul"
 
+#: src/app/settings/profile.tsx
+msgid "Change password"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Change PIN"
+msgstr ""
+
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Change reactions"
 msgstr "Schimbă reacțiile"
 
-#: src/app/settings/account.tsx src/app/sign-in/page.tsx
+#: src/app/settings/account.tsx
+#: src/app/sign-in/page.tsx
 #: src/components/media/no-catalogs.tsx
 msgid "Change server"
 msgstr "Schimbă serverul"
@@ -912,9 +1093,13 @@ msgstr "Canalul anterior"
 msgid "Channel up"
 msgstr "Canalul următor"
 
-#: src/app/favourites/page.tsx src/app/live-tv/page.tsx src/app/search/page.tsx
-#: src/app/settings/audio.tsx src/features/live-tv/channel-list.tsx
-#: src/features/player/live.tsx src/features/player/options.tsx
+#: src/app/favourites/page.tsx
+#: src/app/live-tv/page.tsx
+#: src/app/search/page.tsx
+#: src/app/settings/audio.tsx
+#: src/features/live-tv/channel-list.tsx
+#: src/features/player/live.tsx
+#: src/features/player/options.tsx
 msgid "Channels"
 msgstr "Canale"
 
@@ -922,11 +1107,13 @@ msgstr "Canale"
 msgid "Channels show here once your setup has an addon with live TV."
 msgstr "Canalele apar aici după ce configurația ta are un addon cu canale TV."
 
-#: src/features/player/chapters.tsx src/features/player/keys.ts
+#: src/features/player/chapters.tsx
+#: src/features/player/keys.ts
 msgid "Chapter {number}"
 msgstr "Capitolul {number}"
 
-#: src/features/player/chapters.tsx src/features/player/options.tsx
+#: src/features/player/chapters.tsx
+#: src/features/player/options.tsx
 msgid "Chapters"
 msgstr "Capitole"
 
@@ -938,7 +1125,8 @@ msgstr "Chat"
 msgid "Check now"
 msgstr "Verifică acum"
 
-#: src/app/settings/apps.tsx src/lib/hosts/shell/index.ts
+#: src/app/settings/apps.tsx
+#: src/lib/hosts/shell/index.ts
 msgid "Checking…"
 msgstr "Se verifică…"
 
@@ -975,7 +1163,8 @@ msgid "Clear selection"
 msgstr "Anulează selecția"
 
 #: src/components/shell/crash-report.tsx
-#: src/components/shell/window-controls.tsx src/features/player/mini-player.tsx
+#: src/components/shell/window-controls.tsx
+#: src/features/player/mini-player.tsx
 #: src/features/player/picture-in-picture.tsx
 msgid "Close"
 msgstr "Închide"
@@ -992,8 +1181,10 @@ msgstr "Cod copiat"
 msgid "Code or invite link"
 msgstr "Cod sau link de invitație"
 
-#: src/app/discover/page.tsx src/app/item/_components/collection.tsx
-#: src/app/search/page.tsx src/lib/format.ts
+#: src/app/discover/page.tsx
+#: src/app/item/_components/collection.tsx
+#: src/app/search/page.tsx
+#: src/lib/format.ts
 msgid "Collections"
 msgstr "Colecții"
 
@@ -1015,7 +1206,8 @@ msgstr "Culori și CSS personalizat"
 msgid "Combine movie and show results"
 msgstr "Combină rezultatele pentru filme și seriale"
 
-#: src/app/settings/audio.tsx src/lib/playback/controller.ts
+#: src/app/settings/audio.tsx
+#: src/lib/playback/controller.ts
 msgid "Commentary"
 msgstr "Comentariu"
 
@@ -1027,7 +1219,12 @@ msgstr "Compatibilitate"
 msgid "Composer"
 msgstr "Compozitor"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Computer"
+msgstr ""
+
 #: src/app/settings/account.tsx
+#: src/app/settings/profile.tsx
 msgid "Configuration"
 msgstr "Configurație"
 
@@ -1035,11 +1232,8 @@ msgstr "Configurație"
 msgid "Configuration ids are left out of their copy too."
 msgstr "Nici ID-urile de configurare nu sunt incluse în copia acestora."
 
-#: src/app/sign-in/page.tsx
-msgid "Configuration password"
-msgstr "Parola configurației"
-
-#: src/app/item/_components/no-details.tsx src/components/media/no-catalogs.tsx
+#: src/app/item/_components/no-details.tsx
+#: src/components/media/no-catalogs.tsx
 msgid "Configure"
 msgstr "Configurează"
 
@@ -1048,6 +1242,8 @@ msgid "Confirm"
 msgstr "Confirmă"
 
 #: src/app/servers/page.tsx
+#: src/app/settings/player-example.tsx
+#: src/app/settings/profile.tsx
 msgid "Connect"
 msgstr "Conectează"
 
@@ -1059,11 +1255,14 @@ msgstr "Conectat la Discord."
 msgid "Connection lost"
 msgstr "Conexiune pierdută"
 
-#: src/app.tsx src/app/sign-in/page.tsx
+#: src/app.tsx
+#: src/app/sign-in/page.tsx
+#: src/app/welcome/page.tsx
 msgid "Continue"
 msgstr "Continuă"
 
-#: src/app/home/page.tsx src/app/settings/browsing.tsx
+#: src/app/home/page.tsx
+#: src/app/settings/browsing.tsx
 #: src/features/player/next-episode.tsx
 msgid "Continue watching"
 msgstr "Continuă vizionarea"
@@ -1072,11 +1271,17 @@ msgstr "Continuă vizionarea"
 msgid "Controls"
 msgstr "Comenzi"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Copied"
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "Copied as JSON"
 msgstr "Copiat ca JSON"
 
-#: src/app/settings/apps.tsx src/components/shell/crash-report.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/profile.tsx
+#: src/components/shell/crash-report.tsx
 msgid "Copy"
 msgstr "Copiază"
 
@@ -1088,7 +1293,9 @@ msgstr "Copiază ca JSON"
 msgid "Copy code"
 msgstr "Copiază codul"
 
-#: src/app/player/page.tsx src/features/party/in-party.tsx
+#: src/app/player/page.tsx
+#: src/components/guest-share.tsx
+#: src/features/party/in-party.tsx
 msgid "Copy link"
 msgstr "Copiază linkul"
 
@@ -1100,7 +1307,8 @@ msgstr "Copiază linkul fluxului"
 msgid "Corner button"
 msgstr "Butonul din colț"
 
-#: src/app/player/page.tsx src/features/playlists/playlists.tsx
+#: src/app/player/page.tsx
+#: src/features/playlists/playlists.tsx
 msgid "Could not add to {name}"
 msgstr "Nu s-a putut adăuga în {name}"
 
@@ -1112,6 +1320,8 @@ msgstr "Nu s-a putut verifica: {error}"
 msgid "Could not connect: {message}"
 msgstr "Nu s-a putut conecta: {message}"
 
+#: src/app/settings/profile.tsx
+#: src/app/welcome/welcome-apps.tsx
 #: src/components/shell/crash-report.tsx
 msgid "Could not copy it"
 msgstr "Nu s-a putut copia"
@@ -1124,13 +1334,20 @@ msgstr "Nu s-a putut copia codul"
 msgid "Could not copy the invite link"
 msgstr "Nu s-a putut copia linkul de invitație"
 
-#: src/app/player/page.tsx src/features/versions/version-list.tsx
+#: src/app/player/page.tsx
+#: src/components/guest-share.tsx
+#: src/features/versions/version-list.tsx
 msgid "Could not copy the link"
 msgstr "Nu s-a putut copia linkul"
 
-#: src/app/settings/_components/version-settings.tsx src/app/settings/apps.tsx
+#: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/apps.tsx
 msgid "Could not copy them"
 msgstr "Nu s-au putut copia"
+
+#: src/app/settings/account.tsx
+msgid "Could not end the link"
+msgstr ""
 
 #: src/features/player/next-episode.tsx
 msgid "Could not find versions of that episode"
@@ -1205,6 +1422,10 @@ msgstr "Nu s-au putut încărca cataloagele tale"
 msgid "Could not load your favourites"
 msgstr "Nu s-au putut încărca favoritele tale"
 
+#: src/components/guest-share.tsx
+msgid "Could not make the link"
+msgstr ""
+
 #: src/components/media/random-pick.tsx
 msgid "Could not pick one."
 msgstr "Nu s-a putut alege niciunul."
@@ -1212,6 +1433,10 @@ msgstr "Nu s-a putut alege niciunul."
 #: src/lib/subtitles/files.ts
 msgid "Could not read that file"
 msgstr "Nu s-a putut citi acel fișier"
+
+#: src/app/downloads/page.tsx
+msgid "Could not save it"
+msgstr ""
 
 #: src/lib/jellyfin/user-config.ts
 msgid "Could not save that setting"
@@ -1282,6 +1507,10 @@ msgstr "Decupează"
 msgid "Ctrl"
 msgstr "Ctrl"
 
+#: src/app/settings/profile.tsx
+msgid "Current password"
+msgstr ""
+
 #: src/app/settings/subtitles.tsx
 msgid "Cursive"
 msgstr "Cursiv"
@@ -1337,7 +1566,9 @@ msgstr "Violet închis"
 
 #. No colour of its own
 #: src/app/settings/_components/version-settings.tsx
-#: src/app/settings/subtitles.tsx src/app/settings/theme.tsx src/lib/i18n.ts
+#: src/app/settings/subtitles.tsx
+#: src/app/settings/theme.tsx
+#: src/lib/i18n.ts
 msgid "Default"
 msgstr "Implicit"
 
@@ -1349,7 +1580,8 @@ msgstr "Întârziere"
 msgid "Delay: {delayLabel}"
 msgstr "Întârziere: {delayLabel}"
 
-#: src/app/downloads/page.tsx src/features/playlists/playlists.tsx
+#: src/app/downloads/page.tsx
+#: src/features/playlists/playlists.tsx
 msgid "Delete"
 msgstr "Șterge"
 
@@ -1373,11 +1605,13 @@ msgstr "Descrescător"
 msgid "Desert"
 msgstr "Deșert"
 
-#: src/app/settings/about.tsx src/app/settings/page.tsx
+#: src/app/settings/about.tsx
+#: src/app/settings/page.tsx
 msgid "Desktop app"
 msgstr "Aplicația desktop"
 
-#: src/app/item/_components/details.tsx src/components/media/item-menu.tsx
+#: src/app/item/_components/details.tsx
+#: src/components/media/item-menu.tsx
 #: src/features/versions/version-list.tsx
 msgid "Details"
 msgstr "Detalii"
@@ -1389,6 +1623,10 @@ msgstr "Detalii, sezoane și episoade pentru ce deschizi."
 #: src/app/settings/audio.tsx
 msgid "Device"
 msgstr "Dispozitiv"
+
+#: src/components/guest-share.tsx
+msgid "Devices at once"
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "Diagnostics copied"
@@ -1418,6 +1656,11 @@ msgstr "Decedat la {date} ({age} ani)"
 msgid "Director"
 msgstr "Regizor"
 
+#: src/app/settings/player-example.tsx
+#: src/app/settings/profile.tsx
+msgid "Disconnect"
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "Discord"
 msgstr "Discord"
@@ -1430,12 +1673,15 @@ msgstr "Discord nu rulează pe acest computer."
 msgid "Discord refused the status: {message}"
 msgstr "Discord a refuzat starea: {message}"
 
-#: src/app/discover/page.tsx src/app/settings/apps.tsx
-#: src/app/settings/interface.tsx src/components/shell/layout.tsx
+#: src/app/discover/page.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/interface.tsx
+#: src/components/shell/layout.tsx
 msgid "Discover"
 msgstr "Descoperă"
 
-#: src/components/shell/unreachable.tsx src/features/live-tv/live-reminders.tsx
+#: src/components/shell/unreachable.tsx
+#: src/features/live-tv/live-reminders.tsx
 msgid "Dismiss"
 msgstr "Închide"
 
@@ -1446,10 +1692,6 @@ msgstr "Nu fă nimic"
 #: src/app/settings/interface.tsx
 msgid "Docked"
 msgstr "Ancorat"
-
-#: src/app/settings/interface.tsx
-msgid "Docked keeps it in a column of its own. Floating hovers it over the page, a little in from the edge. Corner button shrinks it to the current page's button in the top corner, which opens into the whole menu."
-msgstr "Andocat îl păstrează într-o coloană separată. Plutitor îl afișează deasupra paginii, puțin retras de la margine. Butonul din colț îl restrânge la un buton în colțul de sus al paginii curente, care deschide întregul meniu."
 
 #: src/app/settings/about.tsx
 msgid "Documentation"
@@ -1474,7 +1716,8 @@ msgstr "Donează-mi"
 #: src/app/settings/_components/gesture-settings.tsx
 #: src/app/settings/_components/reaction-setting.tsx
 #: src/app/settings/_components/version-settings.tsx
-#: src/components/send-report.tsx src/features/player/subtitle-sync.tsx
+#: src/components/send-report.tsx
+#: src/features/player/subtitle-sync.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Done"
 msgstr "Gata"
@@ -1487,7 +1730,9 @@ msgstr ""
 msgid "Down"
 msgstr "Jos"
 
-#: src/app/item/_components/actions.tsx src/app/settings/about.tsx
+#: src/app/item/_components/actions.tsx
+#: src/app/settings/about.tsx
+#: src/app/welcome/welcome-apps.tsx
 #: src/components/media/item-menu.tsx
 #: src/features/downloads/download-button.tsx
 #: src/features/versions/version-list.tsx
@@ -1510,11 +1755,13 @@ msgstr "Descărcare în pauză"
 msgid "Download the show"
 msgstr "Descarcă serialul"
 
-#: src/app/downloads/page.tsx src/features/downloads/download-button.tsx
+#: src/app/downloads/page.tsx
+#: src/features/downloads/download-button.tsx
 msgid "Downloaded"
 msgstr "Descărcat"
 
-#: src/app/downloads/page.tsx src/features/downloads/download-button.tsx
+#: src/app/downloads/page.tsx
+#: src/features/downloads/download-button.tsx
 msgid "Downloading"
 msgstr "Se descarcă"
 
@@ -1526,8 +1773,10 @@ msgstr "Se descarcă versiunea {version}…"
 msgid "Downloading, {percent}%"
 msgstr "Se descarcă, {percent}%"
 
-#: src/app/downloads/page.tsx src/app/settings/interface.tsx
-#: src/app/settings/page.tsx src/components/shell/layout.tsx
+#: src/app/downloads/page.tsx
+#: src/app/settings/interface.tsx
+#: src/app/settings/page.tsx
+#: src/components/shell/layout.tsx
 #: src/components/shell/unreachable.tsx
 msgid "Downloads"
 msgstr "Descărcări"
@@ -1536,9 +1785,17 @@ msgstr "Descărcări"
 msgid "Downloads at once"
 msgstr "Descărcări simultane"
 
+#: src/app/downloads/page.tsx
+msgid "Downloads run while the app is open, and carry on where they stopped when it opens again."
+msgstr ""
+
 #: src/app/settings/downloads.tsx
 msgid "Downloads wait for Wi-Fi or another unmetered network rather than use mobile data."
 msgstr "Descărcările așteaptă Wi-Fi sau o altă rețea fără limită de date, în loc să folosească datele mobile."
+
+#: src/app/settings/profile.tsx
+msgid "Drag one, or use its arrows. A hidden one is left out of your libraries and home."
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "Draw subtitles on the graphics card"
@@ -1569,13 +1826,54 @@ msgstr "E{e}"
 msgid "Each filter shows as a pill above the version list. Its search is words that must all appear, or a regular expression between slashes, such as /2160p|4k/. Case never matters."
 msgstr "Fiecare filtru este afișat ca o etichetă deasupra listei de versiuni. Căutarea poate conține cuvinte care trebuie să apară toate sau o expresie regulată între bare oblice, de exemplu /2160p|4k/. Nu se face diferența între litere mari și mici."
 
+#: src/app/settings/profile.tsx
+msgid "Each link installs your streams in Stremio. Anyone with one plays as you, so revoke a link you no longer use."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Each poster has its title and year under it."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Each poster has its title under it."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Each poster has its year under it."
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
 msgid "Edit"
 msgstr "Editează"
+
+#: src/app/settings/profile.tsx
+msgid "Edit name and picture"
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "End"
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "End it"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "End of this title"
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "End this link"
+msgstr ""
 
 #: src/features/player/controls.tsx
 msgid "Ends at {endsAt}"
 msgstr "Se termină la {endsAt}"
+
+#: src/app/guest/page.tsx
+msgid "Ends within the hour"
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "Engine"
@@ -1584,6 +1882,10 @@ msgstr "Motor"
 #: src/lib/input/keys.ts
 msgid "Enter"
 msgstr "Enter"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Enter {address} as the address."
+msgstr ""
 
 #: src/app/settings/account.tsx
 msgid "Enter a code"
@@ -1613,7 +1915,12 @@ msgstr "Introdu acest cod la Conectare rapidă într-o aplicație deja conectat�
 msgid "Enter your password."
 msgstr "Introdu parola."
 
-#: src/components/media/episodes.tsx src/features/player/pause-screen.tsx
+#: src/app/settings/browsing.tsx
+msgid "Episode {n}"
+msgstr ""
+
+#: src/components/media/episodes.tsx
+#: src/features/player/pause-screen.tsx
 msgid "Episode {number}"
 msgstr "Episodul {number}"
 
@@ -1621,19 +1928,29 @@ msgstr "Episodul {number}"
 msgid "Episode details"
 msgstr "Detaliile episodului"
 
+#: src/app/item/_components/seasons.tsx
+#: src/app/search/page.tsx
 #: src/app/settings/browsing.tsx
-msgid "Episode layout"
-msgstr "Aspectul episoadelor"
-
-#: src/app/item/_components/seasons.tsx src/app/search/page.tsx
-#: src/app/settings/browsing.tsx src/features/player/episodes.tsx
+#: src/features/player/episodes.tsx
 #: src/features/player/options.tsx
 msgid "Episodes"
 msgstr "Episoade"
 
+#: src/app/settings/browsing.tsx
+msgid "Episodes are listed one under another, with more about each."
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Episodes end without offering the next one."
 msgstr "Episoadele se termină fără a-l propune pe următorul."
+
+#: src/app/settings/browsing.tsx
+msgid "Episodes sit in a row on a wide screen, and in a list on a narrow one."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Episodes sit in a row you scroll sideways."
+msgstr ""
 
 #: src/app/settings/browsing.tsx
 msgid "Episodes that haven't aired yet show as unaired, ask before playing, and are passed over when playing on or downloading a season. Turn off if their air dates are often wrong."
@@ -1655,7 +1972,8 @@ msgstr "În fiecare {list}"
 msgid "Every {list} at {time}"
 msgstr "În fiecare {list} la {time}"
 
-#: src/app/history/page.tsx src/app/settings/page.tsx
+#: src/app/history/page.tsx
+#: src/app/settings/page.tsx
 msgid "Everyone"
 msgstr "Toți"
 
@@ -1667,7 +1985,8 @@ msgstr "Tot"
 msgid "Everything unwatched"
 msgstr "Tot ce nu a fost văzut"
 
-#: src/components/shell/window-controls.tsx src/features/player/options.tsx
+#: src/components/shell/window-controls.tsx
+#: src/features/player/options.tsx
 msgid "Exit full screen"
 msgstr "Ieși din ecran complet"
 
@@ -1691,7 +2010,8 @@ msgstr "Estompare"
 msgid "Failed"
 msgstr "Eșuat"
 
-#: src/features/remote/remote-sheet.tsx src/lib/input/keys.ts
+#: src/features/remote/remote-sheet.tsx
+#: src/lib/input/keys.ts
 msgid "Fast forward"
 msgstr "Derulare înainte"
 
@@ -1699,15 +2019,27 @@ msgstr "Derulare înainte"
 msgid "Faster"
 msgstr "Mai rapid"
 
-#: src/app/item/_components/actions.tsx src/features/live-tv/channel-list.tsx
+#: src/app/item/_components/actions.tsx
+#: src/features/live-tv/channel-list.tsx
 msgid "Favourite"
 msgstr "Favorit"
 
-#: src/app/discover/page.tsx src/app/favourites/page.tsx
-#: src/app/settings/apps.tsx src/app/settings/interface.tsx
-#: src/components/shell/layout.tsx src/features/live-tv/live-tv.ts
+#: src/app/discover/page.tsx
+#: src/app/favourites/page.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/interface.tsx
+#: src/components/shell/layout.tsx
+#: src/features/live-tv/live-tv.ts
 msgid "Favourites"
 msgstr "Favorite"
+
+#: src/lib/playback/bumpers.ts
+msgid "Feature presentation"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Featured"
+msgstr ""
 
 #: src/app/settings/browsing.tsx
 msgid "Featured on home"
@@ -1741,7 +2073,8 @@ msgstr "Caută versiuni la deschiderea unui titlu"
 msgid "Finding a version to download"
 msgstr "Se caută o versiune de descărcat"
 
-#: src/app/downloads/page.tsx src/app/player/page.tsx
+#: src/app/downloads/page.tsx
+#: src/app/player/page.tsx
 #: src/features/versions/version-picker.tsx
 msgid "Finding a version…"
 msgstr "Se caută o versiune…"
@@ -1753,6 +2086,10 @@ msgstr "Se caută versiuni"
 #: src/features/player/next-episode.tsx
 msgid "Finding versions of {name}…"
 msgstr "Se caută versiuni pentru {name}…"
+
+#: src/app/welcome/page.tsx
+msgid "Finish"
+msgstr ""
 
 #: src/app/item/_components/details.tsx
 msgid "First aired"
@@ -1775,16 +2112,8 @@ msgid "Folder"
 msgstr "Folder"
 
 #: src/app/settings/browsing.tsx
-msgid "Following pins it above the rows and shows the card the pointer, keyboard or remote is on, starting with a featured title, behind the whole page or in its top corner. Touch screens and narrow windows keep it rotating."
-msgstr "Modulul de previzualizare afișează deasupra rândurilor cardul titlului indicat de cursor, tastatură sau telecomandă, începând cu un titlu recomandat. Poate fi afișat în fundalul întregii pagini sau în colțul de sus. Pe ecranele tactile și în ferestrele înguste, titlurile se schimbă automat."
-
-#: src/app/settings/browsing.tsx
-msgid "Follows the selected card"
-msgstr "Urmează cardul selectat"
-
-#: src/app/settings/browsing.tsx
-msgid "Follows the selected card, in the corner"
-msgstr "Urmează cardul selectat, în colț"
+msgid "Follows the card"
+msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "Font"
@@ -1793,6 +2122,14 @@ msgstr "Font"
 #: src/app/settings/audio.tsx
 msgid "For a receiver on an optical or ARC link, which gets other surround formats as stereo otherwise."
 msgstr "Pentru un receiver conectat printr-o conexiune optică sau ARC, care altfel primește celelalte formate audio surround în format stereo."
+
+#: src/app/settings/profile.tsx
+msgid "For a screen that shows them washed out."
+msgstr ""
+
+#: src/components/guest-share.tsx
+msgid "For Alex"
+msgstr ""
 
 #: src/app/settings/interface.tsx
 msgid "For clocks and times of day, such as the player's clock and the TV guide."
@@ -1818,11 +2155,13 @@ msgstr "Înainte"
 msgid "Frame timings"
 msgstr "Sincronizarea cadrelor"
 
-#: src/app/live-tv/_components/channel-details.tsx src/features/player/live.tsx
+#: src/app/live-tv/_components/channel-details.tsx
+#: src/features/player/live.tsx
 #: src/features/versions/version-list.tsx
 msgid "From the start"
 msgstr "De la început"
 
+#: src/app/settings/interface.tsx
 #: src/app/settings/theme.tsx
 msgid "Frosted glass"
 msgstr "Sticlă mată"
@@ -1832,7 +2171,8 @@ msgid "Full"
 msgstr "Complet"
 
 #: src/app/live-tv/_components/channel-details.tsx
-#: src/features/player/options.tsx src/lib/input/actions.ts
+#: src/features/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Full screen"
 msgstr "Ecran complet"
 
@@ -1840,8 +2180,16 @@ msgstr "Ecran complet"
 msgid "General"
 msgstr "General"
 
+#: src/app/preshow/page.tsx
+msgid "General audiences"
+msgstr ""
+
 #: src/app/settings/_components/gesture-settings.tsx
 msgid "Gestures"
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Get {name}."
 msgstr ""
 
 #: src/components/send-report.tsx
@@ -1859,6 +2207,14 @@ msgstr "Panouri de sticlă"
 #: src/app/settings/theme.tsx
 msgid "Glass surface"
 msgstr "Suprafață de sticlă"
+
+#: src/app/settings/interface.tsx
+msgid "Glass that also bends what's behind its edges, which costs more on a slow device."
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Glass that shows the page through it."
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "GLSL shader files for the built-in mpv, applied in name order to what plays. Heavy ones can make video stutter."
@@ -1884,7 +2240,8 @@ msgstr "Verde"
 msgid "Grey"
 msgstr "Gri"
 
-#: src/app/live-tv/page.tsx src/app/settings/_components/version-settings.tsx
+#: src/app/live-tv/page.tsx
+#: src/app/settings/_components/version-settings.tsx
 msgid "Group"
 msgstr "Grup"
 
@@ -1896,7 +2253,20 @@ msgstr "Grupează pe zile"
 msgid "Groups"
 msgstr "Grupuri"
 
-#: src/app/live-tv/_components/guide.tsx src/app/live-tv/page.tsx
+#: src/features/party/in-party.tsx
+msgid "Guest"
+msgstr ""
+
+#: src/app/guest/page.tsx
+msgid "Guest {number}"
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "Guest links"
+msgstr ""
+
+#: src/app/live-tv/_components/guide.tsx
+#: src/app/live-tv/page.tsx
 msgid "Guide"
 msgstr "Ghid"
 
@@ -1944,7 +2314,8 @@ msgstr "Aici"
 msgid "Hero"
 msgstr "Banner principal"
 
-#: src/app/settings/browsing.tsx src/app/settings/interface.tsx
+#: src/app/settings/browsing.tsx
+#: src/app/settings/interface.tsx
 msgid "Hidden"
 msgstr "Ascuns"
 
@@ -1956,26 +2327,45 @@ msgstr ""
 msgid "Hide"
 msgstr "Ascunde"
 
+#: src/app/settings/profile.tsx
+msgid "Hide {name}"
+msgstr ""
+
 #: src/app/history/page.tsx
 msgid "Hide episodes"
 msgstr "Ascunde episoadele"
 
+#: src/components/guest-share.tsx
 #: src/features/party/in-party.tsx
 msgid "Hide QR code"
 msgstr "Ascunde codul QR"
+
+#: src/app/settings/profile.tsx
+msgid "Highest quality"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Highest resolution"
+msgstr ""
 
 #. Holding the next key down, as in Hold + Enter
 #: src/lib/input/keys.ts
 msgid "Hold"
 msgstr "Ține apăsat"
 
+#: src/app/settings/playback.tsx
+msgid "Hold Play on a movie, or open its menu, to play bumpers and trailers before it as at the theater."
+msgstr ""
+
 #: src/app/settings/_components/gesture-settings.tsx
 #, fuzzy
 msgid "Hold to speed up"
 msgstr "Viteza menținută"
 
-#: src/app/settings/apps.tsx src/app/settings/browsing.tsx
-#: src/app/settings/interface.tsx src/components/shell/layout.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/browsing.tsx
+#: src/app/settings/interface.tsx
+#: src/components/shell/layout.tsx
 #: src/lib/input/actions.ts
 msgid "Home"
 msgstr "Acasă"
@@ -1996,6 +2386,14 @@ msgstr ""
 #: src/features/party/in-party.tsx
 msgid "Host"
 msgstr "Gazdă"
+
+#: src/app/settings/interface.tsx
+msgid "Hovering over the page, a little in from the edge."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "How big?"
+msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "How far subtitles sit above their usual place near the bottom, or below it down to the edge."
@@ -2025,10 +2423,6 @@ msgstr "Cât de mult din videoclip păstrează playerul în memorie: în avans, 
 msgid "How much the volume keys and the scroll wheel change the volume."
 msgstr "Cât de mult modifică volumul tastele de volum și rotița de derulare."
 
-#: src/app/settings/interface.tsx
-msgid "How the tabs sit over the page: as floating pills, on a bar across the top, or on nothing but a fade down from the top edge."
-msgstr "Cum stau filele peste pagină: ca pastile plutitoare, pe o bară în partea de sus sau pe nimic, doar cu o estompare dinspre marginea de sus."
-
 #: src/app/settings/_components/version-settings.tsx
 msgid "How these work"
 msgstr "Cum funcționează"
@@ -2037,9 +2431,21 @@ msgstr "Cum funcționează"
 msgid "How to use the app and what each setting does."
 msgstr "Cum se folosește aplicația și ce face fiecare setare."
 
+#: src/app/welcome/page.tsx
+msgid "How you watch"
+msgstr ""
+
 #: src/lib/subtitles/style.ts
 msgid "Huge"
 msgstr "Uriaș"
+
+#: src/app/settings/player-example.tsx
+msgid "I didn't think you'd come back."
+msgstr ""
+
+#: src/app/settings/example.tsx
+msgid "If you pick it:"
+msgstr ""
 
 #: src/app/settings/_components/version-settings.tsx
 msgid "Image"
@@ -2048,6 +2454,10 @@ msgstr "Imagine"
 #: src/app/settings/_components/version-settings.tsx
 msgid "Import"
 msgstr "Importă"
+
+#: src/app/settings/interface.tsx
+msgid "In a column of its own."
+msgstr ""
 
 #: src/lib/discord.ts
 msgid "In Activity"
@@ -2061,17 +2471,27 @@ msgstr "În Descoperă"
 msgid "In Favourites"
 msgstr "În Favorite"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "In Infuse, tap Add Files and pick Jellyfin."
+msgstr ""
+
 #: src/app/discover/page.tsx
 msgid "In progress"
 msgstr "În curs"
 
-#: src/lib/playback/sound.ts src/lib/subtitles/delay.ts
+#: src/lib/playback/sound.ts
+#: src/lib/subtitles/delay.ts
 msgid "In sync"
 msgstr "Sincronizat"
 
-#: src/app/downloads/page.tsx src/features/downloads/download-button.tsx
+#: src/app/downloads/page.tsx
+#: src/features/downloads/download-button.tsx
 msgid "In the app's downloads"
 msgstr "În descărcările aplicației"
+
+#: src/app/settings/browsing.tsx
+msgid "In the corner"
+msgstr ""
 
 #: src/app/settings/browsing.tsx
 msgid "In the navigation only"
@@ -2093,6 +2513,14 @@ msgstr "Instalează un addon de metadate din Addons → Marketplace. Pentru unul
 msgid "Install catalog addons from Addons → Marketplace. For one that isn't listed, use the Custom addon there."
 msgstr "Instalează addonuri de cataloage din Addons → Marketplace. Pentru unul care nu este listat, folosește addonul Personalizat de acolo."
 
+#: src/app/settings/profile.tsx
+msgid "Install in Stremio"
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Install it and open it once."
+msgstr ""
+
 #: src/app/settings/page.tsx
 msgid "Interface"
 msgstr "Interfață"
@@ -2100,6 +2528,14 @@ msgstr "Interfață"
 #: src/app/settings/playback.tsx
 msgid "Intros"
 msgstr "Intro-uri"
+
+#: src/app/settings/player-example.tsx
+msgid "Intros, recaps and credits are each set their own way below."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "Intros, recaps and credits?"
+msgstr ""
 
 #: src/features/party/in-party.tsx
 msgid "Invite"
@@ -2113,6 +2549,10 @@ msgstr "Cod sau link de invitație"
 msgid "Invite link copied"
 msgstr "Link de invitație copiat"
 
+#: src/features/party/in-party.tsx
+msgid "Invite someone without an account"
+msgstr ""
+
 #: src/app/settings/_components/licenses.tsx
 msgid "It came with no licence text."
 msgstr "Nu a venit cu niciun text de licență."
@@ -2125,9 +2565,25 @@ msgstr "Conține detaliile acestui dispozitiv și jurnalul recent al aplicației
 msgid "It didn't reach the developer, only this server: {forwardError}"
 msgstr "Nu a ajuns la dezvoltator, doar la acest server: {forwardError}"
 
+#: src/app/guest/page.tsx
+msgid "It expired, or whoever shared it ended it. Ask them for a new one."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "It stops, and you choose what's next."
+msgstr ""
+
 #: src/app/settings/theme.tsx
 msgid "It will be undone unless you keep it."
 msgstr "Se va anula dacă nu o păstrezi."
+
+#: src/app/settings/profile.tsx
+msgid "It won't be shown again. Copy it now, or open it in Stremio on this device."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "It's marked watched on {marked}."
+msgstr ""
 
 #: src/app/settings/about.tsx
 msgid "Its Metal and AVFoundation video outputs."
@@ -2137,11 +2593,13 @@ msgstr "Ieșirile video Metal și AVFoundation ale acestuia."
 msgid "Jellyfin API"
 msgstr "API Jellyfin"
 
+#: src/app/guest/page.tsx
 #: src/features/party/not-in-party.tsx
 msgid "Join"
 msgstr "Alătură-te"
 
-#: src/features/party/not-in-party.tsx src/features/party/party-sheet.tsx
+#: src/features/party/not-in-party.tsx
+#: src/features/party/party-sheet.tsx
 msgid "Join a party"
 msgstr "Alătură-te unei sesiuni Watch party"
 
@@ -2161,6 +2619,10 @@ msgstr "Sari prin videoclip"
 msgid "just now"
 msgstr "chiar acum"
 
+#: src/app/settings/interface.tsx
+msgid "Just the current page's button in the top corner, which opens into the whole menu."
+msgstr ""
+
 #: src/app/settings/theme.tsx
 msgid "Keep"
 msgstr "Păstrează"
@@ -2168,6 +2630,10 @@ msgstr "Păstrează"
 #: src/app/settings/playback.tsx
 msgid "Keep in step by changing speed"
 msgstr "Păstrează sincronizarea modificând viteza"
+
+#: src/app/welcome/page.tsx
+msgid "Keep track"
+msgstr ""
 
 #: src/features/party/in-party.tsx
 msgid "Keeping in step"
@@ -2187,6 +2653,7 @@ msgstr "Continuă redarea videoclipului într-o fereastră mică când ieși din
 
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/settings-card.tsx
+#: src/app/settings/browsing.tsx
 msgid "Kept on this device."
 msgstr "Păstrat pe acest dispozitiv."
 
@@ -2194,7 +2661,8 @@ msgstr "Păstrat pe acest dispozitiv."
 msgid "Kept on this device. Select + and press a key to add it; a remote, a gamepad or the scroll wheel works too."
 msgstr "Păstrat pe acest dispozitiv. Selectează + și apasă o tastă pentru a o adăuga; merge și cu telecomanda, gamepad-ul sau rotița de derulare."
 
-#: src/components/shell/input-setup.tsx src/lib/input/actions.ts
+#: src/components/shell/input-setup.tsx
+#: src/lib/input/actions.ts
 msgid "Keyboard shortcuts"
 msgstr "Scurtături de tastatură"
 
@@ -2203,11 +2671,14 @@ msgid "Keys, remotes and gamepads"
 msgstr "Taste, telecomenzi și gamepad-uri"
 
 #: src/app/settings/_components/version-settings.tsx
+#: src/components/guest-share.tsx
 msgid "Label"
 msgstr "Etichetă"
 
-#: src/app/settings/audio.tsx src/app/settings/interface.tsx
-#: src/app/settings/page.tsx src/app/settings/subtitles.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/interface.tsx
+#: src/app/settings/page.tsx
+#: src/app/settings/subtitles.tsx
 msgid "Language"
 msgstr "Limbă"
 
@@ -2224,9 +2695,26 @@ msgstr "Limba și ieșirea"
 msgid "Language and output"
 msgstr "Limba și ieșirea"
 
-#: src/app/settings/browsing.tsx src/lib/subtitles/style.ts
+#: src/app/settings/profile.tsx
+msgid "Languages"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+#: src/lib/subtitles/style.ts
 msgid "Large"
 msgstr "Mare"
+
+#: src/app/settings/profile.tsx
+msgid "Largest episode"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Largest movie"
+msgstr ""
+
+#: src/components/guest-share.tsx
+msgid "Lasts"
+msgstr ""
 
 #: src/app/live-tv/_components/channel-details.tsx
 #: src/components/shell/update-prompt.tsx
@@ -2249,6 +2737,10 @@ msgstr ""
 msgid "Leave the party"
 msgstr "Părăsește sesiunea Watch party"
 
+#: src/app/settings/player-example.tsx
+msgid "Leave them"
+msgstr ""
+
 #: src/app.tsx
 msgid "Leave this server to add {adding}?"
 msgstr "Părăsești acest server pentru a adăuga {adding}?"
@@ -2261,9 +2753,9 @@ msgstr "La ieșirea din aplicație"
 msgid "Left"
 msgstr "Stânga"
 
-#: src/app/settings/browsing.tsx
-msgid "Left empty, posters stand alone. A poster without artwork still shows its title."
-msgstr "Dacă este lăsat necompletat, posterele sunt afișate fără alte elemente. Chiar și un poster fără imagine păstrează titlul."
+#: src/app/settings/playback.tsx
+msgid "Left out"
+msgstr ""
 
 #: src/features/player/options.tsx
 msgid "Less dialogue boost"
@@ -2285,10 +2777,36 @@ msgstr "Permite decodorului televizorului să sincronizeze direct imaginea și s
 msgid "Licences"
 msgstr "Licențe"
 
+#: src/components/guest-share.tsx
+msgid "Link"
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "Link a pack someone shares, in this app's format or the one Fusion and Nuvio use. It stays up to date with its author's changes."
 msgstr "Adaugă un link către un pachet partajat de altcineva, în formatul acestei aplicații sau în formatul folosit de Fusion și Nuvio. Pachetul se actualizează automat odată cu modificările făcute de autor."
 
+#: src/app/settings/profile.tsx
+msgid "Link another device"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+#: src/components/guest-share.tsx
+msgid "Link copied"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Link revoked"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Links"
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "Links that let someone without an account watch one title, made from a title's page. {made} of {most} made this month."
+msgstr ""
+
+#: src/app/settings/interface.tsx
 #: src/app/settings/theme.tsx
 msgid "Liquid glass"
 msgstr "Sticlă lichidă"
@@ -2301,6 +2819,10 @@ msgstr "Listă"
 msgid "List only my languages"
 msgstr "Afișează doar limbile mele"
 
+#: src/app/settings/browsing.tsx
+msgid "Listed on narrow screens, in a row on wide ones."
+msgstr ""
+
 #: src/app/search/page.tsx
 msgid "Listening…"
 msgstr "Se ascultă…"
@@ -2309,17 +2831,25 @@ msgstr "Se ascultă…"
 msgid "Live"
 msgstr "Direct"
 
-#: src/app/home/page.tsx src/app/live-tv/page.tsx src/app/settings/browsing.tsx
-#: src/app/settings/interface.tsx src/components/shell/layout.tsx
+#: src/app/home/page.tsx
+#: src/app/live-tv/page.tsx
+#: src/app/settings/browsing.tsx
+#: src/app/settings/interface.tsx
+#: src/components/shell/layout.tsx
 #: src/lib/input/actions.ts
 msgid "Live TV"
 msgstr "TV în direct"
+
+#: src/app/settings/profile.tsx
+msgid "Living room TV"
+msgstr ""
 
 #: src/features/party/in-party.tsx
 msgid "Loading"
 msgstr "Se încarcă"
 
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/account.tsx
 msgid "Loading…"
 msgstr "Se încarcă…"
 
@@ -2347,13 +2877,22 @@ msgstr "Caută versiunile disponibile imediat ce deschizi pagina unui titlu, ast
 msgid "Lost the connection to {relay}. Reconnecting… Your player carries on, and gets back in step once it's back."
 msgstr "Conexiunea cu {relay} s-a întrerupt. Se încearcă reconectarea… Playerul continuă redarea și se resincronizează după restabilirea conexiunii."
 
-#: src/features/player/options.tsx src/lib/input/actions.ts
+#: src/features/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Lower subtitles"
 msgstr "Coboară subtitrările"
 
 #: src/app/settings/player.tsx
 msgid "macOS draws the video, using less power, and shows Dolby Vision itself. Shaders and mpv's picture options do not apply."
 msgstr "macOS afișează videoclipul, consumând mai puțină energie, și afișează singur Dolby Vision. Shaderele și opțiunile de imagine ale mpv nu se aplică."
+
+#: src/app/settings/profile.tsx
+msgid "Made {made}, never used"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Made {made}, used {used}"
+msgstr ""
 
 #: src/lib/i18n.ts
 msgid "Magenta"
@@ -2362,6 +2901,10 @@ msgstr "Magenta"
 #: src/app/settings/audio.tsx
 msgid "Main"
 msgstr "Principal"
+
+#: src/components/guest-share.tsx
+msgid "Make the link"
+msgstr ""
 
 #: src/app.tsx
 #, fuzzy
@@ -2372,16 +2915,22 @@ msgstr "Schimbă serverul"
 msgid "Mark as watched"
 msgstr "Marchează ca văzut"
 
+#: src/app/settings/player-example.tsx
+msgid "Mark it watched on"
+msgstr ""
+
 #: src/app/settings/browsing.tsx
 msgid "Mark unaired episodes"
 msgstr "Marchează episoadele nedifuzate"
 
-#: src/app/history/page.tsx src/app/item/_components/actions.tsx
+#: src/app/history/page.tsx
+#: src/app/item/_components/actions.tsx
 #: src/components/media/item-menu.tsx
 msgid "Mark unwatched"
 msgstr "Marchează ca nevăzut"
 
-#: src/app/item/_components/actions.tsx src/components/media/item-menu.tsx
+#: src/app/item/_components/actions.tsx
+#: src/components/media/item-menu.tsx
 msgid "Mark watched"
 msgstr "Marchează ca văzut"
 
@@ -2396,6 +2945,10 @@ msgstr "Marcat ca văzut"
 #: src/app/history/page.tsx
 msgid "Marked unwatched"
 msgstr "Marcat ca nevăzut"
+
+#: src/app/settings/player-example.tsx
+msgid "Marked watched on {marked}"
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "Match the video's frame rate"
@@ -2449,9 +3002,12 @@ msgstr "Lipsă"
 msgid "Monospace"
 msgstr "Monospațiat"
 
-#: src/app/downloads/page.tsx src/app/item/_components/header.tsx
-#: src/components/media/episodes.tsx src/components/media/overview.tsx
-#: src/features/playlists/playlists.tsx src/features/versions/version-list.tsx
+#: src/app/downloads/page.tsx
+#: src/app/item/_components/header.tsx
+#: src/components/media/episodes.tsx
+#: src/components/media/overview.tsx
+#: src/features/playlists/playlists.tsx
+#: src/features/versions/version-list.tsx
 msgid "More"
 msgstr "Mai multe"
 
@@ -2497,9 +3053,12 @@ msgstr "Mută în sus"
 msgid "Moves between what's on screen, and to Search and Home. A gamepad's d-pad and left stick move too."
 msgstr "Navighează între elementele afișate pe ecran, precum și către Căutare și Acasă. Funcționează și cu butoanele direcționale (D-pad) și joystick-ul stâng al gamepad-ului."
 
-#: src/app/discover/page.tsx src/app/favourites/page.tsx
-#: src/app/search/page.tsx src/components/media/kind-tabs.tsx
-#: src/components/media/random-pick.tsx src/lib/format.ts
+#: src/app/discover/page.tsx
+#: src/app/favourites/page.tsx
+#: src/app/search/page.tsx
+#: src/components/media/kind-tabs.tsx
+#: src/components/media/random-pick.tsx
+#: src/lib/format.ts
 msgid "Movies"
 msgstr "Filme"
 
@@ -2528,7 +3087,8 @@ msgstr "mpv în această fereastră, cu comenzile și setările de redare ale ap
 msgid "mpv.conf, input.conf, scripts and shaders in this folder apply to the built-in mpv."
 msgstr "mpv.conf, input.conf, scripturile și shaderele din acest folder se aplică la mpv integrat."
 
-#: src/features/player/picture-in-picture.tsx src/features/player/volume.tsx
+#: src/features/player/picture-in-picture.tsx
+#: src/features/player/volume.tsx
 #: src/lib/input/actions.ts
 msgid "Mute"
 msgstr "Fără sunet"
@@ -2538,13 +3098,29 @@ msgid "Mute key"
 msgstr "Tasta de dezactivare a sunetului"
 
 #: src/app/settings/_components/version-settings.tsx
-#: src/components/media/sort-picker.tsx src/features/playlists/playlists.tsx
+#: src/app/settings/profile.tsx
+#: src/app/welcome/page.tsx
+#: src/components/media/sort-picker.tsx
+#: src/features/playlists/playlists.tsx
 msgid "Name"
 msgstr "Nume"
+
+#: src/app/settings/profile.tsx
+msgid "Name and picture"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Name it for the device it goes on."
+msgstr ""
 
 #: src/app/settings/interface.tsx
 msgid "Navigation"
 msgstr "Navigare"
+
+#: src/app/settings/browsing.tsx
+#: src/app/settings/interface.tsx
+msgid "Navigation background"
+msgstr ""
 
 #: src/app/sign-in/page.tsx
 #, fuzzy
@@ -2556,6 +3132,7 @@ msgid "Needs attention"
 msgstr "Necesită atenție"
 
 #: src/app/settings/playback.tsx
+#: src/app/settings/player-example.tsx
 msgid "Never"
 msgstr "Niciodată"
 
@@ -2563,11 +3140,24 @@ msgstr "Niciodată"
 msgid "New code"
 msgstr "Cod nou"
 
+#: src/app/settings/profile.tsx
+msgid "New password"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "New PIN"
+msgstr ""
+
 #: src/features/playlists/playlists.tsx
 msgid "New playlist"
 msgstr "Listă de redare nouă"
 
-#: src/features/player/controls.tsx src/features/remote/remote-sheet.tsx
+#: src/app/settings/profile.tsx
+msgid "New Stremio link"
+msgstr ""
+
+#: src/features/player/controls.tsx
+#: src/features/remote/remote-sheet.tsx
 #: src/lib/i18n.ts
 msgid "Next"
 msgstr "Următorul"
@@ -2576,7 +3166,8 @@ msgstr "Următorul"
 msgid "Next audio track"
 msgstr "Pista audio următoare"
 
-#: src/app/player/page.tsx src/features/player/controls.tsx
+#: src/app/player/page.tsx
+#: src/features/player/controls.tsx
 #: src/lib/input/actions.ts
 msgid "Next channel"
 msgstr "Canalul următor"
@@ -2585,10 +3176,17 @@ msgstr "Canalul următor"
 msgid "Next chapter"
 msgstr "Capitolul următor"
 
-#: src/app/settings/playback.tsx src/features/player/controls.tsx
-#: src/features/player/next-episode.tsx src/lib/input/actions.ts
+#: src/app/settings/playback.tsx
+#: src/app/settings/player-example.tsx
+#: src/features/player/controls.tsx
+#: src/features/player/next-episode.tsx
+#: src/lib/input/actions.ts
 msgid "Next episode"
 msgstr "Episodul următor"
+
+#: src/app/settings/browsing.tsx
+msgid "Next episodes join the continue watching row, after what you are partway through."
+msgstr ""
 
 #: src/features/player/next-episode.tsx
 msgid "Next in {playlistName}"
@@ -2606,15 +3204,22 @@ msgstr "Subtitrarea următoare"
 msgid "Next track"
 msgstr "Piesa următoare"
 
-#: src/app/trailer/page.tsx src/features/player/controls.tsx
+#: src/app/trailer/page.tsx
+#: src/features/player/controls.tsx
 msgid "Next trailer"
 msgstr "Trailerul următor"
 
-#: src/app/home/page.tsx src/app/settings/browsing.tsx
+#: src/app/home/page.tsx
+#: src/app/settings/browsing.tsx
 msgid "Next up"
 msgstr "Urmează"
 
-#: src/app/settings/audio.tsx src/features/player/options.tsx
+#: src/lib/playback/bumpers.ts
+msgid "Nicole Kidman"
+msgstr ""
+
+#: src/app/settings/audio.tsx
+#: src/features/player/options.tsx
 msgid "Night mode"
 msgstr "Mod de noapte"
 
@@ -2659,12 +3264,21 @@ msgid "No favourite channels yet."
 msgstr "Încă nu există canale favorite."
 
 #: src/app/settings/cache.tsx
+#: src/app/settings/profile.tsx
 msgid "No limit"
 msgstr "Fără limită"
 
 #: src/features/player/subtitle-sync.tsx
 msgid "No line matches."
 msgstr "Nicio replică nu corespunde."
+
+#: src/app/settings/account.tsx
+msgid "No links out."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "No links yet"
+msgstr ""
 
 #: src/app/live-tv/page.tsx
 msgid "No live TV here"
@@ -2673,6 +3287,10 @@ msgstr "Nu există TV în direct aici"
 #: src/features/party/chat.tsx
 msgid "No messages yet. Say hello."
 msgstr "Încă nu sunt mesaje. Începe o conversație."
+
+#: src/app/preshow/page.tsx
+msgid "No one 17 and under admitted"
+msgstr ""
 
 #: src/features/remote/remote-sheet.tsx
 msgid "No other device is ready. Open the app on another device signed in here, and it shows up."
@@ -2719,7 +3337,8 @@ msgstr "Nicio versiune nu corespunde."
 msgid "No versions were found."
 msgstr "Nu s-au găsit versiuni."
 
-#: src/app/settings/audio.tsx src/app/settings/subtitles.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/subtitles.tsx
 msgid "None"
 msgstr "Niciunul"
 
@@ -2727,12 +3346,14 @@ msgstr "Niciunul"
 msgid "None of your addons has details for {id}. Add a metadata addon to your configuration, then refresh."
 msgstr "Niciunul dintre addonurile tale nu are detalii pentru {id}. Adaugă un addon de metadate în configurație, apoi reîmprospătează."
 
-#: src/app/settings/subtitles.tsx src/features/player/keys.ts
+#: src/app/settings/subtitles.tsx
+#: src/features/player/keys.ts
 #: src/lib/subtitles/style.ts
 msgid "Normal"
 msgstr "Normal"
 
-#: src/features/player/keys.ts src/lib/input/actions.ts
+#: src/features/player/keys.ts
+#: src/lib/input/actions.ts
 msgid "Normal speed"
 msgstr "Viteză normală"
 
@@ -2743,6 +3364,10 @@ msgstr "Încă nedifuzat"
 #: src/lib/hosts/shell/index.ts
 msgid "Not checked yet."
 msgstr "Încă neverificat."
+
+#: src/app/settings/profile.tsx
+msgid "Not connected"
+msgstr ""
 
 #: src/lib/hosts/shell/player.ts
 msgid "not found"
@@ -2784,7 +3409,8 @@ msgstr "Nimic găsit."
 msgid "Nothing here yet. Add titles from their menu, or from the suggestions below."
 msgstr "Încă nu e nimic aici. Adaugă titluri din meniul acestora sau din sugestiile de mai jos."
 
-#: src/app/discover/page.tsx src/app/item/_components/collection.tsx
+#: src/app/discover/page.tsx
+#: src/app/item/_components/collection.tsx
 msgid "Nothing here."
 msgstr "Nimic aici."
 
@@ -2792,14 +3418,18 @@ msgstr "Nimic aici."
 msgid "Nothing is playing there."
 msgstr "Nu se redă nimic acolo."
 
-#: src/app/favourites/page.tsx src/components/media/random-pick.tsx
+#: src/app/favourites/page.tsx
+#: src/components/media/random-pick.tsx
 msgid "Nothing marked as a favourite yet."
 msgstr "Încă nu este nimic marcat ca favorit."
 
-#: src/app/discover/page.tsx src/app/live-tv/page.tsx
+#: src/app/discover/page.tsx
+#: src/app/live-tv/page.tsx
 #: src/app/settings/_components/licenses.tsx
-#: src/app/settings/_components/version-settings.tsx src/app/settings/audio.tsx
-#: src/app/settings/browsing.tsx src/app/settings/theme.tsx
+#: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/browsing.tsx
+#: src/app/settings/theme.tsx
 msgid "Nothing matches."
 msgstr "Nimic nu corespunde."
 
@@ -2843,7 +3473,7 @@ msgstr "Acum atinge Văzut când apare replica."
 msgid "Now: {shown}"
 msgstr "Acum: {shown}"
 
-#: src/app/settings/browsing.tsx src/app/settings/theme.tsx
+#: src/app/settings/theme.tsx
 msgid "Nowhere"
 msgstr "Nicăieri"
 
@@ -2851,8 +3481,10 @@ msgstr "Nicăieri"
 msgid "Ocean"
 msgstr "Ocean"
 
-#: src/app/settings/audio.tsx src/app/settings/subtitles.tsx
-#: src/features/player/options.tsx src/features/remote/remote-sheet.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/subtitles.tsx
+#: src/features/player/options.tsx
+#: src/features/remote/remote-sheet.tsx
 #: src/lib/playback/sound.ts
 msgid "Off"
 msgstr "Oprit"
@@ -2890,9 +3522,8 @@ msgid "On home and in the navigation"
 msgstr ""
 
 #: src/app/settings/browsing.tsx
-#, fuzzy
-msgid "On home while the hero rotates, in search and in grids. Under a mouse a card pops out; with a keyboard or remote it opens out to its details."
-msgstr "Pe pagina principală, în timpul schimbării automate a imaginii principale și în grile. În grilă, cardul indicat de cursor se mărește în afara rândului, astfel încât cardurile alăturate să rămână pe loc."
+msgid "On home while the hero rotates, in search and in grids. Under a mouse a card pops out; with a keyboard or remote it opens out to its details. Kept on this device."
+msgstr ""
 
 #: src/lib/discord.ts
 msgid "On the calendar"
@@ -2906,9 +3537,9 @@ msgstr "Pe pagina principală"
 msgid "On this server"
 msgstr "Pe acest server"
 
-#: src/app/settings/interface.tsx
-msgid "On wide screens"
-msgstr "Pe ecrane late"
+#: src/app/settings/profile.tsx
+msgid "On top of what the owner set up, for you alone. Left alone, theirs stands."
+msgstr ""
 
 #: src/components/shell/usage-stats.tsx
 msgid "Once a day, the app sends an anonymous count with your type of device, system, app version, language, and country and region. Nothing that identifies you or what you watch is kept."
@@ -2919,13 +3550,18 @@ msgid "Once one of the controls is selected, the arrow keys move between the con
 msgstr "După selectarea unuia dintre controale, tastele săgeată permit navigarea între controale."
 
 #: src/app/settings/browsing.tsx
-msgid "Once you rest on a title for a moment. In the hero, only one you went to."
-msgstr "După ce menții cursorul pe un titlu pentru câteva momente. În secțiunea principală, doar pentru titlul selectat."
+msgid "One grid instead of a row each for movies and shows."
+msgstr ""
+
+#: src/app/settings/playback.tsx
+msgid "One link a line; each showing plays one from each at random, the welcome before the trailers and the rest after. Any video or YouTube link works, and an empty one is left out. When time is short, the feature presentation is kept longest."
+msgstr ""
 
 #: src/lib/subtitles/files.ts
 msgid "Only {names} files can be added"
 msgstr "Se pot adăuga doar fișiere {names}"
 
+#: src/app/settings/player-example.tsx
 #: src/app/settings/subtitles.tsx
 msgid "Only forced"
 msgstr "Doar forțate"
@@ -2954,6 +3590,10 @@ msgstr "Doar gazda controlează redarea."
 msgid "Only the ones your TV or receiver decodes; this app decodes the rest. DTS-HD needs DTS too."
 msgstr "Doar cele pe care le decodează televizorul sau receiverul tău; restul sunt decodate de aplicație. DTS-HD necesită și DTS."
 
+#: src/components/guest-share.tsx
+msgid "Only you see it, in Settings, to tell links apart."
+msgstr ""
+
 #: src/lib/i18n.ts
 msgid "Oops!"
 msgstr "Ups!"
@@ -2962,20 +3602,33 @@ msgstr "Ups!"
 msgid "Opacity: {backgroundOpacity}%"
 msgstr "Opacitate: {backgroundOpacity}%"
 
-#: src/app/history/page.tsx src/app/settings/account.tsx
-#: src/app/settings/apps.tsx src/app/settings/downloads.tsx
-#: src/components/media/item-menu.tsx src/components/media/random-pick.tsx
+#: src/app/history/page.tsx
+#: src/app/settings/account.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/downloads.tsx
+#: src/app/settings/profile.tsx
+#: src/components/media/item-menu.tsx
+#: src/components/media/random-pick.tsx
 msgid "Open"
 msgstr "Deschide"
 
-#: src/app/downloads/page.tsx src/app/settings/apps.tsx
+#: src/app/downloads/page.tsx
+#: src/app/settings/apps.tsx
 #: src/app/settings/player.tsx
 msgid "Open folder"
 msgstr "Deschide folderul"
 
+#: src/app/settings/profile.tsx
+msgid "Open in Stremio"
+msgstr ""
+
 #: src/app/trailer/page.tsx
 msgid "Open its page"
 msgstr "Deschide pagina acestuia"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Open Jellyfin and add {address} as a server."
+msgstr ""
 
 #: src/features/versions/version-list.tsx
 msgid "Open link"
@@ -2988,6 +3641,10 @@ msgstr "Deschide meniul principal"
 #: src/features/playlists/playlists.tsx
 msgid "Open playlist"
 msgstr "Deschide lista de redare"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Open Streamyfin and enter {address} as the server."
+msgstr ""
 
 #: src/app/downloads/page.tsx
 msgid "Open the app's downloads"
@@ -3017,6 +3674,14 @@ msgstr "Opțional."
 msgid "Optional. An image address, shown in place of the label."
 msgstr "Opțional. O adresă de imagine, afișată în locul etichetei."
 
+#: src/app/welcome/page.tsx
+msgid "Optional. Connect an account and what you watch here is marked there, and the other way round."
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Optional. Each change saves as you make it, and you can change it later in settings."
+msgstr ""
+
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. Match only these parts of a version, named as the formatter names them, such as seMatched for the stream expression it matched."
 msgstr "Opțional. Potrivește doar aceste câmpuri ale unei versiuni, folosind denumirile atribuite de formator, de exemplu seMatched pentru expresia de streaming care a fost identificată."
@@ -3024,6 +3689,10 @@ msgstr "Opțional. Potrivește doar aceste câmpuri ale unei versiuni, folosind 
 #: src/app/settings/_components/version-settings.tsx
 msgid "Optional. Only the first badge of a group that matches shows."
 msgstr "Opțional. Se afișează doar prima insignă dintr-un grup care corespunde."
+
+#: src/app/welcome/page.tsx
+msgid "Optional. Watch on your phone or computer by adding this server to an app there."
+msgstr ""
 
 #: src/lib/input/actions.ts
 msgid "Options"
@@ -3045,6 +3714,11 @@ msgstr "Opțiuni pe care aplicația le păstrează pentru ea."
 msgid "Or type one"
 msgstr "Sau scrie una"
 
+#: src/app/settings/profile.tsx
+msgid "Order"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
 #: src/lib/playback/quality.ts
 msgid "Original"
 msgstr "Original"
@@ -3135,13 +3809,27 @@ msgstr "Paginile și panourile își iau nuanțele de la el. Culorile închise s
 msgid "Pages load from the server again until they are saved anew."
 msgstr "Paginile se încarcă din nou de pe server până când sunt salvate din nou."
 
+#: src/app/preshow/page.tsx
+msgid "Parental guidance suggested"
+msgstr ""
+
+#: src/app/preshow/page.tsx
+msgid "Parents strongly cautioned"
+msgstr ""
+
 #: src/app/settings/audio.tsx
 msgid "Pass surround audio through"
 msgstr "Transmite sunetul surround mai departe"
 
+#: src/app/settings/profile.tsx
 #: src/app/sign-in/page.tsx
+#: src/app/welcome/page.tsx
 msgid "Password"
 msgstr "Parolă"
+
+#: src/app/settings/profile.tsx
+msgid "Password saved"
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Past this, what was used longest ago goes first."
@@ -3159,10 +3847,12 @@ msgstr "Lipește filtre rapide ca JSON sau adresa unui fișier cu ele, pentru a 
 msgid "Pattern"
 msgstr "Model"
 
-#: src/app/downloads/page.tsx src/features/player/controls.tsx
+#: src/app/downloads/page.tsx
+#: src/features/player/controls.tsx
 #: src/features/player/mini-player.tsx
 #: src/features/player/picture-in-picture.tsx
-#: src/features/remote/remote-sheet.tsx src/lib/input/actions.ts
+#: src/features/remote/remote-sheet.tsx
+#: src/lib/input/actions.ts
 #: src/lib/input/keys.ts
 msgid "Pause"
 msgstr "Pauză"
@@ -3199,6 +3889,10 @@ msgstr "Persoane"
 msgid "People and invite"
 msgstr "Persoane și invitație"
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "Phone or tablet"
+msgstr ""
+
 #: src/lib/i18n.ts
 msgid "Pick a colour"
 msgstr "Alege o culoare"
@@ -3227,7 +3921,8 @@ msgstr "Alege replica pe care ai auzit-o la {heardAt}."
 msgid "Pick the version to download."
 msgstr "Alege versiunea de descărcat."
 
-#: src/app/settings/player.tsx src/features/player/options.tsx
+#: src/app/settings/player.tsx
+#: src/features/player/options.tsx
 #: src/lib/input/actions.ts
 msgid "Picture-in-picture"
 msgstr "Imagine în imagine"
@@ -3248,6 +3943,7 @@ msgstr "Imagine: {label}"
 msgid "Pills above the version list that each apply a search you save, such as one for 4K versions."
 msgstr "Etichete deasupra listei de versiuni, fiecare aplicând un filtru de căutare salvat, de exemplu pentru versiunile 4K."
 
+#: src/app/settings/profile.tsx
 #: src/app/sign-in/page.tsx
 msgid "PIN"
 msgstr "PIN"
@@ -3255,6 +3951,14 @@ msgstr "PIN"
 #: src/app/sign-in/page.tsx
 msgid "PIN or password"
 msgstr "PIN sau parolă"
+
+#: src/app/settings/profile.tsx
+msgid "PIN removed"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "PIN saved"
+msgstr ""
 
 #: src/app/settings/_components/gesture-settings.tsx
 #, fuzzy
@@ -3265,14 +3969,25 @@ msgstr "Ieși din ecran complet"
 msgid "Pink"
 msgstr "Roz"
 
-#: src/app/item/_components/header.tsx src/app/item/_components/no-details.tsx
+#: src/app/settings/browsing.tsx
+msgid "Pinned above the rows, showing the card the pointer, keyboard or remote is on. Touch screens and narrow windows keep it rotating."
+msgstr ""
+
+#: src/app/item/_components/header.tsx
+#: src/app/item/_components/no-details.tsx
 #: src/app/live-tv/_components/channel-details.tsx
-#: src/components/media/hero.tsx src/components/media/item-menu.tsx
-#: src/components/media/random-pick.tsx src/features/player/controls.tsx
+#: src/app/settings/player-example.tsx
+#: src/components/media/hero.tsx
+#: src/components/media/item-menu.tsx
+#: src/components/media/random-pick.tsx
+#: src/features/player/controls.tsx
 #: src/features/player/mini-player.tsx
 #: src/features/player/picture-in-picture.tsx
-#: src/features/playlists/playlists.tsx src/features/remote/remote-sheet.tsx
-#: src/lib/input/actions.ts src/lib/input/keys.ts
+#: src/features/player/preshow-dialog.tsx
+#: src/features/playlists/playlists.tsx
+#: src/features/remote/remote-sheet.tsx
+#: src/lib/input/actions.ts
+#: src/lib/input/keys.ts
 msgid "Play"
 msgstr "Redă"
 
@@ -3287,6 +4002,10 @@ msgstr "Redă oricum"
 #: src/app/settings/browsing.tsx
 msgid "Play by themselves"
 msgstr "Se redă singure"
+
+#: src/app/settings/browsing.tsx
+msgid "Play by themselves once you rest on a title for a moment. In the hero, only one you went to. Kept on this device."
+msgstr ""
 
 #: src/app/item/_components/header.tsx
 msgid "Play from the start"
@@ -3316,7 +4035,8 @@ msgstr "Redă acum"
 msgid "Play on"
 msgstr "Continuă redarea"
 
-#: src/app/item/_components/actions.tsx src/components/media/item-menu.tsx
+#: src/app/item/_components/actions.tsx
+#: src/components/media/item-menu.tsx
 #: src/features/remote/remote-sheet.tsx
 msgid "Play on another device"
 msgstr "Redă pe alt dispozitiv"
@@ -3345,6 +4065,10 @@ msgstr "Redă prima versiune"
 msgid "Play the first version when none matches"
 msgstr "Redă prima versiune când niciuna nu corespunde"
 
+#: src/app/settings/player-example.tsx
+msgid "Play the next one"
+msgstr ""
+
 #: src/features/player/options.tsx
 msgid "Play the sound earlier"
 msgstr "Redă sunetul mai devreme"
@@ -3361,6 +4085,14 @@ msgstr "Redă mai întâi pista implicită a versiunii"
 msgid "Play versions in"
 msgstr "Redă versiunile în"
 
+#: src/features/player/preshow-dialog.tsx
+msgid "Play with a pre-show"
+msgstr ""
+
+#: src/components/media/item-menu.tsx
+msgid "Play with a pre-show…"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Play with ExoPlayer"
 msgstr "Redă cu ExoPlayer"
@@ -3373,8 +4105,10 @@ msgstr "Redă cu mpv"
 msgid "Play/Pause"
 msgstr "Redă/Pauză"
 
-#: src/app/settings/page.tsx src/lib/hosts/shell/exo-stats.ts
-#: src/lib/hosts/shell/player.ts src/lib/playback/webgpu.ts
+#: src/app/settings/page.tsx
+#: src/lib/hosts/shell/exo-stats.ts
+#: src/lib/hosts/shell/player.ts
+#: src/lib/playback/webgpu.ts
 msgid "Playback"
 msgstr "Redare"
 
@@ -3394,8 +4128,10 @@ msgstr "Redarea a eșuat: {failure}"
 msgid "Played here"
 msgstr "Redat aici"
 
-#: src/app/settings/about.tsx src/app/settings/page.tsx
-#: src/app/settings/player.tsx src/lib/input/actions.ts
+#: src/app/settings/about.tsx
+#: src/app/settings/page.tsx
+#: src/app/settings/player.tsx
+#: src/lib/input/actions.ts
 msgid "Player"
 msgstr "Player"
 
@@ -3408,9 +4144,12 @@ msgid "Player window"
 msgstr "Fereastra playerului"
 
 #: src/app/history/_components/sessions.tsx
-#: src/app/item/_components/trailer.tsx src/features/party/in-party.tsx
-#: src/features/player/chapters.tsx src/features/player/episodes.tsx
-#: src/features/playlists/playlists.tsx src/features/versions/version-list.tsx
+#: src/app/item/_components/trailer.tsx
+#: src/features/party/in-party.tsx
+#: src/features/player/chapters.tsx
+#: src/features/player/episodes.tsx
+#: src/features/playlists/playlists.tsx
+#: src/features/versions/version-list.tsx
 msgid "Playing"
 msgstr "Se redă"
 
@@ -3434,12 +4173,14 @@ msgstr "Se redă pe {name}"
 msgid "Playing on and the next and previous buttons pass over episodes marked as filler. You can still play one yourself."
 msgstr "La redarea continuă, butoanele pentru episodul următor și anterior sar peste episoadele marcate ca episoade de umplutură (filler). Le poți reda în continuare manual."
 
-#: src/app/item/_components/actions.tsx src/features/player/options.tsx
+#: src/app/item/_components/actions.tsx
+#: src/features/player/options.tsx
 #: src/features/playlists/playlists.tsx
 msgid "Playlist"
 msgstr "Listă de redare"
 
-#: src/components/shell/layout.tsx src/features/playlists/playlists.tsx
+#: src/components/shell/layout.tsx
+#: src/features/playlists/playlists.tsx
 msgid "Playlists"
 msgstr "Liste de redare"
 
@@ -3450,6 +4191,10 @@ msgstr "Redă <0>{title}</0> pentru toți cei care se alătură."
 #: src/app/settings/playback.tsx
 msgid "Plays a little faster or slower to catch up with the party. Off, the video jumps instead."
 msgstr "Redă puțin mai repede sau mai încet pentru a ajunge din urmă sesiunea. Dezactivat, videoclipul sare direct."
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Plays almost anything, on iPhone, iPad and Apple TV."
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "Plays Dolby Vision where the screen shows it. Turn it off to play the HDR10 picture most of these videos also carry, if Dolby Vision looks dim or flickers. Videos with no HDR10 picture still play in Dolby Vision."
@@ -3472,13 +4217,24 @@ msgid "Poster size"
 msgstr "Dimensiunea posterului"
 
 #: src/app/settings/browsing.tsx
-#, fuzzy
-msgid "Posters and grids"
-msgstr "Pagina principală și grile"
+msgid "Posters and search"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Posters stand alone."
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Posters, backdrops, logos and photos."
 msgstr "Postere, fundaluri, logo-uri și fotografii."
+
+#: src/app/settings/playback.tsx
+msgid "Pre-show"
+msgstr ""
+
+#: src/features/player/preshow-dialog.tsx
+msgid "Pre-show length"
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Presets"
@@ -3487,6 +4243,10 @@ msgstr "Preșabloane"
 #: src/app/settings/_components/shortcut-settings.tsx
 msgid "Press a key"
 msgstr "Apasă o tastă"
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Press Add to the app below, or enter {address} in it yourself."
+msgstr ""
 
 #: src/lib/hosts/shell/android.ts
 msgid "Press Back again to leave"
@@ -3511,13 +4271,16 @@ msgctxt "Episode segments showing the next episode"
 msgid "Previews"
 msgstr "Previzualizări"
 
-#: src/features/player/controls.tsx src/features/remote/remote-sheet.tsx
+#: src/features/player/controls.tsx
+#: src/features/remote/remote-sheet.tsx
 #: src/lib/i18n.ts
 msgid "Previous"
 msgstr "Anteriorul"
 
-#: src/app/player/page.tsx src/features/player/controls.tsx
-#: src/features/player/live.tsx src/lib/input/actions.ts
+#: src/app/player/page.tsx
+#: src/features/player/controls.tsx
+#: src/features/player/live.tsx
+#: src/lib/input/actions.ts
 msgid "Previous channel"
 msgstr "Canalul anterior"
 
@@ -3525,7 +4288,8 @@ msgstr "Canalul anterior"
 msgid "Previous chapter"
 msgstr "Capitolul anterior"
 
-#: src/features/player/controls.tsx src/lib/input/actions.ts
+#: src/features/player/controls.tsx
+#: src/lib/input/actions.ts
 msgid "Previous episode"
 msgstr "Episodul anterior"
 
@@ -3537,7 +4301,8 @@ msgstr "Luna trecută"
 msgid "Previous track"
 msgstr "Piesa anterioară"
 
-#: src/app/trailer/page.tsx src/features/player/controls.tsx
+#: src/app/trailer/page.tsx
+#: src/features/player/controls.tsx
 msgid "Previous trailer"
 msgstr "Trailerul anterior"
 
@@ -3546,6 +4311,8 @@ msgid "Producer"
 msgstr "Producător"
 
 #: src/app/history/page.tsx
+#: src/app/settings/page.tsx
+#: src/components/shell/layout.tsx
 msgid "Profile"
 msgstr ""
 
@@ -3553,15 +4320,18 @@ msgstr ""
 msgid "Puts every key back the way it came."
 msgstr "Readuce fiecare tastă la starea inițială."
 
+#: src/components/guest-share.tsx
 #: src/features/party/in-party.tsx
 msgid "QR code"
 msgstr "Cod QR"
 
-#: src/app/settings/player.tsx src/features/player/options.tsx
+#: src/app/settings/player.tsx
+#: src/features/player/options.tsx
 msgid "Quality"
 msgstr "Calitate"
 
-#: src/app/settings/account.tsx src/app/sign-in/page.tsx
+#: src/app/settings/account.tsx
+#: src/app/sign-in/page.tsx
 msgid "Quick Connect"
 msgstr "Conectare rapidă"
 
@@ -3582,7 +4352,8 @@ msgstr "Bară laterală"
 msgid "Rainforest"
 msgstr "Pădure tropicală"
 
-#: src/features/player/options.tsx src/lib/input/actions.ts
+#: src/features/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Raise subtitles"
 msgstr "Ridică subtitrările"
 
@@ -3594,7 +4365,8 @@ msgstr "Ridică nivelul canalului central, unde sunetul surround pune dialogul. 
 msgid "Random"
 msgstr "Aleatoriu"
 
-#: src/app/item/_components/actions.tsx src/components/media/item-menu.tsx
+#: src/app/item/_components/actions.tsx
+#: src/components/media/item-menu.tsx
 #: src/components/media/random-pick.tsx
 msgid "Random episode"
 msgstr "Episod aleatoriu"
@@ -3607,7 +4379,8 @@ msgstr "Favorit aleatoriu"
 msgid "Random pick"
 msgstr "Alegere aleatorie"
 
-#: src/app/item/_components/actions.tsx src/app/item/_components/rating.tsx
+#: src/app/item/_components/actions.tsx
+#: src/app/item/_components/rating.tsx
 msgid "Rate"
 msgstr "Evaluează"
 
@@ -3615,7 +4388,8 @@ msgstr "Evaluează"
 msgid "Rate season"
 msgstr "Evaluează sezonul"
 
-#: src/components/media/scores.tsx src/components/media/sort-picker.tsx
+#: src/components/media/scores.tsx
+#: src/components/media/sort-picker.tsx
 msgid "Rating"
 msgstr "Evaluare"
 
@@ -3652,7 +4426,8 @@ msgstr "Căutări recente"
 msgid "Reconnecting to the party…"
 msgstr "Se reconectează la sesiunea Watch party…"
 
-#: src/components/shell/unreachable.tsx src/features/player/controls.tsx
+#: src/components/shell/unreachable.tsx
+#: src/features/player/controls.tsx
 #: src/features/player/picture-in-picture.tsx
 msgid "Reconnecting…"
 msgstr "Se reconectează…"
@@ -3661,7 +4436,8 @@ msgstr "Se reconectează…"
 msgid "Red"
 msgstr "Roșu"
 
-#: src/app/item/_components/no-details.tsx src/components/media/no-catalogs.tsx
+#: src/app/item/_components/no-details.tsx
+#: src/components/media/no-catalogs.tsx
 msgid "Refresh"
 msgstr "Reîmprospătează"
 
@@ -3685,7 +4461,8 @@ msgstr "Data lansării"
 msgid "Released"
 msgstr "Lansat"
 
-#: src/app/settings/audio.tsx src/app/settings/subtitles.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/subtitles.tsx
 msgid "Remember picks per show"
 msgstr "Reține alegerile pe serial"
 
@@ -3705,9 +4482,12 @@ msgstr "Memento eliminat"
 msgid "Reminder set"
 msgstr "Memento setat"
 
-#: src/app/search/page.tsx src/app/servers/page.tsx
+#: src/app/search/page.tsx
+#: src/app/servers/page.tsx
 #: src/app/settings/_components/common.tsx
 #: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/profile.tsx
+#: src/components/avatar-picker.tsx
 msgid "Remove"
 msgstr "Elimină"
 
@@ -3715,7 +4495,8 @@ msgstr "Elimină"
 msgid "Remove {key}"
 msgstr "Elimină {key}"
 
-#: src/app/settings/_components/common.tsx src/features/party/in-party.tsx
+#: src/app/settings/_components/common.tsx
+#: src/features/party/in-party.tsx
 msgid "Remove {name}"
 msgstr "Elimină {name}"
 
@@ -3749,6 +4530,10 @@ msgstr "Elimină din lista de redare"
 msgid "Remove from the list, keep the file"
 msgstr "Elimină din listă, păstrează fișierul"
 
+#: src/app/settings/profile.tsx
+msgid "Remove PIN"
+msgstr ""
+
 #: src/app/servers/page.tsx
 msgid "Remove server"
 msgstr "Elimină serverul"
@@ -3777,7 +4562,9 @@ msgstr "Raport copiat"
 msgid "Request failed ({status})"
 msgstr "Cererea a eșuat ({status})"
 
-#: src/app/history/page.tsx src/app/settings/_components/reaction-setting.tsx
+#: src/app/history/page.tsx
+#: src/app/settings/_components/reaction-setting.tsx
+#: src/app/settings/playback.tsx
 #: src/features/player/options.tsx
 msgid "Reset"
 msgstr "Resetează"
@@ -3826,11 +4613,16 @@ msgstr "Repornește pentru a schimba"
 msgid "Restore"
 msgstr "Restaurează"
 
+#: src/app/preshow/page.tsx
+msgid "Restricted"
+msgstr ""
+
 #: src/app/settings/cache.tsx
 msgid "Results of what you searched for."
 msgstr "Rezultatele căutării tale."
 
-#: src/app/downloads/page.tsx src/components/media/item-menu.tsx
+#: src/app/downloads/page.tsx
+#: src/components/media/item-menu.tsx
 #: src/components/media/random-pick.tsx
 msgid "Resume"
 msgstr "Reia"
@@ -3843,7 +4635,8 @@ msgstr "Reia {code}"
 msgid "Resume all"
 msgstr "Reia tot"
 
-#: src/app/item/_components/header.tsx src/features/versions/version-list.tsx
+#: src/app/item/_components/header.tsx
+#: src/features/versions/version-list.tsx
 #: src/lib/playback/use-player.ts
 msgid "Resume from {resumeAt}"
 msgstr "Reia de la {resumeAt}"
@@ -3856,7 +4649,12 @@ msgstr "Resincronizate automat"
 msgid "Retry"
 msgstr "Încearcă din nou"
 
-#: src/features/remote/remote-sheet.tsx src/lib/input/keys.ts
+#: src/app/settings/profile.tsx
+msgid "Revoke {label}"
+msgstr ""
+
+#: src/features/remote/remote-sheet.tsx
+#: src/lib/input/keys.ts
 msgid "Rewind"
 msgstr "Derulare înapoi"
 
@@ -3865,8 +4663,12 @@ msgid "Right"
 msgstr "Dreapta"
 
 #: src/app/settings/browsing.tsx
-msgid "Rotates through featured titles"
-msgstr "Se rotește între titlurile recomandate"
+msgid "Rotates"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "Rotates through the featured titles."
+msgstr ""
 
 #: src/components/media/scores.tsx
 msgid "Rotten Tomatoes audience"
@@ -3875,6 +4677,10 @@ msgstr "Publicul Rotten Tomatoes"
 #: src/app/settings/browsing.tsx
 msgid "Row"
 msgstr "Rând"
+
+#: src/app/settings/browsing.tsx
+msgid "Rows"
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Rows, catalogs and the calendar."
@@ -3898,7 +4704,9 @@ msgid "Sans serif"
 msgstr "Fără serife"
 
 #: src/app/settings/_components/version-settings.tsx
-#: src/app/settings/player.tsx src/features/playlists/playlists.tsx
+#: src/app/settings/player.tsx
+#: src/app/settings/profile.tsx
+#: src/features/playlists/playlists.tsx
 msgid "Save"
 msgstr "Salvează"
 
@@ -3933,6 +4741,10 @@ msgstr "Salvează subtitrările"
 #: src/app/settings/cache.tsx
 msgid "Save title pages"
 msgstr "Salvează paginile titlurilor"
+
+#: src/app/downloads/page.tsx
+msgid "Save to device"
+msgstr ""
 
 #: src/app/settings/cache.tsx
 msgid "Save what you browse"
@@ -3982,10 +4794,14 @@ msgstr "SDH"
 msgid "SDH, with sounds described"
 msgstr "SDH, cu sunetele descrise"
 
-#: src/app/discover/page.tsx src/app/search/page.tsx
+#: src/app/discover/page.tsx
+#: src/app/search/page.tsx
 #: src/app/settings/_components/licenses.tsx
-#: src/app/settings/_components/version-settings.tsx src/app/settings/apps.tsx
-#: src/components/shell/layout.tsx src/lib/input/actions.ts
+#: src/app/settings/_components/version-settings.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/browsing.tsx
+#: src/components/shell/layout.tsx
+#: src/lib/input/actions.ts
 msgid "Search"
 msgstr "Caută"
 
@@ -4018,6 +4834,10 @@ msgstr "Se caută"
 msgid "Season {season}"
 msgstr "Sezonul {season}"
 
+#: src/app/settings/browsing.tsx
+msgid "Season 1"
+msgstr ""
+
 #: src/components/media/item-menu.tsx
 msgid "See the download"
 msgstr "Vezi descărcarea"
@@ -4030,7 +4850,9 @@ msgstr "Derulează"
 msgid "Seek bar previews"
 msgstr "Previzualizări pe bara de derulare"
 
-#: src/app/history/page.tsx src/lib/i18n.ts src/lib/input/actions.ts
+#: src/app/history/page.tsx
+#: src/lib/i18n.ts
+#: src/lib/input/actions.ts
 msgid "Select"
 msgstr "Selectează"
 
@@ -4038,7 +4860,8 @@ msgstr "Selectează"
 msgid "Select all"
 msgstr "Selectează tot"
 
-#: src/components/send-report.tsx src/features/party/chat.tsx
+#: src/components/send-report.tsx
+#: src/features/party/chat.tsx
 msgid "Send"
 msgstr "Trimite"
 
@@ -4046,7 +4869,8 @@ msgstr "Trimite"
 msgid "Send a report"
 msgstr "Trimite un raport"
 
-#: src/app/settings/apps.tsx src/components/shell/crash-report.tsx
+#: src/app/settings/apps.tsx
+#: src/components/shell/crash-report.tsx
 msgid "Send report"
 msgstr "Trimite raportul"
 
@@ -4082,7 +4906,8 @@ msgstr "Trimite serverului detaliile acestui dispozitiv și jurnalul recent al a
 msgid "Serif"
 msgstr "Cu serife"
 
-#: src/app/settings/about.tsx src/app/settings/account.tsx
+#: src/app/settings/about.tsx
+#: src/app/settings/account.tsx
 msgid "Server"
 msgstr "Server"
 
@@ -4094,11 +4919,21 @@ msgstr "Adresa serverului"
 msgid "server error"
 msgstr "eroare de server"
 
+#: src/app/settings/profile.tsx
+msgid "Set a password"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Set a PIN"
+msgstr ""
+
 #: src/features/player/options.tsx
 msgid "Set by hand"
 msgstr "Setat manual"
 
-#: src/app/settings/page.tsx src/components/shell/layout.tsx
+#: src/app/settings/page.tsx
+#: src/components/guest-layout.tsx
+#: src/components/shell/layout.tsx
 msgid "Settings"
 msgstr "Setări"
 
@@ -4119,9 +4954,22 @@ msgstr "Shadere"
 msgid "Shadow"
 msgstr "Umbră"
 
+#: src/app/item/_components/actions.tsx
+msgid "Share"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "Share the invite"
 msgstr "Partajează invitația"
+
+#: src/components/guest-share.tsx
+msgid "Share the link"
+msgstr ""
+
+#: src/app/item/_components/actions.tsx
+#: src/components/guest-share.tsx
+msgid "Share with a guest"
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "Sharpens the lines and cleans up the compression in anime as it plays, most of all in older and lower-resolution shows. It applies to titles marked as anime. With a keyboard, U in the player switches it for what's playing. Uses more power, and turns itself off for a video this device can't keep up with. HDR videos, and videos about as large as the screen, stay as they are."
@@ -4136,6 +4984,7 @@ msgid "Shortcuts"
 msgstr "Scurtături"
 
 #. A dot under the banner that brings this title up
+#: src/app/settings/profile.tsx
 #: src/components/media/hero.tsx
 msgid "Show {name}"
 msgstr "Arată {name}"
@@ -4201,9 +5050,12 @@ msgstr "Se afișează paginile salvate"
 msgid "Shown"
 msgstr "Afișat"
 
-#: src/app/discover/page.tsx src/app/favourites/page.tsx
-#: src/app/search/page.tsx src/components/media/kind-tabs.tsx
-#: src/components/media/random-pick.tsx src/lib/format.ts
+#: src/app/discover/page.tsx
+#: src/app/favourites/page.tsx
+#: src/app/search/page.tsx
+#: src/components/media/kind-tabs.tsx
+#: src/components/media/random-pick.tsx
+#: src/lib/format.ts
 msgid "Shows"
 msgstr "Seriale"
 
@@ -4215,14 +5067,6 @@ msgstr "Afișează o imagine din videoclip acolo unde indici, tragi sau sari pe 
 msgid "Shows HDR video in HDR on a screen that can show it, instead of converting it to SDR. Leave it off on a screen without HDR."
 msgstr "Afișează videoclipurile HDR în HDR pe un ecran care poate, în loc să le convertească în SDR. Lasă-l dezactivat pe un ecran fără HDR."
 
-#: src/app/settings/browsing.tsx
-msgid "Shows next episodes in the continue watching row, after what you are partway through."
-msgstr "Afișează episoadele următoare în rândul Continuă vizionarea, după ce ai început."
-
-#: src/app/settings/browsing.tsx
-msgid "Shows search results in one grid instead of a row each for movies and shows."
-msgstr "Afișează rezultatele căutării într-o singură grilă, în loc de câte un rând pentru filme și seriale."
-
 #: src/app/settings/subtitles.tsx
 msgid "Shows subtitles in your language unless the audio already is."
 msgstr "Afișează subtitrări în limba ta, dacă sunetul nu este deja în ea."
@@ -4231,6 +5075,10 @@ msgstr "Afișează subtitrări în limba ta, dacă sunetul nu este deja în ea."
 msgid "Shows the time of day at the top of the player with the controls."
 msgstr "Afișează ora din zi în partea de sus a playerului, împreună cu comenzile."
 
+#: src/features/player/preshow-dialog.tsx
+msgid "Showtime"
+msgstr ""
+
 #: src/features/playlists/playlists.tsx
 msgid "Shuffle"
 msgstr "Amestecă"
@@ -4238,10 +5086,6 @@ msgstr "Amestecă"
 #: src/app/settings/interface.tsx
 msgid "Side rail"
 msgstr "Bară laterală"
-
-#: src/app/settings/interface.tsx
-msgid "Side rail runs down the side of the screen; Top tabs sit along the top of each page."
-msgstr "Bara laterală coboară pe partea laterală a ecranului; filele de sus stau în partea de sus a fiecărei pagini."
 
 #: src/app/settings/interface.tsx
 msgid "Sidebar"
@@ -4255,11 +5099,24 @@ msgstr "Conectează un alt dispozitiv ca tine, cu codul pe care îl afișează."
 msgid "Sign in"
 msgstr "Conectează-te"
 
+#: src/app/welcome/page.tsx
+msgid "Sign in as {name} on any device. Stremio links and apps are in Settings, under Profile."
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Sign in as {name} with your password, then save."
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "Sign in as {name} with your password."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 msgid "Sign in failed"
 msgstr "Conectarea a eșuat"
 
-#: src/app/servers/page.tsx src/app/settings/account.tsx
+#: src/app/servers/page.tsx
+#: src/app/settings/account.tsx
 msgid "Sign out"
 msgstr "Deconectează-te"
 
@@ -4275,18 +5132,31 @@ msgstr "Te deconectezi din acest browser?"
 msgid "Sign out of this server?"
 msgstr "Te deconectezi de la acest server?"
 
+#: src/app/settings/profile.tsx
+msgid "Signed in as {account}"
+msgstr ""
+
 #: src/app/servers/page.tsx
 msgid "Signed out"
 msgstr "Deconectat"
 
-#: src/app/settings/subtitles.tsx src/lib/playback/controller.ts
+#: src/app/settings/subtitles.tsx
+#: src/lib/playback/controller.ts
 msgid "Signs and songs"
 msgstr "Semne și cântece"
 
-#: src/app/settings/subtitles.tsx src/features/player/options.tsx
+#: src/lib/playback/bumpers.ts
+msgid "Silence your phones"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+#: src/app/settings/subtitles.tsx
+#: src/features/player/options.tsx
 msgid "Size"
 msgstr "Dimensiune"
 
+#: src/app/guest/page.tsx
+#: src/features/player/controls.tsx
 #: src/features/player/segments.ts
 msgid "Skip"
 msgstr "Sari peste"
@@ -4319,6 +5189,11 @@ msgstr "Sari peste episoadele filler"
 msgid "Skip forward"
 msgstr "Sari înainte"
 
+#: src/app/settings/profile.tsx
+msgid "Skip HDR and Dolby Vision"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
 #: src/features/player/segments.ts
 msgid "Skip intro"
 msgstr "Sari peste intro"
@@ -4342,6 +5217,14 @@ msgstr "Sari peste episoadele de recapitulare"
 #: src/lib/input/actions.ts
 msgid "Skip the intro or credits"
 msgstr "Sari peste intro sau generic"
+
+#: src/app/settings/player-example.tsx
+msgid "Skip them"
+msgstr ""
+
+#: src/app/preshow/page.tsx
+msgid "Skip to the movie"
+msgstr ""
 
 #: src/features/player/segments.ts
 msgid "Skipped ad"
@@ -4367,9 +5250,29 @@ msgstr "Recapitulare sărită"
 msgid "Skipped segment"
 msgstr "Segment sărit"
 
+#: src/app/settings/player-example.tsx
+msgid "Skipped the intro"
+msgstr ""
+
 #: src/app/settings/playback.tsx
 msgid "Skipping"
 msgstr "Se sare"
+
+#: src/features/player/options.tsx
+msgid "Sleep timer"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer off"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Sleep timer: stops at {sleepEnds}"
+msgstr ""
 
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "Slot {n}: {emoji}"
@@ -4379,7 +5282,8 @@ msgstr "Slot {n}: {emoji}"
 msgid "Slower"
 msgstr "Mai încet"
 
-#: src/app/settings/browsing.tsx src/lib/subtitles/style.ts
+#: src/app/settings/browsing.tsx
+#: src/lib/subtitles/style.ts
 msgid "Small"
 msgstr "Mic"
 
@@ -4387,15 +5291,18 @@ msgstr "Mic"
 msgid "Small labels on each version for what it has, from packs you link or badges you make."
 msgstr "Etichete mici pe fiecare versiune pentru ce conține, din pachetele pe care le legi sau insignele pe care le creezi."
 
-#: src/features/player/options.tsx src/lib/input/actions.ts
+#: src/features/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Smaller subtitles"
 msgstr "Subtitrări mai mici"
 
+#: src/app/settings/interface.tsx
 #: src/app/settings/theme.tsx
 msgid "Solid"
 msgstr "Solid"
 
-#: src/lib/party/actions.ts src/lib/party/party.ts
+#: src/lib/party/actions.ts
+#: src/lib/party/party.ts
 msgid "Someone"
 msgstr "Cineva"
 
@@ -4411,7 +5318,8 @@ msgstr "Ceva ce acest dispozitiv nu poate citi"
 msgid "Sort by"
 msgstr "Sortează după"
 
-#: src/app/settings/audio.tsx src/app/settings/browsing.tsx
+#: src/app/settings/audio.tsx
+#: src/app/settings/browsing.tsx
 #: src/features/player/options.tsx
 msgid "Sound"
 msgstr "Sunet"
@@ -4448,6 +5356,10 @@ msgstr "Viteză {shown}×"
 msgid "Speed up while held"
 msgstr "Accelerează cât timp este ținut apăsat"
 
+#: src/app/settings/browsing.tsx
+msgid "Spoilers"
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "Stable"
 msgstr "Stabil"
@@ -4460,42 +5372,82 @@ msgstr "Pornește o sesiune Watch party"
 msgid "Start on"
 msgstr "Pornește pe"
 
+#: src/app/welcome/page.tsx
+msgid "Start watching"
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "Starting…"
 msgstr "Se pornește…"
+
+#: src/components/guest-share.tsx
+msgid "Starts a party here, which the link brings them into."
+msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "Starts without subtitles."
 msgstr "Pornește fără subtitrări."
 
-#: src/features/player/options.tsx src/lib/input/actions.ts
+#: src/features/player/options.tsx
+#: src/lib/input/actions.ts
 msgid "Statistics"
 msgstr "Statistici"
 
-#: src/app/history/page.tsx src/app/settings/apps.tsx
+#: src/app/history/page.tsx
+#: src/app/settings/apps.tsx
 msgid "Status"
 msgstr "Stare"
+
+#: src/app/welcome/page.tsx
+msgid "Step {number} of {total}"
+msgstr ""
 
 #: src/app/settings/audio.tsx
 msgid "Stereo"
 msgstr "Stereo"
 
-#: src/features/remote/remote-sheet.tsx src/lib/input/actions.ts
+#: src/features/remote/remote-sheet.tsx
+#: src/lib/input/actions.ts
 #: src/lib/input/keys.ts
 msgid "Stop"
 msgstr "Oprește"
+
+#: src/app/settings/player-example.tsx
+msgid "Stop and wait"
+msgstr ""
 
 #: src/app/search/page.tsx
 msgid "Stop listening"
 msgstr "Oprește ascultarea"
 
+#: src/features/player/options.tsx
+msgid "Stops after this"
+msgstr ""
+
+#: src/features/player/options.tsx
+msgid "Stops at {at}"
+msgstr ""
+
 #: src/app/settings/player.tsx
 msgid "Stops playing"
 msgstr "Oprește redarea"
 
-#: src/app/player/page.tsx src/features/versions/version-list.tsx
+#: src/app/player/page.tsx
+#: src/features/versions/version-list.tsx
 msgid "Stream link copied"
 msgstr "Linkul fluxului a fost copiat"
+
+#: src/app/settings/profile.tsx
+msgid "Streams"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Streams in these come first, in this order."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Stremio"
+msgstr ""
 
 #: src/features/player/options.tsx
 msgid "Stretch"
@@ -4505,7 +5457,7 @@ msgstr "Întinde"
 msgid "Studios"
 msgstr "Studiouri"
 
-#: src/app/settings/interface.tsx src/features/player/options.tsx
+#: src/features/player/options.tsx
 msgid "Style"
 msgstr "Stil"
 
@@ -4533,8 +5485,10 @@ msgstr "Dimensiunea subtitrărilor: {label}"
 msgid "Subtitle types"
 msgstr "Tipuri de subtitrări"
 
-#: src/app/settings/page.tsx src/app/settings/subtitles.tsx
-#: src/features/player/options.tsx src/features/remote/remote-sheet.tsx
+#: src/app/settings/page.tsx
+#: src/app/settings/subtitles.tsx
+#: src/features/player/options.tsx
+#: src/features/remote/remote-sheet.tsx
 msgid "Subtitles"
 msgstr "Subtitrări"
 
@@ -4623,7 +5577,8 @@ msgstr ""
 msgid "Switch"
 msgstr "Schimbă"
 
-#: src/app/settings/account.tsx src/components/media/no-catalogs.tsx
+#: src/app/settings/account.tsx
+#: src/components/media/no-catalogs.tsx
 #: src/components/shell/layout.tsx
 #, fuzzy
 msgid "Switch profile"
@@ -4641,7 +5596,8 @@ msgstr "Comută televizorul la o rată de reîmprospătare potrivită fiecărui 
 msgid "Sync automatically"
 msgstr "Sincronizează automat"
 
-#: src/features/player/subtitle-sync.tsx src/lib/input/actions.ts
+#: src/features/player/subtitle-sync.tsx
+#: src/lib/input/actions.ts
 msgid "Sync by ear"
 msgstr "Sincronizează după auz"
 
@@ -4802,6 +5758,10 @@ msgstr "Aplicația salvează ce descarci și redă fără conexiune."
 msgid "The app's downloads"
 msgstr "Descărcările aplicației"
 
+#: src/app/settings/interface.tsx
+msgid "The app's own colour."
+msgstr ""
+
 #: src/lib/hosts/native-shell.ts
 msgid "The app's own settings"
 msgstr "Setările proprii ale aplicației"
@@ -4819,6 +5779,10 @@ msgstr "Playerul aplicației și opțiunile lui, cum ar fi pornirea videoclipuri
 msgid "The artwork of the title you're on, blurred and darkened, behind these pages. The version list shows it with title pages."
 msgstr "Grafica titlului pe care te afli, estompată și întunecată, în spatele paginilor și al listei de versiuni."
 
+#: src/app/settings/browsing.tsx
+msgid "The card you're on shows in the top corner, leaving the page to the rows."
+msgstr ""
+
 #: src/app/settings/_components/settings-card.tsx
 msgid "The default for every device. A device that changes it keeps its own."
 msgstr ""
@@ -4831,6 +5795,26 @@ msgstr ""
 msgid "The device is signed in"
 msgstr "Dispozitivul este conectat"
 
+#: src/app/preshow/page.tsx
+msgid "The film advertised has been rated"
+msgstr ""
+
+#: src/app/preshow/page.tsx
+msgid "The film advertised has not yet been rated"
+msgstr ""
+
+#: src/app/preshow/page.tsx
+msgid "The following preview has been <0>approved</0> to"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "The hero rotates through featured titles above the rows."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "The hero shows the card you're on, behind the whole page."
+msgstr ""
+
 #: src/lib/party/party.ts
 msgid "The host removed you from the party."
 msgstr "Gazda te-a eliminat din sesiunea Watch party."
@@ -4838,6 +5822,14 @@ msgstr "Gazda te-a eliminat din sesiunea Watch party."
 #: src/app/settings/about.tsx
 msgid "The interface is built on its components."
 msgstr "Interfața este construită pe componentele acestuia."
+
+#: src/app/settings/player-example.tsx
+msgid "The intro is skipped before you see it."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "The intro plays like any other part."
+msgstr ""
 
 #: src/app/settings/_components/licenses.tsx
 msgid "The licences couldn't be loaded."
@@ -4850,6 +5842,14 @@ msgstr "linkul a răspuns cu HTTP {status}"
 #: src/lib/hosts/shell/player.ts
 msgid "the link answered HTTP {status} ({meaning})"
 msgstr "linkul a răspuns cu HTTP {status} ({meaning})"
+
+#: src/components/guest-share.tsx
+msgid "The link brings them into the party you're in."
+msgstr ""
+
+#: src/components/guest-share.tsx
+msgid "The link is shown only now. You can end it any time in Settings."
+msgstr ""
 
 #: src/router.tsx
 msgid "The link may be old, or the page moved."
@@ -4872,9 +5872,37 @@ msgstr "Playerul mini continuă videoclipul peste pagini cât timp te uiți în 
 msgid "The most a version may stream at. Above it, the server converts it down, which helps on a slow connection. Original plays every version as it is. The player's own quality menu changes this too."
 msgstr "Bitratele maxim la care poate fi transmisă o versiune. Peste el, serverul o convertește în jos, ceea ce ajută pe o conexiune lentă. Original redă fiecare versiune ca atare. Și meniul de calitate al playerului modifică acest lucru."
 
+#: src/features/player/preshow-dialog.tsx
+msgid "The movie fills the showtime, so it starts straight away."
+msgstr ""
+
 #: src/app/settings/apps.tsx
 msgid "The movie or show whose page is open."
 msgstr "Filmul sau serialul a cărui pagină este deschisă."
+
+#: src/features/player/preshow-dialog.tsx
+msgid "The movie runs {runs}, leaving {leaves} of pre-show."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "The navigation is frosted glass, the page blurred through it."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "The navigation is liquid glass, bending the page at its edges."
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "The navigation sits on the app's own colour."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "The next episode starts after a countdown you can cancel."
+msgstr ""
+
+#: src/app/welcome/welcome-apps.tsx
+msgid "The official Jellyfin app."
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "The older way mpv draws, for Macs where the others fail. Some Dolby Vision videos show the wrong colours."
@@ -4884,9 +5912,17 @@ msgstr "Modul mai vechi de afișare al mpv, pentru Mac-urile unde celelalte eșu
 msgid "The open-source software in this app, and the licence of each."
 msgstr "Software-ul open-source din această aplicație și licența fiecăruia."
 
+#: src/app/settings/profile.tsx
+msgid "The order of your libraries and home rows. A catalog added to your addon later goes at the end."
+msgstr ""
+
 #: src/features/remote/remote-sheet.tsx
 msgid "The other device could not be reached"
 msgstr "Celălalt dispozitiv nu a putut fi contactat"
+
+#: src/app/settings/profile.tsx
+msgid "The owner's choice"
+msgstr ""
 
 #: src/components/shell/crash-report.tsx
 msgid "The page restarted unexpectedly"
@@ -4950,6 +5986,24 @@ msgid "the server could not convert this version"
 msgstr "serverul nu a putut converti această versiune"
 
 #. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "the server could not convert this version."
+msgstr ""
+
+#. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "the server is converting as many versions as it can."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "The shared password and a PIN"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "The shared password, no PIN"
+msgstr ""
+
+#. Follows "Playback failed:"
 #: src/lib/playback/use-player.ts
 msgid "the stream ended early"
 msgstr "fluxul s-a încheiat prematur"
@@ -5003,6 +6057,10 @@ msgstr "Nu este nimic aici"
 msgid "These come before the packs' badges. Badges that share a group are alternatives: only the first that matches shows."
 msgstr "Acestea vin înaintea insignelor din pachete. Insignele care împart un grup sunt alternative: se afișează doar prima care corespunde."
 
+#: src/app/welcome/page.tsx
+msgid "These don't match"
+msgstr ""
+
 #: src/lib/subtitles/delay.ts
 msgid "These subtitles don't match the video's own"
 msgstr "Aceste subtitrări nu corespund cu cele proprii ale videoclipului"
@@ -5027,14 +6085,28 @@ msgstr "Subțire"
 msgid "This app decodes Dolby and DTS audio itself, which loses Atmos."
 msgstr "Această aplicație decodează singură sunetul Dolby și DTS, ceea ce pierde Atmos."
 
+#: src/app/welcome/welcome-apps.tsx
+msgid "This app with mpv built in, which plays what a browser can't, on Windows, Mac and Linux."
+msgstr ""
+
 #: src/app/settings/player.tsx
 msgid "This browser"
 msgstr "Acest browser"
 
 #. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "this browser cannot play streams."
+msgstr ""
+
+#. Follows "Playback failed:"
 #: src/lib/playback/video.ts
 msgid "this browser cannot play this version. Nothing is converted on the server, so try another version, an external player or the desktop app."
 msgstr "acest browser nu poate reda această versiune. Nimic nu este convertit pe server, așa că încearcă altă versiune, un player extern sau aplicația desktop."
+
+#. Follows "Playback failed:"
+#: src/lib/playback/remux.ts
+msgid "this browser cannot play this version's video, which the server only repackages. Try another version, an external player or the desktop app."
+msgstr ""
 
 #: src/lib/playback/shaders.ts
 msgid "This browser keeps no files for this site."
@@ -5080,11 +6152,20 @@ msgstr "Acesta nu este un fișier pass .wgsl."
 msgid "This item was not found"
 msgstr "Acest element nu a fost găsit"
 
+#: src/app/guest/page.tsx
+msgid "This link has ended"
+msgstr ""
+
+#: src/features/player/preshow-dialog.tsx
+msgid "This movie's runtime isn't known, so the pre-show runs up to 30 minutes."
+msgstr ""
+
 #: src/app/sign-in/page.tsx
 #, fuzzy
 msgid "This profile has a PIN."
 msgstr "Acest utilizator are un PIN."
 
+#: src/components/guest-share.tsx
 #: src/features/downloads/download-button.tsx
 msgid "This season"
 msgstr "Acest sezon"
@@ -5141,6 +6222,11 @@ msgstr "Această versiune nu mai este disponibilă."
 msgid "This video didn't load."
 msgstr "Acest videoclip nu s-a încărcat."
 
+#. Follows "Playback failed:"
+#: src/lib/playback/youtube-engine.ts
+msgid "this video only plays on YouTube"
+msgstr ""
+
 #: src/app/settings/about.tsx
 msgid "This web app with a player of its own, which plays what a browser can't, on Windows, Mac and Linux."
 msgstr "Această aplicație web cu un player propriu, care redă ce un browser nu poate, pe Windows, Mac și Linux."
@@ -5165,12 +6251,15 @@ msgstr "Timp petrecut pe fiecare titlu"
 msgid "Timing"
 msgstr "Sincronizare"
 
-#: src/app/history/page.tsx src/app/settings/browsing.tsx
+#: src/app/history/page.tsx
+#: src/app/settings/browsing.tsx
 msgid "Title"
 msgstr "Titlu"
 
-#: src/app/settings/apps.tsx src/app/settings/browsing.tsx
-#: src/app/settings/cache.tsx src/app/settings/theme.tsx
+#: src/app/settings/apps.tsx
+#: src/app/settings/browsing.tsx
+#: src/app/settings/cache.tsx
+#: src/app/settings/theme.tsx
 msgid "Title pages"
 msgstr "Pagini de titluri"
 
@@ -5178,7 +6267,8 @@ msgstr "Pagini de titluri"
 msgid "Titles, synopses and version names stay in the language the server sends."
 msgstr "Titlurile, sinopsele și numele versiunilor rămân în limba trimisă de server."
 
-#: src/app/calendar/page.tsx src/app/live-tv/page.tsx
+#: src/app/calendar/page.tsx
+#: src/app/live-tv/page.tsx
 msgid "Today"
 msgstr "Astăzi"
 
@@ -5210,18 +6300,33 @@ msgstr "File de sus"
 msgid "Track {n}"
 msgstr "Pista {n}"
 
+#: src/app/settings/profile.tsx
+msgid "Tracking"
+msgstr ""
+
 #: src/lib/hosts/shell/player.ts
 msgid "Tracks"
 msgstr "Piste"
 
-#: src/app/item/_components/actions.tsx src/features/trailers/preview.tsx
+#: src/app/item/_components/actions.tsx
+#: src/app/preshow/page.tsx
+#: src/features/trailers/preview.tsx
 #: src/lib/playback/trailers.ts
 msgid "Trailer"
 msgstr "Trailer"
 
-#: src/app/item/_components/trailers.tsx src/app/settings/browsing.tsx
+#: src/app/item/_components/trailers.tsx
+#: src/app/settings/browsing.tsx
 msgid "Trailers"
 msgstr "Trailere"
+
+#: src/app/settings/playback.tsx
+msgid "Trailers for movies like this one come first, then the newest."
+msgstr ""
+
+#: src/app/settings/playback.tsx
+msgid "Trailers in the same genre"
+msgstr ""
 
 #: src/app/settings/subtitles.tsx
 msgid "Tried in order for the subtitles the setting below shows."
@@ -5231,9 +6336,12 @@ msgstr "Încercate în ordine pentru subtitrările pe care le afișează setarea
 msgid "Troubleshooting"
 msgstr "Depanare"
 
-#: src/app/downloads/page.tsx src/app/sign-in/page.tsx
-#: src/components/media/random-pick.tsx src/features/party/not-in-party.tsx
-#: src/features/versions/version-list.tsx src/lib/playback/transcoding.ts
+#: src/app/downloads/page.tsx
+#: src/app/sign-in/page.tsx
+#: src/components/media/random-pick.tsx
+#: src/features/party/not-in-party.tsx
+#: src/features/versions/version-list.tsx
+#: src/lib/playback/transcoding.ts
 #: src/lib/playback/use-player.ts
 msgid "Try again"
 msgstr "Încearcă din nou"
@@ -5278,7 +6386,9 @@ msgstr "Scrie numele unei lansări pentru a vedea insignele pe care le primește
 msgid "Typewriter"
 msgstr "Mașină de scris"
 
-#: src/components/media/episodes.tsx src/lib/format.ts
+#: src/app/settings/browsing.tsx
+#: src/components/media/episodes.tsx
+#: src/lib/format.ts
 msgid "Unaired"
 msgstr "Nedifuzat"
 
@@ -5298,13 +6408,24 @@ msgstr "Neterminat"
 msgid "Unknown language"
 msgstr "Limbă necunoscută"
 
-#: src/features/player/picture-in-picture.tsx src/features/player/volume.tsx
+#: src/features/player/picture-in-picture.tsx
+#: src/features/player/volume.tsx
 msgid "Unmute"
 msgstr "Activează sunetul"
 
 #: src/lib/i18n.ts
 msgid "Unnamed"
 msgstr "Fără nume"
+
+#: src/app/guest/page.tsx
+#: src/app/settings/account.tsx
+#: src/components/guest-share.tsx
+msgid "Until {until}"
+msgstr ""
+
+#: src/components/guest-share.tsx
+msgid "Until {until}, with your party"
+msgstr ""
 
 #: src/app/discover/page.tsx
 msgid "Unwatched"
@@ -5360,17 +6481,22 @@ msgstr "Actualizări, mpv și depanare"
 msgid "Updates, Discord and troubleshooting"
 msgstr "Actualizări, Discord, mpv și depanare"
 
-#: src/app/settings/about.tsx src/components/shell/usage-stats.tsx
+#: src/components/avatar-picker.tsx
+msgid "Upload a picture"
+msgstr ""
+
+#: src/components/avatar-picker.tsx
+msgid "Upload picture"
+msgstr ""
+
+#: src/app/settings/about.tsx
+#: src/components/shell/usage-stats.tsx
 msgid "Usage statistics"
 msgstr "Statistici de utilizare"
 
 #: src/app/sign-in/page.tsx
-msgid "Use Quick Connect, or the configuration’s password."
-msgstr "Folosește Conectarea rapidă sau parola configurației."
-
-#: src/app/sign-in/page.tsx
-msgid "Use the configuration’s password."
-msgstr "Folosește parola configurației."
+msgid "Use Quick Connect."
+msgstr ""
 
 #: src/app/settings/theme.tsx
 msgid "Use this server's CSS"
@@ -5379,10 +6505,6 @@ msgstr "Folosește CSS-ul acestui server"
 #: src/app/sign-in/page.tsx
 msgid "Use your configuration’s UUID or alias and its password."
 msgstr "Folosește UUID-ul sau aliasul configurației tale și parola acesteia."
-
-#: src/app/sign-in/page.tsx
-msgid "Use your PIN, or the configuration’s password."
-msgstr "Folosește PIN-ul tău sau parola configurației."
 
 #: src/app/sign-in/page.tsx
 msgid "Use your PIN."
@@ -5428,7 +6550,8 @@ msgstr "Versiunea {version} este pregătită de instalare."
 msgid "Version searches at once"
 msgstr "Căutări de versiuni simultane"
 
-#: src/app/settings/playback.tsx src/features/player/options.tsx
+#: src/app/settings/playback.tsx
+#: src/features/player/options.tsx
 #: src/features/versions/version-picker.tsx
 msgid "Versions"
 msgstr "Versiuni"
@@ -5453,6 +6576,10 @@ msgstr "Versiunile se redă în aplicație, cu comenzile și setările ei de red
 msgid "Versions play in this browser. Choose another player to open them in it instead."
 msgstr "Versiunile se redă în acest browser. Alege alt player pentru a le deschide în el."
 
+#: src/app/settings/profile.tsx
+msgid "Versions to show"
+msgstr ""
+
 #: src/app/settings/page.tsx
 msgid "Versions, next episode and skipping"
 msgstr ""
@@ -5473,7 +6600,8 @@ msgstr "Ieșire video"
 msgid "View"
 msgstr "Vizualizare"
 
-#: src/app/settings/_components/licenses.tsx src/app/settings/about.tsx
+#: src/app/settings/_components/licenses.tsx
+#: src/app/settings/about.tsx
 msgid "Visit"
 msgstr "Vizitează"
 
@@ -5485,7 +6613,8 @@ msgstr "Căutarea vocală a eșuat"
 msgid "Volume"
 msgstr "Volum"
 
-#: src/features/player/gestures.ts src/features/player/keys.ts
+#: src/features/player/gestures.ts
+#: src/features/player/keys.ts
 msgid "Volume {percent}%"
 msgstr "Volum {percent}%"
 
@@ -5518,6 +6647,10 @@ msgid "Waiting · {of}"
 msgstr "Se așteaptă · {of}"
 
 #: src/features/party/party-layer.tsx
+msgid "Waiting for {hostName} to play"
+msgstr ""
+
+#: src/features/party/party-layer.tsx
 msgid "Waiting for {names}"
 msgstr "Se așteaptă {names}"
 
@@ -5543,18 +6676,26 @@ msgstr "Vizionează ca altcineva pe această configurație. Un utilizator cu PIN
 msgid "Watch parties"
 msgstr "Sesiuni Watch party"
 
-#: src/app/item/_components/actions.tsx src/components/shell/layout.tsx
-#: src/features/party/party-sheet.tsx src/features/player/options.tsx
+#: src/app/item/_components/actions.tsx
+#: src/components/guest-layout.tsx
+#: src/components/shell/layout.tsx
+#: src/features/party/party-sheet.tsx
+#: src/features/player/options.tsx
 msgid "Watch party"
 msgstr "Watch party"
 
-#: src/app/item/_components/actions.tsx src/components/shell/layout.tsx
-#: src/features/party/in-party.tsx src/features/party/party-sheet.tsx
+#: src/app/item/_components/actions.tsx
+#: src/components/guest-layout.tsx
+#: src/components/guest-share.tsx
+#: src/components/shell/layout.tsx
+#: src/features/party/in-party.tsx
+#: src/features/party/party-sheet.tsx
 #: src/features/player/options.tsx
 msgid "Watch together"
 msgstr "Vizionează împreună"
 
-#: src/app/discover/page.tsx src/app/history/page.tsx
+#: src/app/discover/page.tsx
+#: src/app/history/page.tsx
 #: src/app/item/_components/actions.tsx
 msgid "Watched"
 msgstr "Văzut"
@@ -5567,7 +6708,8 @@ msgstr "Văzut ×{playCount}"
 msgid "Watched marks and resume points are removed from this server. Favourites stay. Titles a tracker still lists come back when it next syncs."
 msgstr "Marcajele de vizionare și punctele de reluare sunt eliminate de pe acest server. Favoritele rămân. Titlurile pe care un tracker le mai listează revin la următoarea sincronizare."
 
-#: src/app/settings/page.tsx src/features/party/in-party.tsx
+#: src/app/settings/page.tsx
+#: src/features/party/in-party.tsx
 msgid "Watching"
 msgstr "Se vizionează"
 
@@ -5583,17 +6725,41 @@ msgstr "Se vizionează {name}"
 msgid "Watching {name}, {at} in"
 msgstr "Se vizionează {name}, la {at}"
 
+#: src/app/guest/page.tsx
+msgid "Watching as a guest"
+msgstr ""
+
 #: src/app/settings/about.tsx
 msgid "Web app"
 msgstr "Aplicația web"
+
+#: src/lib/playback/bumpers.ts
+msgid "Welcome"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Welcome, {greeting}"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "What everyone on this server sees."
+msgstr ""
 
 #: src/components/send-report.tsx
 msgid "What happened"
 msgstr "Ce s-a întâmplat"
 
+#: src/app/settings/player-example.tsx
+msgid "What language do you watch in?"
+msgstr ""
+
 #: src/features/party/in-party.tsx
 msgid "What others send shows over the video for a few seconds. It always stays in the chat."
 msgstr "Ce trimit ceilalți apare peste videoclip câteva secunde. Rămâne mereu în chat."
+
+#: src/app/guest/page.tsx
+msgid "What should the party call you?"
+msgstr ""
 
 #: src/app/settings/apps.tsx
 msgid "What the app did each day, kept for a week."
@@ -5622,6 +6788,10 @@ msgstr ""
 #: src/app/settings/_components/reaction-setting.tsx
 msgid "What you can send from a party's chat."
 msgstr "Ce poți trimite din chatul unei sesiuni Watch party."
+
+#: src/app/settings/profile.tsx
+msgid "What you watch is marked on these, and what you mark there shows here."
+msgstr ""
 
 #: src/app/settings/apps.tsx
 #, fuzzy
@@ -5656,6 +6826,18 @@ msgstr "Când o versiune are mai multe tipuri de piste audio, se redă primul di
 msgid "When a version has more than one subtitle in your language, the first of these it has shows. Commentary comes last."
 msgstr "Când o versiune are mai multe subtitrări în limba ta, se afișează prima dintre acestea pe care o are. Comentariul vine ultimul."
 
+#: src/app/settings/player-example.tsx
+msgid "When an episode ends?"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "When I don't understand"
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "When should subtitles show?"
+msgstr ""
+
 #: src/app/settings/subtitles.tsx
 msgid "When the audio is not in my language"
 msgstr "Când sunetul nu este în limba mea"
@@ -5681,12 +6863,12 @@ msgid "Where the app is made, and where to report a problem."
 msgstr "Unde este realizată aplicația și unde poți raporta o problemă."
 
 #: src/app/settings/interface.tsx
-msgid "Where the navigation goes when the screen is wide enough for a sidebar, such as a tablet held sideways."
-msgstr "Unde merge navigarea când ecranul este suficient de lat pentru o bară laterală, cum ar fi o tabletă ținută pe orizontală."
-
-#: src/app/settings/interface.tsx
 msgid "Where the navigation goes when the window is wide enough for a sidebar."
 msgstr "Unde merge navigarea când fereastra este suficient de lată pentru o bară laterală."
+
+#: src/app/settings/interface.tsx
+msgid "Where the navigation goes when there's room for a sidebar, such as a tablet held sideways."
+msgstr ""
 
 #: src/app/settings/page.tsx
 msgid "Where they go and how many run at once"
@@ -5695,14 +6877,6 @@ msgstr "Unde ajung și câte rulează simultan"
 #: src/app/settings/interface.tsx
 msgid "Whether the bar at the bottom, and tabs along the top, name each page."
 msgstr "Dacă bara de jos și filele de sus denumesc fiecare pagină."
-
-#: src/app/settings/interface.tsx
-msgid "Whether the rail names each page only while you're in it, or all the time."
-msgstr "Dacă bara laterală denumește fiecare pagină doar cât timp ești în ea sau tot timpul."
-
-#: src/app/settings/interface.tsx
-msgid "Whether the rail names each page under its icon."
-msgstr "Dacă bara laterală denumește fiecare pagină sub pictograma ei."
 
 #: src/app/settings/interface.tsx
 msgid "Whether the tabs name each page beside its icon."
@@ -5740,6 +6914,14 @@ msgstr "Cine vizionează"
 msgid "Who's watching?"
 msgstr "Cine vizionează?"
 
+#: src/components/guest-share.tsx
+msgid "Whole show"
+msgstr ""
+
+#: src/app/settings/interface.tsx
+msgid "Wide screens"
+msgstr ""
+
 #: src/app/settings/subtitles.tsx
 msgid "Width"
 msgstr "Lățime"
@@ -5754,6 +6936,14 @@ msgstr "Cu {names}"
 
 #: src/app/settings/_components/gesture-settings.tsx
 msgid "With a finger or the mouse button, at the held speed."
+msgstr ""
+
+#: src/app/settings/account.tsx
+msgid "With a party"
+msgstr ""
+
+#: src/app/settings/browsing.tsx
+msgid "With neither, posters stand alone. One without artwork still shows its title."
 msgstr ""
 
 #: src/app/settings/_components/version-settings.tsx
@@ -5776,10 +6966,12 @@ msgstr "Galben"
 msgid "Yesterday"
 msgstr "Ieri"
 
-#: src/app/settings/page.tsx src/components/shell/nav/account.tsx
+#: src/app/settings/page.tsx
+#: src/components/shell/nav/account.tsx
 #: src/components/shell/nav/corner-menu.tsx
 #: src/components/shell/nav/mobile-nav.tsx
-#: src/components/shell/nav/touch-rail.tsx src/components/shell/nav/tv-rail.tsx
+#: src/components/shell/nav/touch-rail.tsx
+#: src/components/shell/nav/tv-rail.tsx
 msgid "You"
 msgstr "Tu"
 
@@ -5787,13 +6979,53 @@ msgstr "Tu"
 msgid "You can change this later in Settings, under About."
 msgstr "Poți schimba asta mai târziu în Setări, la Despre."
 
+#: src/app/settings/player-example.tsx
+msgid "You hear {heard}, so subtitles stay out of the way."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "You hear {heard}, with {reads} subtitles."
+msgstr ""
+
+#: src/app/settings/player-example.tsx
+msgid "You hear {heard}. Subtitles stay off."
+msgstr ""
+
 #: src/lib/party/party.ts
 msgid "You left the party."
 msgstr "Ai părăsit sesiunea Watch party."
 
+#: src/app/settings/player-example.tsx
+msgid "You share the main history, so it's marked on its accounts."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "You share the main history, so what you watch is tracked on its accounts."
+msgstr ""
+
+#: src/app/settings/page.tsx
+msgid "You, tracking, your streams and Stremio"
+msgstr ""
+
 #: src/app/live-tv/page.tsx
 msgid "You'll be reminded at {time}"
 msgstr "Vei primi un memento la {time}"
+
+#: src/app/welcome/page.tsx
+msgid "You'll sign in with your name and this, here and in Jellyfin apps. Once it's set, this link only opens on this device."
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "You're set, {name}"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "You've been added to this server. A few steps and it's yours."
+msgstr ""
+
+#: src/components/guest-share.tsx
+msgid "You've made all the links you can this month."
+msgstr ""
 
 #: src/app/settings/player.tsx
 msgid "Your {name}"
@@ -5803,9 +7035,41 @@ msgstr "{name} al tău"
 msgid "Your badges"
 msgstr "Insignele tale"
 
+#: src/app/settings/profile.tsx
+msgid "Your devices stay signed in."
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Your libraries"
+msgstr ""
+
+#: src/app/guest/page.tsx
+msgid "Your name"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Your other apps"
+msgstr ""
+
 #: src/lib/playback/player-choice.ts
 msgid "Your own {name}"
 msgstr "{name} propriu"
+
+#: src/app/settings/profile.tsx
+msgid "Your own password and a PIN"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Your own password, no PIN"
+msgstr ""
+
+#: src/app/welcome/page.tsx
+msgid "Your password"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Your password confirms it's you."
+msgstr ""
 
 #: src/lib/playback/player-choice.ts
 msgid "your player"
@@ -5827,6 +7091,19 @@ msgstr "Playerul tău rulează într-o altă aplicație, care nu poate urmări o
 msgid "Your rating"
 msgstr "Evaluarea ta"
 
+#: src/app/settings/profile.tsx
+msgid "Your streams"
+msgstr ""
+
+#: src/app/settings/profile.tsx
+msgid "Your Stremio link"
+msgstr ""
+
 #: src/app/settings/cache.tsx
 msgid "Your watch history and totals."
 msgstr "Istoricul tău de vizionare și totalurile."
+
+#. Follows "Playback failed:"
+#: src/lib/playback/youtube-engine.ts
+msgid "YouTube could not play this video"
+msgstr ""
