@@ -182,6 +182,7 @@ export function youTubeEngine(
       setRate: (rate) => command('setPlaybackRate', [rate]),
       setAudio() {},
       setSubtitle() {},
+      setSubtitles() {},
       toggleFullscreen: canFullscreen() ? toggleDocumentFullscreen : undefined,
     };
   };
